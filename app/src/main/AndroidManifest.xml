@@ -1,11 +1,83 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.daniel.mobilepauker2">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" />
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".activities.MainMenu"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.LessonImportActivity"
+            android:label="@string/open_lesson"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.EditDescrptionActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".activities.SearchActivity"
+            android:label="@string/search" />
+
+        <activity
+            android:name="com.dropbox.core.android.AuthActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <!-- Change this to be db- followed by your app key -->
+                <data android:scheme="db-9rqxyyq8cty3cf1" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".activities.About"
+            android:label="@string/about"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.SettingsActivity"
+            android:label="@string/settings"
+            android:screenOrientation="portrait" />
+
+        <activity android:name=".activities.LearnCardsActivity" />
+
+        <activity
+            android:name=".activities.SaveDialog"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <activity
+            android:name=".dropbox.SyncDialog"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <activity
+            android:name=".activities.EditCardActivity"
+            android:label="@string/edit_card"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".activities.AddCardActivity"
+            android:label="@string/add_new_card"
+            android:screenOrientation="portrait" />
+    </application>
 </manifest>

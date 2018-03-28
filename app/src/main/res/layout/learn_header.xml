@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:id="@+id/lTimerFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tUKZGTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginStart="10dp"
+            android:fontFamily="serif"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tKZGTimer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_toEndOf="@+id/tUKZGTimer"
+            android:fontFamily="serif"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <View
+            android:id="@+id/vDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/tUKZGTimer"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/darker_gray" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tAllCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lTimerFrame"
+        android:layout_marginStart="10dp"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tUKZGCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tAllCards"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tAllCards"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tKZGCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tAllCards"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tUKZGCards"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+</merge>

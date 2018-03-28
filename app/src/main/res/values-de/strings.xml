@@ -1,0 +1,121 @@
+<resources>
+    <!-- Errors -->
+    <string name="no_lesson_found">Keine Lektion gefunden…</string>
+    <string name="error_importflashcardfile_directory">Auf SD-Karte kann nicht zugegriffen werden</string>
+    <string name="error_filename_not_pauker">Datei ist nicht kompatibel (.pau.gz)</string>
+    <string name="error_reading_from_xml">Datei ist ungültig oder beschädigt</string>
+    <string name="saving_error">Fehler beim Speichern der Lektion</string>
+    <string name="error_synchronizing">Synchronisation nicht möglich</string>
+    <string name="synchro_timeout">Synchronisation abgelaufen</string>
+    <string name="edit_cards_no_card_available">Keine Karten vorhanden</string>
+    <string name="error_filename_invalid">Dateiname ist ungültig</string>
+
+    <!-- Infos -->
+    <string name="learned">Gelernt</string>
+    <string name="expired">Abgelaufen</string>
+    <string name="sum">Summe</string>
+    <string name="untrained">Ungelernt</string>
+    <string name="ustm">UKZG</string>
+    <string name="stm">KZG</string>
+    <string name="stack">Stapel</string>
+    <string name="card_added">Karte hinzugefügt</string>
+    <string name="learncards_show_hint">Versuchen Sie sich an die Rückseite dieser Karte zu erinnern!</string>
+    <string name="info_text_hint">Beschreibung der Lektion (LongTap zum Editieren)</string>
+    <string name="next_expire_date">Nächstes Ablaufdatum:</string>
+    <string name="nothing_learned_yet">Noch nichts gelernt!</string>
+    <string name="not_learned_yet">Noch nicht gelernt!</string>
+    <string name="no_description">Noch keine Beschreibung…</string>
+    <string name="expired_cards">Anzahl abgelaufener Karten:</string>
+    <string name="search_hint">Suche</string>
+    <string name="learned_at">Gelernt am:</string>
+    <string name="expire_at">Läuft ab am:</string>
+    <string name="expired_at">Abgelaufen am:</string>
+    <string name="synchronizing">Synchronisation…</string>
+    <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibtst,
+        kannst du keine Lektion öffnen!</string>
+    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können,
+        benötigt MobilePauker++ die Berechtigung Dateien auf dem Speicher speichern zu dürfen.</string>
+    <string name="learncards_repeat_ustm">Zeit das Ultrakurzzeit-Gedächtnis zu wiederholen</string>
+    <string name="learncards_repeat_stm">Zeit das Kurzzeit-Gedächtnis zu wiederholen</string>
+    <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
+    <string name="learncards_finished_learning">Lernen beendet</string>
+    <string name="saving_success">Datei gespeichert</string>
+
+    <!-- Sonstiges -->
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="ok">OK</string>
+
+    <!-- Content Descriptions und Titles-->
+    <string name="sync_manually">Mit Dropbox synchronisieren</string>
+    <string name="add_new_card">Neue Karte hinzufügen</string>
+    <string name="front">Vorderseite</string>
+    <string name="back">Rückseite</string>
+    <string name="learn_new_card">Neue Karten lernen</string>
+    <string name="repeat_expired_cards">Abgelaufene Karten wiederholen</string>
+    <string name="open_lesson">Lektion öffnen</string>
+    <string name="save_lesson">Lektion speichern</string>
+    <string name="search">Suche</string>
+    <string name="reset_cards">Lektion zurücksetzen</string>
+    <string name="change_sides">Seiten der Karte vertauschen</string>
+    <string name="edit_info_text">Infotext bearbeiten</string>
+    <string name="settings">Einstellungen</string>
+    <string name="edit_description_title">Lektionsbeschreibung</string>
+    <string name="new_lesson">Neue Lektion</string>
+    <string name="not_now">Nicht jetzt</string>
+    <string name="next">Weiter</string>
+    <string name="repeat_question">Haben Sie es es gewusst?</string>
+    <string name="saving_title">Speichern… Bitte warten!</string>
+    <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
+    <string name="edit_card">Karte bearbeiten</string>
+
+    <!-- Buttontexte -->
+    <string name="next_card">Nächste Karte -&gt;</string>
+    <string name="show_me">Zeigs mir!</string>
+    <string name="skipWaiting">Timer laufen noch…</string>
+    <string name="skip_waiting_button">Egal! Mach weiter!</string>
+
+    <!-- Settings Anfang -->
+
+    <!-- Gruppentitel -->
+    <string name="learning_cards">Karten lernen</string>
+    <string name="times">Zeiten</string>
+    <string name="other">Sonstiges</string>
+
+    <!-- Titles -->
+    <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
+    <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
+    <string name="hide_times_title">Zeiten ausblenden</string>
+    <string name="center_text_title">Text zentrieren</string>
+    <string name="font_size_title">Schriftgröße</string>
+    <string name="enable_split_screen_title">Splitscreen aktivieren</string>
+    <string name="repeat_cards_mode_title">Karten wiederholen</string>
+    <string name="return_forgotten_cards_title">Vergessene Karten zurücklegen</string>
+    <string name="auto_save_title">Automatisches Speichern</string>
+    <string name="about_title">Über MobilePauker++</string>
+    <string name="learn_new_cards_randomly_title">Neue Karten zufällig lernen</string>
+    <string name="auto_sync_title">Automatische Synchronisation</string>
+    <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
+
+    <!-- Beschreibungen -->
+    <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
+    <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
+    <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
+    <string name="enable_split_screen_summ">Zeigt beide Seiten gleichzeitig</string>
+    <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
+    <string name="font_size_sum">Setzt die Textgröße von Kartentext (%s)</string>
+    <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm lernen</string>
+    <string name="ustm_summ">Ultrakurzzeit-Gedächtnis: %ss</string>
+    <string name="stm_summ">Kurzzeit-Gedächtnis: %smin</string>
+    <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
+    <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal, wenn die App geöffnet wird</string>
+    <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
+
+    <!-- Settings Ende -->
+
+    <!-- Neue Strings -->
+    <string name="New">Neu</string>
+    <string name="reset">Zurücksetzen</string>
+    <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
+</resources>

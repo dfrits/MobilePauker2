@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLearnCardsView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="5dp"
+    android:paddingTop="5dp">
+
+    <include
+        android:id="@+id/lLearnHeader"
+        layout="@layout/learn_header" />
+
+    <TextView
+        android:id="@+id/tCardSide"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lLearnButtonsFrame"
+        android:layout_below="@id/tAllCards"
+        android:layout_margin="5dp"
+        android:background="@drawable/box_background"
+        android:fontFamily="serif"
+        android:padding="5dp"
+        android:textColor="@color/black" />
+
+    <include
+        android:id="@+id/lLearnButtonsFrame"
+        layout="@layout/learn_buttons_frame" />
+</RelativeLayout>
