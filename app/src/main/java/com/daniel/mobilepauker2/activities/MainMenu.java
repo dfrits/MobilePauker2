@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -98,12 +99,12 @@ public class MainMenu extends AppCompatActivity {
         boolean hasCardsToLearn = modelManager.getUnlearnedBatchSize() != 0;
         boolean hasExpiredCards = modelManager.getExpiredCardsSize() != 0;
 
-        ImageButton button;
+        RelativeLayout button;
         Drawable disabledImg = getDrawable(R.drawable.button_disabled_foreground);
-        button = findViewById(R.id.bLearnNewCard);
+        button = findViewById(R.id.bLearnNewCardFrame);
         button.setClickable(hasCardsToLearn);
         button.setForeground(button.isClickable() ? null : disabledImg);
-        button = findViewById(R.id.bRepeatExpiredCards);
+        button = findViewById(R.id.bRepeatExpiredCardsFrame);
         button.setClickable(hasExpiredCards);
         button.setForeground(button.isClickable() ? null : disabledImg);
     }
@@ -168,6 +169,7 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         MenuItem search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
+        FloatingActionButton floatingOpen = findViewById(R.id.fbOpenLesson);
         if (!modelManager.isLessonNew()) {
             menu.setGroupEnabled(R.id.mGroup, true);
         } else {
@@ -177,9 +179,11 @@ public class MainMenu extends AppCompatActivity {
         if (modelManager.getLessonSize() > 0) {
             search.setVisible(true);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            floatingOpen.setVisibility(View.GONE);
         } else {
             search.setVisible(false);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            floatingOpen.setVisibility(View.VISIBLE);
         }
 
         if (paukerManager.isSaveRequired()) {
@@ -246,7 +250,7 @@ public class MainMenu extends AppCompatActivity {
                                            @NonNull int[] grantResults) {
         if (requestCode == RQ_WRITE_EXT) {
             if ((grantResults.length > 0) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openFile(null);
+                openLesson();
             }
         }
     }
@@ -347,10 +351,25 @@ public class MainMenu extends AppCompatActivity {
     }
 
     /**
-     * Fragt, wenn notwendig, die Permission ab und zeigt davor einen passenden Infodialog an.
+     * Aktion des Floatingbuttons.
      * @param ignored Nicht benötigt
      */
-    public void openFile(@Nullable MenuItem ignored) {
+    public void fbClicked(View ignored) {
+        openLesson();
+    }
+
+    /**
+     * Aktion des Menubuttons
+     * @param ignored Nicht benötigt
+     */
+    public void openLesson(@Nullable MenuItem ignored) {
+        openLesson();
+    }
+
+    /**
+     * Fragt, wenn notwendig, die Permission ab und zeigt davor einen passenden Infodialog an.
+     */
+    private void openLesson() {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.app_name)

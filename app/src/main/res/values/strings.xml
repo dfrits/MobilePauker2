@@ -9,6 +9,8 @@
     <string name="synchro_timeout">Synchronizing timed out</string>
     <string name="edit_cards_no_card_available">No card avialable</string>
     <string name="error_filename_invalid">File name is invalid</string>
+    <string name="add_card_sides_empty_error">One or both sides are empty</string>
+    <string name="delete_lesson_error">Can\'t delete Lesson</string>
 
     <!-- Infos -->
     <string name="learned">Learned</string>
@@ -39,6 +41,7 @@
     <string name="saving_success">File saved</string>
     <string name="card_added">Card added</string>
     <string name="learncards_show_hint">Try to remember the back of this card!</string>
+    <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
@@ -74,6 +77,10 @@
     <string name="show_me">Show me!</string>
     <string name="skipWaiting">Timer still running…</string>
     <string name="skip_waiting_button">Doesn\'t matter! Go on!</string>
+    <string name="reset">Reset</string>
+    <string name="add">Add</string>
+    <string name="learn">Learn</string>
+    <string name="repeat">Repeat</string>
 
     <!-- Settings Anfang -->
 
@@ -143,8 +150,4 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
-    <string name="reset">Reset</string>
-    <string name="add_card_sides_empty_error">One or both sides are empty</string>
-    <string name="delete_lesson_error">Can\'t delete Lesson</string>
-    <string name="delete_lesson_message">Do you realy want to delete the lesson?</string>
 </resources>

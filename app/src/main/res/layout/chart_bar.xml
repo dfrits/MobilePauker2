@@ -17,19 +17,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/gelerntValue"
-        android:textAlignment="center" />
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/gelerntValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/sumValue"
-        android:textAlignment="center" />
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/sumValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:textAlignment="center" />
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
 </RelativeLayout>

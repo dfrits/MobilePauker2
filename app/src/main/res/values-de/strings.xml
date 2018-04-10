@@ -9,6 +9,8 @@
     <string name="synchro_timeout">Synchronisation abgelaufen</string>
     <string name="edit_cards_no_card_available">Keine Karten vorhanden</string>
     <string name="error_filename_invalid">Dateiname ist ungültig</string>
+    <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
+    <string name="delete_lesson_error">Lektion kann nicht gelöscht werden</string>
 
     <!-- Infos -->
     <string name="learned">Gelernt</string>
@@ -40,6 +42,7 @@
     <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
     <string name="learncards_finished_learning">Lernen beendet</string>
     <string name="saving_success">Datei gespeichert</string>
+    <string name="delete_lesson_message">Lektion wirklich löschen?</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
@@ -64,7 +67,7 @@
     <string name="new_lesson">Neue Lektion</string>
     <string name="not_now">Nicht jetzt</string>
     <string name="next">Weiter</string>
-    <string name="repeat_question">Haben Sie es es gewusst?</string>
+    <string name="repeat_question">Haben Sie es gewusst?</string>
     <string name="saving_title">Speichern… Bitte warten!</string>
     <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
     <string name="edit_card">Karte bearbeiten</string>
@@ -74,6 +77,10 @@
     <string name="show_me">Zeigs mir!</string>
     <string name="skipWaiting">Timer laufen noch…</string>
     <string name="skip_waiting_button">Egal! Mach weiter!</string>
+    <string name="add">Hinzufügen</string>
+    <string name="learn">Lernen</string>
+    <string name="repeat">Wiederholen</string>
+    <string name="reset">Zurücksetzen</string>
 
     <!-- Settings Anfang -->
 
@@ -116,6 +123,4 @@
 
     <!-- Neue Strings -->
     <string name="New">Neu</string>
-    <string name="reset">Zurücksetzen</string>
-    <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
 </resources>

@@ -1,7 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,7 +21,6 @@ import com.daniel.mobilepauker2.utils.Constants;
  */
 
 public class SaveDialog extends Activity {
-    private final Context context = this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

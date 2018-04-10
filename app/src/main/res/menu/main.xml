@@ -8,12 +8,12 @@
         android:onClick="saveFile"
         android:orderInCategory="10"
         android:title="@string/save_lesson"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/mOpenLesson"
         android:icon="@drawable/menu_open"
-        android:onClick="openFile"
+        android:onClick="openLesson"
         android:orderInCategory="20"
         android:title="@string/open_lesson"
         app:showAsAction="ifRoom" />

@@ -94,65 +94,112 @@
         android:layout_marginEnd="5dp"
         android:layout_marginStart="10dp">
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/bAddNewCardFrame"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_above="@+id/bLearnNewCardFrame"
             android:layout_alignStart="@+id/bLearnNewCardFrame"
-            android:background="@drawable/button_enabled_background">
+            android:background="@drawable/button_enabled_background"
+            android:onClick="addNewCard">
 
             <ImageButton
                 android:id="@+id/bAddNewCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@+id/tAddNewCardsDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_new_card"
-                android:onClick="addNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_add_card" />
-        </FrameLayout>
+
+            <TextView
+                android:id="@+id/tAddNewCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/add"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/bLearnNewCardFrame"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:layout_centerInParent="true"
+            android:layout_above="@+id/bRepeatExpiredCardsFrame"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
-            android:background="@drawable/button_enabled_background">
+            android:background="@drawable/button_enabled_background"
+            android:onClick="learnNewCard">
 
             <ImageButton
                 android:id="@+id/bLearnNewCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@+id/tLearnNewCardDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/learn_new_card"
-                android:onClick="learnNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_learn_new_cards" />
-        </FrameLayout>
+
+            <TextView
+                android:id="@+id/tLearnNewCardDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/learn"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
 
-        <FrameLayout
+        <RelativeLayout
             android:id="@+id/bRepeatExpiredCardsFrame"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
             android:layout_alignStart="@+id/bLearnNewCardFrame"
-            android:layout_below="@+id/bLearnNewCardFrame"
-            android:background="@drawable/button_enabled_background">
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_enabled_background"
+            android:onClick="repeatCards">
 
             <ImageButton
                 android:id="@+id/bRepeatExpiredCards"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_above="@+id/tRepeatExpiredCardsDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/repeat_expired_cards"
-                android:onClick="repeatCards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_repeat_cards" />
-        </FrameLayout>
+
+            <TextView
+                android:id="@+id/tRepeatExpiredCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/repeat"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </RelativeLayout>
 
     </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fbOpenLesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/menu_open"
+        android:onClick="fbClicked"
+        android:layout_margin="16dp" />
 </RelativeLayout>

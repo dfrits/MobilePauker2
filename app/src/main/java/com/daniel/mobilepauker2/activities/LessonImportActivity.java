@@ -220,8 +220,6 @@ public class LessonImportActivity extends AppCompatActivity {
             paukerManager.setFileAbsolutePath(file.getAbsolutePath());
             modelManager.setLesson(lesson);
         } catch (EOFException e) {
-            // An invalid XML file or unable to read file from file system
-            // TODO tell the user something went wrong!
             paukerManager.killLesson();
         }
     }
@@ -273,9 +271,10 @@ public class LessonImportActivity extends AppCompatActivity {
                                 dialog.dismiss();
                             }
                         });
+                builder.create().show();
                 break;
             case CONTEXT_OPEN:
-                // TODO File direkt öffnen
+                openLesson(null);
                 break;
             default:
                 return super.onContextItemSelected(item);
@@ -357,9 +356,9 @@ public class LessonImportActivity extends AppCompatActivity {
 
     /**
      * Öffnet eine Lektion und beendet bei Erfolg die Activity.
-     * @param item Wird nicht benötigt
+     * @param ignored Wird nicht benötigt
      */
-    public void openLesson(@Nullable MenuItem item) {
+    public void openLesson(@Nullable MenuItem ignored) {
         String filename = (String) listView.getItemAtPosition(lastSelection);
         try {
             loadLessonFromFile(getFilePath(filename));

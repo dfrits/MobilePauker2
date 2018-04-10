@@ -18,7 +18,6 @@
 
 package com.daniel.mobilepauker2.activities;
 
-import android.app.Activity;
 import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
@@ -28,7 +27,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.daniel.mobilepauker2.model.CardPackRamAdapter;
 import com.daniel.mobilepauker2.model.CursorLoader;
