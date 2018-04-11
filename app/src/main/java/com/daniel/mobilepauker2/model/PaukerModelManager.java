@@ -19,9 +19,7 @@
 package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Environment;
-import android.preference.PreferenceManager;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.model.pauker_native.Card;

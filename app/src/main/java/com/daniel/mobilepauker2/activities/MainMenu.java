@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -22,7 +23,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.text.method.ScrollingMovementMethod;
+import android.util.SparseLongArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,13 +41,19 @@ import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.PaukerModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.statistics.ChartAdapter;
 import com.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 
+import java.io.EOFException;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.util.Calendar;
+import java.util.Locale;
 
 import static com.daniel.mobilepauker2.model.PaukerModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.PaukerModelManager.LearningPhase.SIMPLE_LEARNING;
@@ -353,6 +362,29 @@ public class MainMenu extends AppCompatActivity {
         } else {
             startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
         }
+
+        showExpireToast();
+    }
+
+    private void showExpireToast() {
+        String filePath = Environment.getExternalStorageDirectory()
+                + paukerManager.getApplicationDataDirectory()
+                + paukerManager.getCurrentFileName();
+        URI uri = new File(filePath).toURI();
+        FlashCardXMLPullFeedParser parser = null;
+        try {
+            parser = new FlashCardXMLPullFeedParser(uri.toURL());
+            SparseLongArray map = parser.getNextExpireDate();
+            if (map.get(0) > Long.MIN_VALUE) {
+                long dateL = map.get(0);
+                Calendar cal = Calendar.getInstance(Locale.getDefault());
+                cal.setTimeInMillis(dateL);
+                String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
+                String text = getString(R.string.next_expire_date);
+                text = text.concat(" ").concat(date);
+                Toast.makeText(context, text, Toast.LENGTH_LONG*2).show();
+            }
+        } catch (MalformedURLException | EOFException ignored) {}
     }
 
     /**
