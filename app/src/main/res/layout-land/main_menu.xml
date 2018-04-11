@@ -110,6 +110,7 @@
                 android:layout_above="@+id/tAddNewCardsDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_new_card"
+                android:onClick="addNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_add_card" />
 
@@ -143,6 +144,7 @@
                 android:layout_above="@+id/tLearnNewCardDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/learn_new_card"
+                android:onClick="learnNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_learn_new_cards" />
 
@@ -176,6 +178,7 @@
                 android:layout_above="@+id/tRepeatExpiredCardsDesc"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/repeat_expired_cards"
+                android:onClick="repeatCards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_repeat_cards" />
 
@@ -199,7 +202,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:src="@drawable/menu_open"
+        android:layout_margin="16dp"
         android:onClick="fbClicked"
-        android:layout_margin="16dp" />
+        android:src="@drawable/menu_open" />
 </RelativeLayout>
