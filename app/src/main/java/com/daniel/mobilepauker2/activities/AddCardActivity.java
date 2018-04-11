@@ -102,12 +102,16 @@ public class AddCardActivity extends AppCompatActivity {
         String sideAText = sideAEditText.getText().toString();
         String sideBText = sideBEditText.getText().toString();
 
-        PaukerModelManager.instance().addCard(sideAText, sideBText, "-1", "-1", "false");
-        Toast.makeText(context, R.string.card_added, Toast.LENGTH_SHORT).show();
+        if (!sideAText.isEmpty() && !sideBText.isEmpty()) {
+            PaukerModelManager.instance().addCard(sideAText, sideBText, "-1", "-1", "false");
+            Toast.makeText(context, R.string.card_added, Toast.LENGTH_SHORT).show();
 
-        sideAEditText.setText("");
-        sideBEditText.setText("");
-        PaukerManager.instance().setSaveRequired(true);
+            sideAEditText.setText("");
+            sideBEditText.setText("");
+            PaukerManager.instance().setSaveRequired(true);
+        } else {
+            Toast.makeText(context, R.string.add_card_side_empty, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void resetCardSides(View view) {
