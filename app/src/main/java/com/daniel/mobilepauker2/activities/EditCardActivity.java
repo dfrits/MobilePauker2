@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -65,6 +66,16 @@ public class EditCardActivity extends AppCompatActivity {
             SettingsManager settingsManager = SettingsManager.instance();
             sideAEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
             sideBEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 

@@ -7,10 +7,15 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
@@ -47,6 +52,16 @@ public class AddCardActivity extends AppCompatActivity {
             SettingsManager settingsManager = SettingsManager.instance();
             sideAEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
             sideBEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
+            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
     }
 
