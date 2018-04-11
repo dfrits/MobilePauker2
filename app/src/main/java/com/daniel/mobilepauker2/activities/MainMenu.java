@@ -65,6 +65,7 @@ public class MainMenu extends AppCompatActivity {
     private final SettingsManager settingsManager = SettingsManager.instance();
     private final Context context = this;
     private boolean firstStart = true;
+    private MenuItem search;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -167,7 +168,7 @@ public class MainMenu extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
 
         MenuItem save = menu.findItem(R.id.mSaveFile);
-        MenuItem search = menu.findItem(R.id.mSearch);
+        search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
         FloatingActionButton floatingOpen = findViewById(R.id.fbOpenLesson);
         if (!modelManager.isLessonNew()) {
@@ -232,6 +233,10 @@ public class MainMenu extends AppCompatActivity {
         super.onResume();
 
         modelManager.resetLesson();
+
+        if (search != null) {
+            search.collapseActionView();
+        }
 
         if (!firstStart) {
             initButtons();
