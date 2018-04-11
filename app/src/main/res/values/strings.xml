@@ -11,6 +11,7 @@
     <string name="error_filename_invalid">File name is invalid</string>
     <string name="add_card_sides_empty_error">One or both sides are empty</string>
     <string name="delete_lesson_error">Can\'t delete Lesson</string>
+    <string name="add_card_side_empty">One side or both are still empty!</string>
 
     <!-- Infos -->
     <string name="learned">Learned</string>

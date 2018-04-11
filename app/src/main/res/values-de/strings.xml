@@ -11,6 +11,7 @@
     <string name="error_filename_invalid">Dateiname ist ungültig</string>
     <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
     <string name="delete_lesson_error">Lektion kann nicht gelöscht werden</string>
+    <string name="add_card_side_empty">Eine Seite oder beide sind noch leer!</string>
 
     <!-- Infos -->
     <string name="learned">Gelernt</string>
