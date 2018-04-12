@@ -73,6 +73,7 @@
     <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
     <string name="edit_card">Karte bearbeiten</string>
     <string name="bar_chart_title">Statistiken</string>
+    <string name="lessons">Lektionen</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>
