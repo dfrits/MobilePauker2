@@ -20,24 +20,35 @@ package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.text.format.DateFormat;
+import android.util.SparseLongArray;
+import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
+import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
+import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLStreamWriter;
 import com.daniel.mobilepauker2.statistics.BatchStatistics;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 import java.util.zip.GZIPOutputStream;
 
@@ -452,10 +463,7 @@ public class PaukerModelManager {
     //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
     public void saveLesson() {
         if (!isLessonNew()) {
-            String filePath = Environment.getExternalStorageDirectory()
-                    + paukerManager.getApplicationDataDirectory()
-                    + paukerManager.getCurrentFileName();
-            File newxmlfile = new File(filePath);
+            File newxmlfile = getFilePath();
 
             Log.d("PaukerModelManager::saveLesson", "Filename = " + paukerManager.getCurrentFileName());
             Log.d("PaukerModelManager::saveLesson", "Directory= " + paukerManager.getFileAbsolutePath());
@@ -478,6 +486,37 @@ public class PaukerModelManager {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @NonNull
+    private File getFilePath() {
+        String filePath = Environment.getExternalStorageDirectory()
+                + paukerManager.getApplicationDataDirectory()
+                + paukerManager.getCurrentFileName();
+        return new File(filePath);
+    }
+
+    /**
+     * Zeigt einen Toast mit dem nächsten Ablaufdatum an.
+     * @param context Kontext der aufrufenden Activity
+     */
+    public void showExpireToast(Context context) {
+        File filePath = getFilePath();
+        URI uri =filePath.toURI();
+        FlashCardXMLPullFeedParser parser = null;
+        try {
+            parser = new FlashCardXMLPullFeedParser(uri.toURL());
+            SparseLongArray map = parser.getNextExpireDate();
+            if (map.get(0) > Long.MIN_VALUE) {
+                long dateL = map.get(0);
+                Calendar cal = Calendar.getInstance(Locale.getDefault());
+                cal.setTimeInMillis(dateL);
+                String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
+                String text = context.getString(R.string.next_expire_date);
+                text = text.concat(" ").concat(date);
+                Toast.makeText(context, text, Toast.LENGTH_LONG + Toast.LENGTH_SHORT).show();
+            }
+        } catch (MalformedURLException | EOFException ignored) {}
     }
 
     public boolean deleteLesson(Context context, File file) {

@@ -40,6 +40,7 @@ import com.daniel.mobilepauker2.model.CardPackAdapter;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.PaukerModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 
@@ -436,14 +437,14 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     private void completedLearning() {
         autoSaveLesson();
-        finish();
     }
 
     private void autoSaveLesson() {
         if (settingsManager.getBoolPreference(context, AUTO_SAVE)) {
-            startActivity(new Intent(context, SaveDialog.class));
+            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
         } else {
             paukerManager.setSaveRequired(true);
+            finish();
         }
     }
 
@@ -608,6 +609,20 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         super.onPause();
         mSavedCursorPosition = mCardCursor.getPosition();
         stopTimer();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                paukerManager.setSaveRequired(false);
+                modelManager.showExpireToast(context);
+            } else {
+                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
+            }
+        }
+        finish();
     }
 
     // Save UI state changes to the savedInstanceState.

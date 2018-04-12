@@ -11,6 +11,23 @@
         android:layout_height="0dp"
         android:layout_weight="50">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/labelFrame"
+            android:layout_toStartOf="@+id/chartListView">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="serif"
+                android:rotation="90"
+                android:text="@string/bar_chart_title"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chartListView"
             android:layout_width="wrap_content"
@@ -34,6 +51,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
+                android:paddingEnd="0dp"
+                android:paddingStart="2dp"
                 android:text="@string/expired"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
@@ -43,6 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
+                android:paddingEnd="0dp"
+                android:paddingStart="2dp"
                 android:text="@string/learned"
                 android:textColor="@color/black"
                 android:textSize="12sp" />
@@ -52,6 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
+                android:paddingEnd="0dp"
+                android:paddingStart="2dp"
                 android:text="@string/sum"
                 android:textColor="@color/black"
                 android:textSize="12sp" />

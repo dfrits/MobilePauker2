@@ -72,6 +72,7 @@
     <string name="saving_title">Speichern… Bitte warten!</string>
     <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
     <string name="edit_card">Karte bearbeiten</string>
+    <string name="bar_chart_title">Statistiken</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>

@@ -276,6 +276,7 @@ public class MainMenu extends AppCompatActivity {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);
                 invalidateOptionsMenu();
+                modelManager.showExpireToast(context);
             } else {
                 Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
@@ -362,29 +363,6 @@ public class MainMenu extends AppCompatActivity {
         } else {
             startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
         }
-
-        showExpireToast();
-    }
-
-    private void showExpireToast() {
-        String filePath = Environment.getExternalStorageDirectory()
-                + paukerManager.getApplicationDataDirectory()
-                + paukerManager.getCurrentFileName();
-        URI uri = new File(filePath).toURI();
-        FlashCardXMLPullFeedParser parser = null;
-        try {
-            parser = new FlashCardXMLPullFeedParser(uri.toURL());
-            SparseLongArray map = parser.getNextExpireDate();
-            if (map.get(0) > Long.MIN_VALUE) {
-                long dateL = map.get(0);
-                Calendar cal = Calendar.getInstance(Locale.getDefault());
-                cal.setTimeInMillis(dateL);
-                String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
-                String text = getString(R.string.next_expire_date);
-                text = text.concat(" ").concat(date);
-                Toast.makeText(context, text, Toast.LENGTH_LONG*2).show();
-            }
-        } catch (MalformedURLException | EOFException ignored) {}
     }
 
     /**

@@ -72,6 +72,7 @@
     <string name="saving_title">Saving… Please wait!</string>
     <string name="give_lesson_name_dialog_title">Give the lesson a name</string>
     <string name="edit_card">Edit Card</string>
+    <string name="bar_chart_title">Statistics</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
