@@ -107,7 +107,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_add_card" />
 
-            <TextView
+            <com.daniel.mobilepauker2.model.AutoSizeTextView
                 android:id="@+id/tAddNewCardsDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -142,7 +142,7 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_learn_new_cards" />
 
-            <TextView
+            <com.daniel.mobilepauker2.model.AutoSizeTextView
                 android:id="@+id/tLearnNewCardDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -176,17 +176,17 @@
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_repeat_cards" />
 
-            <TextView
+            <com.daniel.mobilepauker2.model.AutoSizeTextView
                 android:id="@+id/tRepeatExpiredCardsDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:fontFamily="sans-serif-smallcaps"
                 android:lines="1"
                 android:text="@string/repeat"
                 android:textAlignment="center"
                 android:textSize="12sp" />
         </RelativeLayout>
+        <!--android:fontFamily="sans-serif-smallcaps"-->
 
         <TextView
             android:id="@+id/infoText"
