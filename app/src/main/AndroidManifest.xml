@@ -24,7 +24,7 @@
 
         <activity
             android:name=".activities.LessonImportActivity"
-            android:label="@string/open_lesson"
+            android:label="@string/lessons"
             android:screenOrientation="portrait" />
 
         <activity
