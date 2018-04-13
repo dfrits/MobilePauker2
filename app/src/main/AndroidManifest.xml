@@ -15,7 +15,8 @@
 
         <activity
             android:name=".activities.MainMenu"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -73,7 +74,8 @@
         <activity
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activities.AddCardActivity"
