@@ -29,7 +29,7 @@
     <string name="not_learned_yet">Noch nicht gelernt!</string>
     <string name="no_description">Noch keine Beschreibung…</string>
     <string name="expired_cards">Anzahl abgelaufener Karten:</string>
-    <string name="search_hint">Suche</string>
+    <string name="search_hint">Karte suchen</string>
     <string name="learned_at">Gelernt am:</string>
     <string name="expire_at">Läuft ab am:</string>
     <string name="expired_at">Abgelaufen am:</string>

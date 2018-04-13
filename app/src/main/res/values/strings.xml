@@ -27,7 +27,7 @@
     <string name="not_learned_yet">Not learned yet!</string>
     <string name="no_description">No description yet…</string>
     <string name="expired_cards">Number of expired cards:</string>
-    <string name="search_hint">Search</string>
+    <string name="search_hint">Search card</string>
     <string name="learned_at">Learned at:</string>
     <string name="expire_at">Expire at:</string>
     <string name="expired_at">Expired at:</string>
