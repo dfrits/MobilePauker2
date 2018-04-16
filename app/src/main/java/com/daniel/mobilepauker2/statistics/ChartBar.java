@@ -14,7 +14,7 @@ import com.db.chart.view.StackBarChartView;
 /**
  * Created by Daniel on 28.02.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

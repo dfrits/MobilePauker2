@@ -4,7 +4,7 @@ package com.daniel.mobilepauker2.model;
 /**
  * Created by Daniel on 12.04.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

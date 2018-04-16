@@ -13,7 +13,7 @@ import java.util.ArrayList;
 /**
  * Created by Daniel on 05.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

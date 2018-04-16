@@ -12,7 +12,7 @@ import com.daniel.mobilepauker2.model.PaukerModelManager;
 /**
  * Created by Daniel on 06.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

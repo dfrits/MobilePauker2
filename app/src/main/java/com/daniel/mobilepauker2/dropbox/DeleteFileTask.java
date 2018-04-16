@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Daniel on 14.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  *

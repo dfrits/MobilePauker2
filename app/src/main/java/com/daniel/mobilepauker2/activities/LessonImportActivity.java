@@ -46,7 +46,7 @@ import java.util.Locale;
 /**
  * Created by Daniel on 04.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 /**
  * Created by Daniel on 16.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

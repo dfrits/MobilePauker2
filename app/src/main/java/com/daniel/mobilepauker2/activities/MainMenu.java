@@ -62,7 +62,7 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 
 /**
  * Created by Daniel on 24.02.2018.
- * Masterarbeit++ - innovativ, plattformübergreifend lernen
+ * Masterarbeit++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

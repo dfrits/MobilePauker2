@@ -30,7 +30,7 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 /**
  * Created by Daniel on 16.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */

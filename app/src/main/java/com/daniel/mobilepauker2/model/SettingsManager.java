@@ -9,7 +9,7 @@ import com.daniel.mobilepauker2.R;
 /**
  * Created by Daniel on 17.03.2018.
  * Masterarbeit:
- * MobilePauker++ - innovativ, plattformübergreifend lernen
+ * MobilePauker++ - Intuitiv, plattformübergreifend lernen
  * Daniel Fritsch
  * hs-augsburg
  */
