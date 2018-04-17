@@ -186,7 +186,6 @@
                 android:textAlignment="center"
                 android:textSize="12sp" />
         </RelativeLayout>
-        <!--android:fontFamily="sans-serif-smallcaps"-->
 
         <TextView
             android:id="@+id/infoText"
@@ -206,15 +205,5 @@
             android:textColor="@color/black"
             android:textSize="15sp" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fbOpenLesson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="16dp"
-            android:onClick="fbClicked"
-            android:src="@drawable/menu_open"
-            tools:ignore="RelativeOverlap" />
     </RelativeLayout>
 </LinearLayout>

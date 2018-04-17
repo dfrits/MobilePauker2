@@ -1,224 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/defaultBackground">
+    android:background="@color/defaultBackground"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="50">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="50">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/labelFrame"
-                android:layout_toStartOf="@+id/chartListView">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:fontFamily="serif"
-                    android:rotation="90"
-                    android:text="@string/bar_chart_title"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/chartListView"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_toEndOf="@+id/labelFrame"
-                android:orientation="horizontal"
-                android:overScrollMode="never"
-                android:scrollbars="none" />
-
-            <LinearLayout
-                android:id="@+id/labelFrame"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="5dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/lAbgelaufen"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="@string/expired"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/lGelernt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="@string/learned"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/lSumme"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="@string/sum"
-                    android:textColor="@color/black"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/leftFrame"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="10dp"
-            android:layout_weight="50">
+            android:layout_height="match_parent"
+            android:layout_above="@+id/labelFrame"
+            android:layout_toStartOf="@+id/chartListView">
 
             <TextView
-                android:id="@+id/infoText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:fontFamily="serif"
+                android:rotation="90"
+                android:text="@string/bar_chart_title"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/chartListView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/labelFrame"
+            android:orientation="horizontal"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:id="@+id/labelFrame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginEnd="5dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/lAbgelaufen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/expired"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/lGelernt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/learned"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/lSumme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/sum"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/leftFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_weight="50">
+
+        <TextView
+            android:id="@+id/infoText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="2dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toEndOf="@+id/bAddNewCardFrame"
+            android:background="@drawable/box_background"
+            android:focusable="true"
+            android:fontFamily="serif"
+            android:hint="@string/info_text_hint"
+            android:longClickable="true"
+            android:paddingBottom="2dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:id="@+id/bAddNewCardFrame"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignBottom="@+id/bLearnNewCardFrame"
+            android:layout_alignTop="@+id/bLearnNewCardFrame"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/bLearnNewCardFrame"
+            android:background="@drawable/button_enabled_background"
+            android:onClick="addNewCard">
+
+            <ImageButton
+                android:id="@+id/bAddNewCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="2dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toEndOf="@+id/bAddNewCardFrame"
-                android:background="@drawable/box_background"
-                android:focusable="true"
-                android:fontFamily="serif"
-                android:hint="@string/info_text_hint"
-                android:longClickable="true"
-                android:paddingBottom="2dp"
-                android:paddingEnd="0dp"
-                android:paddingStart="5dp"
-                android:textColor="@color/black"
-                android:textSize="15sp" />
+                android:layout_above="@+id/tAddNewCardsDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_new_card"
+                android:onClick="addNewCard"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_add_card" />
 
-            <RelativeLayout
-                android:id="@+id/bAddNewCardFrame"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_alignBottom="@+id/bLearnNewCardFrame"
-                android:layout_alignTop="@+id/bLearnNewCardFrame"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@+id/bLearnNewCardFrame"
-                android:background="@drawable/button_enabled_background"
-                android:onClick="addNewCard">
-
-                <ImageButton
-                    android:id="@+id/bAddNewCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/tAddNewCardsDesc"
-                    android:background="?android:selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/add_new_card"
-                    android:onClick="addNewCard"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_add_card" />
-
-                <TextView
-                    android:id="@+id/tAddNewCardsDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:lines="1"
-                    android:text="@string/add"
-                    android:textAlignment="center"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/bLearnNewCardFrame"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_above="@+id/bRepeatExpiredCardsFrame"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/button_enabled_background"
-                android:onClick="learnNewCard">
-
-                <ImageButton
-                    android:id="@+id/bLearnNewCard"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/tLearnNewCardDesc"
-                    android:background="?android:selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/learn_new_card"
-                    android:onClick="learnNewCard"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_learn_new_cards" />
-
-                <TextView
-                    android:id="@+id/tLearnNewCardDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:lines="1"
-                    android:text="@string/learn"
-                    android:textAlignment="center"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/bRepeatExpiredCardsFrame"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
+            <TextView
+                android:id="@+id/tAddNewCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/bLearnNewCardFrame"
-                android:layout_marginBottom="5dp"
-                android:background="@drawable/button_enabled_background"
-                android:onClick="repeatCards">
-
-                <ImageButton
-                    android:id="@+id/bRepeatExpiredCards"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_above="@+id/tRepeatExpiredCardsDesc"
-                    android:background="?android:selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/repeat_expired_cards"
-                    android:onClick="repeatCards"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/button_repeat_cards" />
-
-                <TextView
-                    android:id="@+id/tRepeatExpiredCardsDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:fontFamily="sans-serif-smallcaps"
-                    android:lines="1"
-                    android:text="@string/repeat"
-                    android:textAlignment="center"
-                    android:textSize="12sp" />
-            </RelativeLayout>
-
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/add"
+                android:textAlignment="center"
+                android:textSize="12sp" />
         </RelativeLayout>
-    </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fbOpenLesson"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="16dp"
-        android:onClick="fbClicked"
-        android:src="@drawable/menu_open" />
-</RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bLearnNewCardFrame"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_above="@+id/bRepeatExpiredCardsFrame"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/button_enabled_background"
+            android:onClick="learnNewCard">
+
+            <ImageButton
+                android:id="@+id/bLearnNewCard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/tLearnNewCardDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/learn_new_card"
+                android:onClick="learnNewCard"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_learn_new_cards" />
+
+            <TextView
+                android:id="@+id/tLearnNewCardDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/learn"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bRepeatExpiredCardsFrame"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/bLearnNewCardFrame"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_enabled_background"
+            android:onClick="repeatCards">
+
+            <ImageButton
+                android:id="@+id/bRepeatExpiredCards"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/tRepeatExpiredCardsDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/repeat_expired_cards"
+                android:onClick="repeatCards"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_repeat_cards" />
+
+            <TextView
+                android:id="@+id/tRepeatExpiredCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:fontFamily="sans-serif-smallcaps"
+                android:lines="1"
+                android:text="@string/repeat"
+                android:textAlignment="center"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+    </RelativeLayout>
+</LinearLayout>

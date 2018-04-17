@@ -179,7 +179,6 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
-        FloatingActionButton floatingOpen = findViewById(R.id.fbOpenLesson);
         if (!modelManager.isLessonNew()) {
             menu.setGroupEnabled(R.id.mGroup, true);
         } else {
@@ -189,11 +188,9 @@ public class MainMenu extends AppCompatActivity {
         if (modelManager.getLessonSize() > 0) {
             search.setVisible(true);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-            floatingOpen.setVisibility(View.GONE);
         } else {
             search.setVisible(false);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            floatingOpen.setVisibility(View.VISIBLE);
         }
 
         if (paukerManager.isSaveRequired()) {
@@ -363,14 +360,6 @@ public class MainMenu extends AppCompatActivity {
         } else {
             startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
         }
-    }
-
-    /**
-     * Aktion des Floatingbuttons.
-     * @param ignored Nicht benötigt
-     */
-    public void fbClicked(View ignored) {
-        openLesson();
     }
 
     /**
