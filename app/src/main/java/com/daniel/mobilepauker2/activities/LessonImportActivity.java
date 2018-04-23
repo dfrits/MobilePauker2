@@ -361,6 +361,7 @@ public class LessonImportActivity extends AppCompatActivity {
     public void openLesson(@Nullable MenuItem ignored) {
         String filename = (String) listView.getItemAtPosition(lastSelection);
         try {
+            Toast.makeText(context, R.string.open_lesson_hint, Toast.LENGTH_SHORT).show();
             loadLessonFromFile(getFilePath(filename));
             paukerManager.setSaveRequired(false);
             finish();

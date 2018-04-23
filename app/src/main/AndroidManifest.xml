@@ -80,6 +80,7 @@
         <activity
             android:name=".activities.AddCardActivity"
             android:label="@string/add_new_card"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"  />
     </application>
 </manifest>

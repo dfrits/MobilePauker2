@@ -43,6 +43,7 @@
     <string name="card_added">Card added</string>
     <string name="learncards_show_hint">Try to remember the back of this card!</string>
     <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
+    <string name="open_lesson_hint">Lesson will be opened</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>

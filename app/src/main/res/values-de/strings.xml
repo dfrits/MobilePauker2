@@ -44,6 +44,7 @@
     <string name="learncards_finished_learning">Lernen beendet</string>
     <string name="saving_success">Datei gespeichert</string>
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
+    <string name="open_lesson_hint">Lektion wird geöffnet</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
