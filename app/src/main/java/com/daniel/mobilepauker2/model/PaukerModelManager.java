@@ -1,20 +1,20 @@
-/* 
+/*
  * Copyright 2011 Brian Ford
- * 
+ *
  * This file is part of Pocket Pauker.
- * 
- * Pocket Pauker is free software: you can redistribute it and/or modify it under the 
- * terms of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Pocket Pauker is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * 
- * Pocket Pauker is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *
+ * Pocket Pauker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * See http://www.gnu.org/licenses/.
 
-*/
+ */
 
 package com.daniel.mobilepauker2.model;
 
@@ -54,6 +54,7 @@ import java.util.zip.GZIPOutputStream;
 
 import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.ENABLE_EXPIRE_TOAST;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.LEARN_NEW_CARDS_RANDOMLY;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTTEN_CARDS;
 
@@ -289,7 +290,7 @@ public class PaukerModelManager {
      * Removes the card from its current batch and moves it to the
      * un-learned batch. Use this to forget cards.
      * @param position .
-     * @param context .
+     * @param context  .
      */
     void pullCurrentCard(int position, Context context) {
         if (position < 0 || position >= mCurrentPack.size()) {
@@ -497,12 +498,15 @@ public class PaukerModelManager {
     }
 
     /**
-     * Zeigt einen Toast mit dem nächsten Ablaufdatum an.
+     * Zeigt einen Toast mit dem nächsten Ablaufdatum an, wenn es in den Einstellungen aktiviert ist.
      * @param context Kontext der aufrufenden Activity
      */
     public void showExpireToast(Context context) {
+        if (!settingsManager.getBoolPreference(context, ENABLE_EXPIRE_TOAST))
+            return;
+
         File filePath = getFilePath();
-        URI uri =filePath.toURI();
+        URI uri = filePath.toURI();
         FlashCardXMLPullFeedParser parser = null;
         try {
             parser = new FlashCardXMLPullFeedParser(uri.toURL());

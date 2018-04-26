@@ -110,6 +110,12 @@
             android:key="@string/auto_sync"
             android:summary="@string/auto_sync_disabled_summ"
             android:title="@string/auto_sync_title" />
+        // Toast fürs Ablaufdatum
+        <SwitchPreference
+            android:defaultValue="@bool/expire_toast_default"
+            android:key="@string/expire_toast"
+            android:summary="@string/expire_toast_summ"
+            android:title="@string/expire_toast_title" />
         // Button zum verknüpfen des Acc
         <Preference
             android:key="@string/associate_dropbox"

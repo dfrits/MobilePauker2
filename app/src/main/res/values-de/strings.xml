@@ -107,6 +107,7 @@
     <string name="learn_new_cards_randomly_title">Neue Karten zufällig lernen</string>
     <string name="auto_sync_title">Automatische Synchronisation</string>
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
+    <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
 
     <!-- Beschreibungen -->
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
@@ -122,9 +123,12 @@
     <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>
     <string name="auto_sync_enabled_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
+    <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem Speichern an</string>
 
     <!-- Settings Ende -->
 
     <!-- Neue Strings -->
     <string name="New">Neu</string>
+    <string name="stm_title">KZG</string>
+    <string name="ustm_title">UKZG</string>
 </resources>

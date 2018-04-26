@@ -7,4 +7,5 @@
     <bool name="case_sensitive_default">true</bool>
     <bool name="auto_save_default">false</bool>
     <bool name="auto_sync_default">false</bool>
+    <bool name="expire_toast_default">true</bool>
 </resources>

@@ -106,6 +106,7 @@
     <string name="about" translatable="false">About MobilePauker++</string>
     <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
     <string name="auto_sync" translatable="false">Auto Synchronisation</string>
+    <string name="expire_toast" translatable="false">Enable Expire Toast</string>
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
     <string name="stm_key" translatable="false">STM</string>
     <string name="ustm_key" translatable="false">USTM</string>
@@ -123,6 +124,7 @@
     <string name="about_title">About MobilePauker++</string>
     <string name="learn_new_cards_randomly_title">Learn new cards randomly</string>
     <string name="auto_sync_title">Auto Synchronisation</string>
+    <string name="expire_toast_title">Show Expire Toast</string>
     <string name="associate_dropbox_title">Associate with Dropbox</string>
     <string name="stm_title">STM</string>
     <string name="ustm_title">USTM</string>
@@ -141,6 +143,7 @@
     <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
     <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
+    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the lesson</string>
 
     <!-- Defaultwerte -->
     <string name="repeat_cards_default" translatable="false">0</string>
