@@ -120,7 +120,7 @@
     <string name="stm_summ">Kurzzeit-Gedächtnis: %smin</string>
     <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
     <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>
-    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal, wenn die App geöffnet wird</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
 
     <!-- Settings Ende -->

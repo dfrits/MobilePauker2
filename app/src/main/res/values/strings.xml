@@ -139,7 +139,7 @@
     <string name="stm_summ">Short Term Memory: %smin</string>
     <string name="repeat_cards_summ">The order how to repeat expired cards (%s)</string>
     <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
-    <string name="auto_sync_enabled_summ">Synchronize every time the app opens</string>
+    <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
 
     <!-- Defaultwerte -->
