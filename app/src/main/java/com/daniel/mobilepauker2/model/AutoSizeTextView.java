@@ -28,11 +28,11 @@ import android.support.v7.widget.AppCompatTextView;
 public class AutoSizeTextView extends AppCompatTextView {
 
     // Minimum text size for this text view
-    public static final float MIN_TEXT_SIZE = 20;
+    public static final float MIN_TEXT_SIZE = 18;
 
     // Interface for resize notifications
     public interface OnTextResizeListener {
-        public void onTextResize(AppCompatTextView textView, float oldSize, float newSize);
+        void onTextResize(AppCompatTextView textView, float oldSize, float newSize);
     }
 
     // Our ellipse string
