@@ -514,7 +514,7 @@ public class PaukerModelManager {
                 String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
                 String text = context.getString(R.string.next_expire_date);
                 text = text.concat(" ").concat(date);
-                Toast.makeText(context, text, Toast.LENGTH_LONG + Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, text, Toast.LENGTH_LONG * 2).show();
             }
         } catch (MalformedURLException | EOFException ignored) {}
     }
