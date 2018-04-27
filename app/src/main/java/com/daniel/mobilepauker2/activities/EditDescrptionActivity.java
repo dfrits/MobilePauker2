@@ -7,7 +7,7 @@ import android.widget.EditText;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 
 /**
  * Created by Daniel on 06.03.2018.
@@ -19,7 +19,7 @@ import com.daniel.mobilepauker2.model.PaukerModelManager;
 
 public class EditDescrptionActivity extends AppCompatActivity {
     private EditText editText;
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

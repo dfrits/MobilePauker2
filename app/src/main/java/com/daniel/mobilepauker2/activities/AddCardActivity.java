@@ -7,20 +7,16 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 
 /**
@@ -103,7 +99,7 @@ public class AddCardActivity extends AppCompatActivity {
         String sideBText = sideBEditText.getText().toString();
 
         if (!sideAText.isEmpty() && !sideBText.isEmpty()) {
-            PaukerModelManager.instance().addCard(sideAText, sideBText, "-1", "-1", "false");
+            ModelManager.instance().addCard(sideAText, sideBText, "-1", "-1", "false");
             Toast.makeText(context, R.string.card_added, Toast.LENGTH_SHORT).show();
 
             sideAEditText.setText("");

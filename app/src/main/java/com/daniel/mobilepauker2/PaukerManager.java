@@ -22,7 +22,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
@@ -61,7 +61,7 @@ public class PaukerManager {
     }
 
     public void killLesson() {
-        PaukerModelManager.instance().clearLesson();
+        ModelManager.instance().clearLesson();
         mFileAbsolutePath = null;
         mFileDropboxPath = null;
         mCurrentFileName = null;
@@ -114,7 +114,7 @@ public class PaukerManager {
             File file = new File(filePath);
             setCurrentFileName(file.getName());
             setFileAbsolutePath(file.getAbsolutePath());
-            PaukerModelManager.instance().createNewLesson(filename);
+            ModelManager.instance().createNewLesson(filename);
             return true;
         } else {
             return false;

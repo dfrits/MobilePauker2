@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.FlashCard;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
@@ -46,7 +46,7 @@ public class EditCardActivity extends AppCompatActivity {
         if (cardPosition < 0) {
             Log.w("EditCardsActivity::OnCreate", "Card Position null " + cardPosition);
         } else {
-            flashCard = PaukerModelManager.instance().getCard(cardPosition);
+            flashCard = ModelManager.instance().getCard(cardPosition);
         }
 
         if (flashCard == null) {
@@ -103,7 +103,7 @@ public class EditCardActivity extends AppCompatActivity {
             return;
         }
         if (cardPosition >= 0) {
-            PaukerModelManager.instance().editCard(
+            ModelManager.instance().editCard(
                     cardPosition,
                     sideAEditText.getText().toString(),
                     sideBEditText.getText().toString());

@@ -12,7 +12,6 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -23,9 +22,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateFormat;
 import android.text.method.ScrollingMovementMethod;
-import android.util.SparseLongArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,24 +36,18 @@ import android.widget.Toast;
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
-import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.statistics.ChartAdapter;
 import com.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.EOFException;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Calendar;
-import java.util.Locale;
 
-import static com.daniel.mobilepauker2.model.PaukerModelManager.LearningPhase.FILLING_USTM;
-import static com.daniel.mobilepauker2.model.PaukerModelManager.LearningPhase.SIMPLE_LEARNING;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 
@@ -69,7 +60,7 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 
 public class MainMenu extends AppCompatActivity {
     private static final int RQ_WRITE_EXT = 99;
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final SettingsManager settingsManager = SettingsManager.instance();
     private final Context context = this;
@@ -304,7 +295,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void repeatCards(View view) {
-        modelManager.setLearningPhase(context, PaukerModelManager.LearningPhase.REPEATING_LTM);
+        modelManager.setLearningPhase(context, ModelManager.LearningPhase.REPEATING_LTM);
         Intent importActivity = new Intent(context, LearnCardsActivity.class);
         startActivity(importActivity);
     }

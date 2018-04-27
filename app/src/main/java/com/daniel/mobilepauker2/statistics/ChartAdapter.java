@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.statistics.ChartBar.ChartBarCallback;
 
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  */
 
 public class ChartAdapter extends RecyclerView.Adapter<ChartAdapter.ViewHolder> {
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
 
     private final List<BatchStatistics> batchStatistics;
     private final ChartAdapterCallback callback;

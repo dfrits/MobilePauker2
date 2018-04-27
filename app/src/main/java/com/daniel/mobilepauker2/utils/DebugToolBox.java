@@ -18,15 +18,15 @@
 
 package com.daniel.mobilepauker2.utils;
 
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.statistics.BatchStatistics;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
 
 import java.util.List;
 
 public class DebugToolBox {
 
     public static void printStatsToDebug(List<BatchStatistics> batchStatistics) {
-        final PaukerModelManager modelManager = PaukerModelManager.instance();
+        final ModelManager modelManager = ModelManager.instance();
         Log.d("LessonStatsActivity::onCreate", "Lesson Size   = " + modelManager.getLessonSize());
         Log.d("LessonStatsActivity::onCreate", "Expired Cards = " + modelManager.getExpiredCardsSize());
         Log.d("LessonStatsActivity::onCreate", "New Cards     = " + modelManager.getUnlearnedBatchSize());

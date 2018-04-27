@@ -16,7 +16,7 @@ import android.widget.SearchView;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.CardAdapter;
 import com.daniel.mobilepauker2.model.FlashCard;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
@@ -34,7 +34,7 @@ import java.util.Vector;
 
 public class SearchActivity extends AppCompatActivity {
     private final Context context = this;
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
 
     private ListView listView;
     Vector<Integer> itemPosition;

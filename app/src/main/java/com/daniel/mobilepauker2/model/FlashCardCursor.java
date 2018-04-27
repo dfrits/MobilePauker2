@@ -24,10 +24,8 @@ import android.database.CursorIndexOutOfBoundsException;
 
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.Serializable;
-
 public class FlashCardCursor extends AbstractCursor {
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
 
     static final String[] columnNames = new String[]{
             CardPackAdapter.KEY_ROWID,

@@ -34,7 +34,7 @@ public class SaveLessonThreaded extends Thread {
 
     public void run() {
         Log.d("SaveLessonThreaded::run", "entry");
-        PaukerModelManager.instance().saveLesson();
+        ModelManager.instance().saveLesson();
         Log.d("SaveLessonThreaded::run", "After save lesson");
         sendMessage();
     }

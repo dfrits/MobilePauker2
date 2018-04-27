@@ -70,8 +70,8 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTT
  * * moving cards between lesson batches
  */
 
-public class PaukerModelManager {
-    private static PaukerModelManager instance;
+public class ModelManager {
+    private static ModelManager instance;
     private static final PaukerManager paukerManager = PaukerManager.instance();
 
     private final List<FlashCard> mCurrentPack = new ArrayList<>();
@@ -80,13 +80,13 @@ public class PaukerModelManager {
     private FlashCard mCurrentCard = new FlashCard();
     private LearningPhase mLearningPhase = LearningPhase.NOTHING;
 
-    private PaukerModelManager() {
+    private ModelManager() {
 
     }
 
-    public static PaukerModelManager instance() {
+    public static ModelManager instance() {
         if (instance == null) {
-            instance = new PaukerModelManager();
+            instance = new ModelManager();
         }
         return instance;
     }
@@ -466,9 +466,9 @@ public class PaukerModelManager {
         if (!isLessonNew()) {
             File newxmlfile = getFilePath();
 
-            Log.d("PaukerModelManager::saveLesson", "Filename = " + paukerManager.getCurrentFileName());
-            Log.d("PaukerModelManager::saveLesson", "Directory= " + paukerManager.getFileAbsolutePath());
-            Log.d("PaukerModelManager::saveLesson", "Directory= " + newxmlfile.getAbsolutePath());
+            Log.d("ModelManager::saveLesson", "Filename = " + paukerManager.getCurrentFileName());
+            Log.d("ModelManager::saveLesson", "Directory= " + paukerManager.getFileAbsolutePath());
+            Log.d("ModelManager::saveLesson", "Directory= " + newxmlfile.getAbsolutePath());
 
             GZIPOutputStream gzipOutputStream;
             try {
@@ -480,10 +480,10 @@ public class PaukerModelManager {
                 FlashCardXMLStreamWriter.writeXML(mLesson, gzipOutputStream);
                 gzipOutputStream.close();
             } catch (FileNotFoundException e) {
-                Log.e("PaukerModelManager::saveLesson", "can't create FileOutputStream");
+                Log.e("ModelManager::saveLesson", "can't create FileOutputStream");
                 throw new RuntimeException(e);
             } catch (IOException e) {
-                Log.e("PaukerModelManager::saveLesson", "exception in saveLesson() method");
+                Log.e("ModelManager::saveLesson", "exception in saveLesson() method");
                 throw new RuntimeException(e);
             }
         }

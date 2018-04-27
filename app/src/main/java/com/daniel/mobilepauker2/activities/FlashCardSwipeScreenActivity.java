@@ -32,7 +32,7 @@ import com.daniel.mobilepauker2.model.CardPackRamAdapter;
 import com.daniel.mobilepauker2.model.CursorLoader;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.FlashCardCursor;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.utils.Log;
 
@@ -43,7 +43,7 @@ import static com.daniel.mobilepauker2.utils.Constants.SWIPE_THRESHOLD_VELOCITY;
 public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     protected final SettingsManager settingsManager = SettingsManager.instance();
-    protected final PaukerModelManager modelManager = PaukerModelManager.instance();
+    protected final ModelManager modelManager = ModelManager.instance();
     protected final String INSTANCESTATE_START_TIME = "INSTANCESTATE_START_TIME";
     protected final String INSTANCESTATE_STM_START_TIME = "INSTANCESTATE_STM_START_TIME";
     protected final String INSTANCESTATE_USTM_START_TIME = "INSTANCESTATE_USTM_START_TIME";

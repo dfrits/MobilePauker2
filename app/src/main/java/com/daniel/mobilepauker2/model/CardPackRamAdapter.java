@@ -21,15 +21,11 @@ package com.daniel.mobilepauker2.model;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
-import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.Serializable;
-
 public class CardPackRamAdapter extends CardPackAdapter {
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
     private final FlashCardCursor cardCursor;
 
     public CardPackRamAdapter(Context context) {

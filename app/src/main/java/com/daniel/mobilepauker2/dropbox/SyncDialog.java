@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.model.PaukerModelManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.DbxException;
@@ -46,7 +46,7 @@ public class SyncDialog extends Activity {
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String FILES = "FILES";
     private final Context context = this;
-    private final PaukerModelManager modelManager = PaukerModelManager.instance();
+    private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
     private String accessToken;
     private File[] files;
