@@ -168,7 +168,7 @@ public class SyncDialog extends Activity {
 
         new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
-            public void onUploadComplete(List<Metadata> result) {
+            public void onDeleteComplete(List<Metadata> result) {
                 syncWithFiles(validatedFiles, lokalDeletedFiles);
             }
 

@@ -27,7 +27,7 @@ public class DeleteFileTask extends AsyncTask<File, Void, List<Metadata>> {
     private Exception mException;
 
     public interface Callback {
-        void onUploadComplete(List<Metadata> result);
+        void onDeleteComplete(List<Metadata> result);
         void onError(Exception e);
     }
 
@@ -44,7 +44,7 @@ public class DeleteFileTask extends AsyncTask<File, Void, List<Metadata>> {
         } else if (result == null) {
             mCallback.onError(null);
         } else {
-            mCallback.onUploadComplete(result);
+            mCallback.onDeleteComplete(result);
         }
     }
 
