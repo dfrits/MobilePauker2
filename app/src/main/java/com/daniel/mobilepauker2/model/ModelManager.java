@@ -461,36 +461,8 @@ public class ModelManager {
         }
     }
 
-    //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
-    public void saveLesson() {
-        if (!isLessonNew()) {
-            File newxmlfile = getFilePath();
-
-            Log.d("ModelManager::saveLesson", "Filename = " + paukerManager.getCurrentFileName());
-            Log.d("ModelManager::saveLesson", "Directory= " + paukerManager.getFileAbsolutePath());
-            Log.d("ModelManager::saveLesson", "Directory= " + newxmlfile.getAbsolutePath());
-
-            GZIPOutputStream gzipOutputStream;
-            try {
-                if (!newxmlfile.exists() && !newxmlfile.createNewFile()) {
-                    return;
-                }
-                FileOutputStream fos = new FileOutputStream(newxmlfile);
-                gzipOutputStream = new GZIPOutputStream(fos);
-                FlashCardXMLStreamWriter.writeXML(mLesson, gzipOutputStream);
-                gzipOutputStream.close();
-            } catch (FileNotFoundException e) {
-                Log.e("ModelManager::saveLesson", "can't create FileOutputStream");
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                Log.e("ModelManager::saveLesson", "exception in saveLesson() method");
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
     @NonNull
-    private File getFilePath() {
+    public File getFilePath() {
         String filePath = Environment.getExternalStorageDirectory()
                 + paukerManager.getApplicationDataDirectory()
                 + paukerManager.getCurrentFileName();
@@ -670,6 +642,10 @@ public class ModelManager {
 
     public List<FlashCard> getCurrentPack() {
         return mCurrentPack;
+    }
+
+    public Lesson getLesson() {
+        return mLesson;
     }
 
     /*

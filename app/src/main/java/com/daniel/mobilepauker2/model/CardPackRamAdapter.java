@@ -30,7 +30,7 @@ public class CardPackRamAdapter extends CardPackAdapter {
 
     public CardPackRamAdapter(Context context) {
         super(context);
-        cardCursor = new FlashCardCursor(mContext);
+        cardCursor = new FlashCardCursor();
     }
 
     @Override

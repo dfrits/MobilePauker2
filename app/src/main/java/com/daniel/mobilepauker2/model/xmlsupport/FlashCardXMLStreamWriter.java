@@ -2,6 +2,8 @@ package com.daniel.mobilepauker2.model.xmlsupport;
 
 import android.util.Xml;
 
+import com.daniel.mobilepauker2.PaukerManager;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Batch;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
@@ -10,10 +12,53 @@ import com.daniel.mobilepauker2.utils.Log;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
 public class FlashCardXMLStreamWriter {
-    //TODO If this function goes wrong we lose the file - is there a safe way to do this?
+
+    //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
+    public static void saveLesson() {
+        final ModelManager modelManager = ModelManager.instance();
+        final PaukerManager paukerManager = PaukerManager.instance();
+        if (!modelManager.isLessonNew()) {
+            // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
+            String name = "neu_" + modelManager.getFilePath().getName();
+            String path = modelManager.getFilePath().getParent();
+            File newxmlfile = new File(path, name);
+
+            Log.d("ModelManager::saveLesson", "Filename = " + paukerManager.getCurrentFileName());
+            Log.d("ModelManager::saveLesson", "Directory= " + paukerManager.getFileAbsolutePath());
+            Log.d("ModelManager::saveLesson", "Directory= " + newxmlfile.getAbsolutePath());
+
+            GZIPOutputStream gzipOutputStream;
+            try {
+                if (!newxmlfile.exists() && !newxmlfile.createNewFile()) {
+                    return;
+                }
+
+                FileOutputStream fos = new FileOutputStream(newxmlfile);
+                gzipOutputStream = new GZIPOutputStream(fos);
+                if (FlashCardXMLStreamWriter.writeXML(modelManager.getLesson(), gzipOutputStream)) {
+                    newxmlfile.renameTo(modelManager.getFilePath());
+                }
+                newxmlfile.delete();
+
+                gzipOutputStream.close();
+            } catch (FileNotFoundException e) {
+                Log.e("ModelManager::saveLesson", "can't create FileOutputStream");
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                Log.e("ModelManager::saveLesson", "exception in saveLesson() method");
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
     public static boolean writeXML(Lesson lesson, OutputStream outputStream) {
 
         XmlSerializer serializer = Xml.newSerializer();
@@ -75,11 +120,10 @@ public class FlashCardXMLStreamWriter {
             serializer.flush();
             outputStream.close();
 
-            return false;
-            //return writer.toString();
+            return true;
         } catch (Exception e) {
             Log.e("FlashCardXMLStreamWriter::writeXML", "Exception caught");
-            throw new RuntimeException(e);
+            return false;
         }
     }
 

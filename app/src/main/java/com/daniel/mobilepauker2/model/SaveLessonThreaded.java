@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
+import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLStreamWriter;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
@@ -34,7 +35,7 @@ public class SaveLessonThreaded extends Thread {
 
     public void run() {
         Log.d("SaveLessonThreaded::run", "entry");
-        ModelManager.instance().saveLesson();
+        FlashCardXMLStreamWriter.saveLesson();
         Log.d("SaveLessonThreaded::run", "After save lesson");
         sendMessage();
     }

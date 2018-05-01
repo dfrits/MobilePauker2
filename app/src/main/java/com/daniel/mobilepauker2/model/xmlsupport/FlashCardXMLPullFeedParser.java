@@ -28,7 +28,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
         super(feedUrl);
     }
 
-    public Lesson parse() throws EOFException {
+    public Lesson parse() {
 
         List<FlashCard> flashCards = null;
         XmlPullParser parser = Xml.newPullParser();

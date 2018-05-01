@@ -18,7 +18,6 @@
 
 package com.daniel.mobilepauker2.model;
 
-import android.content.Context;
 import android.database.AbstractCursor;
 import android.database.CursorIndexOutOfBoundsException;
 
@@ -37,7 +36,7 @@ public class FlashCardCursor extends AbstractCursor {
 
     private final int columnCount;
 
-    public FlashCardCursor(Context context) {
+    public FlashCardCursor() {
         this.columnCount = columnNames.length;
     }
 
