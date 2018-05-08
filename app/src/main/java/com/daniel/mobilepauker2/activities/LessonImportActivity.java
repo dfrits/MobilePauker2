@@ -63,7 +63,6 @@ public class LessonImportActivity extends AppCompatActivity {
     private ListView listView;
     private SharedPreferences preferences;
     private File[] files = new File[0];
-    private RelativeLayout progressBar;
 
     /**
      * Speichert die letzte Selektion in der Liste.
@@ -77,7 +76,7 @@ public class LessonImportActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         setContentView(R.layout.open_lesson);
-        progressBar = findViewById(R.id.pFrame);
+        RelativeLayout progressBar = findViewById(R.id.pFrame);
         init();
     }
 
@@ -212,16 +211,12 @@ public class LessonImportActivity extends AppCompatActivity {
     }
 
     private void loadLessonFromFile(File file) throws IOException {
-        try {
-            URI uri = file.toURI();
-            FlashCardXMLPullFeedParser xmlFlashCardFeedParser = new FlashCardXMLPullFeedParser(uri.toURL());
-            Lesson lesson = xmlFlashCardFeedParser.parse();
-            paukerManager.setCurrentFileName(file.getName());
-            paukerManager.setFileAbsolutePath(file.getAbsolutePath());
-            modelManager.setLesson(lesson);
-        } catch (EOFException e) {
-            paukerManager.killLesson();
-        }
+        URI uri = file.toURI();
+        FlashCardXMLPullFeedParser xmlFlashCardFeedParser = new FlashCardXMLPullFeedParser(uri.toURL());
+        Lesson lesson = xmlFlashCardFeedParser.parse();
+        paukerManager.setCurrentFileName(file.getName());
+        paukerManager.setFileAbsolutePath(file.getAbsolutePath());
+        modelManager.setLesson(lesson);
     }
 
     @Override
