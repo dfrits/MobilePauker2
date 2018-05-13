@@ -27,6 +27,7 @@ import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.io.File;
+import java.io.FileFilter;
 
 public class PaukerManager {
 
@@ -213,7 +214,7 @@ public class PaukerManager {
         return true;
     }
 
-    public File[] listFiles(Context context) throws SecurityException {
+    public File[] listFiles(final Context context) throws SecurityException {
         File appDirectory = new File(Environment.getExternalStorageDirectory() + getApplicationDataDirectory());
         File[] files;
 
@@ -222,7 +223,12 @@ public class PaukerManager {
         }
 
         if (appDirectory.exists() && appDirectory.isDirectory()) {
-            files = appDirectory.listFiles();
+            files = appDirectory.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File file) {
+                    return validateFilename(context, file.getName());
+                }
+            });
         } else {
             Toast.makeText(context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG).show();
             return null;

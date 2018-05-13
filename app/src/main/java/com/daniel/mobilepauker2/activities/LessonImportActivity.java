@@ -40,7 +40,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Locale;
 
 /**
@@ -174,7 +177,18 @@ public class LessonImportActivity extends AppCompatActivity {
      */
     private boolean readFlashCardFiles() {
         try {
+            // Dateien auslesen
             files = paukerManager.listFiles(context);
+
+            // Sortieren
+            Arrays.sort(files, new Comparator<File>() {
+                @Override
+                public int compare(File o1, File o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+            // Liste füllen und Endungen abschneiden
             fileNames.clear();
 
             if (fileNames == null || files.length == 0) {
@@ -183,7 +197,7 @@ public class LessonImportActivity extends AppCompatActivity {
 
             for (File aFile : files) {
                 String fileName = aFile.getName();
-                fileNames.add(fileName);
+                fileNames.add(fileName.substring(0, fileName.indexOf(".pau.gz")));
             }
 
             return true;
