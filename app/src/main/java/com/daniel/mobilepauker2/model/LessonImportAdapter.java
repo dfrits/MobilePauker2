@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -19,9 +20,11 @@ import java.util.ArrayList;
  */
 
 public class LessonImportAdapter extends ArrayAdapter<String> {
+    private final ArrayList<String> data;
 
     public LessonImportAdapter(@NonNull Context context, ArrayList<String> data) {
         super(context, android.R.layout.simple_list_item_1, data);
+        this.data = data;
     }
 
     @NonNull
@@ -33,6 +36,11 @@ public class LessonImportAdapter extends ArrayAdapter<String> {
         } else {
             view.setBackgroundColor(Color.TRANSPARENT);
         }
+
+        TextView tv = view.findViewById(android.R.id.text1);
+        String name = data.get(position);
+        tv.setText(name.substring(0, name.indexOf(".pau.gz")));
+
         return view;
     }
 }

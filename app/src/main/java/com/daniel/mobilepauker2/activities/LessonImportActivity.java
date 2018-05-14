@@ -196,8 +196,7 @@ public class LessonImportActivity extends AppCompatActivity {
             }
 
             for (File aFile : files) {
-                String fileName = aFile.getName();
-                fileNames.add(fileName.substring(0, fileName.indexOf(".pau.gz")));
+                fileNames.add(aFile.getName());
             }
 
             return true;
