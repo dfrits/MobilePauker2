@@ -140,7 +140,10 @@ public class LessonImportActivity extends AppCompatActivity {
                 } else {
                     text = text.concat(" ").concat(getString(R.string.nothing_learned_yet));
                 }
-            } catch (IOException ignored) {
+            } catch (IOException | RuntimeException ignored) {
+                Toast.makeText(context, R.string.error_reading_from_xml, Toast.LENGTH_SHORT).show();
+                resetSelection(null);
+                init();
                 text = null;
             }
             if (text != null) {
