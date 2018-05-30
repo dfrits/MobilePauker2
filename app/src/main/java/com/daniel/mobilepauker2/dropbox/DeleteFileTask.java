@@ -57,6 +57,7 @@ public class DeleteFileTask extends AsyncTask<File, Void, List<Metadata>> {
             if (localFile != null) {
 
                 String remoteFileName = localFile.getName();
+                remoteFileName = remoteFileName.substring(0, remoteFileName.indexOf(";*;"));
 
                 try {
                     data.add(mDbxClient.files().delete(remoteFolderPath + "/" + remoteFileName));
