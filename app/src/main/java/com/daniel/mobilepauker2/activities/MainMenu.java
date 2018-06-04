@@ -368,7 +368,7 @@ public class MainMenu extends AppCompatActivity {
      * Fragt, wenn notwendig, die Permission ab und zeigt davor einen passenden Infodialog an.
      */
     private void openLesson() {
-        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.app_name)
                 .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
@@ -380,6 +380,7 @@ public class MainMenu extends AppCompatActivity {
                 .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        pref.edit().putBoolean("FirstTime", false).apply();
                         requestPermission();
                         dialog.dismiss();
                     }
@@ -391,7 +392,6 @@ public class MainMenu extends AppCompatActivity {
             } else {
                 if (pref.getBoolean("FirstTime", true)) {
                     builder.setMessage(R.string.write_permission_info_message);
-                    pref.edit().putBoolean("FirstTime", false).apply();
                 } else {
                     builder.setMessage(R.string.write_permission_rational_message)
                             .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
