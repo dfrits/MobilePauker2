@@ -105,10 +105,9 @@ public class PaukerManager {
      * <p>
      * Note the lesson is not created until it is saved
      * Note this method appends .pau.gz to the application filename.
-     * @param filename Name of the file
      */
-    public boolean setupNewApplicationLesson(String filename) {
-        String _filename = filename + ".pau.gz";
+    public void setupNewApplicationLesson() {
+        /*String _filename = filename + ".pau.gz";
         if (setCurrentFileName(_filename)) {
             mApplicationDataDirectory = Constants.DEFAULT_APP_FILE_DIRECTORY;
             String filePath = Environment.getExternalStorageDirectory() + getApplicationDataDirectory() + _filename;
@@ -119,7 +118,9 @@ public class PaukerManager {
             return true;
         } else {
             return false;
-        }
+        }*/
+        mCurrentFileName = Constants.DEFAULT_FILE_NAME;
+        ModelManager.instance().createNewLesson();
     }
 
 

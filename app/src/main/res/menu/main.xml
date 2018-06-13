@@ -27,29 +27,30 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 
-    <item
-        android:onClick="mEditInfoTextClicked"
-        android:orderInCategory="40"
-        android:title="@string/edit_info_text" />
-
-    <!-- TODO Implementieren -->
-    <item
-        android:onClick="mResetLessonClicked"
-        android:orderInCategory="50"
-        android:title="@string/reset_cards"
-        android:visible="false"/>
-
-    <item
-        android:onClick="mSettingsClicked"
-        android:orderInCategory="60"
-        android:title="@string/settings" />
-
     <!-- TODO Implementieren -->
     <!-- TODO Main anpassen -->
     <group android:id="@+id/mGroup">
         <item
             android:onClick="mNewLessonClicked"
+            android:orderInCategory="40"
             android:title="@string/new_lesson"
+            app:showAsAction="never" />
+
+        <!-- TODO Implementieren -->
+        <item
+            android:onClick="mResetLessonClicked"
+            android:orderInCategory="50"
+            android:title="@string/reset_cards"
             android:visible="false" />
     </group>
+
+    <item
+        android:onClick="mEditInfoTextClicked"
+        android:orderInCategory="60"
+        android:title="@string/edit_info_text" />
+
+    <item
+        android:onClick="mSettingsClicked"
+        android:orderInCategory="70"
+        android:title="@string/settings" />
 </menu>

@@ -157,4 +157,5 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
+    <string name="new_lession_created">New Lesson created</string>
 </resources>

@@ -31,14 +31,12 @@ import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
-import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLStreamWriter;
 import com.daniel.mobilepauker2.statistics.BatchStatistics;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.io.EOFException;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -50,7 +48,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
-import java.util.zip.GZIPOutputStream;
 
 import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
@@ -535,7 +532,7 @@ public class ModelManager {
     }
 
     public boolean isLessonNew() {
-        return paukerManager.getCurrentFileName().equals(Constants.DEFAULT_FILE_NAME);
+        return !paukerManager.getCurrentFileName().equals(Constants.DEFAULT_FILE_NAME);
     }
 
     public boolean isLessonSetup() {
@@ -550,7 +547,7 @@ public class ModelManager {
         mLesson = null;
     }
 
-    public void createNewLesson(String lessonName) {
+    public void createNewLesson() {
         Log.d("AndyPaukerApplication::setupNewLesson", "Entry");
         Lesson newLesson = new Lesson();
         setLesson(newLesson);

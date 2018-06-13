@@ -75,7 +75,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.main_menu);
 
         if (!modelManager.isLessonSetup()) {
-            modelManager.createNewLesson(Constants.DEFAULT_FILE_NAME);
+            modelManager.createNewLesson();
         }
 
         initButtons();
@@ -114,9 +114,11 @@ public class MainMenu extends AppCompatActivity {
             descriptionView.setMovementMethod(new ScrollingMovementMethod());
         }
 
-        if (!modelManager.isLessonNew()) {
-            setTitle(paukerManager.getReadableFileName());
+        String title = getString(R.string.app_name);
+        if (modelManager.isLessonNew()) {
+            title = paukerManager.getReadableFileName();
         }
+        setTitle(title);
     }
 
     private void initChartList() {
@@ -174,7 +176,7 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
-        if (!modelManager.isLessonNew()) {
+        if (modelManager.isLessonNew()) {
             menu.setGroupEnabled(R.id.mGroup, true);
         } else {
             menu.setGroupEnabled(R.id.mGroup, false);
@@ -448,7 +450,12 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mNewLessonClicked(MenuItem item) {
-        Toast.makeText(context, "New Lesson created", Toast.LENGTH_SHORT).show();
+        paukerManager.setupNewApplicationLesson();
+        paukerManager.setSaveRequired(false);
+        initButtons();
+        initChartList();
+        initView();
+        Toast.makeText(context, R.string.new_lession_created, Toast.LENGTH_SHORT).show();
     }
 
     public void mEditInfoTextClicked(@Nullable MenuItem ignored) {

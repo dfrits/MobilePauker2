@@ -45,6 +45,7 @@
     <string name="saving_success">Datei gespeichert</string>
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
     <string name="open_lesson_hint">Lektion wird geöffnet</string>
+    <string name="new_lession_created">Neue Lektion erstellt</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
@@ -108,6 +109,8 @@
     <string name="auto_sync_title">Automatische Synchronisation</string>
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
+    <string name="stm_title">KZG</string>
+    <string name="ustm_title">UKZG</string>
 
     <!-- Beschreibungen -->
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
@@ -129,6 +132,4 @@
 
     <!-- Neue Strings -->
     <string name="New">Neu</string>
-    <string name="stm_title">KZG</string>
-    <string name="ustm_title">UKZG</string>
 </resources>
