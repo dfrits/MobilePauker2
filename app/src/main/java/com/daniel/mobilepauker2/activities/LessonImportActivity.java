@@ -35,14 +35,12 @@ import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.android.Auth;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -249,6 +247,9 @@ public class LessonImportActivity extends AppCompatActivity {
 
     @Override
     public boolean onContextItemSelected(final MenuItem item) {
+        final AdapterView.AdapterContextMenuInfo menuInfo =
+                (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        final int position = menuInfo.position;
         switch (item.getItemId()) {
             case CONTEXT_DELETE:
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -257,11 +258,9 @@ public class LessonImportActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                AdapterView.AdapterContextMenuInfo menuInfo =
-                                        (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
                                 Log.d("Import flash card file activity",
-                                        "list pos:" + menuInfo.position + " id:" + menuInfo.id);
-                                String filename = listView.getItemAtPosition(menuInfo.position).toString();
+                                        "list pos:" + position + " id:" + menuInfo.id);
+                                String filename = listView.getItemAtPosition(position).toString();
                                 String filePath = Environment.getExternalStorageDirectory() +
                                         paukerManager.getApplicationDataDirectory() + filename;
                                 File file = new File(filePath);
@@ -285,7 +284,7 @@ public class LessonImportActivity extends AppCompatActivity {
                 builder.create().show();
                 break;
             case CONTEXT_OPEN:
-                openLesson(null);
+                openLesson(position);
                 break;
             default:
                 return super.onContextItemSelected(item);
@@ -350,7 +349,7 @@ public class LessonImportActivity extends AppCompatActivity {
      * Bei Erststart wird Authentifizierung gestartet. Vorher findet keine automatische
      * Syncronisation statt.
      */
-    public void syncManually(MenuItem item) {
+    public void syncManuallyClicked(MenuItem item) {
         if (accessToken == null) {
             Auth.startOAuth2Authentication(this, Constants.DROPBOX_APP_KEY);
         } else {
@@ -369,8 +368,12 @@ public class LessonImportActivity extends AppCompatActivity {
      * Öffnet eine Lektion und beendet bei Erfolg die Activity.
      * @param ignored Wird nicht benötigt
      */
-    public void openLesson(@Nullable MenuItem ignored) {
-        String filename = (String) listView.getItemAtPosition(lastSelection);
+    public void mOpenLessonClicked(@Nullable MenuItem ignored) {
+        openLesson(lastSelection);
+    }
+
+    private void openLesson(int position) {
+        String filename = (String) listView.getItemAtPosition(position);
         try {
             Toast.makeText(context, R.string.open_lesson_hint, Toast.LENGTH_SHORT).show();
             loadLessonFromFile(getFilePath(filename));
