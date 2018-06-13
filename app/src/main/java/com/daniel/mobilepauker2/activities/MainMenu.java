@@ -105,7 +105,7 @@ public class MainMenu extends AppCompatActivity {
         descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                editInfoText(v);
+                infoTextClicked(v);
                 return true;
             }
         });
@@ -135,6 +135,23 @@ public class MainMenu extends AppCompatActivity {
         chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         chartView.setScrollContainer(true);
         chartView.setNestedScrollingEnabled(true);
+    }
+
+    private void showBatchDetails(int index) {
+        if (modelManager.getLessonSize() == 0) return;
+
+        Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
+        browseIntent.setClass(context, SearchActivity.class);
+        browseIntent.putExtra(SearchManager.QUERY, "");
+
+
+        if ((index > 1 && modelManager.getBatchStatistics().get(index - 2).getBatchSize() == 0)
+                || (index == 1 && modelManager.getUnlearnedBatchSize() == 0)) {
+            return;
+        }
+
+        browseIntent.putExtra(Constants.STACK_INDEX, index);
+        startActivity(browseIntent);
     }
 
     private void editInfoText() {
@@ -299,71 +316,6 @@ public class MainMenu extends AppCompatActivity {
         startActivity(importActivity);
     }
 
-    public void saveFile(@Nullable MenuItem ignored) {
-        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
-            final LayoutInflater inflater = getLayoutInflater();
-
-            @SuppressLint("InflateParams")
-            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
-            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.give_lesson_name_dialog_title)
-                    .setView(view)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            String newLessonName = textField.getText().toString();
-
-                            if (!newLessonName.endsWith(".pau.gz"))
-                                newLessonName = newLessonName + ".pau.gz";
-
-                            if (paukerManager.setCurrentFileName(newLessonName))
-                                startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
-                            else
-                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-            final AlertDialog dialog = builder.create();
-
-            textField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
-                }
-            });
-
-            dialog.show();
-            textField.setText("");
-        } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
-        }
-    }
-
-    /**
-     * Aktion des Menubuttons
-     * @param ignored Nicht benötigt
-     */
-    public void openLesson(@Nullable MenuItem ignored) {
-        openLesson();
-    }
-
     /**
      * Fragt, wenn notwendig, die Permission ab und zeigt davor einen passenden Infodialog an.
      */
@@ -426,44 +378,92 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    public void resetLesson(MenuItem item) {
+    public void mSaveFileClicked(@Nullable MenuItem ignored) {
+        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
+            final LayoutInflater inflater = getLayoutInflater();
+
+            @SuppressLint("InflateParams")
+            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
+            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.give_lesson_name_dialog_title)
+                    .setView(view)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            String newLessonName = textField.getText().toString();
+
+                            if (!newLessonName.endsWith(".pau.gz"))
+                                newLessonName = newLessonName + ".pau.gz";
+
+                            if (paukerManager.setCurrentFileName(newLessonName))
+                                startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
+                            else
+                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            final AlertDialog dialog = builder.create();
+
+            textField.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
+                }
+            });
+
+            dialog.show();
+            textField.setText("");
+        } else {
+            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
+        }
+    }
+
+    /**
+     * Aktion des Menubuttons
+     * @param ignored Nicht benötigt
+     */
+    public void mOpenLessonClicked(@Nullable MenuItem ignored) {
+        openLesson();
+    }
+
+    public void mResetLessonClicked(MenuItem item) {
         Toast.makeText(context, "Lesson reseted", Toast.LENGTH_SHORT).show();
     }
 
-    public void newLesson(MenuItem item) {
+    public void mNewLessonClicked(MenuItem item) {
         Toast.makeText(context, "New Lesson created", Toast.LENGTH_SHORT).show();
     }
 
-    public void editInfoText(@Nullable MenuItem ignored) {
+    public void mEditInfoTextClicked(@Nullable MenuItem ignored) {
         editInfoText();
     }
 
-    public void settings(MenuItem item) {
+    public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
     }
 
-    public void editInfoText(@Nullable View ignored) {
+    public void infoTextClicked(@Nullable View ignored) {
         editInfoText();
     }
 
-    private void showBatchDetails(int index) {
-        if (modelManager.getLessonSize() == 0) return;
-
-        Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
-        browseIntent.setClass(context, SearchActivity.class);
-        browseIntent.putExtra(SearchManager.QUERY, "");
-
-
-        if ((index > 1 && modelManager.getBatchStatistics().get(index - 2).getBatchSize() == 0)
-                || (index == 1 && modelManager.getUnlearnedBatchSize() == 0)) {
-            return;
-        }
-
-        browseIntent.putExtra(Constants.STACK_INDEX, index);
-        startActivity(browseIntent);
-    }
-
-    public void openSearch(MenuItem item) {
+    public void mOpenSearchClicked(MenuItem item) {
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setIconified(false);
     }

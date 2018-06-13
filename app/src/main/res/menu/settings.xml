@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:onClick="settings"
+        android:onClick="mSettingsClicked"
         app:showAsAction="never"
         android:title="@string/settings" />
 </menu>

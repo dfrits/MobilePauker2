@@ -5,7 +5,7 @@
     <item
         android:id="@+id/mSearch"
         android:icon="@drawable/menu_search_enabled"
-        android:onClick="openSearch"
+        android:onClick="mOpenSearchClicked"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always|collapseActionView" />

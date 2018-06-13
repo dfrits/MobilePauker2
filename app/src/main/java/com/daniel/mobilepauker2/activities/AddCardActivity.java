@@ -116,7 +116,7 @@ public class AddCardActivity extends AppCompatActivity {
     }
 
 
-    public void settings(MenuItem item) {
+    public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
     }
 }

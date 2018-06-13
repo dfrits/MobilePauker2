@@ -708,7 +708,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         updateLearningPhase();
     }
 
-    public void settings(MenuItem item) {
+    public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
     }
 
@@ -752,11 +752,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         int currentTimeSeconds = (int) (SystemClock.uptimeMillis() / 1000);
 
         int stmPref = 60 * Integer.parseInt(settingsManager.getStringPreference(context, STM));
-        if (currentTimeSeconds - sTMStartTimeSeconds >= stmPref) {
-            return true;
-        } else {
-            return false;
-        }
+        return currentTimeSeconds - sTMStartTimeSeconds >= stmPref;
     }
 
     private void updateTimeText(int seconds, int minutes) {

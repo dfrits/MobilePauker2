@@ -139,7 +139,7 @@ public class SearchActivity extends AppCompatActivity {
         startActivityForResult(intent, Constants.REQUEST_CODE_EDIT_CARD);
     }
 
-    public void openSearch(MenuItem searchMenuItem) {
+    public void mOpenSearchClicked(MenuItem searchMenuItem) {
         SearchView searchView = (SearchView) searchMenuItem.getActionView();
         searchView.setIconified(false);
     }

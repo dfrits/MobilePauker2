@@ -5,7 +5,7 @@
     <item
         android:id="@+id/mSaveFile"
         android:icon="@drawable/menu_save_enabled"
-        android:onClick="saveFile"
+        android:onClick="mSaveFileClicked"
         android:orderInCategory="10"
         android:title="@string/save_lesson"
         app:showAsAction="ifRoom" />
@@ -13,7 +13,7 @@
     <item
         android:id="@+id/mOpenLesson"
         android:icon="@drawable/menu_open"
-        android:onClick="openLesson"
+        android:onClick="mOpenLessonClicked"
         android:orderInCategory="20"
         android:title="@string/open_lesson"
         app:showAsAction="ifRoom" />
@@ -21,26 +21,26 @@
     <item
         android:id="@+id/mSearch"
         android:icon="@drawable/menu_search_enabled"
-        android:onClick="openSearch"
+        android:onClick="mOpenSearchClicked"
         android:orderInCategory="30"
         android:title="@string/search"
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 
     <item
-        android:onClick="editInfoText"
+        android:onClick="mEditInfoTextClicked"
         android:orderInCategory="40"
         android:title="@string/edit_info_text" />
 
     <!-- TODO Implementieren -->
     <item
-        android:onClick="resetLesson"
+        android:onClick="mResetLessonClicked"
         android:orderInCategory="50"
         android:title="@string/reset_cards"
         android:visible="false"/>
 
     <item
-        android:onClick="settings"
+        android:onClick="mSettingsClicked"
         android:orderInCategory="60"
         android:title="@string/settings" />
 
@@ -48,7 +48,7 @@
     <!-- TODO Main anpassen -->
     <group android:id="@+id/mGroup">
         <item
-            android:onClick="newLesson"
+            android:onClick="mNewLessonClicked"
             android:title="@string/new_lesson"
             android:visible="false" />
     </group>

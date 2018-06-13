@@ -118,7 +118,7 @@ public class EditCardActivity extends AppCompatActivity {
         sideBEditText.setText(sideBText);
     }
 
-    public void settings(MenuItem item) {
+    public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
     }
 }
