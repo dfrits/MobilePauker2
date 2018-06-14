@@ -64,7 +64,7 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
                 } else {
                     Calendar cal = Calendar.getInstance(Locale.getDefault());
                     cal.setTimeInMillis(learnedTime);
-                    String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
+                    String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                     text = context.getString(R.string.learned_at).concat(" ").concat(date);
                 }
                 learnedAt.setText(text);
@@ -77,7 +77,7 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
                     expireAt.setVisibility(View.VISIBLE);
                     Calendar cal = Calendar.getInstance(Locale.getDefault());
                     cal.setTimeInMillis(expirationTime);
-                    String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
+                    String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
 
                     String text;
                     if (expirationTime < System.currentTimeMillis()) {

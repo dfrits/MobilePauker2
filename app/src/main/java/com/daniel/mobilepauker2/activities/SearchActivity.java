@@ -20,6 +20,8 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
+import java.text.Collator;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -35,9 +37,8 @@ import java.util.Vector;
 public class SearchActivity extends AppCompatActivity {
     private final Context context = this;
     private final ModelManager modelManager = ModelManager.instance();
-
-    private ListView listView;
     Vector<Integer> itemPosition;
+    private ListView listView;
     private Intent intent;
     private List<FlashCard> pack;
 
@@ -77,34 +78,9 @@ public class SearchActivity extends AppCompatActivity {
                 List<FlashCard> results = new ArrayList<>();
                 itemPosition.clear();
 
-                if (query.equals("")) {
-                    results = pack;
-                } else {
-                    FlashCard card;
-                    for (int i = 0; i < pack.size(); i++) {
-                        card = pack.get(i);
-                        Log.d("SearchActivity::ShowResults", "Index - " + card.getId());
+                results = queryString(query, results);
 
-                        if (card.getFrontSide().getText().toLowerCase().contains(query.toLowerCase()) ||
-                                card.getReverseSide().getText().toLowerCase().contains(query.toLowerCase())) {
-                            results.add(card);
-                            itemPosition.add(i);
-                        }
-                    }
-                }
-
-                CardAdapter adapter = new CardAdapter(context, results);
-                listView.setAdapter(adapter);
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if (itemPosition.size() > 0) {
-                            editCard(itemPosition.get(position));
-                        } else {
-                            editCard(position);
-                        }
-                    }
-                });
+                showResults(results);
 
                 return true;
             }
@@ -112,7 +88,7 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus)searchView.clearFocus();
+                if (!hasFocus) searchView.clearFocus();
             }
         });
         String query = intent.getStringExtra(SearchManager.QUERY);
@@ -131,6 +107,43 @@ public class SearchActivity extends AppCompatActivity {
             pack = modelManager.getCurrentPack();
             invalidateOptionsMenu();
         }
+    }
+
+    private void showResults(List<FlashCard> results) {
+        CardAdapter adapter = new CardAdapter(context, results);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (itemPosition.size() > 0) {
+                    editCard(itemPosition.get(position));
+                } else {
+                    editCard(position);
+                }
+            }
+        });
+    }
+
+    private List<FlashCard> queryString(String query, List<FlashCard> results) {
+        if (query.equals("")) {
+            results = pack;
+        } else {
+            FlashCard card;
+            for (int i = 0; i < pack.size(); i++) {
+                card = pack.get(i);
+                Log.d("SearchActivity::ShowResults", "Index - " + card.getId());
+
+                String frontSide = card.getFrontSide().getText().toLowerCase();
+                String backSide = card.getReverseSide().getText().toLowerCase();
+
+                if (frontSide.contains(query.toLowerCase())
+                        || backSide.contains(query.toLowerCase())) {
+                    results.add(card);
+                    itemPosition.add(i);
+                }
+            }
+        }
+        return results;
     }
 
     private void editCard(int position) {

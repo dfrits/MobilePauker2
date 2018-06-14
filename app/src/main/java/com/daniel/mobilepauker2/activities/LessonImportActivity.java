@@ -132,7 +132,7 @@ public class LessonImportActivity extends AppCompatActivity {
                         long dateL = map.get(0);
                         Calendar cal = Calendar.getInstance(Locale.getDefault());
                         cal.setTimeInMillis(dateL);
-                        String date = DateFormat.format("dd MMMM yyyy HH:mm", cal).toString();
+                        String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                         text = text.concat(" ").concat(date);
                     }
                 } else {
