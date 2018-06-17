@@ -227,14 +227,14 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 if (checkSTMTimeout()) // STM timeout so go straight to repeating ustm cards
                 {
-                    Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
                 } else if (zeroUnlearnedCards && !checkUSTMTimeout()) {
                     setLearningPhase(LearningPhase.WAITING_FOR_USTM);
                     updateLearningPhase();
                 } else if (checkUSTMTimeout()) {
-                    Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
                 }
@@ -248,7 +248,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 // USTM Timeout
                 if (checkUSTMTimeout() || stopWaiting) {
-                    Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_LONG).show();
                     stopWaiting = false;
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
@@ -264,14 +264,14 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 {
                     if (checkSTMTimeout()) //STM timer has timed out so move to repeating STM
                     {
-                        Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
                         setLearningPhase(LearningPhase.REPEATING_STM);
                     } else if (!zeroUnlearnedCards) // Unlearned cards available so go back to filling ustm;
                     {
                         setLearningPhase(LearningPhase.FILLING_USTM);
                         startUSTMTimer();
                     } else {
-                        Toast.makeText(this, getString(R.string.learncards_waiting_stm_timer), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, getString(R.string.learncards_waiting_stm_timer), Toast.LENGTH_SHORT).show();
                         setLearningPhase(LearningPhase.WAITING_FOR_STM);
                     }
                     {
@@ -289,7 +289,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 // USTM Timeout
                 if (checkSTMTimeout() || stopWaiting) {
-                    Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
                     stopWaiting = false;
                     setLearningPhase(LearningPhase.REPEATING_STM);
                     updateLearningPhase();
@@ -299,7 +299,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             case REPEATING_STM: {
                 if (zeroSTMCards) {
-                    Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
                     completedLearning();
                 } else {
                     setButtonVisibilityRepeating();
@@ -309,7 +309,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             case REPEATING_LTM: {
                 if (modelManager.getExpiredCardsSize() <= 0) {
-                    Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
                     completedLearning();
                 } else {
                     setButtonVisibilityRepeating();
