@@ -265,7 +265,7 @@ public class MainMenu extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG) {
+        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);
@@ -295,6 +295,12 @@ public class MainMenu extends AppCompatActivity {
             }
         } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
+        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
+            if (resultCode == RESULT_OK) {
+                createNewLesson();
+            } else {
+                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -316,6 +322,67 @@ public class MainMenu extends AppCompatActivity {
         modelManager.setLearningPhase(context, ModelManager.LearningPhase.REPEATING_LTM);
         Intent importActivity = new Intent(context, LearnCardsActivity.class);
         startActivity(importActivity);
+    }
+
+    /**
+     * Speichert die Lektion.
+     * @param requestCode Wird für onActivityResult benötigt
+     */
+    private void saveLesson(final int requestCode) {
+        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
+            final LayoutInflater inflater = getLayoutInflater();
+
+            @SuppressLint("InflateParams")
+            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
+            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.give_lesson_name_dialog_title)
+                    .setView(view)
+                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            String newLessonName = textField.getText().toString();
+
+                            if (!newLessonName.endsWith(".pau.gz"))
+                                newLessonName = newLessonName + ".pau.gz";
+
+                            if (paukerManager.setCurrentFileName(newLessonName))
+                                startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
+                            else
+                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+            final AlertDialog dialog = builder.create();
+
+            textField.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
+                }
+            });
+
+            dialog.show();
+            textField.setText("");
+        } else {
+            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
+        }
     }
 
     /**
@@ -380,61 +447,20 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
+    /**
+     * Erstellt eine neue Lektion
+     */
+    private void createNewLesson() {
+        paukerManager.setupNewApplicationLesson();
+        paukerManager.setSaveRequired(false);
+        initButtons();
+        initChartList();
+        initView();
+        Toast.makeText(context, R.string.new_lession_created, Toast.LENGTH_SHORT).show();
+    }
+
     public void mSaveFileClicked(@Nullable MenuItem ignored) {
-        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
-            final LayoutInflater inflater = getLayoutInflater();
-
-            @SuppressLint("InflateParams")
-            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
-            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.give_lesson_name_dialog_title)
-                    .setView(view)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            String newLessonName = textField.getText().toString();
-
-                            if (!newLessonName.endsWith(".pau.gz"))
-                                newLessonName = newLessonName + ".pau.gz";
-
-                            if (paukerManager.setCurrentFileName(newLessonName))
-                                startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
-                            else
-                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-            final AlertDialog dialog = builder.create();
-
-            textField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
-                }
-            });
-
-            dialog.show();
-            textField.setText("");
-        } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
-        }
+        saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL);
     }
 
     /**
@@ -446,21 +472,51 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mResetLessonClicked(MenuItem item) {
-        modelManager.forgetAllCards();
-        paukerManager.setSaveRequired(true);
-        initButtons();
-        initChartList();
-        initView();
-        Toast.makeText(context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.reset_lesson_dialog_title)
+                .setMessage(R.string.reset_lesson_dialog_info)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        modelManager.forgetAllCards();
+                        paukerManager.setSaveRequired(true);
+                        initButtons();
+                        initChartList();
+                        initView();
+                        Toast.makeText(context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     public void mNewLessonClicked(MenuItem item) {
-        paukerManager.setupNewApplicationLesson();
-        paukerManager.setSaveRequired(false);
-        initButtons();
-        initChartList();
-        initView();
-        Toast.makeText(context, R.string.new_lession_created, Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.new_lesson_dialog_title)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (paukerManager.isSaveRequired()) {
+                            saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
+                        } else {
+                            createNewLesson();
+                        }
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     public void mEditInfoTextClicked(@Nullable MenuItem ignored) {
@@ -483,7 +539,7 @@ public class MainMenu extends AppCompatActivity {
     public void mFlipSidesClicked(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.reverse_sides_dialog_title)
-                .setMessage(R.string.reverse_sides_info)
+                .setMessage(R.string.reverse_sides_dialog_info)
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

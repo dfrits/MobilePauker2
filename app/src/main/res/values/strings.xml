@@ -47,8 +47,9 @@
     <string name="new_lession_created">New Lesson created</string>
     <string name="lektion_zurückgesetzt">Lesson reseted</string>
     <string name="flip_sides_complete">Sides fliped</string>
-    <string name="reverse_sides_info">You can change in the settings, that the reverse side have
+    <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side have
         to be shown first</string>
+    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
@@ -80,6 +81,10 @@
     <string name="edit_card">Edit Card</string>
     <string name="bar_chart_title">Statistics</string>
     <string name="lessons">Lessons</string>
+    <string name="reverse_sides_dialog_title">Flip all card sides?</string>
+    <string name="new_lesson_dialog_title">Create new Lesson?</string>
+    <string name="reset_lesson_dialog_title">Reset Lession?</string>
+    <string name="lektion_verwalten_titel">Manage Lesson</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
@@ -163,5 +168,4 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
-    <string name="reverse_sides_dialog_title">Do you really want to flip the card sides?</string>
 </resources>

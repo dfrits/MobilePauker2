@@ -48,8 +48,9 @@
     <string name="new_lession_created">Neue Lektion erstellt</string>
     <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
     <string name="flip_sides_complete">Seiten vertauscht</string>
-    <string name="reverse_sides_info">Du kannst in den Einstellungen angeben, dass die Rückseite
+    <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite
         zuerst gezeigt werden soll</string>
+    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
@@ -57,7 +58,7 @@
     <string name="ok">OK</string>
 
     <!-- Content Descriptions und Titles-->
-    <string name="reverse_sides_dialog_title">Willst du wirklich die Kartenseiten vertauschen?</string>
+    <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte hinzufügen</string>
     <string name="front">Vorderseite</string>
@@ -81,6 +82,9 @@
     <string name="edit_card">Karte bearbeiten</string>
     <string name="bar_chart_title">Statistiken</string>
     <string name="lessons">Lektionen</string>
+    <string name="new_lesson_dialog_title">Create new Lesson?</string>
+    <string name="reset_lesson_dialog_title">Reset Lession?</string>
+    <string name="lektion_verwalten_titel">Lektion verwalten</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>
