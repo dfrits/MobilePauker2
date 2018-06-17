@@ -527,7 +527,10 @@ public class ModelManager {
         mLesson.getShortTermList().clear();
     }
 
-    public void ForgetAllCards() {
+    /**
+     * Verschiebt alle Karten auf den Stapel der ungelernten Karten.
+     */
+    public void forgetAllCards() {
         mLesson.reset();
     }
 

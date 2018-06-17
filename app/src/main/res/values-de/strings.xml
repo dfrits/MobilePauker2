@@ -46,6 +46,7 @@
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
     <string name="open_lesson_hint">Lektion wird geöffnet</string>
     <string name="new_lession_created">Neue Lektion erstellt</string>
+    <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>

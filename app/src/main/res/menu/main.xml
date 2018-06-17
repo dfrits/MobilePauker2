@@ -27,8 +27,6 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
 
-    <!-- TODO Implementieren -->
-    <!-- TODO Main anpassen -->
     <group android:id="@+id/mGroup">
         <item
             android:onClick="mNewLessonClicked"
@@ -36,12 +34,11 @@
             android:title="@string/new_lesson"
             app:showAsAction="never" />
 
-        <!-- TODO Implementieren -->
         <item
             android:onClick="mResetLessonClicked"
             android:orderInCategory="50"
             android:title="@string/reset_cards"
-            android:visible="false" />
+            app:showAsAction="never"/>
     </group>
 
     <item

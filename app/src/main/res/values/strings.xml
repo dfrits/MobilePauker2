@@ -158,4 +158,5 @@
     <!-- Neue Strings -->
     <string name="New">New</string>
     <string name="new_lession_created">New Lesson created</string>
+    <string name="lektion_zurückgesetzt">Lesson reseted</string>
 </resources>

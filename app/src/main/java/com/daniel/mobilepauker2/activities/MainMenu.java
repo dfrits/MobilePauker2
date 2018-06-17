@@ -446,7 +446,12 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mResetLessonClicked(MenuItem item) {
-        Toast.makeText(context, "Lesson reseted", Toast.LENGTH_SHORT).show();
+        modelManager.forgetAllCards();
+        paukerManager.setSaveRequired(true);
+        initButtons();
+        initChartList();
+        initView();
+        Toast.makeText(context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT).show();
     }
 
     public void mNewLessonClicked(MenuItem item) {
