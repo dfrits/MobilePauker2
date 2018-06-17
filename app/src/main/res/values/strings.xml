@@ -44,6 +44,11 @@
     <string name="learncards_show_hint">Try to remember the back of this card!</string>
     <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
     <string name="open_lesson_hint">Lesson will be opened</string>
+    <string name="new_lession_created">New Lesson created</string>
+    <string name="lektion_zurückgesetzt">Lesson reseted</string>
+    <string name="flip_sides_complete">Sides fliped</string>
+    <string name="reverse_sides_info">You can change in the settings, that the reverse side have
+        to be shown first</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
@@ -128,6 +133,7 @@
     <string name="associate_dropbox_title">Associate with Dropbox</string>
     <string name="stm_title">STM</string>
     <string name="ustm_title">USTM</string>
+    <string name="flip_cards">Flip sides</string>
 
     <!-- Beschreibungen -->
     <string name="flip_card_sides_summ">Which side to show first when repeating (%s)</string>
@@ -157,6 +163,5 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
-    <string name="new_lession_created">New Lesson created</string>
-    <string name="lektion_zurückgesetzt">Lesson reseted</string>
+    <string name="reverse_sides_dialog_title">Do you really want to flip the card sides?</string>
 </resources>

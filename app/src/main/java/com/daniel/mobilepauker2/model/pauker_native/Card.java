@@ -14,9 +14,7 @@ import java.util.List;
  */
 public class Card implements Comparable<Card> {
 
-    public class UID {
-    }
-
+    private class UID {}
 
     /**
      * the elements of a card
@@ -155,6 +153,10 @@ public class Card implements Comparable<Card> {
         return frontSide.getLearnedTimestamp();
     }
 
+    public void setLearnedTimeStamp(long learnedTimeStamp) {
+        frontSide.setLearnedTimestamp(learnedTimeStamp);
+    }
+
     /**
      * returns the unique object identifier<br>
      * used for indexing!
@@ -200,7 +202,9 @@ public class Card implements Comparable<Card> {
      * @param batchNumber the number of the batch this card is part of
      */
     public void setLongTermBatchNumber(int batchNumber) {
-        frontSide.setLongTermBatchNumber(batchNumber);
+        if (batchNumber > -1) {
+            frontSide.setLongTermBatchNumber(batchNumber);
+        }
     }
 
     /**
@@ -306,9 +310,23 @@ public class Card implements Comparable<Card> {
      * flips the card sides
      */
     public void flip() {
+        long learnedTimestamp = frontSide.getLearnedTimestamp();
+        int longTermBatchNumber = frontSide.getLongTermBatchNumber();
+        ComponentOrientation orientation = frontSide.getOrientation();
+        boolean learned = frontSide.isLearned();
+        boolean repeatedByTyping = frontSide.isRepeatedByTyping();
+
+
         CardSide tmpCardSide = frontSide;
         frontSide = reverseSide;
         reverseSide = tmpCardSide;
+
+
+        frontSide.setLearnedTimestamp(learnedTimestamp);
+        frontSide.setLongTermBatchNumber(longTermBatchNumber);
+        frontSide.setOrientation(orientation);
+        frontSide.setLearned(learned);
+        frontSide.setRepeatByTyping(repeatedByTyping);
     }
 
     //    /**

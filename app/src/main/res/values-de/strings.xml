@@ -47,6 +47,9 @@
     <string name="open_lesson_hint">Lektion wird geöffnet</string>
     <string name="new_lession_created">Neue Lektion erstellt</string>
     <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
+    <string name="flip_sides_complete">Seiten vertauscht</string>
+    <string name="reverse_sides_info">Du kannst in den Einstellungen angeben, dass die Rückseite
+        zuerst gezeigt werden soll</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
@@ -54,6 +57,7 @@
     <string name="ok">OK</string>
 
     <!-- Content Descriptions und Titles-->
+    <string name="reverse_sides_dialog_title">Willst du wirklich die Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte hinzufügen</string>
     <string name="front">Vorderseite</string>
@@ -112,6 +116,7 @@
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
     <string name="stm_title">KZG</string>
     <string name="ustm_title">UKZG</string>
+    <string name="flip_cards">Seiten vertauschen</string>
 
     <!-- Beschreibungen -->
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>

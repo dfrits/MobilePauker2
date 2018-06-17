@@ -39,15 +39,21 @@
             android:orderInCategory="50"
             android:title="@string/reset_cards"
             app:showAsAction="never"/>
+
+        <item
+            android:onClick="mFlipSidesClicked"
+            android:orderInCategory="60"
+            android:title="@string/flip_cards"
+            app:showAsAction="never"/>
     </group>
 
     <item
         android:onClick="mEditInfoTextClicked"
-        android:orderInCategory="60"
+        android:orderInCategory="70"
         android:title="@string/edit_info_text" />
 
     <item
         android:onClick="mSettingsClicked"
-        android:orderInCategory="70"
+        android:orderInCategory="80"
         android:title="@string/settings" />
 </menu>

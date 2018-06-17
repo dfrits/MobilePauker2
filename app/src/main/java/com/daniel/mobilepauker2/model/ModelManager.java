@@ -178,6 +178,7 @@ public class ModelManager {
                 }
 
                 case WAITING_FOR_STM: {
+                    //noinspection UnusedAssignment
                     cardIterator = mLesson.getShortTermList().listIterator(); // Need to put something in the iterator for requery
                     return;
                 }
@@ -476,7 +477,7 @@ public class ModelManager {
 
         File filePath = getFilePath();
         URI uri = filePath.toURI();
-        FlashCardXMLPullFeedParser parser = null;
+        FlashCardXMLPullFeedParser parser;
         try {
             parser = new FlashCardXMLPullFeedParser(uri.toURL());
             SparseLongArray map = parser.getNextExpireDate();
@@ -532,6 +533,13 @@ public class ModelManager {
      */
     public void forgetAllCards() {
         mLesson.reset();
+    }
+
+    /**
+     * Dreht alle Karten um.
+     */
+    public void flipAllCards() {
+        mLesson.flip();
     }
 
     public boolean isLessonNew() {
@@ -651,7 +659,7 @@ public class ModelManager {
     /*
      * Shuffle the card pack
      */
-    public void shuffleCurrentPack() {
+    private void shuffleCurrentPack() {
         Collections.shuffle(mCurrentPack);
     }
 

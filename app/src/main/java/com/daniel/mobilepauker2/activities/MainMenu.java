@@ -479,4 +479,29 @@ public class MainMenu extends AppCompatActivity {
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setIconified(false);
     }
+
+    public void mFlipSidesClicked(MenuItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.reverse_sides_dialog_title)
+                .setMessage(R.string.reverse_sides_info)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        modelManager.flipAllCards();
+                        paukerManager.setSaveRequired(true);
+                        initButtons();
+                        initChartList();
+                        initView();
+                        Toast.makeText(context, R.string.flip_sides_complete, Toast.LENGTH_SHORT).show();
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
+    }
 }

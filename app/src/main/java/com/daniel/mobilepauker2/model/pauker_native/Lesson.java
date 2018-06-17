@@ -249,7 +249,7 @@ public class Lesson {
     /**
      * removes empty longterm batches at the end of this lesson
      */
-    public void trim() {
+    private void trim() {
         for (int i = longTermBatches.size() - 1; i >= 0; i--) {
             LongTermBatch longTermBatch = longTermBatches.get(i);
             if (longTermBatch.getNumberOfCards() == 0) {
@@ -311,10 +311,15 @@ public class Lesson {
      */
     public void flip() {
         for (Card card : getCards()) {
+            //Daten zwischenspeichern, da immer die Vorderseite abgefragt wird
+            boolean isLearned = card.isLearned();
+            int batchNumber = -1;
+            LongTermBatch longTermBatch = null;
+
             // remove card
-            if (card.isLearned()) {
-                int batchNumber = card.getLongTermBatchNumber();
-                LongTermBatch longTermBatch = longTermBatches.get(batchNumber);
+            if (isLearned) {
+                batchNumber = card.getLongTermBatchNumber();
+                longTermBatch = longTermBatches.get(batchNumber);
                 longTermBatch.removeCard(card);
             } else {
                 unlearnedBatch.removeCard(card);
@@ -324,13 +329,10 @@ public class Lesson {
             card.flip();
 
             // re-add card
-            if (card.isLearned()) {
-                int batchNumber = card.getLongTermBatchNumber();
-                for (int size = longTermBatches.size();
-                     size < (batchNumber + 1); size++) {
+            if (isLearned) {
+                for (int size = longTermBatches.size(); size < (batchNumber + 1); size++) {
                     longTermBatches.add(new LongTermBatch(size));
                 }
-                LongTermBatch longTermBatch = longTermBatches.get(batchNumber);
                 longTermBatch.addCard(card);
             } else {
                 unlearnedBatch.addCard(card);
