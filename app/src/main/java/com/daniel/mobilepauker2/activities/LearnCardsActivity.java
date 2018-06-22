@@ -441,7 +441,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     private void autoSaveLesson() {
         if (settingsManager.getBoolPreference(context, AUTO_SAVE)) {
-            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG);
+            startActivityForResult(new Intent(context, SaveDialog.class), Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL);
         } else {
             paukerManager.setSaveRequired(true);
             finish();
@@ -613,7 +613,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG) {
+        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);

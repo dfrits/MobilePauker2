@@ -30,10 +30,11 @@ public class Constants {
     public static final int SWIPE_THRESHOLD_VELOCITY = 100;
 
     // Activityrequestcodes
-    public static final int REQUEST_CODE_SAVE_DIALOG = 1;
+    public static final int REQUEST_CODE_SAVE_DIALOG_NORMAL = 1;
     public static final int REQUEST_CODE_SYNC_DIALOG = 2;
     public static final int REQUEST_CODE_EDIT_CARD = 3;
     public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
+    public static final int REQUEST_CODE_SAVE_DIALOG_NEW_LESSON = 5;
 
     // Messagekey für den Handler
     public static final String MESSAGE_KEY = "RESULT";
