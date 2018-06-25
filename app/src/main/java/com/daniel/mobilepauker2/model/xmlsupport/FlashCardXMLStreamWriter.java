@@ -37,6 +37,9 @@ public class FlashCardXMLStreamWriter {
 
             GZIPOutputStream gzipOutputStream;
             try {
+                if (!new File(path).exists() && !new File(path).mkdirs()) {
+                    return;
+                }
                 if (!newxmlfile.exists() && !newxmlfile.createNewFile()) {
                     return;
                 }
