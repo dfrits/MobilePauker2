@@ -95,6 +95,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startUnlearnedBatchSize = modelManager.getUnlearnedBatchSize();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         if (modelManager.getLearningPhase() != REPEATING_LTM
                 && (modelManager.getLearningPhase() != SIMPLE_LEARNING
