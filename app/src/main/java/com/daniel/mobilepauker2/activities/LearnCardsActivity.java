@@ -18,7 +18,9 @@
 
 package com.daniel.mobilepauker2.activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -88,7 +90,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             mHandler.postAtTime(this,
                     start + (((minutes * 60) + seconds + 1) * 1000));
 
-            updateTimeText(seconds, minutes);}
+            updateTimeText(seconds, minutes);
+        }
     };
 
     @Override
@@ -613,6 +616,25 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.exit_learning_dialog)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create().show();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
@@ -639,11 +661,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         Log.d("LearnCardsActivity::OnRestoreInstanceState", "Entry");
-        super.onRestoreInstanceState(savedInstanceState);
         mStartTime = savedInstanceState.getLong(INSTANCESTATE_START_TIME);
         uSTMStartTimeSeconds = savedInstanceState.getInt(INSTANCESTATE_STM_START_TIME);
         sTMStartTimeSeconds = savedInstanceState.getInt(INSTANCESTATE_USTM_START_TIME);
-        cursorLoaded();
         super.onRestoreInstanceState(savedInstanceState);
     }
 

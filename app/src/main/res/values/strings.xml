@@ -85,6 +85,7 @@
     <string name="new_lesson_dialog_title">Create new Lesson?</string>
     <string name="reset_lesson_dialog_title">Reset Lession?</string>
     <string name="lektion_verwalten_titel">Manage Lesson</string>
+    <string name="exit_learning_dialog">Exit Learning?</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
