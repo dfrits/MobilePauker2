@@ -127,7 +127,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
      * card at the current cursor position
      */
     public void updateCurrentCard() {
+        final String flipMode = settingsManager.getStringPreference(context, SettingsManager.Keys.FLIP_CARD_SIDES);
         try {
+            if ((currentCard.getSideAText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID)) ||
+                    currentCard.getSideBText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID))) &&
+                    flipMode.equals("2")) {
+                return;
+            }
+
+
             if (isCardCursorAvailable()) {
                 currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
                 currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
@@ -152,7 +160,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         LearningPhase learningPhase = modelManager.getLearningPhase();
         if (learningPhase == REPEATING_LTM || learningPhase == REPEATING_STM || learningPhase == REPEATING_USTM) {
-            String flipMode = settingsManager.getStringPreference(context, SettingsManager.Keys.FLIP_CARD_SIDES);
             switch (flipMode) {
                 case "1":
                     flipCardSides = true;
@@ -168,6 +175,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         } else {
             flipCardSides = false;
         }
+
         if (flipCardSides) {
             currentCard.setSide(FlashCard.SideShowing.SIDE_B);
         } else {
