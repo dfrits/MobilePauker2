@@ -129,14 +129,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     public void updateCurrentCard() {
         final String flipMode = settingsManager.getStringPreference(context, SettingsManager.Keys.FLIP_CARD_SIDES);
         try {
-            if ((currentCard.getSideAText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID)) ||
-                    currentCard.getSideBText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID))) &&
-                    flipMode.equals("2")) {
-                return;
-            }
-
-
             if (isCardCursorAvailable()) {
+                if ((currentCard.getSideAText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID)) ||
+                        currentCard.getSideBText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID))) &&
+                        flipMode.equals("2")) {
+                    return;
+                }
                 currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
                 currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
                 String learnStatus = mCardCursor.getString(CardPackAdapter.KEY_LEARN_STATUS_ID);
