@@ -74,6 +74,8 @@ public class MainMenu extends AppCompatActivity {
 
         setContentView(R.layout.main_menu);
 
+        checkErrors();
+
         if (!modelManager.isLessonSetup()) {
             modelManager.createNewLesson();
         }
@@ -81,6 +83,27 @@ public class MainMenu extends AppCompatActivity {
         initButtons();
         initView();
         initChartList();
+    }
+
+    /**
+     * Um Fehler ohne Studio zu bekommen
+     */
+    private void checkErrors() {
+        final ErrorReporter errorReporter = ErrorReporter.instance();
+        if (errorReporter.isThereAnyErrorsToReport(this)) {
+            AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+
+            alt_bld.setCancelable(false);
+            alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.CheckErrorAndSendMail(context);
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog alert = alt_bld.create();
+            alert.show();
+        }
     }
 
     public void initButtons() {

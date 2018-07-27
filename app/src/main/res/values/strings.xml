@@ -167,6 +167,9 @@
 
     <!-- Settings Ende -->
 
+    <!-- Nur für die Zeit der Entwicklung -->
+    <string name="CrashReport_MailBody">Thanks for sending a crash report!</string>
+
     <!-- Neue Strings -->
     <string name="New">New</string>
 </resources>

@@ -246,30 +246,24 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     }
 
     private void SendErrorMail(Context _context, String ErrorContent) {
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-//        String body = _context.getResources().getString(R.string.CrashReport_MailBody) +
-//                "\n\n" +
-//                ErrorContent +
-//                "\n\n";
+        String body = _context.getResources().getString(R.string.CrashReport_MailBody) +
+                "\n\n" +
+                ErrorContent +
+                "\n\n";
+
+        String subject = "New Erroreport";
 
 		 /* Create the Intent */
         final Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		
 		/* Fill it with Data */
         emailIntent.setType("plain/text");
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"simsoftrd@gmail.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Android Pauker: Bug report");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fritsch_daniel@gmx.de"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "MobilePauker++: Bug report");
 				
 		/* Send it off to the Activity-Chooser */
         _context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-
-//		sendIntent.putExtra(Intent.EXTRA_EMAIL,
-//				new String[] {"postmaster@alocaly.com"});
-//		sendIntent.putExtra(Intent.EXTRA_TEXT, body);
-//		sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-//		sendIntent.setType("message/rfc822");
-//		_context.startActivity( Intent.createChooser(sendIntent, "Title:") );
     }
 
     private void SaveAsFile(String ErrorContent) {
@@ -288,7 +282,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     private String[] GetErrorFileList() {
         File dir = new File(FilePath + "/");
         // Try to create the files folder if it doesn't exist
-        if(!dir.mkdir()) return new String[]{};
+        if(!dir.exists() && !dir.mkdir()) return new String[]{};
         // Filter for ".stacktrace" files
         FilenameFilter filter = new FilenameFilter() {
             public boolean accept(File dir, String name) {
