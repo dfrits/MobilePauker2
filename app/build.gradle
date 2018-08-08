@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.daniel.mobilepauker2"
-        minSdkVersion 24
+        minSdkVersion 25
         //noinspection OldTargetApi
         targetSdkVersion 25
         versionCode 2
