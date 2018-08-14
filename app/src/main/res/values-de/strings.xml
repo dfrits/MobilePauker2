@@ -44,6 +44,7 @@
     <string name="learncards_finished_learning">Lernen beendet</string>
     <string name="saving_success">Datei gespeichert</string>
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
+    <string name="delete_card_message">Karte wirklich löschen?</string>
     <string name="open_lesson_hint">Lektion wird geöffnet</string>
     <string name="new_lession_created">Neue Lektion erstellt</string>
     <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
@@ -86,6 +87,7 @@
     <string name="reset_lesson_dialog_title">Reset Lession?</string>
     <string name="lektion_verwalten_titel">Lektion verwalten</string>
     <string name="exit_learning_dialog">Lernen beenden?</string>
+    <string name="delete_card">Karte löschen</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>

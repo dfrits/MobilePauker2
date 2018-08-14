@@ -43,6 +43,7 @@
     <string name="card_added">Card added</string>
     <string name="learncards_show_hint">Try to remember the back of this card!</string>
     <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
+    <string name="delete_card_message">Do you really want to delete the card?</string>
     <string name="open_lesson_hint">Lesson will be opened</string>
     <string name="new_lession_created">New Lesson created</string>
     <string name="lektion_zurückgesetzt">Lesson reseted</string>
@@ -86,6 +87,7 @@
     <string name="reset_lesson_dialog_title">Reset Lession?</string>
     <string name="lektion_verwalten_titel">Manage Lesson</string>
     <string name="exit_learning_dialog">Exit Learning?</string>
+    <string name="delete_card">Karte löschen</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Next card -&gt;</string>

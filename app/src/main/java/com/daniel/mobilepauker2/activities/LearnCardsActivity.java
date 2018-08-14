@@ -1,20 +1,20 @@
-/* 
+/*
  * Copyright 2011 Brian Ford
- * 
+ *
  * This file is part of Pocket Pauker.
- * 
- * Pocket Pauker is free software: you can redistribute it and/or modify it under the 
- * terms of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Pocket Pauker is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * 
- * Pocket Pauker is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *
+ * Pocket Pauker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * See http://www.gnu.org/licenses/.
 
-*/
+ */
 
 package com.daniel.mobilepauker2.activities;
 
@@ -117,7 +117,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings, menu);
+        getMenuInflater().inflate(R.menu.learning_cards, menu);
 
         return true;
     }
@@ -130,11 +130,17 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         final String flipMode = settingsManager.getStringPreference(context, SettingsManager.Keys.FLIP_CARD_SIDES);
         try {
             if (isCardCursorAvailable()) {
-                if ((currentCard.getSideAText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID)) ||
-                        currentCard.getSideBText().equalsIgnoreCase(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID))) &&
-                        flipMode.equals("2")) {
+                if (mSavedCursorPosition == mCardCursor.getPosition() && flipMode.equals("2")) {
+                    if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A) {
+                        currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
+                        currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
+                    } else {
+                        currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
+                        currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
+                    }
                     return;
                 }
+
                 currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
                 currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
                 String learnStatus = mCardCursor.getString(CardPackAdapter.KEY_LEARN_STATUS_ID);
@@ -650,8 +656,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             } else {
                 Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
+            finish();
         }
-        finish();
     }
 
     // Save UI state changes to the savedInstanceState.
@@ -737,6 +743,45 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
+    }
+
+    public void mEditClicked(MenuItem item) {
+        Intent intent = new Intent(context, EditCardActivity.class);
+        intent.putExtra(Constants.CURSOR_POSITION, mCardCursor.getPosition());
+        startActivity(intent);
+    }
+
+    public void mDeleteClicked(MenuItem item) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.delete_card_message)
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Muss vorher gespeichert werden, da sonst im Nachhinein der Wert
+                        // verfälscht werden kann!
+                        boolean isLast = mCardCursor.isLast();
+
+                        if (modelManager.deleteCard(mCardCursor.getPosition())) {
+                            if (!isLast) {
+                                updateCurrentCard();
+                                fillData();
+                            } else {
+                                completedLearning = true;
+                            }
+                        } else {
+                            Toast.makeText(context, "Löschen nicht möglich!", Toast.LENGTH_SHORT).show();
+                        }
+                        updateLearningPhase();
+                        dialog.cancel();
+                    }
+                });
+        builder.create().show();
     }
 
     //***************************************

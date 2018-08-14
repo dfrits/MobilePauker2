@@ -4,9 +4,9 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.daniel.mobilepauker2"
-        minSdkVersion 24
+        minSdkVersion 25
         //noinspection OldTargetApi
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 2
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
