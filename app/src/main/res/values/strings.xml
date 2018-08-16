@@ -87,6 +87,8 @@
     <string name="reset_lesson_dialog_title">Reset Lession?</string>
     <string name="lektion_verwalten_titel">Manage Lesson</string>
     <string name="exit_learning_dialog">Exit Learning?</string>
+    <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
+    <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
     <string name="delete_card">Karte löschen</string>
 
     <!-- Buttontexte -->

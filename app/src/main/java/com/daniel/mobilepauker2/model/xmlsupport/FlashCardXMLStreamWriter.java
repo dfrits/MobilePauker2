@@ -25,7 +25,7 @@ public class FlashCardXMLStreamWriter {
     public static void saveLesson() {
         final ModelManager modelManager = ModelManager.instance();
         final PaukerManager paukerManager = PaukerManager.instance();
-        if (modelManager.isLessonNew()) {
+        if (modelManager.isLessonNotNew()) {
             // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
             String name = "neu_" + modelManager.getFilePath().getName();
             String path = modelManager.getFilePath().getParent();

@@ -542,7 +542,7 @@ public class ModelManager {
         mLesson.flip();
     }
 
-    public boolean isLessonNew() {
+    public boolean isLessonNotNew() {
         return !paukerManager.getCurrentFileName().equals(Constants.DEFAULT_FILE_NAME);
     }
 

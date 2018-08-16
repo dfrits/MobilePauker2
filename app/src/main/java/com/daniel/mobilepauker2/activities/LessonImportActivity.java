@@ -331,6 +331,16 @@ public class LessonImportActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
             }
             init();
+            if (modelManager.isLessonNotNew() && fileNames.contains(paukerManager.getCurrentFileName())) {
+                try {
+                    loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
+                    paukerManager.setSaveRequired(false);
+                } catch (IOException ignored) {
+                    Toast.makeText(context, "Datensatz der geöffneten Lektion kann nicht " +
+                                    "automatisch aktualisiert werden! Bitte manuel Lektion erneut " +
+                                    "öffnen.", Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
