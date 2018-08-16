@@ -83,11 +83,13 @@
     <string name="edit_card">Karte bearbeiten</string>
     <string name="bar_chart_title">Statistiken</string>
     <string name="lessons">Lektionen</string>
-    <string name="new_lesson_dialog_title">Create new Lesson?</string>
-    <string name="reset_lesson_dialog_title">Reset Lession?</string>
+    <string name="new_lesson_dialog_title">Neue Lektion erstellen?</string>
+    <string name="reset_lesson_dialog_title">Lektion zurücksetzen?</string>
     <string name="lektion_verwalten_titel">Lektion verwalten</string>
     <string name="exit_learning_dialog">Lernen beenden?</string>
     <string name="delete_card">Karte löschen</string>
+    <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
+    <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>

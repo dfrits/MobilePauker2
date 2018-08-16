@@ -77,7 +77,6 @@ public class LessonImportActivity extends AppCompatActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         setContentView(R.layout.open_lesson);
-        RelativeLayout progressBar = findViewById(R.id.pFrame);
         init();
     }
 
@@ -269,6 +268,8 @@ public class LessonImportActivity extends AppCompatActivity {
                                     if (modelManager.deleteLesson(context, file)) {
                                         init();
                                         resetSelection(null);
+                                        paukerManager.setupNewApplicationLesson();
+                                        paukerManager.setSaveRequired(false);
                                     } else {
                                         Toast.makeText(context, R.string.delete_lesson_error, Toast.LENGTH_SHORT).show();
                                     }
@@ -331,6 +332,20 @@ public class LessonImportActivity extends AppCompatActivity {
                 Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
             }
             init();
+            if (modelManager.isLessonNotNew())
+                if (fileNames.contains(paukerManager.getCurrentFileName())) {
+                    try {
+                        loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
+                        paukerManager.setSaveRequired(false);
+                    } catch (IOException ignored) {
+                        Toast.makeText(context, "Datensatz der geöffneten Lektion kann nicht " +
+                                "automatisch aktualisiert werden! Bitte manuel Lektion erneut " +
+                                "öffnen.", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    paukerManager.setupNewApplicationLesson();
+                    paukerManager.setSaveRequired(false);
+                }
         }
     }
 

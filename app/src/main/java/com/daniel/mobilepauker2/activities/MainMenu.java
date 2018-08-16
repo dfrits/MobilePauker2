@@ -138,7 +138,7 @@ public class MainMenu extends AppCompatActivity {
         }
 
         String title = getString(R.string.app_name);
-        if (modelManager.isLessonNew()) {
+        if (modelManager.isLessonNotNew()) {
             title = paukerManager.getReadableFileName();
         }
         setTitle(title);
@@ -199,7 +199,7 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
-        if (modelManager.isLessonNew()) {
+        if (modelManager.isLessonNotNew()) {
             menu.setGroupEnabled(R.id.mGroup, true);
         } else {
             menu.setGroupEnabled(R.id.mGroup, false);
@@ -465,7 +465,26 @@ public class MainMenu extends AppCompatActivity {
                     startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
                 }
             } else {
-                startActivity(new Intent(context, LessonImportActivity.class));
+                if (paukerManager.isSaveRequired()) {
+                    builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.lesson_not_saved_dialog_title)
+                            .setMessage(R.string.lesson_not_saved_dialog_message)
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    startActivity(new Intent(context, LessonImportActivity.class));
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    builder.create().show();
+                } else
+                    startActivity(new Intent(context, LessonImportActivity.class));
             }
         }
     }
