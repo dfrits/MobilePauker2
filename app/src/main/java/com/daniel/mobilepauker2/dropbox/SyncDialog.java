@@ -148,28 +148,29 @@ public class SyncDialog extends Activity {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void deleteFiles(List<Metadata> deletedFiles, final List<Metadata> validatedFiles) {
-        final List<File> lokalDeletedFiles = getLokalDeletedFiles(); // Dateien, die lokal gelöscht wurden
+        final List<File> localDeletedFiles = getLokalDeletedFiles(); // Dateien, die lokal gelöscht wurden
 
         if (files != null) {
-            List<File> filesTMP = new ArrayList<>(Arrays.asList(files));
+            List<File> localFilesTMP = new ArrayList<>(Arrays.asList(files));
             for (int i = 0; i < deletedFiles.size(); i++) {
-                if (deletedFiles.get(i) instanceof DeletedMetadata) {
-                    DeletedMetadata metadata = (DeletedMetadata) deletedFiles.get(i);
-                    int index = getFileIndex(metadata.getName(), filesTMP);
+                Metadata metadata = deletedFiles.get(i);
+                if (metadata instanceof DeletedMetadata) {
+                    DeletedMetadata deletedMetadata = (DeletedMetadata) metadata;
+                    int index = getFileIndex(deletedMetadata.getName(), localFilesTMP);
                     if (index > -1) {
-                        filesTMP.get(index).delete();
+                        localFilesTMP.get(index).delete();
                     }
                 }
             }
         }
 
-        File[] data = new File[lokalDeletedFiles.size()];
-        data = lokalDeletedFiles.toArray(data);
+        File[] data = new File[localDeletedFiles.size()];
+        data = localDeletedFiles.toArray(data);
 
         new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
             public void onDeleteComplete(List<Metadata> result) {
-                syncWithFiles(validatedFiles, lokalDeletedFiles);
+                syncWithFiles(validatedFiles, localDeletedFiles);
             }
 
             @Override
@@ -203,15 +204,15 @@ public class SyncDialog extends Activity {
      * Aktualisiert die Files und ladet gegebenenfalls runter bzw hoch.
      * @param metadataList      Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
      *                          Dateien verglichen werden sollen
-     * @param lokalDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
+     * @param localDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
      */
-    private void syncWithFiles(List<Metadata> metadataList, List<File> lokalDeletedFiles) {
-        // Lokale Files kopieren, damit nichts verloren geht
-        List<File> filesTMP;
+    private void syncWithFiles(List<Metadata> metadataList, List<File> localDeletedFiles) {
+        // Lokale Files in Liste umwandeln
+        List<File> localFilesTMP;
         if (files != null) {
-            filesTMP = new ArrayList<>(Arrays.asList(files));
+            localFilesTMP = new ArrayList<>(Arrays.asList(files));
         } else {
-            filesTMP = new ArrayList<>();
+            localFilesTMP = new ArrayList<>();
         }
 
         List<File> lokal = new ArrayList<>(); // Zum Hochladen
@@ -223,27 +224,30 @@ public class SyncDialog extends Activity {
                 FileMetadata metadata = (FileMetadata) metadataList.get(i);
 
                 if (paukerManager.validateFilename(context, metadata.getName())) {
-                    int fileIndex = getFileIndex(metadata.getName(), filesTMP);
+                    int fileIndex = getFileIndex(metadata.getName(), localFilesTMP);
 
                     if (fileIndex == -1) {
-                        if (getFileIndex(metadata.getName(), lokalDeletedFiles) == -1) {
+                        if (getFileIndex(metadata.getName(), localDeletedFiles) == -1) {
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
                     } else {
-                        if (metadata.getClientModified().getTime() < filesTMP.get(fileIndex).lastModified()) {
-                            lokal.add(filesTMP.get(fileIndex));
-                        } else {
+                        long serverTime = metadata.getClientModified().getTime();
+                        long localTime = localFilesTMP.get(fileIndex).lastModified();
+                        if (serverTime < localTime) {
+                            lokal.add(localFilesTMP.get(fileIndex));
+                        } else if (serverTime > localTime){
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
-                        filesTMP.remove(fileIndex);
+                        localFilesTMP.remove(fileIndex);
                     }
                 }
             }
         }
 
-        if (!filesTMP.isEmpty()) lokal.addAll(filesTMP);
+        // Alle übrigen Dateien in der Liste sind lokal neu hinzugefügt worden und werden hochgeladen.
+        if (!localFilesTMP.isEmpty()) lokal.addAll(localFilesTMP);
 
         if (!lokal.isEmpty()) {
             uploadFiles(lokal);
