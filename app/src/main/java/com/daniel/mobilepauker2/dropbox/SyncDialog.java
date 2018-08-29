@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -49,7 +50,7 @@ public class SyncDialog extends Activity {
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
     private String accessToken;
-    private File[] files;
+    private List<File> files = new ArrayList<>();
     private Timer timeout;
     private TimerTask timerTask;
 
@@ -74,7 +75,14 @@ public class SyncDialog extends Activity {
 
         Serializable serializableExtra = intent.getSerializableExtra(FILES);
         if (serializableExtra instanceof File[]) {
-            files = (File[]) serializableExtra;
+            File[] tmpFiles = (File[]) serializableExtra;
+            long lastSyncTime = PreferenceManager.getDefaultSharedPreferences(context)
+                    .getLong(Constants.DROPBOX_LAST_SYNC_TIME, 0L);
+            for (File tmpFile : tmpFiles) {
+                if (tmpFile.lastModified() > lastSyncTime) {
+                    files.add(tmpFile);
+                }
+            }
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
             setResult(RESULT_CANCELED);
@@ -88,7 +96,7 @@ public class SyncDialog extends Activity {
 
     /**
      * Sucht nach allen Dateien im Dropboxordner, validiert sie und ruft dann
-     * {@link SyncDialog#syncWithFiles(List, List) synWithFiles()} auf.
+     * {@link SyncDialog#syncWithFiles(List, List) syncWithFiles()} auf.
      */
     private void loadData() {
         DropboxClientFactory.init(accessToken);
@@ -98,6 +106,8 @@ public class SyncDialog extends Activity {
             public void onDataLoaded(ListFolderResult result) {
                 List<Metadata> dbFiles = new ArrayList<>(); // Dateien in Dropbox mit der passenden Endung
                 List<Metadata> dbDeletedFiles = new ArrayList<>(); // Dateien, die in Dropbox gelöscht wurden
+                long lastSyncTime = PreferenceManager.getDefaultSharedPreferences(context)
+                        .getLong(Constants.DROPBOX_LAST_SYNC_TIME, 0L);
 
                 while (true) {
                     List<Metadata> entries = result.getEntries();
@@ -107,7 +117,8 @@ public class SyncDialog extends Activity {
                             if (entry instanceof DeletedMetadata) {
                                 dbDeletedFiles.add(entry);
                             } else {
-                                dbFiles.add(entry);
+                                if (((FileMetadata) entry).getClientModified().getTime() > lastSyncTime)
+                                    dbFiles.add(entry);
                             }
                         }
                     }
@@ -151,14 +162,13 @@ public class SyncDialog extends Activity {
         final List<File> localDeletedFiles = getLokalDeletedFiles(); // Dateien, die lokal gelöscht wurden
 
         if (files != null) {
-            List<File> localFilesTMP = new ArrayList<>(Arrays.asList(files));
             for (int i = 0; i < deletedFiles.size(); i++) {
                 Metadata metadata = deletedFiles.get(i);
                 if (metadata instanceof DeletedMetadata) {
                     DeletedMetadata deletedMetadata = (DeletedMetadata) metadata;
-                    int index = getFileIndex(deletedMetadata.getName(), localFilesTMP);
+                    int index = getFileIndex(deletedMetadata.getName(), files);
                     if (index > -1) {
-                        localFilesTMP.get(index).delete();
+                        files.get(index).delete();
                     }
                 }
             }
@@ -202,29 +212,21 @@ public class SyncDialog extends Activity {
 
     /**
      * Aktualisiert die Files und ladet gegebenenfalls runter bzw hoch.
-     * @param metadataList      Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
+     * @param validatedFiles    Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
      *                          Dateien verglichen werden sollen
      * @param localDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
      */
-    private void syncWithFiles(List<Metadata> metadataList, List<File> localDeletedFiles) {
-        // Lokale Files in Liste umwandeln
-        List<File> localFilesTMP;
-        if (files != null) {
-            localFilesTMP = new ArrayList<>(Arrays.asList(files));
-        } else {
-            localFilesTMP = new ArrayList<>();
-        }
-
+    private void syncWithFiles(List<Metadata> validatedFiles, List<File> localDeletedFiles) {
         List<File> lokal = new ArrayList<>(); // Zum Hochladen
         List<FileMetadata> dropB = new ArrayList<>(); // Zum Runterladen
         int downloadSize = 0; // Die Gesamtgröße zum runterladen
 
-        for (int i = 0; i < metadataList.size(); i++) {
-            if (metadataList.get(i) instanceof FileMetadata) {
-                FileMetadata metadata = (FileMetadata) metadataList.get(i);
+        for (int i = 0; i < validatedFiles.size(); i++) {
+            if (validatedFiles.get(i) instanceof FileMetadata) {
+                FileMetadata metadata = (FileMetadata) validatedFiles.get(i);
 
                 if (paukerManager.validateFilename(context, metadata.getName())) {
-                    int fileIndex = getFileIndex(metadata.getName(), localFilesTMP);
+                    int fileIndex = getFileIndex(metadata.getName(), files);
 
                     if (fileIndex == -1) {
                         if (getFileIndex(metadata.getName(), localDeletedFiles) == -1) {
@@ -233,21 +235,21 @@ public class SyncDialog extends Activity {
                         }
                     } else {
                         long serverTime = metadata.getClientModified().getTime();
-                        long localTime = localFilesTMP.get(fileIndex).lastModified();
+                        long localTime = files.get(fileIndex).lastModified();
                         if (serverTime < localTime) {
-                            lokal.add(localFilesTMP.get(fileIndex));
-                        } else if (serverTime > localTime){
+                            lokal.add(files.get(fileIndex));
+                        } else if (serverTime > localTime) {
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
-                        localFilesTMP.remove(fileIndex);
+                        files.remove(fileIndex);
                     }
                 }
             }
         }
 
         // Alle übrigen Dateien in der Liste sind lokal neu hinzugefügt worden und werden hochgeladen.
-        if (!localFilesTMP.isEmpty()) lokal.addAll(localFilesTMP);
+        if (!files.isEmpty()) lokal.addAll(files);
 
         if (!lokal.isEmpty()) {
             uploadFiles(lokal);
@@ -256,6 +258,8 @@ public class SyncDialog extends Activity {
         if (!dropB.isEmpty()) {
             downloadFiles(dropB, downloadSize);
         } else {
+            PreferenceManager.getDefaultSharedPreferences(context).edit()
+                    .putLong(Constants.DROPBOX_LAST_SYNC_TIME, System.currentTimeMillis()).apply();
             setResult(RESULT_OK);
             finish();
         }
