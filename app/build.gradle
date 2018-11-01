@@ -4,9 +4,9 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.daniel.mobilepauker2"
-        minSdkVersion 25
+        minSdkVersion 26
         //noinspection OldTargetApi
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 2
         versionName "1.1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -27,8 +27,9 @@ dependencies {
     implementation 'com.dropbox.core:dropbox-core-sdk:3.0.3'
     implementation 'com.android.support:recyclerview-v7:26.1.0'
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
-    implementation 'com.squareup.okhttp3:okhttp:3.7.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.diogobernardino:williamchart:2.5.0'
+    implementation 'com.ankushgrover:Hourglass:2.0.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
