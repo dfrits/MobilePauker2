@@ -62,6 +62,7 @@
             android:screenOrientation="portrait" />
 
         <activity android:name=".activities.LearnCardsActivity" />
+        <activity android:name=".activities.LearnCardsActivity2" />
 
         <activity
             android:name=".activities.SaveDialog"

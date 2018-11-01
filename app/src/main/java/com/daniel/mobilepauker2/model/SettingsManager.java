@@ -37,12 +37,8 @@ public class SettingsManager {
                 return context.getString(R.string.auto_save);
             case AUTO_SYNC:
                 return context.getString(R.string.auto_sync);
-            case FONT_SIZE:
-                return context.getString(R.string.font_size);
             case HIDE_TIMES:
                 return context.getString(R.string.hide_times);
-            case CENTER_TEXT:
-                return context.getString(R.string.center_text);
             case REPEAT_CARDS:
                 return context.getString(R.string.repeat_cards_mode);
             case CASE_SENSITIV:
@@ -51,8 +47,6 @@ public class SettingsManager {
                 return context.getString(R.string.flip_card_sides);
             case START_ASSOCIATION:
                 return context.getString(R.string.associate_dropbox);
-            case ENABLE_SPLITSCREEN:
-                return context.getString(R.string.enable_split_screen);
             case RETURN_FORGOTTEN_CARDS:
                 return context.getString(R.string.return_forgotten_cards);
             case LEARN_NEW_CARDS_RANDOMLY:
@@ -71,8 +65,6 @@ public class SettingsManager {
                 return context.getString(R.string.stm_default);
             case USTM:
                 return context.getString(R.string.ustm_default);
-            case FONT_SIZE:
-                return context.getString(R.string.font_size_sum_default);
             case REPEAT_CARDS:
                 return context.getString(R.string.repeat_cards_default);
             case FLIP_CARD_SIDES:
@@ -92,11 +84,7 @@ public class SettingsManager {
                 return context.getResources().getBoolean(R.bool.auto_sync_default);
             case HIDE_TIMES:
                 return context.getResources().getBoolean(R.bool.auto_sync_default);
-            case CENTER_TEXT:
-                return context.getResources().getBoolean(R.bool.auto_sync_default);
             case CASE_SENSITIV:
-                return context.getResources().getBoolean(R.bool.auto_sync_default);
-            case ENABLE_SPLITSCREEN:
                 return context.getResources().getBoolean(R.bool.auto_sync_default);
             case LEARN_NEW_CARDS_RANDOMLY:
                 return context.getResources().getBoolean(R.bool.learn_new_cards_randomly_default);
@@ -125,9 +113,6 @@ public class SettingsManager {
         USTM,
         STM,
         HIDE_TIMES,
-        CENTER_TEXT,
-        FONT_SIZE,
-        ENABLE_SPLITSCREEN,
         REPEAT_CARDS,
         RETURN_FORGOTTEN_CARDS,
         AUTO_SAVE,

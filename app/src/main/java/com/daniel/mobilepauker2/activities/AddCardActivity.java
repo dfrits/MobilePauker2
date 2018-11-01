@@ -43,12 +43,6 @@ public class AddCardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (sideAEditText != null && sideBEditText != null) {
-            SettingsManager settingsManager = SettingsManager.instance();
-            sideAEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
-            sideBEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
-        }
     }
 
     @Override

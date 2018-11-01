@@ -20,7 +20,6 @@ import com.dropbox.core.android.Auth;
 
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FLIP_CARD_SIDES;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FONT_SIZE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.REPEAT_CARDS;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTTEN_CARDS;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.START_ASSOCIATION;
@@ -107,8 +106,6 @@ public class SettingsFragment extends PreferenceFragment
                     summ = getString(R.string.return_forgotten_cards_summ);
                 } else if (s.equals(settingsManager.getSettingsKey(context, FLIP_CARD_SIDES))) {
                     summ = getString(R.string.flip_card_sides_summ);
-                } else if (s.equals(settingsManager.getSettingsKey(context, FONT_SIZE))) {
-                    summ = getString(R.string.font_size_sum);
                 }
 
                 listP.setSummary(String.format(summ.toString(), listP.getEntry()));

@@ -112,9 +112,6 @@
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="hide_times" translatable="false">Hide times</string>
-    <string name="center_text" translatable="false">Center text</string>
-    <string name="font_size" translatable="false">Font size</string>
-    <string name="enable_split_screen" translatable="false">Enable split screen</string>
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
     <string name="auto_save" translatable="false">Auto Save</string>
@@ -130,9 +127,6 @@
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="hide_times_title">Hide times</string>
-    <string name="center_text_title">Center text</string>
-    <string name="font_size_title">Font size</string>
-    <string name="enable_split_screen_title">Enable split screen</string>
     <string name="repeat_cards_mode_title">Repeat cards</string>
     <string name="return_forgotten_cards_title">Return forgotten cards</string>
     <string name="auto_save_title">Auto Save</string>
@@ -149,9 +143,7 @@
     <string name="flip_card_sides_summ">Which side to show first when repeating (%s)</string>
     <string name="case_sensitive_summ">If cards are repeated with input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
-    <string name="enable_split_screen_summ">Show both sides on same screen</string>
     <string name="auto_save_summ">Save automatically after every session</string>
-    <string name="font_size_sum">Set the size of the card text (%s)</string>
     <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>
     <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
     <string name="stm_summ">Short Term Memory: %smin</string>
@@ -165,7 +157,6 @@
     <string name="repeat_cards_default" translatable="false">0</string>
     <string name="return_forgotten_cards_default" translatable="false">0</string>
     <string name="flip_card_sides_default" translatable="false">0</string>
-    <string name="font_size_sum_default" translatable="false">18</string>
     <string name="ustm_default" translatable="false">18</string>
     <string name="stm_default" translatable="false">12</string>
 

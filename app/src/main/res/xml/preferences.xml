@@ -36,12 +36,6 @@
             android:key="@string/flip_card_sides"
             android:summary="@string/flip_card_sides_summ"
             android:title="@string/flip_card_sides_title" />
-        // Splitscreen
-        <SwitchPreference
-            android:defaultValue="@bool/enable_split_screen_default"
-            android:key="@string/enable_split_screen"
-            android:summary="@string/enable_split_screen_summ"
-            android:title="@string/enable_split_screen_title" />
         // Groß/Klein beachten
         <!-- TODO Implementieren -->
         <!--<SwitchPreference
@@ -83,20 +77,6 @@
     <PreferenceCategory
         android:key="@string/other"
         android:title="@string/other">
-        // Fontgröße TODO Zu ListPref ändern
-        <ListPreference
-            android:defaultValue="@string/font_size_sum_default"
-            android:dialogTitle="@string/font_size_title"
-            android:entries="@array/font_size_entries"
-            android:entryValues="@array/font_size_values"
-            android:key="@string/font_size"
-            android:summary="@string/font_size_sum"
-            android:title="@string/font_size" />
-        // Text mittig
-        <SwitchPreference
-            android:defaultValue="@bool/center_text_default"
-            android:key="@string/center_text"
-            android:title="@string/center_text_title" />
         // Autospeichern
         <SwitchPreference
             android:defaultValue="@bool/auto_save_default"

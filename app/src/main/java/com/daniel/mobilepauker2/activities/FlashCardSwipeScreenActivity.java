@@ -114,10 +114,6 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
         mCardCursor.close();
     }
 
-    abstract void onLeftSwipe();
-
-    abstract void onRightSwipe();
-
     abstract void updateCurrentCard();
 
     public boolean isCardCursorAvailable() {
@@ -147,29 +143,6 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
     protected abstract void cursorLoaded();
 
     class MyGestureDetector extends SimpleOnGestureListener {
-        @Override
-        public boolean onFling(MotionEvent e1,
-                               MotionEvent e2,
-                               float velocityX,
-                               float velocityY) {
-
-            try {
-                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH) {
-                    return false;
-                }
-                // right to left swipe
-                if (e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE
-                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    onLeftSwipe();
-                } else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE
-                        && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    onRightSwipe();
-                }
-            } catch (Exception e) {
-                Log.w("FlashCardSwipeScreenActivity::MyGestureDetector", "Caught exception while performing swipe action, ignored");
-            }
-            return false;
-        }
 
         @Override
         public boolean onDown(MotionEvent motionEvent) {

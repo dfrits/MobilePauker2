@@ -112,9 +112,6 @@
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
     <string name="hide_times_title">Zeiten ausblenden</string>
-    <string name="center_text_title">Text zentrieren</string>
-    <string name="font_size_title">Schriftgröße</string>
-    <string name="enable_split_screen_title">Splitscreen aktivieren</string>
     <string name="repeat_cards_mode_title">Karten wiederholen</string>
     <string name="return_forgotten_cards_title">Vergessene Karten zurücklegen</string>
     <string name="auto_save_title">Automatisches Speichern</string>
@@ -131,9 +128,7 @@
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
-    <string name="enable_split_screen_summ">Zeigt beide Seiten gleichzeitig</string>
     <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
-    <string name="font_size_sum">Setzt die Textgröße von Kartentext (%s)</string>
     <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm lernen</string>
     <string name="ustm_summ">Ultrakurzzeit-Gedächtnis: %ss</string>
     <string name="stm_summ">Kurzzeit-Gedächtnis: %smin</string>
