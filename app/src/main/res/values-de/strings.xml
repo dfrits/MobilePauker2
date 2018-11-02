@@ -52,6 +52,7 @@
     <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite
         zuerst gezeigt werden soll</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="timer_finished">\"Abgelaufen!\"</string>
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
@@ -142,4 +143,6 @@
 
     <!-- Neue Strings -->
     <string name="New">Neu</string>
+    <string name="titel_card_side_b">Backside</string>
+    <string name="titel_card_side_a">Frontside</string>
 </resources>

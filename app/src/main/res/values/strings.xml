@@ -51,6 +51,7 @@
     <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side have
         to be shown first</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="timer_finished">\"Finished!\"</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
@@ -89,7 +90,7 @@
     <string name="exit_learning_dialog">Exit Learning?</string>
     <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
-    <string name="delete_card">Karte löschen</string>
+    <string name="delete_card">Delete card</string>
 
     <!-- Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
@@ -124,7 +125,7 @@
     <string name="ustm_key" translatable="false">USTM</string>
 
     <!-- Titles -->
-    <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
+    <string name="flip_card_sides_title">First shown card side</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="hide_times_title">Hide times</string>
     <string name="repeat_cards_mode_title">Repeat cards</string>
@@ -140,7 +141,7 @@
     <string name="flip_cards">Flip sides</string>
 
     <!-- Beschreibungen -->
-    <string name="flip_card_sides_summ">Which side to show first when repeating (%s)</string>
+    <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
     <string name="case_sensitive_summ">If cards are repeated with input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
     <string name="auto_save_summ">Save automatically after every session</string>
@@ -164,4 +165,6 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
+    <string name="titel_card_side_b">Backside</string>
+    <string name="titel_card_side_a">Frontside</string>
 </resources>
