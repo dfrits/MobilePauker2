@@ -1,5 +1,6 @@
 <resources>
     <!-- Errors -->
+    <string name="load_card_data_error">Fehler beim Laden der Karte!</string>
     <string name="no_lesson_found">Keine Lektion gefunden…</string>
     <string name="error_importflashcardfile_directory">Auf SD-Karte kann nicht zugegriffen werden</string>
     <string name="error_filename_not_pauker">Datei ist nicht kompatibel (.pau.gz)</string>
@@ -56,7 +57,7 @@
 
     <!-- Sonstiges -->
     <string name="yes">Ja</string>
-    <string name="no">Nein</string>
+    <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
 
     <!-- Content Descriptions und Titles-->
@@ -143,6 +144,4 @@
 
     <!-- Neue Strings -->
     <string name="New">Neu</string>
-    <string name="titel_card_side_b">Backside</string>
-    <string name="titel_card_side_a">Frontside</string>
 </resources>

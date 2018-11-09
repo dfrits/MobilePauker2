@@ -1,6 +1,7 @@
 <resources>
     <!-- Errors -->
     <string name="no_lesson_found">No Lesson found…</string>
+    <string name="load_card_data_error">Erro while loading card!</string>
     <string name="error_importflashcardfile_directory">Unable to access directory on SD card</string>
     <string name="error_filename_not_pauker">File is not compatible (.pau.gz)</string>
     <string name="error_reading_from_xml">File is invalid or corrupted</string>
@@ -56,7 +57,7 @@
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
     <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
 
     <!-- Content Descriptions und Titles-->
@@ -165,6 +166,4 @@
 
     <!-- Neue Strings -->
     <string name="New">New</string>
-    <string name="titel_card_side_b">Backside</string>
-    <string name="titel_card_side_a">Frontside</string>
 </resources>
