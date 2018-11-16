@@ -1,5 +1,5 @@
 <resources>
-    <!-- Errors -->
+    <!-- region Errors -->
     <string name="no_lesson_found">No Lesson found…</string>
     <string name="load_card_data_error">Erro while loading card!</string>
     <string name="error_importflashcardfile_directory">Unable to access directory on SD card</string>
@@ -15,8 +15,9 @@
     <string name="add_card_side_empty">One side or both are still empty!</string>
     <string name="pause_timer_error">Time cannot be paused now</string>
     <string name="restart_timer_error">Time cannot be resarted now</string>
+    <!-- endregion -->
 
-    <!-- Infos -->
+    <!-- region Infos -->
     <string name="learned">Learned</string>
     <string name="expired">Expired</string>
     <string name="sum">Sum</string>
@@ -57,15 +58,17 @@
     <string name="timer_finished">\"Finished!\"</string>
     <string name="ustm_timer_paused">USTM \"Pause\"</string>
     <string name="stm_timer_paused">STM \"Pause\"</string>
+    <!-- endregion -->
 
-    <!-- Sonstiges -->
+    <!-- region Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="no">No</string>
+    <!-- endregion -->
 
-    <!-- Content Descriptions und Titles-->
+    <!-- region Content Descriptions und Titles-->
     <string name="sync_manually">Syncronize with Dropbox</string>
     <string name="add_new_card">Add new card</string>
     <string name="front">Front</string>
@@ -99,8 +102,9 @@
     <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
     <string name="delete_card">Delete card</string>
+    <!-- endregion -->
 
-    <!-- Buttontexte -->
+    <!-- region Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
     <string name="show_me">Show me!</string>
     <string name="skipWaiting">Timer still running…</string>
@@ -109,15 +113,17 @@
     <string name="add">Add</string>
     <string name="learn">Learn</string>
     <string name="repeat">Repeat</string>
+    <!-- endregion -->
 
-    <!-- Settings Anfang -->
+    <!-- region Settings -->
 
-    <!-- Gruppentitel -->
+    <!-- region Gruppentitel -->
     <string name="learning_cards">Learning cards</string>
     <string name="times">Times</string>
     <string name="other">Other</string>
+    <!-- endregion -->
 
-    <!-- Keys -->
+    <!-- region Keys -->
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="hide_times" translatable="false">Hide times</string>
@@ -131,8 +137,9 @@
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
     <string name="stm_key" translatable="false">STM</string>
     <string name="ustm_key" translatable="false">USTM</string>
+    <!-- endregion -->
 
-    <!-- Titles -->
+    <!-- region Titles -->
     <string name="flip_card_sides_title">First shown card side</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="hide_times_title">Hide times</string>
@@ -147,8 +154,9 @@
     <string name="stm_title">STM</string>
     <string name="ustm_title">USTM</string>
     <string name="flip_cards">Flip sides</string>
+    <!-- endregion -->
 
-    <!-- Beschreibungen -->
+    <!-- region Beschreibungen -->
     <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
     <string name="case_sensitive_summ">If cards are repeated with input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
@@ -161,16 +169,19 @@
     <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
     <string name="expire_toast_summ">Shows a info line with the next expire date after saving the lesson</string>
+    <!-- endregion -->
 
-    <!-- Defaultwerte -->
+    <!-- region Defaultwerte -->
     <string name="repeat_cards_default" translatable="false">0</string>
     <string name="return_forgotten_cards_default" translatable="false">0</string>
     <string name="flip_card_sides_default" translatable="false">0</string>
     <string name="ustm_default" translatable="false">18</string>
     <string name="stm_default" translatable="false">12</string>
+    <!-- endregion -->
 
-    <!-- Settings Ende -->
+    <!-- endregion -->
 
-    <!-- Neue Strings -->
+    <!-- region Neue Strings -->
     <string name="New">New</string>
+    <!-- endregion -->
 </resources>

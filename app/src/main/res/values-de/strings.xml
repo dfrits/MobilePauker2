@@ -1,5 +1,5 @@
 <resources>
-    <!-- Errors -->
+    <!-- region Errors -->
     <string name="load_card_data_error">Fehler beim Laden der Karte!</string>
     <string name="no_lesson_found">Keine Lektion gefunden…</string>
     <string name="error_importflashcardfile_directory">Auf SD-Karte kann nicht zugegriffen werden</string>
@@ -15,8 +15,9 @@
     <string name="add_card_side_empty">Eine Seite oder beide sind noch leer!</string>
     <string name="pause_timer_error">Zeit kann gerade nicht angehalten werden</string>
     <string name="restart_timer_error">Zeit kann gerade nicht fortgesetzt werden</string>
+    <!-- endregion -->
 
-    <!-- Infos -->
+    <!-- region Infos -->
     <string name="learned">Gelernt</string>
     <string name="expired">Abgelaufen</string>
     <string name="sum">Summe</string>
@@ -58,14 +59,16 @@
         zuerst gezeigt werden soll</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
     <string name="timer_finished">\"Abgelaufen!\"</string>
+    <!-- endregion -->
 
-    <!-- Sonstiges -->
+    <!-- region Sonstiges -->
     <string name="yes">Ja</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
     <string name="no">Nein</string>
+    <!-- endregion -->
 
-    <!-- Content Descriptions und Titles-->
+    <!-- region Content Descriptions und Titles-->
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte hinzufügen</string>
@@ -99,8 +102,9 @@
     <string name="delete_card">Karte löschen</string>
     <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
     <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
+    <!-- endregion -->
 
-    <!-- Buttontexte -->
+    <!-- region Buttontexte -->
     <string name="next_card">Nächste Karte -&gt;</string>
     <string name="show_me">Zeigs mir!</string>
     <string name="skipWaiting">Timer laufen noch…</string>
@@ -109,15 +113,17 @@
     <string name="learn">Lernen</string>
     <string name="repeat">Wiederholen</string>
     <string name="reset">Zurücksetzen</string>
+    <!-- endregion -->
 
-    <!-- Settings Anfang -->
+    <!-- region Settings -->
 
-    <!-- Gruppentitel -->
+    <!-- region Gruppentitel -->
     <string name="learning_cards">Karten lernen</string>
     <string name="times">Zeiten</string>
     <string name="other">Sonstiges</string>
+    <!-- endregion -->
 
-    <!-- Titles -->
+    <!-- region Titles -->
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
     <string name="hide_times_title">Zeiten ausblenden</string>
@@ -132,8 +138,9 @@
     <string name="stm_title">KZG</string>
     <string name="ustm_title">UKZG</string>
     <string name="flip_cards">Seiten vertauschen</string>
+    <!-- endregion -->
 
-    <!-- Beschreibungen -->
+    <!-- region Beschreibungen -->
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
@@ -146,9 +153,11 @@
     <string name="auto_sync_enabled_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem Speichern an</string>
+    <!-- endregion -->
 
-    <!-- Settings Ende -->
+    <!-- endregion -->
 
-    <!-- Neue Strings -->
+    <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <!-- endregion -->
 </resources>
