@@ -26,7 +26,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -56,9 +55,6 @@ import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATIN
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.CENTER_TEXT;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.ENABLE_SPLITSCREEN;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FONT_SIZE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 
@@ -190,13 +186,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private void setupSplitView() {
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        setContentView(R.layout.learn_cards_split);
-    }
-
-    private void setupNormalView() {
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.learn_cards);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     private void updateLearningPhase() {
@@ -368,15 +358,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         TextView sideBTextView = findViewById(R.id.tCardSideB);
 
         // Textgröße setzen
-        int textSize = Integer.parseInt(settingsManager.getStringPreference(context, FONT_SIZE));
+        int textSize = 18;
         sideATextView.setTextSize(textSize);
         sideBTextView.setTextSize(textSize);
 
         // Text evtl mittig setzen
-        int gravity = settingsManager.getBoolPreference(context, CENTER_TEXT) ?
+        /*int gravity = settingsManager.getBoolPreference(context, CENTER_TEXT) ?
                 Gravity.CENTER : Gravity.NO_GRAVITY;
         sideATextView.setGravity(gravity);
-        sideBTextView.setGravity(gravity);
+        sideBTextView.setGravity(gravity);*/
 
         LearningPhase learningPhase = modelManager.getLearningPhase();
         // Layoutcontents setzen
@@ -406,23 +396,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
         }
 
-        fillHeader();
-    }
-
-    private void fillDataNormalView(String cardText) {
-        TextView cardTextView = findViewById(R.id.tCardSide);
-
-        // Textgröße setzen
-        int textSize = Integer.parseInt(settingsManager.getStringPreference(context, FONT_SIZE));
-        cardTextView.setTextSize(textSize);
-
-        // Text evtl mittig setzen
-        int gravity = settingsManager.getBoolPreference(context, CENTER_TEXT) ?
-                Gravity.CENTER : Gravity.NO_GRAVITY;
-        cardTextView.setGravity(gravity);
-
-        // Layoutcontents setzen
-        cardTextView.setText(cardText);
         fillHeader();
     }
 
@@ -464,79 +437,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         }
     }
 
-    /**
-     * Prüft ob nach links geswipt werden darf.
-     * @return <b>True</b>, wenn
-     * <ul>
-     * <li>Modus: <b>"Karte lernen"</b> und der USTM-Timer noch <b>nicht</b> abgelaufen ist</li>
-     * <li>Modus: <b>"Karte lernen"</b> und der USTM-Timer noch <b>abgelaufen</b> und die Vorderseite sichtbar ist</li>
-     * <li>Modus: <b>"Karte wiederholen"</b> und die Vorderseite sichtbar ist</li>
-     * </ul>
-     * sonst <b>false</b>
-     */
-    private boolean isLeftSwipeAllowed() {
-        LearningPhase learningPhase = modelManager.getLearningPhase();
-        if ((learningPhase == SIMPLE_LEARNING || learningPhase == FILLING_USTM)
-                && !checkUSTMTimeout())
-            return true;
-        if ((learningPhase == SIMPLE_LEARNING || learningPhase == FILLING_USTM) && checkSTMTimeout()) {
-            if (flipCardSides) {
-                return currentCard.getSide() == FlashCard.SideShowing.SIDE_B;
-            } else {
-                return currentCard.getSide() == FlashCard.SideShowing.SIDE_A;
-            }
-        }
-        if (learningPhase == REPEATING_LTM || learningPhase == REPEATING_STM || learningPhase == REPEATING_USTM) {
-            if (flipCardSides) {
-                return currentCard.getSide() == FlashCard.SideShowing.SIDE_B;
-            } else {
-                return currentCard.getSide() == FlashCard.SideShowing.SIDE_A;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    void onLeftSwipe() {
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)) return;
-
-        if (isLeftSwipeAllowed()) {
-
-            if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A) {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_B);
-            } else {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_A);
-            }
-
-            fillData();
-            if (bShowMe.getVisibility() == View.VISIBLE) {
-                bShowMe.setVisibility(View.GONE);
-                lRepeatButtons.setVisibility(View.VISIBLE);
-            }
-        }
-    }
-
-    @Override
-    void onRightSwipe() {
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)) return;
-
-        LearningPhase learningPhase = modelManager.getLearningPhase();
-        if ((learningPhase == SIMPLE_LEARNING || learningPhase == FILLING_USTM) && !checkUSTMTimeout()) {
-            if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A) {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_B);
-            } else {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_A);
-            }
-
-            fillData();
-        }
-    }
-
     @Override
     public void screenTouched() {
         LearningPhase learningPhase = modelManager.getLearningPhase();
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)
-                && learningPhase == REPEATING_LTM || learningPhase == REPEATING_STM || learningPhase == REPEATING_USTM) {
+        if (learningPhase == REPEATING_LTM
+                || learningPhase == REPEATING_STM
+                || learningPhase == REPEATING_USTM) {
             if (flipCardSides) {
                 currentCard.setSide(FlashCard.SideShowing.SIDE_A);
             } else {
@@ -550,29 +456,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     @Override
-    public void moveCursorForwardToNextCard() {
-
-    }
-
-    @Override
-    public void moveCursorBackToNextCard() {
-
-    }
-
-    @Override
     protected void fillData() {
-        String mainCardText;
-        if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A) {
-            mainCardText = currentCard.getSideAText();
-        } else {
-            mainCardText = currentCard.getSideBText();
-        }
-
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)) {
-            fillDataSplitView(currentCard.getSideAText(), currentCard.getSideBText());
-        } else {
-            fillDataNormalView(mainCardText);
-        }
+        fillDataSplitView(currentCard.getSideAText(), currentCard.getSideBText());
     }
 
     @Override
@@ -603,11 +488,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
         }
 
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)) {
-            setupSplitView();
-        } else {
-            setupNormalView();
-        }
+        setupSplitView();
 
         if (modelManager.getLearningPhase() != REPEATING_LTM
                 && (modelManager.getLearningPhase() != SIMPLE_LEARNING
@@ -637,7 +518,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         finish();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -680,21 +561,22 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     private void setLearningPhase(LearningPhase learningPhase) {
+        //Neue Phase dem Modelmanager mitteilen und Deck aktualisieren
         modelManager.setLearningPhase(context, learningPhase);
-        refreshCursor();
+        //Cursor an erste Stelle setzen
+        setCursorToFirst();
+        //Daten aktualisieren
         updateCurrentCard();
+        //Daten erneut füllen
         fillData();
     }
 
     public void showCard(View view) {
-        if (settingsManager.getBoolPreference(context, ENABLE_SPLITSCREEN)) {
-            screenTouched();
-        } else {
-            onLeftSwipe();
-        }
+        screenTouched();
     }
 
     public void nextCard(View view) {
+        // Karte ein Deck weiterschieben
         mCardPackAdapter.setCardLearned(mCardCursor.getLong(CardPackAdapter.KEY_ROWID_ID));
 
         if (!mCardCursor.isLast()) {
@@ -703,6 +585,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             fillData();
         }
 
+        // Lernphase aktualisieren
         updateLearningPhase();
     }
 
@@ -754,7 +637,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     public void mDeleteClicked(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.delete_card_message)
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -872,5 +755,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             text = String.format(Locale.getDefault(), "%s %d / %ds", getString(R.string.ustm), ustm, ustmPref);
             ustmTimer.setText(text);
         }
+    }
+
+    public void mPauseTimerClicked(MenuItem item) {
+    }
+
+    public void mRestartTimerClicked(MenuItem item) {
     }
 }

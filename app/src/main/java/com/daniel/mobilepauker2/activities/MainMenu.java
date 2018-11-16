@@ -315,12 +315,12 @@ public class MainMenu extends AppCompatActivity {
             modelManager.setLearningPhase(context, FILLING_USTM);
         }
 
-        startActivity(new Intent(context, LearnCardsActivity.class));
+        startActivity(new Intent(context, LearnCardsActivity2.class));
     }
 
     public void repeatCards(View view) {
         modelManager.setLearningPhase(context, ModelManager.LearningPhase.REPEATING_LTM);
-        Intent importActivity = new Intent(context, LearnCardsActivity.class);
+        Intent importActivity = new Intent(context, LearnCardsActivity2.class);
         startActivity(importActivity);
     }
 
@@ -453,7 +453,7 @@ public class MainMenu extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             })
-                            .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+                            .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
@@ -506,7 +506,7 @@ public class MainMenu extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -529,7 +529,7 @@ public class MainMenu extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -571,7 +571,7 @@ public class MainMenu extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

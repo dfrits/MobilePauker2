@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.ModelManager;
-import com.daniel.mobilepauker2.model.SettingsManager;
 
 /**
  * Created by dfritsch on 22.03.2018.
@@ -49,7 +48,7 @@ public class AddCardActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
@@ -78,7 +77,7 @@ public class AddCardActivity extends AppCompatActivity {
                             finish();
                         }
                     })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             dialog.dismiss();

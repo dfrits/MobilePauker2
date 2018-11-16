@@ -273,7 +273,7 @@ public class ModelManager {
      * correctly, we have to move the current card one batch further
      * @param position .
      */
-    public void setCardLearned(int position) {
+    void setCardLearned(int position) {
         if (position < 0 || position >= mCurrentPack.size()) {
             Log.e("AndyPaukerApplication::learnedCard", "request to update a card with position outside the pack");
             return;
@@ -490,7 +490,8 @@ public class ModelManager {
                 text = text.concat(" ").concat(date);
                 Toast.makeText(context, text, Toast.LENGTH_LONG * 2).show();
             }
-        } catch (MalformedURLException | EOFException ignored) {}
+        } catch (MalformedURLException | EOFException ignored) {
+        }
     }
 
     public boolean deleteLesson(Context context, File file) {
@@ -581,6 +582,10 @@ public class ModelManager {
         } else {
             if (mLesson.getUnlearnedBatch().removeCard(mCurrentCard)) {
                 Log.d("AndyPaukerApplication::deleteCard", "Deleted from unlearned batch");
+            } else if (mLesson.getUltraShortTermList().remove(mCurrentCard)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from ultra short term batch");
+            } else if (mLesson.getShortTermList().remove(mCurrentCard)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from short term batch");
             } else {
                 Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from unlearned batch  ");
                 return false;
@@ -590,7 +595,6 @@ public class ModelManager {
         mCurrentPack.remove(position);
 
         return true;
-
     }
 
     public void setLearningPhase(Context context, LearningPhase learningPhase) {

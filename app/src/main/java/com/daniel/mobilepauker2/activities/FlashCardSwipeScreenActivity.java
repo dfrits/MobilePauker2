@@ -1,20 +1,20 @@
-/* 
+/*
  * Copyright 2011 Brian Ford
- * 
+ *
  * This file is part of Pocket Pauker.
- * 
- * Pocket Pauker is free software: you can redistribute it and/or modify it under the 
- * terms of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Pocket Pauker is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * 
- * Pocket Pauker is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *
+ * Pocket Pauker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * See http://www.gnu.org/licenses/.
 
-*/
+ */
 
 package com.daniel.mobilepauker2.activities;
 
@@ -36,10 +36,6 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.utils.Log;
 
-import static com.daniel.mobilepauker2.utils.Constants.SWIPE_MAX_OFF_PATH;
-import static com.daniel.mobilepauker2.utils.Constants.SWIPE_MIN_DISTANCE;
-import static com.daniel.mobilepauker2.utils.Constants.SWIPE_THRESHOLD_VELOCITY;
-
 public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     protected final SettingsManager settingsManager = SettingsManager.instance();
@@ -55,7 +51,7 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
     protected CardPackRamAdapter mCardPackAdapter;
     protected boolean mActivitySetupOk = false;
     protected int mSavedCursorPosition = 0;
-
+    private int LOADER_ID = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +62,8 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
         // Setup the cursor
         Log.d("FlashCardSwipeScreenActivity::onCreate", "Seting up cursor");
 
-        getLoaderManager().initLoader(1, null, this);
+        LOADER_ID = 1;
+        getLoaderManager().initLoader(LOADER_ID, null, this);
 
         // Setup Gesture detection
         Log.d("FlashCardSwipeScreenActivity::onCreate", "Setting up gesture detection");
@@ -121,7 +118,12 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
     }
 
     public void refreshCursor() {
-//        getLoaderManager().initLoader(LOADER_ID, null, this);
+        if (LOADER_ID > -1) {
+            getLoaderManager().initLoader(LOADER_ID, null, this);
+        }
+    }
+
+    public void setCursorToFirst() {
         if (mCardCursor instanceof FlashCardCursor) {
             FlashCardCursor cursor = (FlashCardCursor) mCardCursor;
             if (modelManager.getCurrentBatchSize() == 0) {
@@ -133,10 +135,6 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
     }
 
     public abstract void screenTouched();
-
-    public abstract void moveCursorForwardToNextCard();
-
-    public abstract void moveCursorBackToNextCard();
 
     protected abstract void fillData();
 

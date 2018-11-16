@@ -13,6 +13,8 @@
     <string name="add_card_sides_empty_error">One or both sides are empty</string>
     <string name="delete_lesson_error">Can\'t delete Lesson</string>
     <string name="add_card_side_empty">One side or both are still empty!</string>
+    <string name="pause_timer_error">Time cannot be paused now</string>
+    <string name="restart_timer_error">Time cannot be resarted now</string>
 
     <!-- Infos -->
     <string name="learned">Learned</string>
@@ -53,12 +55,15 @@
         to be shown first</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
     <string name="timer_finished">\"Finished!\"</string>
+    <string name="ustm_timer_paused">USTM \"Pause\"</string>
+    <string name="stm_timer_paused">STM \"Pause\"</string>
 
     <!-- Sonstiges -->
     <string name="app_name" translatable="false">MobilePauker++</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="no">No</string>
 
     <!-- Content Descriptions und Titles-->
     <string name="sync_manually">Syncronize with Dropbox</string>
@@ -68,6 +73,8 @@
     <string name="learn_new_card">Learn new cards</string>
     <string name="repeat_expired_cards">Repeat expired cards</string>
     <string name="open_lesson">Open lesson</string>
+    <string name="pause_timer">Pause Time</string>
+    <string name="restart_timer">Restart Time</string>
     <string name="save_lesson">Save lesson</string>
     <string name="search">Search</string>
     <string name="reset_cards">Reset lesson</string>

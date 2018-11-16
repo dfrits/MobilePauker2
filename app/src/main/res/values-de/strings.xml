@@ -13,12 +13,16 @@
     <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
     <string name="delete_lesson_error">Lektion kann nicht gelöscht werden</string>
     <string name="add_card_side_empty">Eine Seite oder beide sind noch leer!</string>
+    <string name="pause_timer_error">Zeit kann gerade nicht angehalten werden</string>
+    <string name="restart_timer_error">Zeit kann gerade nicht fortgesetzt werden</string>
 
     <!-- Infos -->
     <string name="learned">Gelernt</string>
     <string name="expired">Abgelaufen</string>
     <string name="sum">Summe</string>
     <string name="untrained">Ungelernt</string>
+    <string name="ustm_timer_paused">USTM \"Pausiert\"</string>
+    <string name="stm_timer_paused">STM \"Pausiert\"</string>
     <string name="ustm">UKZG</string>
     <string name="stm">KZG</string>
     <string name="stack">Stapel</string>
@@ -59,12 +63,15 @@
     <string name="yes">Ja</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
+    <string name="no">Nein</string>
 
     <!-- Content Descriptions und Titles-->
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte hinzufügen</string>
     <string name="front">Vorderseite</string>
+    <string name="pause_timer">Zeit pausieren</string>
+    <string name="restart_timer">Zeit fortsetzen</string>
     <string name="back">Rückseite</string>
     <string name="learn_new_card">Neue Karten lernen</string>
     <string name="repeat_expired_cards">Abgelaufene Karten wiederholen</string>

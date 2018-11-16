@@ -3,14 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:onClick="mEditClicked"
-        app:showAsAction="never"
-        android:title="@string/edit_card" />
+        android:title="@string/edit_card"
+        app:showAsAction="never" />
     <item
         android:onClick="mDeleteClicked"
-        app:showAsAction="never"
-        android:title="@string/delete_card" />
+        android:title="@string/delete_card"
+        app:showAsAction="never" />
     <item
-        android:onClick="mSettingsClicked"
-        app:showAsAction="never"
-        android:title="@string/settings" />
+        android:id="@+id/mPauseButton"
+        android:icon="@drawable/menu_pause_button"
+        android:onClick="mPauseTimerClicked"
+        android:title="@string/pause_timer"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mRestartButton"
+        android:icon="@drawable/menu_restart_button"
+        android:onClick="mRestartTimerClicked"
+        android:title="@string/restart_timer"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 </menu>
