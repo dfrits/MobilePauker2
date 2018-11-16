@@ -43,8 +43,8 @@
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
                 android:paddingStart="5dp"
-                android:paddingEnd="0dp"
-                android:textSize="12sp" />
+                android:textColor="@color/black"
+                android:paddingEnd="0dp"/>
         </RelativeLayout>
 
 
@@ -80,8 +80,8 @@
                 android:longClickable="true"
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
-                android:scrollHorizontally="false"
-                android:textSize="16sp" />
+                android:textColor="@color/black"
+                android:scrollHorizontally="false"/>
         </RelativeLayout>
     </LinearLayout>
 

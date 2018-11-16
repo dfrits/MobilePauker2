@@ -110,6 +110,15 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
         if (requestCode == Constants.REQUEST_CODE_EDIT_CARD && resultCode == RESULT_OK) {
             updateCurrentCard();
             fillInData(flipCardSides);
+        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
+            if (resultCode == RESULT_OK) {
+                Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                paukerManager.setSaveRequired(false);
+                modelManager.showExpireToast(context);
+            } else {
+                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
+            }
+            finish();
         }
     }
 
