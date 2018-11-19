@@ -9,16 +9,19 @@
         android:id="@+id/tNothingFound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="22sp"
+        android:autoSizeTextType="uniform"
         android:fontFamily="serif"
         android:text="@string/no_lesson_found"
         android:textColor="@color/black"
-        android:textSize="22sp"
         android:visibility="gone" />
 
     <TextView
         android:id="@+id/infoText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="22sp"
+        android:autoSizeMinTextSize="18sp"
         android:autoSizeTextType="uniform"
         android:fontFamily="serif"
         android:maxLines="1"
