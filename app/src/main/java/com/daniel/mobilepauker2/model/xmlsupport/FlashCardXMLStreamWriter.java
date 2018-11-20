@@ -46,10 +46,14 @@ public class FlashCardXMLStreamWriter {
 
                 FileOutputStream fos = new FileOutputStream(newxmlfile);
                 gzipOutputStream = new GZIPOutputStream(fos);
+                boolean isRenamed = false;
                 if (FlashCardXMLStreamWriter.writeXML(modelManager.getLesson(), gzipOutputStream)) {
-                    newxmlfile.renameTo(modelManager.getFilePath());
+                    isRenamed = newxmlfile.renameTo(modelManager.getFilePath());
                 }
-                newxmlfile.delete();
+                if (isRenamed) {
+                    //noinspection ResultOfMethodCallIgnored
+                    newxmlfile.delete();
+                }
 
                 gzipOutputStream.close();
             } catch (FileNotFoundException e) {
@@ -62,7 +66,7 @@ public class FlashCardXMLStreamWriter {
         }
     }
 
-    public static boolean writeXML(Lesson lesson, OutputStream outputStream) {
+    private static boolean writeXML(Lesson lesson, OutputStream outputStream) {
 
         XmlSerializer serializer = Xml.newSerializer();
 
@@ -167,12 +171,12 @@ public class FlashCardXMLStreamWriter {
 
             if (isFrontSideFontValid(card)) {
                 serializer.startTag("", "Font");
-                serializer.attribute("", "Background", card.getFrontSide().getFont().getBackgroundColor());
-                serializer.attribute("", "Bold", card.getFrontSide().getFont().getBold());
+                serializer.attribute("", "Background", String.valueOf(card.getFrontSide().getFont().getBackgroundColor()));
+                serializer.attribute("", "Bold", String.valueOf(card.getFrontSide().getFont().isBold()));
                 serializer.attribute("", "Family", card.getFrontSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", card.getFrontSide().getFont().getForeground());
-                serializer.attribute("", "Italic", card.getFrontSide().getFont().getItalic());
-                serializer.attribute("", "Size", card.getFrontSide().getFont().getSize());
+                serializer.attribute("", "Foreground", String.valueOf(card.getFrontSide().getFont().getTextColor()));
+                serializer.attribute("", "Italic", String.valueOf(card.getFrontSide().getFont().isItalic()));
+                serializer.attribute("", "Size", String.valueOf(card.getFrontSide().getFont().getTextSize()));
                 serializer.endTag("", "Font");
             } else {
                 Log.w("FlashCardXMLStreamWriter::serialiseCard", "card front font null");
@@ -205,12 +209,12 @@ public class FlashCardXMLStreamWriter {
 
             if (isReverseSideFontValid(card)) {
                 serializer.startTag("", "Font");
-                serializer.attribute("", "Background", card.getReverseSide().getFont().getBackgroundColor());
-                serializer.attribute("", "Bold", card.getReverseSide().getFont().getBold());
+                serializer.attribute("", "Background", String.valueOf(card.getReverseSide().getFont().getBackgroundColor()));
+                serializer.attribute("", "Bold", String.valueOf(card.getReverseSide().getFont().isBold()));
                 serializer.attribute("", "Family", card.getReverseSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", card.getReverseSide().getFont().getForeground());
-                serializer.attribute("", "Italic", card.getReverseSide().getFont().getItalic());
-                serializer.attribute("", "Size", card.getReverseSide().getFont().getSize());
+                serializer.attribute("", "Foreground", String.valueOf(card.getReverseSide().getFont().getTextColor()));
+                serializer.attribute("", "Italic", String.valueOf(card.getReverseSide().getFont().isItalic()));
+                serializer.attribute("", "Size", String.valueOf(card.getReverseSide().getFont().getTextSize()));
                 serializer.endTag("", "Font");
             } else {
                 Log.w("FlashCArdXMLStreamWriter::serialiseCard", "card reverse font null");
@@ -237,13 +241,12 @@ public class FlashCardXMLStreamWriter {
             fontBoolean = false;
         } else {
 
-            if (card.getFrontSide().getFont().getBackgroundColor() == null ||
-                    card.getFrontSide().getFont().getBackgroundColor() == null ||
-                    card.getFrontSide().getFont().getBold() == null ||
+            if (card.getFrontSide().getFont().getBackgroundColor() == -1 ||
+                    !card.getFrontSide().getFont().isBold() ||
                     card.getFrontSide().getFont().getFamily() == null ||
-                    card.getFrontSide().getFont().getForeground() == null ||
-                    card.getFrontSide().getFont().getItalic() == null ||
-                    card.getFrontSide().getFont().getSize() == null
+                    card.getFrontSide().getFont().getTextColor() == -1 ||
+                    !card.getFrontSide().getFont().isItalic() ||
+                    card.getFrontSide().getFont().getTextSize() == -1
                     ) {
                 fontBoolean = false;
             }
@@ -259,13 +262,12 @@ public class FlashCardXMLStreamWriter {
             fontBoolean = false;
         } else {
 
-            if (card.getReverseSide().getFont().getBackgroundColor() == null ||
-                    card.getReverseSide().getFont().getBackgroundColor() == null ||
-                    card.getReverseSide().getFont().getBold() == null ||
+            if (card.getReverseSide().getFont().getBackgroundColor() == -1 ||
+                    !card.getReverseSide().getFont().isBold() ||
                     card.getReverseSide().getFont().getFamily() == null ||
-                    card.getReverseSide().getFont().getForeground() == null ||
-                    card.getReverseSide().getFont().getItalic() == null ||
-                    card.getReverseSide().getFont().getSize() == null
+                    card.getReverseSide().getFont().getTextColor() == -1 ||
+                    !card.getReverseSide().getFont().isItalic() ||
+                    card.getReverseSide().getFont().getTextSize() == -1
                     ) {
                 fontBoolean = false;
             }
@@ -277,11 +279,8 @@ public class FlashCardXMLStreamWriter {
     private static boolean isCardValid(Card card) {
         if (card == null) {
             return false;
-        } else if (card.getFrontSide() == null ||
-                card.getReverseSide() == null) {
-            return false;
-        }
-        return true;
+        } else return card.getFrontSide() != null &&
+                card.getReverseSide() != null;
     }
 
 }

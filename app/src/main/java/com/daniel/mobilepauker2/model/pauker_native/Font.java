@@ -1,56 +1,60 @@
 package com.daniel.mobilepauker2.model.pauker_native;
 
 public class Font {
-    String mBackground = "-1";
-    String mBold = "false";
-    String mFamily = "Dialog";
-    String mForeground = "-16777216";
-    String mItalic = "false";
-    String mSize = "12";
+    private final boolean mBold;
+    private final boolean mItalic;
+    private final int mBackground;
+    private final int mForeground;
+    private final int mSize;
+    private final String mFamily;
 
     public Font() {
-
+        mBold = false;
+        mItalic = false;
+        mBackground = -1;
+        mForeground = -16777216;
+        mSize = 16;
+        mFamily = "Dialog";
     }
 
     public Font(String background, String bold, String family, String foreground, String italic, String size) {
-        mBackground = background;
-        mBold = bold;
+        mBold = bold.equals("true");
+        mItalic = italic.equals("true");
+        mBackground = parseInt(background);
+        mForeground = parseInt(foreground);
+        mSize = parseInt(size);
         mFamily = family;
-        mForeground = foreground;
-        mItalic = italic;
-        mSize = size;
     }
 
-    public String getStyle() {
-        return mFamily;
+    private int parseInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException ignored) {
+            return -1;
+        }
     }
 
-    public String getBackgroundColor() {
+    public boolean isBold() {
+        return mBold;
+    }
+
+    public boolean isItalic() {
+        return mItalic;
+    }
+
+    public int getBackgroundColor() {
         return mBackground;
     }
 
+    public int getTextColor() {
+        return mForeground;
+    }
 
-    public String getBold() {
-        return mBold;
+    public int getTextSize() {
+        return mSize;
     }
 
     public String getFamily() {
         return mFamily;
-    }
-
-    public String getForeground() {
-        return mForeground;
-    }
-
-    public String getItalic() {
-        return mItalic;
-    }
-
-    public String getSize() {
-        return mSize;
-    }
-
-    public void setSize(String mSize) {
-        this.mSize = mSize;
     }
 }

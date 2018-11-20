@@ -86,4 +86,31 @@
             android:onClick="skipWaiting"
             android:text="@string/skip_waiting_button" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lBInputRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tTypeAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/bProofInput"
+            android:fontFamily="serif"
+            android:padding="3dp"
+            android:text="@string/put_in_your_answer"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/bProofInput"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"  />
+    </RelativeLayout>
 </RelativeLayout>

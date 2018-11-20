@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lLearnCardsView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -43,8 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/titelCardSideA"
-                android:background="@drawable/box_background"
-                android:fontFamily="serif"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
                 android:textColor="@color/black" />
         </RelativeLayout>
 
@@ -67,14 +68,33 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/tCardSideB"
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/titelCardSideB"
-                android:background="@drawable/box_background"
-                android:fontFamily="serif"
-                android:textColor="@color/black" />
+                android:id="@+id/tCardSideB">
+
+                <TextView
+                    android:id="@+id/tCardSideB_TV"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:textColor="@color/black" />
+
+                <EditText
+                    android:id="@+id/tCardSideB_ET"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:focusable="true"
+                    android:gravity="top"
+                    android:importantForAutofill="no"
+                    android:inputType="text|textMultiLine"
+                    android:paddingStart="2dp"
+                    android:paddingEnd="2dp"
+                    android:scrollHorizontally="false"
+                    tools:ignore="LabelFor" />
+            </FrameLayout>
         </RelativeLayout>
     </LinearLayout>
 

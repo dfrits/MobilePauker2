@@ -22,15 +22,26 @@ import com.daniel.mobilepauker2.model.CardPackAdapter;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.util.Locale;
 import java.util.Random;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.*;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.*;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.NOTHING;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_LTM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_STM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_USTM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_STM;
+import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_USTM;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 
 public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     private final PaukerManager paukerManager = PaukerManager.instance();
@@ -40,8 +51,8 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     private boolean repeatingLTM = false;
     private boolean stopWaiting = false;
     private boolean firstStart = true;
-    private boolean ustmTimerFinished;
-    private boolean stmTimerFinished;
+    private boolean ustmTimerFinished = true;
+    private boolean stmTimerFinished = true;
     private Hourglass ustmTimer;
     private Hourglass stmTimer;
     private int ustmTotalTime;
@@ -52,8 +63,6 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     private Button bShowMe;
     private RelativeLayout lRepeatButtons;
     private RelativeLayout lSkipWaiting;
-    private TextView sideA;
-    private TextView sideB;
     private MenuItem pauseButton;
     private MenuItem restartButton;
 
@@ -83,8 +92,6 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
         }
 
         initButtons();
-        sideA = findViewById(R.id.tCardSideA);
-        sideB = findViewById(R.id.tCardSideB);
     }
 
     @Override
@@ -227,23 +234,28 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     }
 
     private void startUSTMTimer() {
-        if (ustmTimer != null && !ustmTimer.isPaused()) {
+        if (ustmTimer != null && ustmTimerFinished) {
             ustmTimer.startTimer();
             ustmTimerFinished = false;
         }
     }
 
     private void startSTMTimer() {
-        if (stmTimer != null && !stmTimerFinished) {
+        if (stmTimer != null && stmTimerFinished) {
             stmTimer.startTimer();
             stmTimerFinished = false;
         }
     }
 
     private void pauseTimer() {
-        if (ustmTimer != null && !ustmTimer.isPaused()) {
+        if (ustmTimer != null && !ustmTimer.isPaused() && !ustmTimerFinished) {
             ustmTimer.pauseTimer();
+        }
+        if (stmTimer != null && !stmTimer.isPaused() && !stmTimerFinished) {
             stmTimer.pauseTimer();
+        }
+        if (!stmTimerFinished) {
+            disableButtons();
         }
     }
 
@@ -254,6 +266,7 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
         if (stmTimer != null && stmTimer.isPaused() && !stmTimerFinished) {
             stmTimer.resumeTimer();
         }
+        enableButtons();
     }
 
     private void stopUSTMTimer() {
@@ -361,11 +374,7 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
                         setLearningPhase(LearningPhase.FILLING_USTM);
                         startUSTMTimer();
                     } else {
-                        //Toast.makeText(this, getString(R.string.learncards_waiting_stm_timer), Toast.LENGTH_SHORT).show();
                         setLearningPhase(LearningPhase.WAITING_FOR_STM);
-                    }
-                    {
-                        Log.e("LearnCardsActivity::updateLearningPhase", "Unrecognised state while repeating USTM");
                     }
 
                     updateLearningPhase();
@@ -449,24 +458,38 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     }
 
     private void setButtonVisibilityWaiting() {
-        bNext.setVisibility(View.GONE);
-        bShowMe.setVisibility(View.GONE);
-        lRepeatButtons.setVisibility(View.GONE);
+        bNext.setVisibility(GONE);
+        bShowMe.setVisibility(GONE);
+        lRepeatButtons.setVisibility(GONE);
         lSkipWaiting.setVisibility(VISIBLE);
     }
 
     private void setButtonVisibilityRepeating() {
-        bNext.setVisibility(View.GONE);
+        bNext.setVisibility(GONE);
         bShowMe.setVisibility(VISIBLE);
-        lRepeatButtons.setVisibility(View.GONE);
-        lSkipWaiting.setVisibility(View.GONE);
+        lRepeatButtons.setVisibility(GONE);
+        lSkipWaiting.setVisibility(GONE);
     }
 
     private void setButtonVisibilityFilling() {
         bNext.setVisibility(VISIBLE);
-        bShowMe.setVisibility(View.GONE);
-        lRepeatButtons.setVisibility(View.GONE);
-        lSkipWaiting.setVisibility(View.GONE);
+        bShowMe.setVisibility(GONE);
+        lRepeatButtons.setVisibility(GONE);
+        lSkipWaiting.setVisibility(GONE);
+    }
+
+    private void disableButtons() {
+        bNext.setEnabled(false);
+        bShowMe.setEnabled(false);
+        lRepeatButtons.setEnabled(false);
+        lSkipWaiting.setEnabled(false);
+    }
+
+    private void enableButtons() {
+        bNext.setEnabled(true);
+        bShowMe.setEnabled(true);
+        lRepeatButtons.setEnabled(true);
+        lSkipWaiting.setEnabled(true);
     }
 
     @Override
@@ -509,7 +532,7 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
             }
 
             fillInData(flipCardSides);
-            bShowMe.setVisibility(View.GONE);
+            bShowMe.setVisibility(GONE);
             lRepeatButtons.setVisibility(VISIBLE);
         }
     }
@@ -525,24 +548,25 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     private void fillInData(boolean flipCardSides) {
         // Daten setzen
         // TODO Schriftgröße, Kursiv?, Fett?, Font, Vorder-, Hintergrund, Art der Wiederholung
-
+        Font fontA = modelManager.getCardFont(CardPackAdapter.KEY_SIDEA_ID, mCardCursor.getPosition());
+        Font fontB = modelManager.getCardFont(CardPackAdapter.KEY_SIDEB_ID, mCardCursor.getPosition());
 
         LearningPhase learningPhase = modelManager.getLearningPhase();
         // Layoutcontents setzen
         if (flipCardSides) {
-            fillSideA(R.string.back, currentCard.getSideBText());
+            fillSideA(R.string.back, currentCard.getSideBText(), fontB);
 
-            // Now work out if we should show side A in bottom box
             String sideAText = "";
             if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A
                     || learningPhase == SIMPLE_LEARNING
                     || learningPhase == FILLING_USTM) {
                 sideAText = currentCard.getSideAText();
             }
-            fillSideB(R.string.front, sideAText);
+            fillSideB(R.string.front, sideAText, fontA);
+
         } else {
             // Card sides not flipped so show side A in top box!
-            fillSideA(R.string.front, currentCard.getSideAText());
+            fillSideA(R.string.front, currentCard.getSideAText(), fontA);
 
             String sideBText = "";
             if (currentCard.getSide() == FlashCard.SideShowing.SIDE_B
@@ -550,7 +574,7 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
                     || learningPhase == FILLING_USTM) {
                 sideBText = currentCard.getSideBText();
             }
-            fillSideB(R.string.back, sideBText);
+            fillSideB(R.string.back, sideBText, fontB);
         }
 
         fillHeader();
@@ -585,15 +609,28 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
         return flipCardSides;
     }
 
-    private void fillSideA(int titleResource, String text) {
+    private void fillSideA(int titleResource, String text, Font font) {
         ((TextView) findViewById(R.id.titelCardSideA)).setText(getString(titleResource));
+        TextView sideA = findViewById(R.id.tCardSideA);
+        modelManager.setFont(context, font == null ? new Font() : font, sideA);
         sideA.setText(text);
     }
 
-    private void fillSideB(int titleResource, String text) {
+    /**
+     * Füllt die Kartenseite mit Text und setzt Titel und Font. Benutzt beim Wiederholen durch
+     * Erinnern.
+     * @param titleResource Ttiel der Karte
+     * @param text          Anzuzeigender Text
+     */
+    private void fillSideB(int titleResource, String text, Font font) {
         ((TextView) findViewById(R.id.titelCardSideB)).setText(getString(titleResource));
+        findViewById(R.id.tCardSideB_ET).setVisibility(GONE);
+        TextView sideB = findViewById(R.id.tCardSideB_TV);
         if (text.isEmpty()) {
             sideB.setHint(getString(R.string.learncards_show_hint));
+            modelManager.setFont(context, new Font(), sideB);
+        } else {
+            modelManager.setFont(context, font == null ? new Font() : font, sideB);
         }
         sideB.setText(text);
     }
@@ -608,8 +645,8 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
             text = getString(R.string.expired).concat(": %d");
             text = String.format(text, modelManager.getExpiredCardsSize());
             allCards.setText(text);
-            ustmCards.setVisibility(View.GONE);
-            stmCards.setVisibility(View.GONE);
+            ustmCards.setVisibility(GONE);
+            stmCards.setVisibility(GONE);
         } else {
             text = getString(R.string.untrained).concat(": %d");
             text = String.format(text, modelManager.getUnlearnedBatchSize());
@@ -670,12 +707,12 @@ public class LearnCardsActivity2 extends FlashCardSwipeScreenActivity {
     }
 
     public void mPauseTimerClicked(MenuItem item) {
-        if (restartButton != null) {
+        if (restartButton != null && !stmTimerFinished) {
             pauseTimer();
             item.setVisible(false);
             restartButton.setVisible(true);
 
-            if (ustmTimerText != null && ustmTimerText.getVisibility() == VISIBLE) {
+            if (ustmTimerText != null && ustmTimerText.getVisibility() == VISIBLE && !ustmTimerFinished) {
                 ustmTimerText.setText(R.string.ustm_timer_paused);
             }
             if (stmTimerText != null && stmTimerText.getVisibility() == VISIBLE) {

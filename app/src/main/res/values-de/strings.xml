@@ -18,6 +18,11 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="put_in_your_answer">Type in your Answer</string>
+    <string name="wrong_answer">Deine Antwort war falsch!</string>
+    <string name="zurücklegen">Zurücklegen</string>
+    <string name="weiterlegen">Trotzdem weiterlegen</string>
+    <string name="compare_ques_answ">Richtig wäre gewesen: %s\nDeine Antwort war: %s</string>
     <string name="learned">Gelernt</string>
     <string name="expired">Abgelaufen</string>
     <string name="sum">Summe</string>

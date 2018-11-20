@@ -38,11 +38,11 @@
             android:title="@string/flip_card_sides_title" />
         // Groß/Klein beachten
         <!-- TODO Implementieren -->
-        <!--<SwitchPreference
+        <SwitchPreference
             android:defaultValue="@bool/case_sensitive_default"
             android:key="@string/case_sensitive"
             android:summary="@string/case_sensitive_summ"
-            android:title="@string/case_sensitive_title"/>-->
+            android:title="@string/case_sensitive_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/times">
