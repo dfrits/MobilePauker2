@@ -13,7 +13,7 @@ public class Font {
         mItalic = false;
         mBackground = -1;
         mForeground = -16777216;
-        mSize = 16;
+        mSize = 12;
         mFamily = "Dialog";
     }
 

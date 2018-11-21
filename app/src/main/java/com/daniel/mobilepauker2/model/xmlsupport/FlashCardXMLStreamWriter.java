@@ -6,6 +6,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Batch;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
+import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
 import com.daniel.mobilepauker2.utils.Log;
@@ -158,8 +159,8 @@ public class FlashCardXMLStreamWriter {
                 serializer.attribute("", "LearnedTimestamp", Long.toString(timeStamp));
             }
 
-            serializer.attribute("", "Orientation", "LTR"); // TODO this should not default
-            serializer.attribute("", "RepeatByTyping", "false"); // TODO this should not default
+            serializer.attribute("", "Orientation", String.valueOf(card.getFrontSide().getOrientation().getOrientation()));
+            serializer.attribute("", "RepeatByTyping", String.valueOf(card.getFrontSide().isRepeatedByTyping()));
 
             serializer.startTag("", "Text");
 
@@ -169,25 +170,23 @@ public class FlashCardXMLStreamWriter {
 
             serializer.endTag("", "Text");
 
-            if (isFrontSideFontValid(card)) {
-                serializer.startTag("", "Font");
-                serializer.attribute("", "Background", String.valueOf(card.getFrontSide().getFont().getBackgroundColor()));
-                serializer.attribute("", "Bold", String.valueOf(card.getFrontSide().getFont().isBold()));
-                serializer.attribute("", "Family", card.getFrontSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", String.valueOf(card.getFrontSide().getFont().getTextColor()));
-                serializer.attribute("", "Italic", String.valueOf(card.getFrontSide().getFont().isItalic()));
-                serializer.attribute("", "Size", String.valueOf(card.getFrontSide().getFont().getTextSize()));
-                serializer.endTag("", "Font");
-            } else {
-                Log.w("FlashCardXMLStreamWriter::serialiseCard", "card front font null");
-            }
+            Font font = card.getFrontSide().getFont();
+            font = font == null ? new Font() : font;
+            serializer.startTag("", "Font");
+            serializer.attribute("", "Background", String.valueOf(font.getBackgroundColor()));
+            serializer.attribute("", "Bold", String.valueOf(font.isBold()));
+            serializer.attribute("", "Family", font.getFamily());
+            serializer.attribute("", "Foreground", String.valueOf(font.getTextColor()));
+            serializer.attribute("", "Italic", String.valueOf(font.isItalic()));
+            serializer.attribute("", "Size", String.valueOf(font.getTextSize()));
+            serializer.endTag("", "Font");
 
             serializer.endTag("", "FrontSide");
 
             // ReverseSide
             serializer.startTag("", "ReverseSide");
-            serializer.attribute("", "Orientation", "LTR"); // TODO defaults
-            serializer.attribute("", "RepeatByTyping", "false"); // TODO defaults
+            serializer.attribute("", "Orientation", String.valueOf(card.getFrontSide().getOrientation().getOrientation()));
+            serializer.attribute("", "RepeatByTyping", String.valueOf(card.getFrontSide().isRepeatedByTyping()));
 
             // BugFix*******************
             // 11/12/2011 - bf
@@ -206,19 +205,16 @@ public class FlashCardXMLStreamWriter {
             }
             serializer.endTag("", "Text");
 
-
-            if (isReverseSideFontValid(card)) {
-                serializer.startTag("", "Font");
-                serializer.attribute("", "Background", String.valueOf(card.getReverseSide().getFont().getBackgroundColor()));
-                serializer.attribute("", "Bold", String.valueOf(card.getReverseSide().getFont().isBold()));
-                serializer.attribute("", "Family", card.getReverseSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", String.valueOf(card.getReverseSide().getFont().getTextColor()));
-                serializer.attribute("", "Italic", String.valueOf(card.getReverseSide().getFont().isItalic()));
-                serializer.attribute("", "Size", String.valueOf(card.getReverseSide().getFont().getTextSize()));
-                serializer.endTag("", "Font");
-            } else {
-                Log.w("FlashCArdXMLStreamWriter::serialiseCard", "card reverse font null");
-            }
+            font = card.getReverseSide().getFont();
+            font = font == null ? new Font() : font;
+            serializer.startTag("", "Font");
+            serializer.attribute("", "Background", String.valueOf(font.getBackgroundColor()));
+            serializer.attribute("", "Bold", String.valueOf(font.isBold()));
+            serializer.attribute("", "Family", font.getFamily());
+            serializer.attribute("", "Foreground", String.valueOf(font.getTextColor()));
+            serializer.attribute("", "Italic", String.valueOf(font.isItalic()));
+            serializer.attribute("", "Size", String.valueOf(font.getTextSize()));
+            serializer.endTag("", "Font");
 
             serializer.endTag("", "ReverseSide");
 
@@ -232,48 +228,6 @@ public class FlashCardXMLStreamWriter {
         }
 
         return true;
-    }
-
-    private static boolean isFrontSideFontValid(Card card) {
-        boolean fontBoolean = true;
-
-        if (card.getFrontSide().getFont() == null) {
-            fontBoolean = false;
-        } else {
-
-            if (card.getFrontSide().getFont().getBackgroundColor() == -1 ||
-                    !card.getFrontSide().getFont().isBold() ||
-                    card.getFrontSide().getFont().getFamily() == null ||
-                    card.getFrontSide().getFont().getTextColor() == -1 ||
-                    !card.getFrontSide().getFont().isItalic() ||
-                    card.getFrontSide().getFont().getTextSize() == -1
-                    ) {
-                fontBoolean = false;
-            }
-        }
-
-        return fontBoolean;
-    }
-
-    private static boolean isReverseSideFontValid(Card card) {
-        boolean fontBoolean = true;
-
-        if (card.getReverseSide().getFont() == null) {
-            fontBoolean = false;
-        } else {
-
-            if (card.getReverseSide().getFont().getBackgroundColor() == -1 ||
-                    !card.getReverseSide().getFont().isBold() ||
-                    card.getReverseSide().getFont().getFamily() == null ||
-                    card.getReverseSide().getFont().getTextColor() == -1 ||
-                    !card.getReverseSide().getFont().isItalic() ||
-                    card.getReverseSide().getFont().getTextSize() == -1
-                    ) {
-                fontBoolean = false;
-            }
-        }
-
-        return fontBoolean;
     }
 
     private static boolean isCardValid(Card card) {

@@ -219,7 +219,7 @@ public class CardSide implements Comparable<CardSide> {
      * would be the frontside
      * @param longTermBatchNumber the long term batch number
      */
-    public void setLongTermBatchNumber(int longTermBatchNumber) {
+    void setLongTermBatchNumber(int longTermBatchNumber) {
         this.longTermBatchNumber = longTermBatchNumber;
     }
 
@@ -254,7 +254,7 @@ public class CardSide implements Comparable<CardSide> {
      * @param repeatByTyping <CODE>true</CODE>, if the cardside should be repeated by typing instead
      *                       of memorizing, <CODE>false</CODE> otherwise
      */
-    public void setRepeatByTyping(boolean repeatByTyping) {
+    void setRepeatByTyping(boolean repeatByTyping) {
         this.repeatByTyping = repeatByTyping;
     }
 
