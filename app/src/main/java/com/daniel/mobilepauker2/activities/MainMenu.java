@@ -190,7 +190,7 @@ public class MainMenu extends AppCompatActivity {
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        if (paukerManager.isSaveRequired()) {
+        /*if (paukerManager.isSaveRequired()) {
             save.setEnabled(true);
             save.setIcon(R.drawable.menu_save_enabled);
             //            save.setIconTintList(ColorStateList.valueOf(Color.DKGRAY));
@@ -198,7 +198,8 @@ public class MainMenu extends AppCompatActivity {
             save.setEnabled(false);
             save.setIcon(R.drawable.menu_save_disabled);
             //             save.setIconTintList(ColorStateList.valueOf(Color.WHITE));
-        }
+        }*/
+        save.setVisible(paukerManager.isSaveRequired());
 
         if (search.isVisible()) {
             final SearchView searchView = (SearchView) search.getActionView();
