@@ -36,11 +36,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Created by dfritsch on 21.03.2018.
- * veesy.de
- * hs-augsburg
- */
+/**  * Created by dfritsch on 21.11.2018.  * MobilePauker++  */
 
 public class SyncDialog extends Activity {
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
