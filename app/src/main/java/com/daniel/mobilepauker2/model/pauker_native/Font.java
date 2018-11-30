@@ -1,18 +1,18 @@
 package com.daniel.mobilepauker2.model.pauker_native;
 
 public class Font {
-    private final boolean mBold;
-    private final boolean mItalic;
-    private final int mBackground;
-    private final int mForeground;
-    private final int mSize;
-    private final String mFamily;
+    private boolean mBold;
+    private boolean mItalic;
+    private int mBackground;
+    private int mTextColor;
+    private int mSize;
+    private String mFamily;
 
     public Font() {
         mBold = false;
         mItalic = false;
         mBackground = -1;
-        mForeground = -16777216;
+        mTextColor = -16777216;
         mSize = 12;
         mFamily = "Dialog";
     }
@@ -21,7 +21,7 @@ public class Font {
         mBold = bold.equals("true");
         mItalic = italic.equals("true");
         mBackground = parseInt(background);
-        mForeground = parseInt(foreground);
+        mTextColor = parseInt(foreground);
         mSize = parseInt(size);
         mFamily = family;
     }
@@ -47,7 +47,7 @@ public class Font {
     }
 
     public int getTextColor() {
-        return mForeground;
+        return mTextColor;
     }
 
     public int getTextSize() {
@@ -56,5 +56,25 @@ public class Font {
 
     public String getFamily() {
         return mFamily;
+    }
+
+    public void setBold(boolean mBold) {
+        this.mBold = mBold;
+    }
+
+    public void setItalic(boolean mItalic) {
+        this.mItalic = mItalic;
+    }
+
+    public void setBackground(int mBackground) {
+        this.mBackground = mBackground;
+    }
+
+    public void setTextColor(int mForeground) {
+        this.mTextColor = mForeground;
+    }
+
+    public void setSize(int mSize) {
+        this.mSize = mSize;
     }
 }

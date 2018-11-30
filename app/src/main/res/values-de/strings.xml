@@ -1,5 +1,6 @@
 <resources>
     <!-- region Errors -->
+    <string name="number_format_error">Bitte nur Ziffern eingeben</string>
     <string name="load_card_data_error">Fehler beim Laden der Karte!</string>
     <string name="no_lesson_found">Keine Lektion gefunden…</string>
     <string name="error_importflashcardfile_directory">Auf SD-Karte kann nicht zugegriffen werden</string>
@@ -18,7 +19,7 @@
     <!-- endregion -->
 
     <!-- region Infos -->
-    <string name="put_in_your_answer">Type in your Answer</string>
+    <string name="put_in_your_answer">Gib deine Antwort ein</string>
     <string name="wrong_answer">Deine Antwort war falsch!</string>
     <string name="zurücklegen">Zurücklegen</string>
     <string name="weiterlegen">Trotzdem weiterlegen</string>
@@ -70,6 +71,11 @@
     <string name="yes">Ja</string>
     <string name="cancel">Abbrechen</string>
     <string name="ok">OK</string>
+    <string name="text_size">Textgröße</string>
+    <string name="background">Hintergrund</string>
+    <string name="text_color">Schriftfarbe</string>
+    <string name="bold">Fett</string>
+    <string name="italic">Kursiv</string>
     <string name="no">Nein</string>
     <!-- endregion -->
 

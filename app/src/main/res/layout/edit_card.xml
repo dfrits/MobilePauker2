@@ -30,7 +30,22 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <ImageButton
+                android:id="@+id/mSideA"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/eTSideA"
+                android:layout_alignTop="@+id/tFront"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <com.daniel.mobilepauker2.model.MPEditText
                 android:id="@+id/eTSideA"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -43,10 +58,9 @@
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
                 android:paddingStart="5dp"
-                android:textColor="@color/black"
-                android:paddingEnd="0dp"/>
+                android:paddingEnd="0dp"
+                android:textColor="@color/black" />
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -66,7 +80,22 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <ImageButton
+                android:id="@+id/mSideB"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/eTSideB"
+                android:layout_alignTop="@+id/tBack"
+                android:layout_alignEnd="@+id/eTSideB"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontB"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <com.daniel.mobilepauker2.model.MPEditText
                 android:id="@+id/eTSideB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -80,8 +109,8 @@
                 android:longClickable="true"
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
-                android:textColor="@color/black"
-                android:scrollHorizontally="false"/>
+                android:scrollHorizontally="false"
+                android:textColor="@color/black" />
         </RelativeLayout>
     </LinearLayout>
 

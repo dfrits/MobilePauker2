@@ -25,9 +25,6 @@ public class Constants {
 
     // Konstanten für den Swipegestenerkenner
     public static final String STACK_INDEX = "STACK_INDEX";
-    public static final int SWIPE_MIN_DISTANCE = 60;
-    public static final int SWIPE_MAX_OFF_PATH = 400;
-    public static final int SWIPE_THRESHOLD_VELOCITY = 100;
 
     // Activityrequestcodes
     public static final int REQUEST_CODE_SAVE_DIALOG_NORMAL = 1;
@@ -39,5 +36,8 @@ public class Constants {
     // Messagekey für den Handler
     public static final String MESSAGE_KEY = "RESULT";
 
+    // Keys
     public static String CURSOR_POSITION = "CURSOR_POSITION";
+    public static String LAST_TEXT_COLOR_CHOICE = "LAST_TEXT_COLOR_CHOICE";
+    public static String LAST_BACK_COLOR_CHOICE = "LAST_BACK_COLOR_CHOICE";
 }

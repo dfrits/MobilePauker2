@@ -316,12 +316,12 @@ public class MainMenu extends AppCompatActivity {
             modelManager.setLearningPhase(context, FILLING_USTM);
         }
 
-        startActivity(new Intent(context, LearnCardsActivity2.class));
+        startActivity(new Intent(context, LearnCardsActivity.class));
     }
 
     public void repeatCards(View view) {
         modelManager.setLearningPhase(context, ModelManager.LearningPhase.REPEATING_LTM);
-        Intent importActivity = new Intent(context, LearnCardsActivity2.class);
+        Intent importActivity = new Intent(context, LearnCardsActivity.class);
         startActivity(importActivity);
     }
 

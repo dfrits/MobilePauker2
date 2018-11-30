@@ -18,15 +18,15 @@
 
 package com.daniel.mobilepauker2.model;
 
-import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.SparseLongArray;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -240,9 +240,15 @@ public class ModelManager {
         }
     }
 
-    public void addCard(String sideA, String sideB, String rowID, String index, String learnStatus) {
+    void addCard(String sideA, String sideB, String rowID, String index, String learnStatus) {
         FlashCard newCard = new FlashCard(sideA, sideB, index, rowID, learnStatus);
         mLesson.getUnlearnedBatch().addCard(newCard);
+    }
+
+    public void addCard(FlashCard flashCard, String sideA, String sideB) {
+        flashCard.setSideAText(sideA);
+        flashCard.setSideBText(sideB);
+        mLesson.getUnlearnedBatch().addCard(flashCard);
     }
 
     public List<BatchStatistics> getBatchStatistics() {
@@ -648,18 +654,16 @@ public class ModelManager {
      * Setzt die entsprechende Font-Werte bei der Karte, falls sie vorhanden sind. Sonst werden
      * Standartwerte gesetzt. Gesetzt werden Textgröße, Textfarbe, Fett, Kursiv, Font und
      * Hintergrundfarbe.
-     * @param context  Instanz der aufrufenden Activity
      * @param font  Seite, bei der die Werte gesetzt werden sollen
      * @param cardSide Hiervon werden die Werte ausgelesen
      */
-    public void setFont(Context context, Font font, TextView cardSide) {
-        int textSize = font.getTextSize();
-        if (textSize > 16) cardSide.setTextSize(textSize);
-        else cardSide.setTextSize(16);
+    void setFont(@Nullable Font font, TextView cardSide) {
+        font = font == null ? new Font() : font;
 
-        int textColor = font.getTextColor();
-        if (textColor != -1) cardSide.setTextColor(textColor);
-        else cardSide.setTextColor(context.getColor(R.color.black));
+        int textSize = font.getTextSize();
+        cardSide.setTextSize(textSize > 16 ? textSize : 16);
+
+        cardSide.setTextColor(font.getTextColor());
 
         boolean bold = font.isBold();
         boolean italic = font.isItalic();
@@ -672,16 +676,16 @@ public class ModelManager {
 
         int backgroundColor = font.getBackgroundColor();
         if (backgroundColor != -1)
-            cardSide.setBackground(createBoxBackground(context, backgroundColor));
+            cardSide.setBackground(createBoxBackground(backgroundColor));
         else cardSide.setBackgroundResource(R.drawable.box_background);
     }
 
     @NonNull
-    private GradientDrawable createBoxBackground(Context context, int backgroundColor) {
+    private GradientDrawable createBoxBackground(int backgroundColor) {
         GradientDrawable background = new GradientDrawable();
         background.setShape(GradientDrawable.RECTANGLE);
         background.setCornerRadius(2);
-        background.setStroke(3, context.getColor(R.color.black));
+        background.setStroke(3, Color.BLACK);
         background.setColor(backgroundColor);
         return background;
     }
