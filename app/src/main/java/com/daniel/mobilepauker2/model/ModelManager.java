@@ -41,7 +41,6 @@ import com.daniel.mobilepauker2.statistics.BatchStatistics;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.EOFException;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -502,7 +501,7 @@ public class ModelManager {
                 text = text.concat(" ").concat(date);
                 Toast.makeText(context, text, Toast.LENGTH_LONG * 2).show();
             }
-        } catch (MalformedURLException | EOFException ignored) {
+        } catch (MalformedURLException ignored) {
         }
     }
 
@@ -654,7 +653,7 @@ public class ModelManager {
      * Setzt die entsprechende Font-Werte bei der Karte, falls sie vorhanden sind. Sonst werden
      * Standartwerte gesetzt. Gesetzt werden Textgröße, Textfarbe, Fett, Kursiv, Font und
      * Hintergrundfarbe.
-     * @param font  Seite, bei der die Werte gesetzt werden sollen
+     * @param font     Seite, bei der die Werte gesetzt werden sollen
      * @param cardSide Hiervon werden die Werte ausgelesen
      */
     void setFont(@Nullable Font font, TextView cardSide) {

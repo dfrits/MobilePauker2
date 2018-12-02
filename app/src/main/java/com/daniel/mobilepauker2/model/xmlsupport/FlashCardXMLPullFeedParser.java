@@ -14,13 +14,10 @@ import com.daniel.mobilepauker2.utils.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.EOFException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
 
@@ -28,6 +25,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
         super(feedUrl);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public Lesson parse() {
 
         List<FlashCard> flashCards = null;
@@ -87,7 +85,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                     SIDEB = false;
 
                                     if (orientation != null) {
-                                        currentFlashCard.getFrontSide().setOrientation(new ComponentOrientation("LTR"));
+                                        currentFlashCard.getFrontSide().setOrientation(new ComponentOrientation(orientation));
                                     }
 
                                     if (learnedTimestamp != null) {
@@ -100,7 +98,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                     SIDEB = true;
 
                                     if (orientation != null) {
-                                        currentFlashCard.getReverseSide().setOrientation(new ComponentOrientation("LTR"));
+                                        currentFlashCard.getReverseSide().setOrientation(new ComponentOrientation(orientation));
                                     }
 
                                     if (learnedTimestamp != null) {
@@ -253,9 +251,8 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
      * zurückgegeben.
      * @return Eine Map mit dem frühesten Ablaufdatum <b>(index = 0)</b> und die Anzahl abgelaufener
      * Karten (<b>index = 2)</b>
-     * @throws EOFException .
      */
-    public SparseLongArray getNextExpireDate() throws EOFException {
+    public SparseLongArray getNextExpireDate() {
 
         final XmlPullParser parser = Xml.newPullParser();
         final SparseLongArray map = new SparseLongArray(2);

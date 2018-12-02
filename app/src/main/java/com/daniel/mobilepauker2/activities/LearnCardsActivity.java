@@ -123,8 +123,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
-            } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
             finish();
         }

@@ -10,6 +10,7 @@ package com.daniel.mobilepauker2.utils;
 
 public class Constants {
     public static final String DEFAULT_APP_FILE_DIRECTORY = "/MobilePauker/";
+    public static final String STANDARD_ORIENTATION = "LTR";
 
     // Dropboxkonstanten
     public final static String DROPBOX_APP_KEY = "9rqxyyq8cty3cf1";
@@ -34,7 +35,8 @@ public class Constants {
     public static final int REQUEST_CODE_SAVE_DIALOG_NEW_LESSON = 5;
 
     // Messagekey für den Handler
-    public static final String MESSAGE_KEY = "RESULT";
+    public static final String MESSAGE_BOOL_KEY = "RESULT";
+    public static final String MESSAGE_MSG_KEY = "MSG";
 
     // Keys
     public static String CURSOR_POSITION = "CURSOR_POSITION";

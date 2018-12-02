@@ -65,6 +65,7 @@ public class AddCardActivity extends AEditCardActivity {
             sideBEditText.setText("");
             PaukerManager.instance().setSaveRequired(true);
             sideAEditText.requestFocus();
+            finish();
         } else {
             Toast.makeText(context, R.string.add_card_side_empty, Toast.LENGTH_SHORT).show();
         }

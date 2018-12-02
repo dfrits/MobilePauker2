@@ -35,15 +35,28 @@ public class SaveLessonThreaded extends Thread {
 
     public void run() {
         Log.d("SaveLessonThreaded::run", "entry");
-        FlashCardXMLStreamWriter.saveLesson();
+        try {
+            FlashCardXMLStreamWriter.saveLesson();
+            sendMessage();
+        } catch (SecurityException e) {
+            sendErrorMessage(e.getMessage());
+        }
         Log.d("SaveLessonThreaded::run", "After save lesson");
-        sendMessage();
     }
 
     private void sendMessage() {
         Message msg = mHandler.obtainMessage();
         Bundle b = new Bundle();
-        b.putBoolean(Constants.MESSAGE_KEY, true);
+        b.putBoolean(Constants.MESSAGE_BOOL_KEY, true);
+        msg.setData(b);
+        mHandler.sendMessage(msg);
+    }
+
+    private void sendErrorMessage(String message) {
+        Message msg = mHandler.obtainMessage();
+        Bundle b = new Bundle();
+        b.putBoolean(Constants.MESSAGE_BOOL_KEY, false);
+        b.getString(Constants.MESSAGE_MSG_KEY, message);
         msg.setData(b);
         mHandler.sendMessage(msg);
     }

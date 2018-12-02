@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -9,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.SaveLessonThreaded;
@@ -21,6 +23,7 @@ import com.daniel.mobilepauker2.utils.Constants;
  */
 
 public class SaveDialog extends Activity {
+    final Context context = this;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,10 +39,11 @@ public class SaveDialog extends Activity {
         SaveLessonThreaded saveThread = new SaveLessonThreaded(new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                boolean result = msg.getData().getBoolean(Constants.MESSAGE_KEY);
+                boolean result = msg.getData().getBoolean(Constants.MESSAGE_BOOL_KEY);
                 if (result) {
                     setResult(RESULT_OK);
                 } else {
+                    Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
                     setResult(RESULT_CANCELED);
                 }
                 finish();

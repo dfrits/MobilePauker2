@@ -2,6 +2,9 @@ package com.daniel.mobilepauker2.model.pauker_native;
 
 import android.support.annotation.NonNull;
 
+import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.utils.Constants;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,8 +28,6 @@ public class CardSide implements Comparable<CardSide> {
     private String text;
     // style
     private Font font;
-    private Color foregroundColor;
-    private Color backgroundColor;
     private ComponentOrientation orientation;
     // learning
     private boolean repeatByTyping;
@@ -137,18 +138,6 @@ public class CardSide implements Comparable<CardSide> {
         return font;
     }
 
-    //    /**
-    //     * returns the cardside font family
-    //     * @return the cardside font family
-    //     */
-    //    public String getFontFamily() {
-    ////        return font == null
-    ////                ? PaukerFrame.DEFAULT_FONT.getFamily()
-    ////                : font.getFamily();
-    //
-    //    	return null;
-    //    }
-
     /**
      * sets the cardside font
      * @param font the cardside font
@@ -157,44 +146,12 @@ public class CardSide implements Comparable<CardSide> {
         this.font = font;
     }
 
-    //    /**
-    //     * returns the cardside foreground color
-    //     * @return the cardside foreground color
-    //     */
-    //    public Color getForegroundColor() {
-    //        return foregroundColor;
-    //    }
-    //
-    //    /**
-    //     * sets the cardside foreground color
-    //     * @param foregroundColor the cardside foreground color
-    //     */
-    //    public void setForegroundColor(Color foregroundColor) {
-    //        this.foregroundColor = foregroundColor;
-    //    }
-    //
-    //    /**
-    //     * returns the cardside background color
-    //     * @return the cardside background color
-    //     */
-    //    public Color getBackgroundColor() {
-    //        return backgroundColor;
-    //    }
-    //
-    //    /**
-    //     * sets the cardside background color
-    //     * @param backgroundColor the cardside background color
-    //     */
-    //    public void setBackgroundColor(Color backgroundColor) {
-    //        this.backgroundColor = backgroundColor;
-    //    }
-
     /**
      * returns the cardside orientation
      * @return the cardside orientation
      */
     public ComponentOrientation getOrientation() {
-        return orientation;
+        return orientation==null? new ComponentOrientation(Constants.STANDARD_ORIENTATION):orientation;
     }
 
     /**

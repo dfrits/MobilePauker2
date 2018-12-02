@@ -272,20 +272,6 @@ public class MainMenu extends AppCompatActivity {
                 paukerManager.setSaveRequired(false);
                 invalidateOptionsMenu();
                 modelManager.showExpireToast(context);
-
-                /*if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
-                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-                    if (accessToken != null) {
-                        File[] files = paukerManager.listFiles(context);
-                        Intent syncIntent = new Intent(context, SyncDialog.class);
-                        syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-                        syncIntent.putExtra(SyncDialog.FILES, files);
-                        startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG);
-                    }
-                }*/
-            } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
         } else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             if (resultCode == RESULT_OK) {
