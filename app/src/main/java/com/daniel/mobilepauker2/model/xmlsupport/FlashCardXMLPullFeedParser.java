@@ -10,6 +10,7 @@ import com.daniel.mobilepauker2.model.pauker_native.ComponentOrientation;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
+import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -75,7 +76,9 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                             currentFlashCard.setInitialBatch(batchCount - 1); // This line is repeated many times!
                             if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.FRONTSIDE) || name.equalsIgnoreCase(FlashCardXMLPullFeedParser.REVERSESIDE)) {
                                 String orientation = parser.getAttributeValue(null, "Orientation");
+                                orientation = orientation == null ? Constants.STANDARD_ORIENTATION : orientation;
                                 String repeatByTyping = parser.getAttributeValue(null, "RepeatByTyping");
+                                repeatByTyping = repeatByTyping == null ? Constants.STANDARD_REPEAT : repeatByTyping;
                                 String learnedTimestamp = parser.getAttributeValue(null, "LearnedTimestamp");
 
                                 currentFlashCard.setRepeatByTyping(repeatByTyping.equals("true"));

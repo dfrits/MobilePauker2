@@ -10,7 +10,10 @@ package com.daniel.mobilepauker2.utils;
 
 public class Constants {
     public static final String DEFAULT_APP_FILE_DIRECTORY = "/MobilePauker/";
+
+    // Standard-XML-Werte
     public static final String STANDARD_ORIENTATION = "LTR";
+    public static final String STANDARD_REPEAT = "false";
 
     // Dropboxkonstanten
     public final static String DROPBOX_APP_KEY = "9rqxyyq8cty3cf1";
