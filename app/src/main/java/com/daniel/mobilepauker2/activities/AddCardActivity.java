@@ -82,7 +82,7 @@ public class AddCardActivity extends AEditCardActivity {
             sideBEditText.setText("");
             PaukerManager.instance().setSaveRequired(true);
             sideAEditText.requestFocus();
-            sideAEditText.setSelection(sideAText.length(), sideAText.length());
+            sideAEditText.setSelection(0, 0);
 
             if (checkBox != null && !checkBox.isChecked()) finish();
         } else {
@@ -97,7 +97,9 @@ public class AddCardActivity extends AEditCardActivity {
     }
 
     public void mKeepOpenClicked(MenuItem item) {
+        boolean isChecked = checkBox.isChecked();
+        checkBox.setChecked(!isChecked);
         PreferenceManager.getDefaultSharedPreferences(context).edit()
-                .putBoolean(Constants.KEEP_OPEN_KEY, item.isChecked()).apply();
+                .putBoolean(Constants.KEEP_OPEN_KEY, !isChecked).apply();
     }
 }
