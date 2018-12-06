@@ -3,6 +3,7 @@ package com.daniel.mobilepauker2.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -34,6 +35,7 @@ import java.lang.reflect.Method;
  */
 
 public abstract class AEditCardActivity extends AppCompatActivity {
+    private boolean fontChanged;
     protected final Context context = this;
     protected final ModelManager modelManager = ModelManager.instance();
     protected FlashCard flashCard;
@@ -62,6 +64,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
 
         sideAEditText = findViewById(R.id.eTSideA);
         sideBEditText = findViewById(R.id.eTSideB);
+        fontChanged = false;
     }
 
     @Override
@@ -82,30 +85,14 @@ public abstract class AEditCardActivity extends AppCompatActivity {
     protected boolean detectChanges() {
         return !sideAEditText.getText().toString().equals(initSideAText)
                 || !sideBEditText.getText().toString().equals(initSideBText)
-                || fontChanged(true)
-                || fontChanged(false);
-    }
-
-    private boolean fontChanged(boolean checkFrontside) {
-        return checkFrontside ?
-                !(sideAEditText.getTextSize() != initSideATSize)
-                        || sideAEditText.getDrawingCacheBackgroundColor() == initSideABColor
-                        || sideAEditText.getCurrentTextColor() == initSideATColor
-                        || Boolean.compare(sideAEditText.getTypeface().isBold(), initSideABold) == 0
-                        || Boolean.compare(sideAEditText.getTypeface().isItalic(), initSideAItalic) == 0 :
-
-                !(sideBEditText.getTextSize() != initSideBTSize)
-                        || sideBEditText.getDrawingCacheBackgroundColor() == initSideBBColor
-                        || sideBEditText.getCurrentTextColor() == initSideBTColor
-                        || Boolean.compare(sideBEditText.getTypeface().isBold(), initSideBBold) == 0
-                        || Boolean.compare(sideBEditText.getTypeface().isItalic(), initSideBItalic) == 0;
-
+                || fontChanged;
     }
 
     public void okClicked(View view) {
     }
 
     public void resetCardSides(View view) {
+        fontChanged = false;
         sideAEditText.setText(initSideAText);
         sideBEditText.setText(initSideBText);
         Font font = flashCard.getFrontSide().getFont();
@@ -126,6 +113,8 @@ public abstract class AEditCardActivity extends AppCompatActivity {
             font.setItalic(initSideBItalic);
         }
         sideBEditText.setFont(font);
+        sideAEditText.requestFocus();
+        sideAEditText.setSelection(initSideAText.length(), initSideAText.length());
     }
 
     public void editFontA(View view) {
@@ -137,6 +126,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                 if (font == null) {
                     font = new Font();
                     flashCard.getFrontSide().setFont(font);
+                    fontChanged = true;
                 }
                 return setNewFontDetails(item, font, sideAEditText);
             }
@@ -152,6 +142,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                 if (font == null) {
                     font = new Font();
                     flashCard.getReverseSide().setFont(font);
+                    fontChanged = true;
                 }
                 return setNewFontDetails(item, font, sideBEditText);
             }
@@ -161,16 +152,12 @@ public abstract class AEditCardActivity extends AppCompatActivity {
     private boolean setNewFontDetails(MenuItem item, final Font font, final MPEditText cardSide) {
         switch (item.getItemId()) {
             case R.id.mBold:
-                if (font == null) {
-                    Font newFont = new Font();
-                    newFont.setBold(!newFont.isBold());
-
-                } else {
-                    font.setBold(!font.isBold());
-                }
+                font.setBold(!font.isBold());
+                fontChanged = true;
                 break;
             case R.id.mItalic:
                 font.setItalic(!font.isItalic());
+                fontChanged = true;
                 break;
             case R.id.mBackground:
                 final ColorPickerView bcPicker = new ColorPickerView(context);
@@ -190,6 +177,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                                         .putInt(Constants.LAST_BACK_COLOR_CHOICE, color).apply();
                                 font.setBackground(color);
                                 cardSide.setFont(font);
+                                fontChanged = true;
                             }
                         })
                         .setNegativeButton(R.string.cancel, null);
@@ -213,6 +201,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                                         .putInt(Constants.LAST_TEXT_COLOR_CHOICE, color).apply();
                                 font.setTextColor(color);
                                 cardSide.setFont(font);
+                                fontChanged = true;
                             }
                         })
                         .setNegativeButton(R.string.cancel, null);
@@ -248,6 +237,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                                 font.setSize(Integer.parseInt(s));
                             }
                             cardSide.setFont(font);
+                            fontChanged = true;
                         } catch (NumberFormatException e) {
                             Toast.makeText(context, R.string.number_format_error
                                     , Toast.LENGTH_SHORT).show();

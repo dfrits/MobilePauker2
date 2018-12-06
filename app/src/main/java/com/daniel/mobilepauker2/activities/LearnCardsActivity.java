@@ -110,7 +110,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     protected void onPause() {
         super.onPause();
         mSavedCursorPosition = mCardCursor.getPosition();
-        pauseTimer();
     }
 
     @Override
