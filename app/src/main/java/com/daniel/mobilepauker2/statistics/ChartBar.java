@@ -1,7 +1,6 @@
 package com.daniel.mobilepauker2.statistics;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
@@ -65,17 +64,17 @@ class ChartBar {
         BarSet stackBarSet;
         if (ungel != -1) {
             stackBarSet = new BarSet(titelLabel, new float[]{ungel});
-            stackBarSet.setColor(Color.RED);
+            stackBarSet.setColor(context.getColor(R.color.unlearned));
             chart.addData(stackBarSet);
         }
         if (gel != -1) {
             stackBarSet = new BarSet(titelLabel, new float[]{gel});
-            stackBarSet.setColor(Color.GREEN);
+            stackBarSet.setColor(context.getColor(R.color.learned));
             chart.addData(stackBarSet);
         }
         if (abgl != -1) {
             stackBarSet = new BarSet(titelLabel, new float[]{abgl});
-            stackBarSet.setColor(Color.BLUE);
+            stackBarSet.setColor(context.getColor(R.color.colorPrimary));
             chart.addData(stackBarSet);
         }
 

@@ -82,7 +82,7 @@
     <!-- region Content Descriptions und Titles-->
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
-    <string name="add_new_card">Neue Karte hinzufügen</string>
+    <string name="add_new_card">Neue Karte</string>
     <string name="front">Vorderseite</string>
     <string name="pause_timer">Zeit pausieren</string>
     <string name="restart_timer">Zeit fortsetzen</string>
@@ -135,6 +135,7 @@
     <!-- endregion -->
 
     <!-- region Titles -->
+    <string name="offen_lassen_checkbox">Offen lassen</string>
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
     <string name="hide_times_title">Zeiten ausblenden</string>

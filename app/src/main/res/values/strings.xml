@@ -67,7 +67,7 @@
     <!-- endregion -->
 
     <!-- region Sonstiges -->
-    <string name="app_name" translatable="false">MobilePauker++</string>
+    <string name="app_name" translatable="false">Mobile Pauker ++</string>
     <string name="yes">Yes</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
@@ -81,7 +81,7 @@
 
     <!-- region Content Descriptions und Titles-->
     <string name="sync_manually">Syncronize with Dropbox</string>
-    <string name="add_new_card">Add new card</string>
+    <string name="add_new_card">new card</string>
     <string name="front">Front</string>
     <string name="back">Back</string>
     <string name="learn_new_card">Learn new cards</string>
@@ -118,7 +118,6 @@
     <!-- region Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
     <string name="show_me">Show me!</string>
-    <string name="skipWaiting">Timer still running…</string>
     <string name="skip_waiting_button">Doesn\'t matter! Go on!</string>
     <string name="reset">Reset</string>
     <string name="add">Add</string>
@@ -151,6 +150,7 @@
     <!-- endregion -->
 
     <!-- region Titles -->
+    <string name="offen_lassen_checkbox">Keep open</string>
     <string name="flip_card_sides_title">First shown card side</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="hide_times_title">Hide times</string>
@@ -194,5 +194,6 @@
 
     <!-- region Neue Strings -->
     <string name="New">New</string>
+    <string name="skipWaiting">Timer still running…</string>
     <!-- endregion -->
 </resources>

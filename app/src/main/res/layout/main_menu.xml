@@ -34,7 +34,8 @@
             android:layout_toEndOf="@+id/labelFrame"
             android:orientation="horizontal"
             android:overScrollMode="never"
-            android:scrollbars="none" />
+            android:scrollbars="none"
+            android:layout_marginStart="5dp"/>
 
         <LinearLayout
             android:id="@+id/labelFrame"
@@ -88,105 +89,133 @@
 
         <RelativeLayout
             android:id="@+id/bAddNewCardFrame"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="70dp"
             android:layout_above="@+id/bLearnNewCardFrame"
             android:layout_alignParentStart="true"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="addNewCard">
+            android:layout_marginBottom="5dp">
 
             <ImageButton
                 android:id="@+id/bAddNewCard"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/tAddNewCardsDesc"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/add_new_card"
                 android:onClick="addNewCard"
+                android:padding="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/button_add_card" />
+                android:src="@drawable/button_add_card"
+                android:tint="@color/color_selector" />
 
             <TextView
                 android:id="@+id/tAddNewCardsDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bAddNewCard"
+                android:layout_alignEnd="@+id/bAddNewCard"
                 android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="7dp"
+                android:autoSizeMaxTextSize="13sp"
                 android:autoSizeTextType="uniform"
-                android:fontFamily="sans-serif-smallcaps"
+                android:fontFamily="sans-serif"
                 android:lines="1"
                 android:text="@string/add"
                 android:textAlignment="center"
-                android:textSize="12sp" />
+                android:textColor="@color/black" />
         </RelativeLayout>
 
 
         <RelativeLayout
             android:id="@+id/bLearnNewCardFrame"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="70dp"
-            android:layout_above="@id/bRepeatExpiredCardsFrame"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="learnNewCard">
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp">
 
             <ImageButton
                 android:id="@+id/bLearnNewCard"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/tLearnNewCardDesc"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/learn_new_card"
                 android:onClick="learnNewCard"
+                android:padding="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/button_learn_new_cards" />
+                android:src="@drawable/button_learn_new_cards"
+                android:tint="@color/color_selector"
+                android:tintMode="src_in" />
 
             <TextView
                 android:id="@+id/tLearnNewCardDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bLearnNewCard"
+                android:layout_alignEnd="@+id/bLearnNewCard"
                 android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:autoSizeMaxTextSize="13sp"
                 android:autoSizeTextType="uniform"
-                android:fontFamily="sans-serif-smallcaps"
+                android:fontFamily="sans-serif"
                 android:lines="1"
                 android:text="@string/learn"
                 android:textAlignment="center"
-                android:textSize="12sp" />
+                android:textColor="@color/text_color" />
         </RelativeLayout>
 
 
         <RelativeLayout
             android:id="@+id/bRepeatExpiredCardsFrame"
-            android:layout_width="70dp"
+            android:layout_width="100dp"
             android:layout_height="70dp"
-            android:layout_alignBottom="@+id/infoText"
+            android:layout_below="@+id/bLearnNewCardFrame"
             android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="repeatCards">
+            android:layout_marginTop="5dp">
 
             <ImageButton
                 android:id="@+id/bRepeatExpiredCards"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/tRepeatExpiredCardsDesc"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:contentDescription="@string/repeat_expired_cards"
                 android:onClick="repeatCards"
+                android:padding="5dp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/button_repeat_cards" />
+                android:src="@drawable/button_repeat_cards"
+                android:tint="@color/color_selector"
+                android:tintMode="src_in" />
 
             <TextView
                 android:id="@+id/tRepeatExpiredCardsDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bRepeatExpiredCards"
+                android:layout_alignEnd="@+id/bRepeatExpiredCards"
                 android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:autoSizeMaxTextSize="13sp"
                 android:autoSizeTextType="uniform"
+                android:fontFamily="sans-serif"
                 android:lines="1"
                 android:text="@string/repeat"
                 android:textAlignment="center"
-                android:textSize="12sp" />
+                android:textColor="@color/text_color" />
         </RelativeLayout>
 
         <TextView
@@ -204,7 +233,7 @@
             android:longClickable="true"
             android:paddingStart="5dp"
             android:paddingEnd="0dp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textSize="15sp" />
 
     </RelativeLayout>

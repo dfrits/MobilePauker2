@@ -1,14 +1,158 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/defaultBackground"
-    android:orientation="vertical">
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:weightSum="10">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1.2">
+
+        <RelativeLayout
+            android:id="@+id/bAddNewCardFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.3">
+
+            <ImageButton
+                android:id="@+id/bAddNewCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tAddNewCardsDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/add_new_card"
+                android:onClick="addNewCard"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_add_card"
+                android:tint="@color/color_selector"
+                android:tintMode="src_in" />
+
+            <TextView
+                android:id="@+id/tAddNewCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bAddNewCard"
+                android:layout_alignEnd="@+id/bAddNewCard"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="7dp"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="sans-serif"
+                android:lines="1"
+                android:text="@string/add"
+                android:textAlignment="center"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/bLearnNewCardFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/bRepeatExpiredCardsFrame"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintTop_toBottomOf="@+id/bAddNewCardFrame">
+
+            <ImageButton
+                android:id="@+id/bLearnNewCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tLearnNewCardDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/learn_new_card"
+                android:onClick="learnNewCard"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_learn_new_cards"
+                android:tint="@color/color_selector"
+                android:tintMode="src_in" />
+
+            <TextView
+                android:id="@+id/tLearnNewCardDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bLearnNewCard"
+                android:layout_alignEnd="@+id/bLearnNewCard"
+                android:layout_alignParentBottom="true"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="7dp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="sans-serif"
+                android:lines="1"
+                android:text="@string/learn"
+                android:textAlignment="center"
+                android:textColor="@color/text_color" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bRepeatExpiredCardsFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="2dp"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/buttonPanel"
+            app:layout_constraintHeight_default="percent"
+            app:layout_constraintHeight_percent="0.3">
+
+            <ImageButton
+                android:id="@+id/bRepeatExpiredCards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tRepeatExpiredCardsDesc"
+                android:background="?android:selectableItemBackgroundBorderless"
+                android:contentDescription="@string/repeat_expired_cards"
+                android:onClick="repeatCards"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_repeat_cards"
+                android:tint="@color/color_selector"
+                android:tintMode="src_in" />
+
+            <TextView
+                android:id="@+id/tRepeatExpiredCardsDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@+id/bRepeatExpiredCards"
+                android:layout_alignEnd="@+id/bRepeatExpiredCards"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:autoSizeMaxTextSize="13sp"
+                android:autoSizeTextType="uniform"
+                android:fontFamily="sans-serif"
+                android:lines="1"
+                android:text="@string/repeat"
+                android:textAlignment="center"
+                android:textColor="@color/text_color" />
+        </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="50">
+        android:id="@+id/fStatistic"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginStart="20dp"
+        android:layout_weight="8.8">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -30,6 +174,7 @@
             android:id="@+id/chartListView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/labelFrame"
             android:orientation="horizontal"
             android:overScrollMode="never"
@@ -72,138 +217,258 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/leftFrame"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="5dp"
-        android:layout_weight="50">
-
-        <TextView
-            android:id="@+id/infoText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="2dp"
-            android:layout_toEndOf="@+id/bAddNewCardFrame"
-            android:background="@drawable/box_background"
-            android:focusable="true"
-            android:fontFamily="serif"
-            android:hint="@string/info_text_hint"
-            android:longClickable="true"
-            android:paddingStart="5dp"
-            android:paddingEnd="0dp"
-            android:paddingBottom="2dp"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
-
-        <RelativeLayout
-            android:id="@+id/bAddNewCardFrame"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignTop="@+id/bLearnNewCardFrame"
-            android:layout_alignBottom="@+id/bLearnNewCardFrame"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/bLearnNewCardFrame"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="addNewCard">
-
-            <ImageButton
-                android:id="@+id/bAddNewCard"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/tAddNewCardsDesc"
-                android:background="?android:selectableItemBackgroundBorderless"
-                android:contentDescription="@string/add_new_card"
-                android:onClick="addNewCard"
-                android:scaleType="fitCenter"
-                android:src="@drawable/button_add_card" />
-
-            <TextView
-                android:id="@+id/tAddNewCardsDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:autoSizeTextType="uniform"
-                android:fontFamily="sans-serif-smallcaps"
-                android:lines="1"
-                android:text="@string/add"
-                android:textAlignment="center"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/bLearnNewCardFrame"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_above="@+id/bRepeatExpiredCardsFrame"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="learnNewCard">
-
-            <ImageButton
-                android:id="@+id/bLearnNewCard"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/tLearnNewCardDesc"
-                android:background="?android:selectableItemBackgroundBorderless"
-                android:contentDescription="@string/learn_new_card"
-                android:onClick="learnNewCard"
-                android:scaleType="fitCenter"
-                android:src="@drawable/button_learn_new_cards" />
-
-            <TextView
-                android:id="@+id/tLearnNewCardDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:autoSizeTextType="uniform"
-                android:fontFamily="sans-serif-smallcaps"
-                android:lines="1"
-                android:text="@string/learn"
-                android:textAlignment="center"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-
-        <RelativeLayout
-            android:id="@+id/bRepeatExpiredCardsFrame"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:layout_alignStart="@+id/bLearnNewCardFrame"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/button_enabled_background"
-            android:onClick="repeatCards">
-
-            <ImageButton
-                android:id="@+id/bRepeatExpiredCards"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@+id/tRepeatExpiredCardsDesc"
-                android:background="?android:selectableItemBackgroundBorderless"
-                android:contentDescription="@string/repeat_expired_cards"
-                android:onClick="repeatCards"
-                android:scaleType="fitCenter"
-                android:src="@drawable/button_repeat_cards" />
-
-            <TextView
-                android:id="@+id/tRepeatExpiredCardsDesc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:autoSizeTextType="uniform"
-                android:fontFamily="sans-serif-smallcaps"
-                android:lines="1"
-                android:text="@string/repeat"
-                android:textAlignment="center"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-    </RelativeLayout>
 </LinearLayout>
+
+
+    <!--
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/defaultBackground"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/labelFrame"
+                android:layout_toStartOf="@+id/chartListView">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="serif"
+                    android:rotation="90"
+                    android:text="@string/bar_chart_title"
+                    android:textSize="12sp" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/chartListView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toEndOf="@+id/labelFrame"
+                android:orientation="horizontal"
+                android:overScrollMode="never"
+                android:scrollbars="none" />
+
+            <LinearLayout
+                android:id="@+id/labelFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginEnd="5dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/lAbgelaufen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="@string/expired"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lGelernt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="@string/learned"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/lSumme"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:text="@string/sum"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bottomFrame"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="50">
+
+            <RelativeLayout
+                android:id="@+id/bAddNewCardFrame"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_above="@+id/bRepeatExpiredCardsFrame"
+                android:layout_alignTop="@+id/bRepeatExpiredCardsFrame"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent="0.5"
+                app:layout_constraintStart_toStartOf="@id/bottomFrame"
+                app:layout_constraintTop_toTopOf="@id/bottomFrame"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.15">
+
+                <ImageButton
+                    android:id="@+id/bAddNewCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/tAddNewCardsDesc"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/add_new_card"
+                    android:onClick="addNewCard"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/add"
+                    android:tint="@color/color_selector"
+                    android:tintMode="src_in" />
+
+                <TextView
+                    android:id="@+id/tAddNewCardsDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/bAddNewCard"
+                    android:layout_alignEnd="@+id/bAddNewCard"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="7dp"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="sans-serif"
+                    android:lines="1"
+                    android:text="@string/add"
+                    android:textAlignment="center"
+                    android:textColor="@color/black" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/bLearnNewCardFrame"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/bAddNewCardFrame"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent="0.5"
+                app:layout_constraintStart_toEndOf="@+id/bAddNewCardFrame"
+                app:layout_constraintTop_toTopOf="@+id/bAddNewCardFrame"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.15">
+
+                <ImageButton
+                    android:id="@+id/bLearnNewCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/tLearnNewCardDesc"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/learn_new_card"
+                    android:onClick="learnNewCard"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/learn"
+                    android:tint="@color/color_selector"
+                    android:tintMode="src_in" />
+
+                <TextView
+                    android:id="@+id/tLearnNewCardDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/bLearnNewCard"
+                    android:layout_alignEnd="@+id/bLearnNewCard"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="7dp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="sans-serif"
+                    android:lines="1"
+                    android:text="@string/learn"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_color" />
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/bRepeatExpiredCardsFrame"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="5dp"
+                app:layout_constraintBottom_toBottomOf="@+id/bottomFrame"
+                app:layout_constraintEnd_toEndOf="@+id/bLearnNewCardFrame"
+                app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_percent="0.5"
+                app:layout_constraintStart_toStartOf="@+id/bLearnNewCardFrame"
+                app:layout_constraintTop_toBottomOf="@+id/bLearnNewCardFrame"
+                app:layout_constraintWidth_default="percent"
+                app:layout_constraintWidth_percent="0.15">
+
+                <ImageButton
+                    android:id="@+id/bRepeatExpiredCards"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/tRepeatExpiredCardsDesc"
+                    android:background="?android:selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/repeat_expired_cards"
+                    android:onClick="repeatCards"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/repeat"
+                    android:tint="@color/color_selector"
+                    android:tintMode="src_in" />
+
+                <TextView
+                    android:id="@+id/tRepeatExpiredCardsDesc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@+id/bRepeatExpiredCards"
+                    android:layout_alignEnd="@+id/bRepeatExpiredCards"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeTextType="uniform"
+                    android:fontFamily="sans-serif"
+                    android:lines="1"
+                    android:text="@string/repeat"
+                    android:textAlignment="center"
+                    android:textColor="@color/text_color" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/infoText"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/bLearnNewCardFrame"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
+                android:background="@drawable/box_background"
+                android:focusable="true"
+                android:fontFamily="serif"
+                android:hint="@string/info_text_hint"
+                android:longClickable="true"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp"
+                android:paddingBottom="2dp"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@+id/bRepeatExpiredCardsFrame"
+                app:layout_constraintEnd_toEndOf="@id/bottomFrame"
+                app:layout_constraintStart_toEndOf="@id/bLearnNewCardFrame"
+                app:layout_constraintTop_toTopOf="@id/bottomFrame" />
+
+        </android.support.constraint.ConstraintLayout>
+    </LinearLayout>-->

@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -27,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,14 +85,13 @@ public class MainMenu extends AppCompatActivity {
         boolean hasCardsToLearn = modelManager.getUnlearnedBatchSize() != 0;
         boolean hasExpiredCards = modelManager.getExpiredCardsSize() != 0;
 
-        RelativeLayout button;
-        Drawable disabledImg = getDrawable(R.drawable.button_disabled_foreground);
-        button = findViewById(R.id.bLearnNewCardFrame);
-        button.setClickable(hasCardsToLearn);
-        button.setForeground(button.isClickable() ? null : disabledImg);
-        button = findViewById(R.id.bRepeatExpiredCardsFrame);
-        button.setClickable(hasExpiredCards);
-        button.setForeground(button.isClickable() ? null : disabledImg);
+        findViewById(R.id.bLearnNewCard).setEnabled(hasCardsToLearn);
+        findViewById(R.id.bLearnNewCard).setClickable(hasCardsToLearn);
+        findViewById(R.id.tLearnNewCardDesc).setEnabled(hasCardsToLearn);
+
+        findViewById(R.id.bRepeatExpiredCards).setEnabled(hasExpiredCards);
+        findViewById(R.id.bRepeatExpiredCards).setClickable(hasExpiredCards);
+        findViewById(R.id.tRepeatExpiredCardsDesc).setEnabled(hasExpiredCards);
     }
 
     private void initView() {
@@ -102,16 +99,18 @@ public class MainMenu extends AppCompatActivity {
 
         String description = modelManager.getDescription();
         TextView descriptionView = findViewById(R.id.infoText);
-        descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                infoTextClicked(v);
-                return true;
+        if (descriptionView != null) {
+            descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    infoTextClicked(v);
+                    return true;
+                }
+            });
+            descriptionView.setText(description);
+            if (!description.isEmpty()) {
+                descriptionView.setMovementMethod(new ScrollingMovementMethod());
             }
-        });
-        descriptionView.setText(description);
-        if (!description.isEmpty()) {
-            descriptionView.setMovementMethod(new ScrollingMovementMethod());
         }
 
         String title = getString(R.string.app_name);
@@ -184,7 +183,7 @@ public class MainMenu extends AppCompatActivity {
 
         if (modelManager.getLessonSize() > 0) {
             search.setVisible(true);
-            open.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            open.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         } else {
             search.setVisible(false);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -204,6 +203,7 @@ public class MainMenu extends AppCompatActivity {
         if (search.isVisible()) {
             final SearchView searchView = (SearchView) search.getActionView();
             searchView.setIconifiedByDefault(false);
+            searchView.setIconified(false);
             searchView.setQueryHint(getString(R.string.search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
