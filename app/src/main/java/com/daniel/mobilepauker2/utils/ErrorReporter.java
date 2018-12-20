@@ -14,8 +14,6 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 
-import com.daniel.mobilepauker2.R;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,7 +1,6 @@
 package com.daniel.mobilepauker2.model.xmlsupport;
 
 import android.util.Xml;
-import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.model.ModelManager;

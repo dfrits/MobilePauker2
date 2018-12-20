@@ -20,8 +20,6 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.text.Collator;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;

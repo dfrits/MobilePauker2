@@ -2,7 +2,6 @@ package com.daniel.mobilepauker2.model.pauker_native;
 
 import android.support.annotation.NonNull;
 
-import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.utils.Constants;
 
 import java.util.LinkedList;
