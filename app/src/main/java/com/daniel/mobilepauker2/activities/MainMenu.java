@@ -40,6 +40,7 @@ import com.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
 
@@ -99,18 +100,35 @@ public class MainMenu extends AppCompatActivity {
 
         String description = modelManager.getDescription();
         TextView descriptionView = findViewById(R.id.infoText);
-        if (descriptionView != null) {
-            descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
+        descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                infoTextClicked(v);
+                return true;
+            }
+        });
+        descriptionView.setText(description);
+        if (!description.isEmpty()) {
+            descriptionView.setMovementMethod(new ScrollingMovementMethod());
+        }
+
+        SlidingUpPanelLayout drawer = findViewById(R.id.dPanel);
+        if (drawer != null) {
+            drawer.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
                 @Override
-                public boolean onLongClick(View v) {
-                    infoTextClicked(v);
-                    return true;
+                public void onPanelSlide(View panel, float slideOffset) {
+
+                }
+
+                @Override
+                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                    if (newState == SlidingUpPanelLayout.PanelState.EXPANDED)
+                        findViewById(R.id.dImage).setRotation(180);
+                    if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED)
+                        findViewById(R.id.dImage).setRotation(0);
                 }
             });
-            descriptionView.setText(description);
-            if (!description.isEmpty()) {
-                descriptionView.setMovementMethod(new ScrollingMovementMethod());
-            }
+            drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         }
 
         String title = getString(R.string.app_name);
@@ -189,15 +207,6 @@ public class MainMenu extends AppCompatActivity {
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        /*if (paukerManager.isSaveRequired()) {
-            save.setEnabled(true);
-            save.setIcon(R.drawable.menu_save_enabled);
-            //            save.setIconTintList(ColorStateList.valueOf(Color.DKGRAY));
-        } else {
-            save.setEnabled(false);
-            save.setIcon(R.drawable.menu_save_disabled);
-            //             save.setIconTintList(ColorStateList.valueOf(Color.WHITE));
-        }*/
         save.setVisible(paukerManager.isSaveRequired());
 
         if (search.isVisible()) {

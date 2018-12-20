@@ -7,7 +7,8 @@
     <color name="white">#FFFFFF</color>
     <color name="grey">#FFCCCCCC</color>
     <color name="defaultBackground">#FAFAFA</color>
-    <color name="unlearned">#b53f8c</color>
+    <color name="unlearned">#b53f5e</color>
     <color name="learned">#5eb53f</color>
     <color name="expired">#3f8cb5</color>
+    <color name="drawer_background">#f1f1f1</color>
 </resources>

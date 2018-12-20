@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:layout="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
@@ -149,73 +150,137 @@
         android:id="@+id/fStatistic"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
         android:layout_weight="8.8">
 
-        <RelativeLayout
+        <com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:sothree="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/dPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/labelFrame"
-            android:layout_toStartOf="@+id/chartListView">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:fontFamily="serif"
-                android:rotation="90"
-                android:text="@string/bar_chart_title"
-                android:textSize="12sp" />
-        </RelativeLayout>
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/chartListView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="5dp"
-            android:layout_toEndOf="@+id/labelFrame"
-            android:orientation="horizontal"
-            android:overScrollMode="never"
-            android:scrollbars="none" />
-
-        <LinearLayout
-            android:id="@+id/labelFrame"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginEnd="5dp"
-            android:orientation="vertical">
+            android:gravity="bottom"
+            sothree:umanoOverlay="true"
+            sothree:umanoShadowHeight="0dp"
+            sothree:umanoPanelHeight="16dp"
+            sothree:umanoFadeColor="@android:color/transparent"
+            sothree:umanoScrollableView="@id/infoTextPanel">
 
-            <TextView
-                android:id="@+id/lAbgelaufen"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:text="@string/expired"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/lGelernt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:text="@string/learned"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/labelFrame"
+                    android:layout_toStartOf="@+id/chartListView">
 
-            <TextView
-                android:id="@+id/lSumme"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:text="@string/sum"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-        </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:fontFamily="serif"
+                        android:rotation="90"
+                        android:text="@string/bar_chart_title"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/chartListView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignBottom="@+id/labelFrame"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@+id/labelFrame"
+                    android:orientation="horizontal"
+                    android:overScrollMode="never"
+                    android:scrollbars="none" />
+
+                <LinearLayout
+                    android:id="@+id/labelFrame"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/lAbgelaufen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/expired"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/lGelernt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/learned"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/lSumme"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/sum"
+                        android:textColor="@color/black"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_marginBottom="5dp"
+                android:background="@color/defaultBackground">
+
+                <ImageView
+                    android:id="@+id/dImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="15dp"
+                    android:scaleType="centerInside"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="5dp"
+                    android:src="@drawable/arrow"
+                    android:background="@drawable/drawer_image_background"
+                    layout:ignore="ContentDescription" />
+
+                <ScrollView
+                    android:id="@+id/infoTextPanel"
+                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/box_background">
+
+                    <TextView
+                        android:id="@+id/infoText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="true"
+                        android:fontFamily="serif"
+                        android:hint="@string/info_text_hint"
+                        android:longClickable="true"
+                        android:paddingStart="5dp"
+                        android:paddingEnd="0dp"
+                        android:paddingBottom="2dp"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+                </ScrollView>
+            </LinearLayout>
+
+
+        </com.sothree.slidinguppanel.SlidingUpPanelLayout>
     </RelativeLayout>
 </LinearLayout>
 
