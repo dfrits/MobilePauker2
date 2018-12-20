@@ -40,9 +40,6 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
     protected final SettingsManager settingsManager = SettingsManager.instance();
     protected final ModelManager modelManager = ModelManager.instance();
-    protected final String INSTANCESTATE_START_TIME = "INSTANCESTATE_START_TIME";
-    protected final String INSTANCESTATE_STM_START_TIME = "INSTANCESTATE_STM_START_TIME";
-    protected final String INSTANCESTATE_USTM_START_TIME = "INSTANCESTATE_USTM_START_TIME";
     protected final String INSTANCESTATE_CURSOR_POSITION = "INSTANCESTATE_CURSOR_POSITION";
     private final Context context = this;
     protected Cursor mCardCursor = null;

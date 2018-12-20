@@ -69,6 +69,7 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ErrorReporter.instance().init(context);
+        checkErrors();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main_menu);
@@ -574,5 +575,32 @@ public class MainMenu extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    private void checkErrors() {
+        final ErrorReporter errorReporter = ErrorReporter.instance();
+        if (errorReporter.isThereAnyErrorsToReport(this)) {
+            AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+
+            alt_bld.setMessage(getString(R.string.crash_report_message));
+            alt_bld.setCancelable(false);
+            alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.CheckErrorAndSendMail(context);
+                }
+            });
+
+            alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.deleteErrorFiles(getApplicationContext());
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alert = alt_bld.create();
+            alert.setTitle(getString(R.string.crash_report_title));
+            alert.setIcon(R.mipmap.ic_launcher);
+            alert.show();
+        }
     }
 }

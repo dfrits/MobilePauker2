@@ -31,6 +31,7 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.utils.Constants;
+import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.android.Auth;
 
@@ -337,9 +338,8 @@ public class LessonImportActivity extends AppCompatActivity {
                         loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
                         paukerManager.setSaveRequired(false);
                     } catch (IOException ignored) {
-                        Toast.makeText(context, "Datensatz der geöffneten Lektion kann nicht " +
-                                "automatisch aktualisiert werden! Bitte manuel Lektion erneut " +
-                                "öffnen.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, R.string.reopen_lesson_error, Toast.LENGTH_LONG).show();
+                        ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
                     }
                 } else {
                     paukerManager.setupNewApplicationLesson();
@@ -396,6 +396,7 @@ public class LessonImportActivity extends AppCompatActivity {
         } catch (IOException e) {
             resetSelection(null);
             Toast.makeText(context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT).show();
+            ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
         }
     }
 }

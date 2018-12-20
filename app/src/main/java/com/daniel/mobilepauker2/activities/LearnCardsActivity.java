@@ -25,6 +25,7 @@ import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
+import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.util.Locale;
@@ -421,7 +422,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         //Neue Phase dem Modelmanager mitteilen und Deck aktualisieren
         modelManager.setLearningPhase(context, newLearningsPhase);
         //Cursor an erste Stelle setzen
-        // setCursorToFirst();
         refreshCursor();
     }
 
@@ -512,6 +512,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         } catch (Exception e) {
             Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception");
             Toast.makeText(context, R.string.load_card_data_error, Toast.LENGTH_SHORT).show();
+            ErrorReporter.instance().AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?");
             finish();
         }
     }

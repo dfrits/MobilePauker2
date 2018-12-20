@@ -14,6 +14,8 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 
+import com.daniel.mobilepauker2.R;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,7 +41,6 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     private String FingerPrint;
     private String Host;
     private String ID;
-    private String Manufacturer;
     private String Model;
     private String Product;
     private String Tags;
@@ -49,8 +50,8 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     private final HashMap<String, String> CustomParameters = new HashMap<>();
 
     private Thread.UncaughtExceptionHandler PreviousHandler;
-    private static ErrorReporter S_mInstance;
-    private Context CurContext;
+    private static ErrorReporter instance;
+    private Context context;
 
     public void AddCustomData(String Key, String Value) {
         CustomParameters.put(Key, Value);
@@ -66,19 +67,19 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     }
 
     public static ErrorReporter instance() {
-        if (S_mInstance == null) {
-            S_mInstance = new ErrorReporter();
+        if (instance == null) {
+            instance = new ErrorReporter();
         }
-        return S_mInstance;
+        return instance;
     }
 
     public void init(Context context) {
         PreviousHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        CurContext = context;
+        this.context = context;
     }
 
-    public long getAvailableInternalMemorySize() {
+    private long getAvailableInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSizeLong();
@@ -86,7 +87,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         return availableBlocks * blockSize;
     }
 
-    public long getTotalInternalMemorySize() {
+    private long getTotalInternalMemorySize() {
         File path = Environment.getDataDirectory();
         StatFs stat = new StatFs(path.getPath());
         long blockSize = stat.getBlockSizeLong();
@@ -94,7 +95,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         return totalBlocks * blockSize;
     }
 
-    void RecoltInformations(Context context) {
+    private void RecoltInformations(Context context) {
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi;
@@ -124,33 +125,14 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
                 Type = Build.TYPE;
                 User = Build.USER;
             }
-
-//			StringBuilder bldr = new StringBuilder();
-//			Class<Build> build = android.os.Build.class;
-//
-//			for(Field curr: build.getFields())
-//			{
-//				if(curr.getType().equals(String.class))
-//				{
-//					try
-//					{
-//						bldr.append("Build->" + curr.getName() + ":").append("" + curr.get(build)).append("\n");
-//					}
-//					catch(Exception e)
-//					{
-//						Log.d("Error Reporter", "Build info exception.", e);
-//					}
-//				}
-//			}
-
         } catch (Exception e) {
             e.printStackTrace();
             throw new RuntimeException("Exception in ErrorReporter!");
         }
     }
 
-    public String CreateInformationString() {
-        RecoltInformations(CurContext);
+    private String CreateInformationString() {
+        RecoltInformations(context);
 
         String ReturnVal = "";
         ReturnVal += "Version : " + VersionName;
@@ -239,35 +221,26 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         printWriter.close();
         Report.append("****  End of current Report ***");
         SaveAsFile(Report.toString());
-        //SendErrorMail( Report );
         PreviousHandler.uncaughtException(t, e);
     }
 
     private void SendErrorMail(Context _context, String ErrorContent) {
-        Intent sendIntent = new Intent(Intent.ACTION_SEND);
-//        String body = _context.getResources().getString(R.string.CrashReport_MailBody) +
-//                "\n\n" +
-//                ErrorContent +
-//                "\n\n";
+        String body = _context.getResources().getString(R.string.crash_report_mail_body) +
+                "\n\n" +
+                ErrorContent +
+                "\n\n";
 
 		 /* Create the Intent */
         final Intent emailIntent = new Intent(Intent.ACTION_SEND);
 		
 		/* Fill it with Data */
         emailIntent.setType("plain/text");
-//        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
-        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"simsoftrd@gmail.com"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Android Pauker: Bug report");
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fritsch_daniel@gmx.de"});
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, _context.getString(R.string.crash_report_mail_subject));
 				
 		/* Send it off to the Activity-Chooser */
         _context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-
-//		sendIntent.putExtra(Intent.EXTRA_EMAIL,
-//				new String[] {"postmaster@alocaly.com"});
-//		sendIntent.putExtra(Intent.EXTRA_TEXT, body);
-//		sendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-//		sendIntent.setType("message/rfc822");
-//		_context.startActivity( Intent.createChooser(sendIntent, "Title:") );
     }
 
     private void SaveAsFile(String ErrorContent) {
@@ -275,7 +248,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
             Random generator = new Random();
             int random = generator.nextInt(99999);
             String FileName = "stack-" + random + ".stacktrace";
-            FileOutputStream trace = CurContext.openFileOutput(FileName, Context.MODE_PRIVATE);
+            FileOutputStream trace = context.openFileOutput(FileName, Context.MODE_PRIVATE);
             trace.write(ErrorContent.getBytes());
             trace.close();
         } catch (Exception e) {
@@ -312,6 +285,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
                 String[] ErrorFileList = GetErrorFileList();
                 for (String curString : ErrorFileList) {
                     File curFile = new File(FilePath + "/" + curString);
+                    //noinspection ResultOfMethodCallIgnored
                     curFile.delete();
                 }
             }
@@ -345,6 +319,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
 
                     // DELETE FILES !!!!
                     File curFile = new File(FilePath + "/" + curString);
+                    //noinspection ResultOfMethodCallIgnored
                     curFile.delete();
                 }
                 SendErrorMail(_context, WholeErrorText.toString());

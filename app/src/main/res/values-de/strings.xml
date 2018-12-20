@@ -1,5 +1,7 @@
 <resources>
     <!-- region Errors -->
+    <string name="reopen_lesson_error">Datensatz der geöffneten Lektion kann nicht automatisch
+        aktualisiert werden! Bitte manuel Lektion erneut öffnen.</string>
     <string name="number_format_error">Bitte nur Ziffern eingeben</string>
     <string name="load_card_data_error">Fehler beim Laden der Karte!</string>
     <string name="no_lesson_found">Keine Lektion gefunden…</string>
@@ -16,6 +18,11 @@
     <string name="add_card_side_empty">Eine Seite oder beide sind noch leer!</string>
     <string name="pause_timer_error">Zeit kann gerade nicht angehalten werden</string>
     <string name="restart_timer_error">Zeit kann gerade nicht fortgesetzt werden</string>
+    <string name="crash_report_message">Uups! Mobile Pauker++ ist beim letzten Mal abgestürzt,
+        bitte Fehlerbericht per Mail abschicken…</string>
+    <string name="crash_report_title">Fehlerbericht</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: Fehlerbericht</string>
+    <string name="crash_report_mail_body">Danke für diesen Fehlerbericht!</string>
     <!-- endregion -->
 
     <!-- region Infos -->
