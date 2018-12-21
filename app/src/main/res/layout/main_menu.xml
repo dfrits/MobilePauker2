@@ -29,7 +29,6 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/chartListView"
             android:layout_width="wrap_content"
@@ -136,7 +135,6 @@
                 android:textColor="@color/black" />
         </RelativeLayout>
 
-
         <RelativeLayout
             android:id="@+id/bLearnNewCardFrame"
             android:layout_width="100dp"
@@ -179,7 +177,6 @@
                 android:textAlignment="center"
                 android:textColor="@color/text_color" />
         </RelativeLayout>
-
 
         <RelativeLayout
             android:id="@+id/bRepeatExpiredCardsFrame"
@@ -233,14 +230,11 @@
             android:layout_marginStart="5dp"
             android:layout_toEndOf="@id/bAddNewCardFrame"
             android:background="@drawable/box_background"
-            android:focusable="true"
             android:fontFamily="serif"
             android:hint="@string/info_text_hint"
-            android:longClickable="true"
             android:paddingStart="5dp"
             android:paddingEnd="0dp"
             android:textColor="@color/text_color"
             android:textSize="15sp" />
-
     </RelativeLayout>
 </LinearLayout>

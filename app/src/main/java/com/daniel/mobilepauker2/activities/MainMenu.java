@@ -26,6 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,7 @@ import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;
 
@@ -101,19 +105,12 @@ public class MainMenu extends AppCompatActivity {
 
         String description = modelManager.getDescription();
         TextView descriptionView = findViewById(R.id.infoText);
-        descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                infoTextClicked(v);
-                return true;
-            }
-        });
         descriptionView.setText(description);
         if (!description.isEmpty()) {
             descriptionView.setMovementMethod(new ScrollingMovementMethod());
         }
 
-        SlidingUpPanelLayout drawer = findViewById(R.id.dPanel);
+        SlidingUpPanelLayout drawer = findViewById(R.id.drawerPanel);
         if (drawer != null) {
             drawer.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
                 @Override
@@ -122,14 +119,14 @@ public class MainMenu extends AppCompatActivity {
                 }
 
                 @Override
-                public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
-                    if (newState == SlidingUpPanelLayout.PanelState.EXPANDED)
-                        findViewById(R.id.dImage).setRotation(180);
-                    if (newState == SlidingUpPanelLayout.PanelState.COLLAPSED)
-                        findViewById(R.id.dImage).setRotation(0);
+                public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                    if (newState == PanelState.EXPANDED)
+                        findViewById(R.id.drawerImage).setRotation(180);
+                    if (newState == PanelState.COLLAPSED)
+                        findViewById(R.id.drawerImage).setRotation(0);
                 }
             });
-            drawer.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            drawer.setPanelState(PanelState.COLLAPSED);
         }
 
         String title = getString(R.string.app_name);
@@ -172,11 +169,6 @@ public class MainMenu extends AppCompatActivity {
 
         browseIntent.putExtra(Constants.STACK_INDEX, index);
         startActivity(browseIntent);
-    }
-
-    private void editInfoText() {
-        startActivity(new Intent(context, EditDescrptionActivity.class));
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
     }
 
     /**
@@ -536,15 +528,12 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mEditInfoTextClicked(@Nullable MenuItem ignored) {
-        editInfoText();
+        startActivity(new Intent(context, EditDescrptionActivity.class));
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
     }
 
     public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
-    }
-
-    public void infoTextClicked(@Nullable View ignored) {
-        editInfoText();
     }
 
     public void mOpenSearchClicked(MenuItem item) {

@@ -1,62 +1,59 @@
 <resources>
     <!-- region Errors -->
-    <string name="reopen_lesson_error">Datensatz der geöffneten Lektion kann nicht automatisch
-        aktualisiert werden! Bitte manuell Lektion erneut öffnen.</string>
-    <string name="number_format_error">Bitte nur Ziffern eingeben</string>
-    <string name="load_card_data_error">Fehler beim Laden der Karte!</string>
-    <string name="no_lesson_found">Keine Lektion gefunden…</string>
-    <string name="error_importflashcardfile_directory">Auf die SD-Karte kann nicht zugegriffen werden</string>
-    <string name="error_filename_not_pauker">Datei ist nicht kompatibel</string>
-    <string name="error_reading_from_xml">Datei ist ungültig oder beschädigt</string>
-    <string name="saving_error">Fehler beim Speichern der Lektion</string>
-    <string name="error_synchronizing">Synchronisation nicht möglich</string>
-    <string name="synchro_timeout">Synchronisation abgelaufen</string>
-    <string name="edit_cards_no_card_available">Keine Karten vorhanden</string>
-    <string name="error_filename_invalid">Dateiname ist ungültig</string>
-    <string name="add_card_sides_empty_error">Eine oder beide Seiten sind leer</string>
-    <string name="delete_lesson_error">Lektion kann nicht gelöscht werden</string>
-    <string name="add_card_side_empty">Eine Seite oder beide sind noch leer!</string>
-    <string name="pause_timer_error">Zeit kann gerade nicht angehalten werden</string>
-    <string name="restart_timer_error">Zeit kann gerade nicht fortgesetzt werden</string>
-    <string name="crash_report_message">Uups! Mobile Pauker++ ist beim letzten Mal abgestürzt,
-        bitte Fehlerbericht per Mail abschicken…</string>
-    <string name="crash_report_title">Fehlerbericht</string>
-    <string name="crash_report_mail_subject">Mobile Pauker++: Fehlerbericht</string>
-    <string name="crash_report_mail_body">Danke für diesen Fehlerbericht!</string>
+    <string name="reopen_lesson_error">現在のレッソンのデータは更新されることができません！ 自分でもう一度　開けてください。</string>
+    <string name="number_format_error">数字だけ入れてください</string>
+    <string name="load_card_data_error">カードの読み込みにエラー</string>
+    <string name="no_lesson_found">レッソンが見つかりません…</string>
+    <string name="error_importflashcardfile_directory">SD－カードを使えません</string>
+    <string name="error_filename_not_pauker">ファイルは互換性ではありません</string>
+    <string name="error_reading_from_xml">ファイルは無効またわ破損です</string>
+    <string name="saving_error">レッスンの保存中にエラー</string>
+    <string name="error_synchronizing">同期をできません</string>
+    <string name="synchro_timeout">同期は切れました</string>
+    <string name="edit_cards_no_card_available">かーどがありません</string>
+    <string name="error_filename_invalid">ファイルネームは無効です</string>
+    <string name="add_card_sides_empty_error">面や後は空です！</string>
+    <string name="delete_lesson_error">レッソンを削除できません</string>
+    <string name="add_card_side_empty">面や後は空です！</string>
+    <string name="pause_timer_error">時間を止められません</string>
+    <string name="restart_timer_error">時間を続けられません</string>
+    <string name="crash_report_message">アラ! Mobile Pauker++ は前回クラッシュした、エラーレポートを送ってください…</string>
+    <string name="crash_report_title">エラーレポート</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: エラーレポート</string>
+    <string name="crash_report_mail_body">エラーレポートを送りましたありがとうございます!</string>
     <!-- endregion -->
 
     <!-- region Infos -->
-    <string name="put_in_your_answer">Gib deine Antwort ein</string>
-    <string name="wrong_answer">Deine Antwort war falsch!</string>
-    <string name="zurücklegen">Zurücklegen</string>
-    <string name="weiterlegen">Trotzdem weiterlegen</string>
-    <string name="compare_ques_answ">Richtig wäre gewesen: %s\nDeine Antwort war: %s</string>
-    <string name="learned">Gelernt</string>
-    <string name="expired">Abgelaufen</string>
-    <string name="sum">Summe</string>
-    <string name="untrained">Ungelernt</string>
-    <string name="ustm_timer_paused">UKZG \"Pausiert\"</string>
-    <string name="stm_timer_paused">KZG \"Pausiert\"</string>
-    <string name="ustm">UKZG</string>
-    <string name="stm">KZG</string>
-    <string name="stack">Stapel</string>
-    <string name="card_added">Karte hinzugefügt</string>
-    <string name="learncards_show_hint">Versuchen Sie sich an die Rückseite dieser Karte zu erinnern!</string>
-    <string name="info_text_hint">Beschreibung der Lektion</string>
-    <string name="next_expire_date">Nächstes Ablaufdatum:</string>
-    <string name="nothing_learned_yet">Noch nichts gelernt!</string>
-    <string name="not_learned_yet">Noch nicht gelernt!</string>
-    <string name="no_description">Noch keine Beschreibung…</string>
-    <string name="expired_cards">Anzahl abgelaufener Karten:</string>
-    <string name="search_hint">Karte suchen</string>
-    <string name="learned_at">Gelernt am:</string>
-    <string name="expire_at">Läuft ab am:</string>
-    <string name="expired_at">Abgelaufen am:</string>
-    <string name="synchronizing">Synchronisation…</string>
-    <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibst,
-        kannst du keine Lektion öffnen!</string>
-    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können,
-        benötigt Mobile Pauker++ die Berechtigung auf dem Speicher zugreifen zu dürfen.</string>
+    <string name="put_in_your_answer">答を入れてください</string>
+    <string name="wrong_answer">間違いました!</string>
+    <string name="zurücklegen">戻します</string>
+    <string name="weiterlegen">それでも続けます</string>
+    <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
+    <string name="learned">勉強した</string>
+    <string name="expired">失効した</string>
+    <string name="sum">全部</string>
+    <string name="untrained">勉強したない</string>
+    <string name="ustm_timer_paused">超短期記憶 \"途切れてます\"</string>
+    <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
+    <string name="ustm">超短期記憶</string>
+    <string name="stm">短期記憶</string>
+    <string name="stack">スタック</string>
+    <string name="card_added">カードを足しました</string>
+    <string name="learncards_show_hint">カードの後を覚えて見てください!</string>
+    <string name="info_text_hint">レッソンの説明</string>
+    <string name="next_expire_date">次の有効期限:</string>
+    <string name="nothing_learned_yet">まだ何も勉強してません!</string>
+    <string name="not_learned_yet">まだ勉強してません!</string>
+    <string name="no_description">説明がありません…</string>
+    <string name="expired_cards">有効期限したカードの数:</string>
+    <string name="search_hint">カードを探す</string>
+    <string name="learned_at">学んだ:</string>
+    <string name="expire_at">有効期限:</string>
+    <string name="expired_at">経った:</string>
+    <string name="synchronizing">同期</string>
+    <string name="write_permission_rational_message">許可を与えないと、レッスンを開くことができません!</string>
+    <string name="write_permission_info_message">レッソンを開くと保存するための,
+        Mobile　Pauker++ がストレージにアクセスするためのアクセス許可が必要です.</string>
     <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
     <string name="learncards_finished_learning">Lernen beendet</string>
     <string name="saving_success">Datei gespeichert</string>

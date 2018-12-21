@@ -39,7 +39,7 @@
     <string name="ustm">USTM</string>
     <string name="stm">STM</string>
     <string name="stack">Stack</string>
-    <string name="info_text_hint">Description of the lesson (LongTap to edit)</string>
+    <string name="info_text_hint">Description of the lesson</string>
     <string name="next_expire_date">Next expire date:</string>
     <string name="nothing_learned_yet">Nothing learned yet!</string>
     <string name="not_learned_yet">Not learned yet!</string>
@@ -52,9 +52,7 @@
     <string name="synchronizing">Synchronizing…</string>
     <string name="write_permission_rational_message">You can\'t open Lessons if you don\'t grant
         this Permission!</string>
-    <string name="write_permission_info_message">To open and save lessons MobilePauker++ needs the permission to save files on the storage.</string>
-    <string name="learncards_repeat_ustm">Time to repeat Ultra Short Term Memory</string>
-    <string name="learncards_repeat_stm">Time to repeat Short Term Memory</string>
+    <string name="write_permission_info_message">To open and save lessons MobilePauker++ needs the permission to access the storage.</string>
     <string name="learncards_waiting_stm_timer">Waiting on short term memory timer</string>
     <string name="learncards_finished_learning">Finished Learning</string>
     <string name="saving_success">File saved</string>
@@ -89,7 +87,7 @@
 
     <!-- region Content Descriptions und Titles-->
     <string name="sync_manually">Syncronize with Dropbox</string>
-    <string name="add_new_card">new card</string>
+    <string name="add_new_card">New card</string>
     <string name="front">Front</string>
     <string name="back">Back</string>
     <string name="learn_new_card">Learn new cards</string>
