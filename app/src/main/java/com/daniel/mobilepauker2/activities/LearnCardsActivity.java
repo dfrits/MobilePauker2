@@ -525,7 +525,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     public void screenTouched() {
-        if (ustmTimer.isPaused() || stmTimer.isPaused())
+        if ((ustmTimer != null && ustmTimer.isPaused()) || (stmTimer != null && stmTimer.isPaused()))
             return;
         LearningPhase learningPhase = modelManager.getLearningPhase();
         if (learningPhase == REPEATING_LTM
