@@ -27,6 +27,7 @@ import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
+import com.danilomendes.progressbar.InvertedTextProgressbar;
 
 import java.util.Locale;
 import java.util.Random;
@@ -59,8 +60,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private Hourglass stmTimer;
     private int ustmTotalTime;
     private int stmTotalTime;
-    private TextView ustmTimerText;
-    private TextView stmTimerText;
+    private InvertedTextProgressbar ustmTimerBar;
+    private InvertedTextProgressbar stmTimerBar;
     private Button bNext;
     private Button bShowMe;
     private RelativeLayout lRepeatButtons;
@@ -171,16 +172,16 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerTick(long timeRemaining) {
                     if (timeRemaining > 0) {
-                        if (ustmTimerText.getVisibility() == VISIBLE
+                        if (ustmTimerBar.getVisibility() == VISIBLE
                                 && !ustmTimerFinished) {
-                            String timerText;
                             int totalSec = (int) (timeRemaining / 1000);
                             int timeElapsed = ustmTotalTime - totalSec;
                             int sec = timeElapsed % 60;
 
-                            timerText = String.format(Locale.getDefault()
-                                    , "%s %d / %ds", getString(R.string.ustm), sec, ustmTotalTime);
-                            ustmTimerText.setText(timerText);
+                            String timerText = String.format(Locale.getDefault()
+                                    , "%d / %ds", sec, ustmTotalTime);
+                            ustmTimerBar.setProgress(timeElapsed);
+                            ustmTimerBar.setText(timerText);
                         }
                     } else {
                         stopUSTMTimer();// evtl. wieder zu onTimerFinish() zurücktun
@@ -191,7 +192,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 public void onTimerFinish() {
                 }
             };
-            ustmTimerText = findViewById(R.id.tUKZGTimer);
+            ustmTimerBar = findViewById(R.id.UKZGTimerBar);
+            ustmTimerBar.setMaxProgress(ustmTotalTime);
+            ustmTimerBar.setMinProgress(0);
         }
         if (stmTimer == null) {
             stmTotalTime = Integer.parseInt(settingsManager.getStringPreference(context, STM));
@@ -199,7 +202,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerTick(long timeRemaining) {
                     if (timeRemaining > 0
-                            && stmTimerText.getVisibility() == VISIBLE
+                            && stmTimerBar.getVisibility() == VISIBLE
                             && !stmTimerFinished) {
                         String timerText;
                         int totalSec = (int) (timeRemaining / 1000);
@@ -208,12 +211,13 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         int min = timeElapsed / 60;
                         if (sec < 10) {
                             timerText = String.format(Locale.getDefault(),
-                                    "%s %d:0%d / %d:00min", getString(R.string.stm), min, sec, stmTotalTime);
+                                    "%d:0%d / %d:00min", min, sec, stmTotalTime);
                         } else {
                             timerText = String.format(Locale.getDefault(),
-                                    "%s %d:%d / %d:00min", getString(R.string.stm), min, sec, stmTotalTime);
+                                    "%d:%d / %d:00min", min, sec, stmTotalTime);
                         }
-                        stmTimerText.setText(timerText);
+                        stmTimerBar.setProgress(timeElapsed);
+                        stmTimerBar.setText(timerText);
                     } else {
                         stopSTMTimer();
                     }
@@ -223,7 +227,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 public void onTimerFinish() {
                 }
             };
-            stmTimerText = findViewById(R.id.tKZGTimer);
+            stmTimerBar = findViewById(R.id.KZGTimerBar);
+            stmTimerBar.setMaxProgress(stmTotalTime * 60);
+            stmTimerBar.setMinProgress(0);
         }
     }
 
@@ -272,9 +278,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (ustmTimer != null && !ustmTimerFinished) {
             ustmTimer.stopTimer();
             ustmTimerFinished = true;
-            String timerText = String.format(Locale.getDefault()
-                    , "%s %s", getString(R.string.ustm), getString(R.string.timer_finished));
-            ustmTimerText.setText(timerText);
+            ustmTimerBar.setText(" ");
+            ustmTimerBar.setProgress(ustmTotalTime);
         }
     }
 
@@ -282,9 +287,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (stmTimer != null && !stmTimerFinished) {
             stmTimer.stopTimer();
             stmTimerFinished = true;
-            String timerText = String.format(Locale.getDefault()
-                    , "%s %s", getString(R.string.stm), getString(R.string.timer_finished));
-            stmTimerText.setText(timerText);
+            stmTimerBar.setProgress(stmTotalTime);
+            stmTimerBar.setText(" ");
         }
     }
 
@@ -479,15 +483,17 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private void disableButtons() {
         bNext.setEnabled(false);
         bShowMe.setEnabled(false);
-        lRepeatButtons.setEnabled(false);
-        lSkipWaiting.setEnabled(false);
+        findViewById(R.id.bYes).setEnabled(false);
+        findViewById(R.id.bNo).setEnabled(false);
+        findViewById(R.id.bSkipWaiting).setEnabled(false);
     }
 
     private void enableButtons() {
         bNext.setEnabled(true);
         bShowMe.setEnabled(true);
-        lRepeatButtons.setEnabled(true);
-        lSkipWaiting.setEnabled(true);
+        findViewById(R.id.bYes).setEnabled(true);
+        findViewById(R.id.bNo).setEnabled(true);
+        findViewById(R.id.bSkipWaiting).setEnabled(true);
     }
 
     @Override
@@ -519,6 +525,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     public void screenTouched() {
+        if (ustmTimer.isPaused() || stmTimer.isPaused())
+            return;
         LearningPhase learningPhase = modelManager.getLearningPhase();
         if (learningPhase == REPEATING_LTM
                 || learningPhase == REPEATING_STM
@@ -546,7 +554,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     private void fillInData(boolean flipCardSides) {
         // Daten setzen
-        // TODO Schriftgröße, Kursiv?, Fett?, Font, Vorder-, Hintergrund, Art der Wiederholung
+        // TODO Art der Wiederholung
         Font fontA = modelManager.getCardFont(CardPackAdapter.KEY_SIDEA_ID, mCardCursor.getPosition());
         Font fontB = modelManager.getCardFont(CardPackAdapter.KEY_SIDEB_ID, mCardCursor.getPosition());
 
@@ -710,13 +718,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             pauseTimer();
             item.setVisible(false);
             restartButton.setVisible(true);
-
-            if (ustmTimerText != null && ustmTimerText.getVisibility() == VISIBLE && !ustmTimerFinished) {
-                ustmTimerText.setText(R.string.ustm_timer_paused);
-            }
-            if (stmTimerText != null && stmTimerText.getVisibility() == VISIBLE) {
-                stmTimerText.setText(R.string.stm_timer_paused);
-            }
         } else {
             Toast.makeText(context, R.string.pause_timer_error, Toast.LENGTH_LONG).show();
         }
