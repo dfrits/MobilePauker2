@@ -129,7 +129,7 @@ public class SyncDialog extends Activity {
                 Log.d("LessonImportActivity::loadData::onError"
                         , "Error loading Files: " + e.getMessage());
                 Toast.makeText(context,
-                        "An error has occurred",
+                        R.string.simple_error_message,
                         Toast.LENGTH_SHORT)
                         .show();
             }
@@ -287,7 +287,7 @@ public class SyncDialog extends Activity {
                                 "Failed to download file.", e);
 
                         Toast.makeText(context,
-                                "An error has occurred",
+                                R.string.simple_error_message,
                                 Toast.LENGTH_SHORT)
                                 .show();
                         setResult(RESULT_CANCELED);

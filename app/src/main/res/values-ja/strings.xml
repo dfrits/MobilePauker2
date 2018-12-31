@@ -173,5 +173,6 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="simple_error_message">An error has occurred</string>
     <!-- endregion -->
 </resources>

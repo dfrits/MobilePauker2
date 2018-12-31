@@ -287,7 +287,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (stmTimer != null && !stmTimerFinished) {
             stmTimer.stopTimer();
             stmTimerFinished = true;
-            stmTimerBar.setProgress(stmTotalTime);
+            stmTimerBar.setProgress(stmTotalTime*60);
             stmTimerBar.setText(" ");
         }
     }
