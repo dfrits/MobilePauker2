@@ -250,10 +250,6 @@ public class MainMenu extends AppCompatActivity {
             initChartList();
         }
         firstStart = false;
-
-        if (paukerManager.isSaveRequired()) {
-            setTitle(getTitle() + "*");
-        }
     }
 
     @Override
