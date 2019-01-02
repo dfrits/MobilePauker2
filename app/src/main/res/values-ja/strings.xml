@@ -21,6 +21,7 @@
     <string name="crash_report_title">エラーレポート</string>
     <string name="crash_report_mail_subject">Mobile Pauker++: エラーレポート</string>
     <string name="crash_report_mail_body">エラーレポートを送りましたありがとうございます!</string>
+    <string name="simple_error_message">An error has occurred</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -173,6 +174,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
-    <string name="simple_error_message">An error has occurred</string>
     <!-- endregion -->
 </resources>

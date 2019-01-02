@@ -23,6 +23,7 @@
     <string name="crash_report_title">Fehlerbericht</string>
     <string name="crash_report_mail_subject">Mobile Pauker++: Fehlerbericht</string>
     <string name="crash_report_mail_body">Danke für diesen Fehlerbericht!</string>
+    <string name="simple_error_message">Ein Fehler ist aufgetreten</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -176,6 +177,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
-    <string name="simple_error_message">An error has occurred</string>
     <!-- endregion -->
 </resources>
