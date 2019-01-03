@@ -1,5 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -20,6 +22,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.CardPackAdapter;
 import com.daniel.mobilepauker2.model.FlashCard;
+import com.daniel.mobilepauker2.model.MPEditText;
 import com.daniel.mobilepauker2.model.MPTextView;
 import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
@@ -34,6 +37,7 @@ import java.util.Random;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_A;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.NOTHING;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_LTM;
@@ -119,6 +123,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (requestCode == Constants.REQUEST_CODE_EDIT_CARD && resultCode == RESULT_OK) {
             updateCurrentCard();
             fillInData(flipCardSides);
+            setButtonsVisibility();
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
@@ -287,7 +292,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (stmTimer != null && !stmTimerFinished) {
             stmTimer.stopTimer();
             stmTimerFinished = true;
-            stmTimerBar.setProgress(stmTotalTime*60);
+            stmTimerBar.setProgress(stmTotalTime * 60);
             stmTimerBar.setText(" ");
         }
     }
@@ -469,6 +474,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private void setButtonVisibilityRepeating() {
         bNext.setVisibility(GONE);
         bShowMe.setVisibility(VISIBLE);
+        String text = mCardCursor != null && modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping() ?
+                "Enter answer" : getString(R.string.show_me);
+        bShowMe.setText(text);
         lRepeatButtons.setVisibility(GONE);
         lSkipWaiting.setVisibility(GONE);
     }
@@ -532,16 +540,90 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 || learningPhase == REPEATING_STM
                 || learningPhase == REPEATING_USTM) {
 
-            if (flipCardSides) {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_A);
+            if (modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
+                showInputDialog();
             } else {
-                currentCard.setSide(FlashCard.SideShowing.SIDE_B);
-            }
+                if (flipCardSides) {
+                    currentCard.setSide(SIDE_A);
+                } else {
+                    currentCard.setSide(FlashCard.SideShowing.SIDE_B);
+                }
 
-            fillInData(flipCardSides);
-            bShowMe.setVisibility(GONE);
-            lRepeatButtons.setVisibility(VISIBLE);
+                fillInData(flipCardSides);
+                bShowMe.setVisibility(GONE);
+                lRepeatButtons.setVisibility(VISIBLE);
+            }
         }
+    }
+
+    @SuppressLint("InflateParams")
+    private void showInputDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = getLayoutInflater().inflate(R.layout.dialog_input, null);
+        final MPEditText inputField = view.findViewById(R.id.eTInput);
+        builder.setView(view)
+                .setPositiveButton("Proof", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String cardText;
+                        if (flipCardSides) {
+                            cardText = currentCard.getSideAText();
+                        } else {
+                            cardText = currentCard.getSideBText();
+                        }
+                        boolean caseSensitive = settingsManager.getBoolPreference(context, SettingsManager.Keys.CASE_SENSITIV);
+                        String input = inputField.getText().toString();
+                        if (caseSensitive && cardText.equals(input)) {
+                            yesClicked(null);
+                        } else if (cardText.equalsIgnoreCase(input)) {
+                            yesClicked(null);
+                        } else showResultDialog(cardText, input);
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                }
+            }
+        });
+        if (flipCardSides) {
+            inputField.setFont(modelManager.getCardFont(CardPackAdapter.KEY_SIDEA_ID, mCardCursor.getPosition()));
+        } else {
+            inputField.setFont(modelManager.getCardFont(CardPackAdapter.KEY_SIDEB_ID, mCardCursor.getPosition()));
+        }
+        builder.create().show();
+    }
+
+    @SuppressLint("InflateParams")
+    private void showResultDialog(String cardText, String input) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, R.style.ResultDialogTheme);
+        View view = getLayoutInflater().inflate(R.layout.dialog_result, null);
+        builder.setView(view)
+                .setPositiveButton("Weiterlegen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        yesClicked(null);
+                    }
+                })
+                .setNegativeButton("Zurücklegen", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        noClicked(null);
+                    }
+                });
+        ((TextView) view.findViewById(R.id.tVRightAnswer)).setText(cardText);
+        ((TextView) view.findViewById(R.id.tVInput)).setText(input);
+        builder.create().show();
     }
 
     @Override
@@ -564,10 +646,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             fillSideA(R.string.back, currentCard.getSideBText(), fontB);
 
             String sideAText = "";
-            if (currentCard.getSide() == FlashCard.SideShowing.SIDE_A
+            if (currentCard.getSide() == SIDE_A
                     || learningPhase == SIMPLE_LEARNING
                     || learningPhase == FILLING_USTM) {
                 sideAText = currentCard.getSideAText();
+            } else if (modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
+                sideAText = "Tap to enter your answer.";
             }
             fillSideB(R.string.front, sideAText, fontA);
 
@@ -580,6 +664,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     || learningPhase == SIMPLE_LEARNING
                     || learningPhase == FILLING_USTM) {
                 sideBText = currentCard.getSideBText();
+            } else if (modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
+                sideBText = "Tap to enter your answer.";
             }
             fillSideB(R.string.back, sideBText, fontB);
         }
@@ -610,7 +696,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         if (flipCardSides) {
             currentCard.setSide(FlashCard.SideShowing.SIDE_B);
         } else {
-            currentCard.setSide(FlashCard.SideShowing.SIDE_A);
+            currentCard.setSide(SIDE_A);
         }
 
         return flipCardSides;
@@ -633,7 +719,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         ((TextView) findViewById(R.id.titelCardSideB)).setText(getString(titleResource));
         findViewById(R.id.tCardSideB_ET).setVisibility(GONE);
         MPTextView sideB = findViewById(R.id.tCardSideB_TV);
-        if (text.isEmpty()) {
+        if (text.isEmpty() || modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
             sideB.setHint(getString(R.string.learncards_show_hint));
             sideB.setFont(new Font());
         } else {

@@ -52,6 +52,7 @@ public class EditCardActivity extends AEditCardActivity {
         initSideABold = font.isBold();
         initSideAItalic = font.isItalic();
         sideAEditText.setCard(flashCard.getFrontSide());
+        initIsRepeatedByTyping = flashCard.isRepeatedByTyping();
 
         //SideB
         text = flashCard.getSideBText();

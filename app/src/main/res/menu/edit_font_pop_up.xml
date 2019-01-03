@@ -15,4 +15,8 @@
     <item
         android:id="@+id/mItalic"
         android:title="@string/italic" />
+    <item
+        android:id="@+id/mRepeatType"
+        android:title="@string/repeat_type"
+        android:visible="false"/>
 </menu>

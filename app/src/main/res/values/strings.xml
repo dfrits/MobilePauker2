@@ -27,6 +27,11 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="sr_repeat_type">Repeat type:</string>
     <string name="wrong_answer">Your Answer was wrong!</string>
     <string name="zurücklegen">Put back</string>
     <string name="skipWaiting">Timer still running…</string>
@@ -84,9 +89,11 @@
     <string name="text_color">Text color</string>
     <string name="bold">Bold</string>
     <string name="italic">Italic</string>
+    <string name="repeat_type">Repeat type</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
+    <string name="repeat_type_description">Repeat Type Image</string>
     <string name="sync_manually">Syncronize with Dropbox</string>
     <string name="add_new_card">New card</string>
     <string name="front">Front</string>
@@ -176,7 +183,7 @@
 
     <!-- region Beschreibungen -->
     <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
-    <string name="case_sensitive_summ">If cards are repeated with input</string>
+    <string name="case_sensitive_summ">If cards are repeated by input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
     <string name="auto_save_summ">Save automatically after every session</string>
     <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>

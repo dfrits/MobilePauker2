@@ -7,5 +7,5 @@
     <stroke
         android:width="3px"
         android:color="@color/black" />
-    <solid android:color="#F2F2F2" />
+    <solid android:color="@color/box_background" />
 </shape>

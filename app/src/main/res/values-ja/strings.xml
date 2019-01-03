@@ -68,6 +68,11 @@
         zuerst gezeigt werden soll</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
     <string name="timer_finished">\"Abgelaufen!\"</string>
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="sr_repeat_type">Repeat type:</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -80,9 +85,11 @@
     <string name="bold">Fett</string>
     <string name="italic">Kursiv</string>
     <string name="no">Nein</string>
+    <string name="repeat_type">Repeat type</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
+    <string name="repeat_type_description">Repeat Type Image</string>
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte</string>

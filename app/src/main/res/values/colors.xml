@@ -11,4 +11,5 @@
     <color name="learned">#5eb53f</color>
     <color name="expired">#3f8cb5</color>
     <color name="drawer_background">#f1f1f1</color>
+    <color name="box_background">#F2F2F2</color>
 </resources>

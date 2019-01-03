@@ -3,6 +3,7 @@ package com.daniel.mobilepauker2.activities;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -46,6 +47,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
     protected int initSideABColor;
     protected boolean initSideABold;
     protected boolean initSideAItalic;
+    protected boolean initIsRepeatedByTyping;
     //SideB
     protected MPEditText sideBEditText;
     protected String initSideBText = "";
@@ -92,6 +94,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
 
     public void resetCardSides(View view) {
         fontChanged = false;
+        flashCard.setRepeatByTyping(initIsRepeatedByTyping);
         sideAEditText.setText(initSideAText);
         sideBEditText.setText(initSideBText);
         Font font = flashCard.getFrontSide().getFont();
@@ -117,7 +120,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
     }
 
     public void editFontA(View view) {
-        PopupMenu popupMenu = createPopupMenu(view, flashCard.getFrontSide().getFont());
+        PopupMenu popupMenu = createPopupMenu(view, flashCard.getFrontSide().getFont(), true);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -133,7 +136,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
     }
 
     public void editFontB(View view) {
-        PopupMenu popupMenu = createPopupMenu(view, flashCard.getReverseSide().getFont());
+        PopupMenu popupMenu = createPopupMenu(view, flashCard.getReverseSide().getFont(), false);
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -209,6 +212,10 @@ public abstract class AEditCardActivity extends AppCompatActivity {
             case R.id.mTextSize:
                 editTextSize(cardSide, font);
                 break;
+            case R.id.mRepeatType:
+                fontChanged = true;
+                flashCard.setRepeatByTyping(!flashCard.isRepeatedByTyping());
+                break;
             default:
                 return false;
         }
@@ -262,12 +269,12 @@ public abstract class AEditCardActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private PopupMenu createPopupMenu(View view, Font font) {
+    private PopupMenu createPopupMenu(View view, Font font, boolean showRepeatTypeMenu) {
         PopupMenu dropdownMenu = new PopupMenu(context, view);
         Menu menu = dropdownMenu.getMenu();
         dropdownMenu.getMenuInflater().inflate(R.menu.edit_font_pop_up, menu);
 
-        setIcons(menu, font);
+        setIcons(menu, font, showRepeatTypeMenu);
 
         try {
             Field[] fields = dropdownMenu.getClass().getDeclaredFields();
@@ -282,13 +289,13 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            return dropdownMenu;
         }
         dropdownMenu.show();
         return dropdownMenu;
     }
 
-    private void setIcons(Menu menu, Font font) {
+    private void setIcons(Menu menu, Font font, boolean showRepeatTypeMenu) {
         font = font == null ? new Font() : font;
 
         // Size
@@ -312,5 +319,15 @@ public abstract class AEditCardActivity extends AppCompatActivity {
         circle = new TextDrawable("I");
         circle.setItalic(font.isItalic());
         menu.findItem(R.id.mItalic).setIcon(circle);
+
+        // Repeat Type --> Nur bei der Vorderseite
+        if (showRepeatTypeMenu) {
+            MenuItem item = menu.findItem(R.id.mRepeatType);
+            item.setVisible(true);
+            Drawable icon = flashCard.isRepeatedByTyping() ?
+                    getDrawable(R.drawable.rt_typing) :
+                    getDrawable(R.drawable.rt_thinking);
+            item.setIcon(icon);
+        }
     }
 }
