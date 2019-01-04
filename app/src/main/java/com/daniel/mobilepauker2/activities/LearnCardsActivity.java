@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -72,13 +73,13 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private RelativeLayout lSkipWaiting;
     private MenuItem pauseButton;
     private MenuItem restartButton;
+    private RelativeLayout timerAnimation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         setContentView(R.layout.learn_cards);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -92,6 +93,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 if (ustmTimer != null && stmTimer != null) {
                     findViewById(R.id.lTimerFrame).setVisibility(VISIBLE);
                     startAllTimer();
+                    timerAnimation = findViewById(R.id.timerAnimationPanel);
                 }
             }
         } else if (modelManager.getLearningPhase() == REPEATING_LTM) {
@@ -107,6 +109,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!firstStart && !restartButton.isVisible()) {
             restartTimer();
+        }
+
+        LearningPhase learningPhase = modelManager.getLearningPhase();
+        if (learningPhase == WAITING_FOR_USTM || learningPhase == WAITING_FOR_STM) {
+            showHideTimerAnimation();
         }
 
         firstStart = false;
@@ -160,9 +167,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         pauseButton = menu.findItem(R.id.mPauseButton);
         restartButton = menu.findItem(R.id.mRestartButton);
 
-        if (modelManager.getLearningPhase() == REPEATING_LTM
-                || (modelManager.getLearningPhase() == SIMPLE_LEARNING
-                && modelManager.getLearningPhase() == NOTHING)) {
+        LearningPhase learningPhase = modelManager.getLearningPhase();
+        if (learningPhase == REPEATING_LTM
+                || learningPhase == SIMPLE_LEARNING
+                || learningPhase == NOTHING
+                || learningPhase == REPEATING_STM) {
             pauseButton.setVisible(false);
             restartButton.setVisible(false);
         }
@@ -189,7 +198,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                             ustmTimerBar.setText(timerText);
                         }
                     } else {
-                        stopUSTMTimer();// evtl. wieder zu onTimerFinish() zurücktun
+                        stopUSTMTimer();
+                        if (modelManager.getLearningPhase() == WAITING_FOR_USTM) {
+                            stopWaiting = true;
+                            updateLearningPhase();
+                        }
                     }
                 }
 
@@ -225,6 +238,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         stmTimerBar.setText(timerText);
                     } else {
                         stopSTMTimer();
+                        if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
+                            stopWaiting = true;
+                            updateLearningPhase();
+                        }
                     }
                 }
 
@@ -337,14 +354,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 if (stmTimerFinished) // STM timeout so go straight to repeating ustm cards
                 {
-                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
                 } else if (zeroUnlearnedCards && !ustmTimerFinished) {
                     setLearningPhase(LearningPhase.WAITING_FOR_USTM);
                     updateLearningPhase();
                 } else if (ustmTimerFinished) {
-                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_SHORT).show();
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
                 }
@@ -354,12 +369,13 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             case WAITING_FOR_USTM: {
                 Log.d("LearnCardsActivity::updateLearningPhase", "Waiting for USTM");
-                setButtonVisibilityWaiting();
+                // Gif zeigen
+                showHideTimerAnimation();
 
                 // USTM Timeout
                 if (ustmTimerFinished || stopWaiting) {
-                    //Toast.makeText(this, getString(R.string.learncards_repeat_ustm), Toast.LENGTH_LONG).show();
                     stopWaiting = false;
+
                     stopUSTMTimer();
                     setLearningPhase(LearningPhase.REPEATING_USTM);
                     updateLearningPhase();
@@ -375,7 +391,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 {
                     if (stmTimerFinished) //STM timer has timed out so move to repeating STM
                     {
-                        //Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
                         setLearningPhase(LearningPhase.REPEATING_STM);
                     } else if (!zeroUnlearnedCards) // Unlearned cards available so go back to filling ustm;
                     {
@@ -392,14 +407,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
 
             case WAITING_FOR_STM: {
-                setButtonVisibilityWaiting();
+                // Gif zeigen
+                showHideTimerAnimation();
 
                 // USTM Timeout
                 if (stmTimerFinished || stopWaiting) {
-                    //Toast.makeText(this, getString(R.string.learncards_repeat_stm), Toast.LENGTH_SHORT).show();
                     stopWaiting = false;
                     stopSTMTimer();
                     setLearningPhase(LearningPhase.REPEATING_STM);
+                    invalidateOptionsMenu();
                     updateLearningPhase();
                 }
                 break;
@@ -407,7 +423,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             case REPEATING_STM: {
                 if (zeroSTMCards) {
-                    //Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
                     finishLearning();
                 } else {
                     setButtonVisibilityRepeating();
@@ -417,7 +432,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             case REPEATING_LTM: {
                 if (modelManager.getExpiredCardsSize() <= 0) {
-                    //Toast.makeText(this, getString(R.string.learncards_finished_learning), Toast.LENGTH_LONG).show();
                     finishLearning();
                 } else {
                     setButtonVisibilityRepeating();
@@ -504,6 +518,13 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         findViewById(R.id.bSkipWaiting).setEnabled(true);
     }
 
+    private void showHideTimerAnimation() {
+        if (timerAnimation == null) return;
+
+        timerAnimation.setVisibility(stopWaiting ? GONE : VISIBLE);
+        setButtonsVisibility();
+    }
+
     @Override
     void updateCurrentCard() {
         try {
@@ -587,15 +608,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         dialog.dismiss();
                     }
                 })
-        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                }
-            }
-        });
+                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
+                            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                        }
+                    }
+                });
         if (flipCardSides) {
             inputField.setFont(modelManager.getCardFont(CardPackAdapter.KEY_SIDEA_ID, mCardCursor.getPosition()));
         } else {
@@ -636,7 +657,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     private void fillInData(boolean flipCardSides) {
         // Daten setzen
-        // TODO Art der Wiederholung
         Font fontA = modelManager.getCardFont(CardPackAdapter.KEY_SIDEA_ID, mCardCursor.getPosition());
         Font fontB = modelManager.getCardFont(CardPackAdapter.KEY_SIDEB_ID, mCardCursor.getPosition());
 
@@ -754,7 +774,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     protected void cursorLoaded() {
-        setCursorToFirst();
+        if (mSavedCursorPosition == 0) {
+            setCursorToFirst();
+        } else {
+            mCardCursor.moveToPosition(mSavedCursorPosition);
+        }
         updateCurrentCard();
         fillData();
     }

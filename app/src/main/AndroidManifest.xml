@@ -26,7 +26,7 @@
         <activity
             android:name=".activities.LessonImportActivity"
             android:label="@string/lessons"
-            android:theme="@style/OpenLessonTheme"/>
+            android:theme="@style/OpenLessonTheme" />
 
         <activity
             android:name=".activities.EditDescrptionActivity"
@@ -61,7 +61,9 @@
             android:label="@string/settings"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.LearnCardsActivity" />
+        <activity
+            android:name=".activities.LearnCardsActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.SaveDialog"
@@ -81,6 +83,6 @@
             android:name=".activities.AddCardActivity"
             android:label="@string/add_new_card"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateAlwaysHidden"  />
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
     </application>
 </manifest>

@@ -76,6 +76,8 @@
         </RelativeLayout>
     </LinearLayout>
 
+    <include layout="@layout/timer_animation" />
+
     <include
         android:id="@+id/lLearnButtonsFrame"
         layout="@layout/learn_buttons_frame" />
