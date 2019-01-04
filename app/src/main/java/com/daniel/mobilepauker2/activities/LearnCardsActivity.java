@@ -717,7 +717,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
      */
     private void fillSideB(int titleResource, String text, Font font) {
         ((TextView) findViewById(R.id.titelCardSideB)).setText(getString(titleResource));
-        findViewById(R.id.tCardSideB_ET).setVisibility(GONE);
         MPTextView sideB = findViewById(R.id.tCardSideB_TV);
         if (text.isEmpty() || modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
             sideB.setHint(getString(R.string.learncards_show_hint));

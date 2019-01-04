@@ -27,15 +27,12 @@
     <!-- endregion -->
 
     <!-- region Infos -->
-    <string name="dialog_input_message">Type in your answer.</string>
-    <string name="dialog_result_message">Your answer is wrong!</string>
-    <string name="dialog_result_right_answer">Right answer is:</string>
-    <string name="dialog_result_input_answer">Your answer is:</string>
-    <string name="sr_repeat_type">Repeat type:</string>
+    <string name="dialog_input_message">Gib deine Antwort ein.</string>
+    <string name="dialog_result_message">Deine Antwort ist falsch!</string>
+    <string name="dialog_result_right_answer">Richtige ist:</string>
+    <string name="dialog_result_input_answer">Deine Antwort:</string>
+    <string name="sr_repeat_type">Wiederholungsart:</string>
     <string name="put_in_your_answer">Gib deine Antwort ein</string>
-    <string name="wrong_answer">Deine Antwort war falsch!</string>
-    <string name="zurücklegen">Zurücklegen</string>
-    <string name="weiterlegen">Trotzdem weiterlegen</string>
     <string name="compare_ques_answ">Richtig wäre gewesen: %s\nDeine Antwort war: %s</string>
     <string name="learned">Gelernt</string>
     <string name="expired">Abgelaufen</string>
@@ -88,11 +85,11 @@
     <string name="bold">Fett</string>
     <string name="italic">Kursiv</string>
     <string name="no">Nein</string>
-    <string name="repeat_type">Repeat type</string>
+    <string name="repeat_type">Wiederholungsart</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
-    <string name="repeat_type_description">Repeat Type Image</string>
+    <string name="repeat_type_description">Wiederholungsartbild</string>
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <string name="add_new_card">Neue Karte</string>
