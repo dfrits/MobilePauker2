@@ -27,7 +27,7 @@ public class About extends AppCompatActivity {
     {
         fileNameMap = new HashMap<>();
         fileNameMap.put(Locale.ENGLISH, "file:///android_asset/instructions_en.html");
-        fileNameMap.put(Locale.GERMAN, "file:///android_asset/instructions_de.html");
+        fileNameMap.put(Locale.GERMANY, "file:///android_asset/instructions_de.html");
     }
 
     @Override
