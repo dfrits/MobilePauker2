@@ -37,7 +37,6 @@
             android:summary="@string/flip_card_sides_summ"
             android:title="@string/flip_card_sides_title" />
         // Groß/Klein beachten
-        <!-- TODO Implementieren -->
         <SwitchPreference
             android:defaultValue="@bool/case_sensitive_default"
             android:key="@string/case_sensitive"
@@ -101,14 +100,9 @@
             android:key="@string/associate_dropbox"
             android:title="@string/associate_dropbox_title" />
         // About
-        <!-- TODO Implementieren -->
         <Preference
-            android:enabled="false"
-            android:selectable="false"
             android:title="@string/about">
-            <intent
-                android:targetClass="activities.About"
-                android:targetPackage="com.daniel.mobilepauker2" />
+            <intent android:action="com.daniel.mobilepauker2.activities.about" />
         </Preference>
     </PreferenceCategory>
 </PreferenceScreen>

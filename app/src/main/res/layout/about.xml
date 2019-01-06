@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/aboutPanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/defaultBackground"
+    android:padding="20dp">
+
+    <android.support.v4.widget.Space
+        android:id="@+id/spaceleft"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/aboutPanel"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4" />
+
+    <ImageView
+        android:id="@+id/iAppIcon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher_round"
+        app:layout_constraintEnd_toStartOf="@id/spaceright"
+        app:layout_constraintStart_toEndOf="@id/spaceleft"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_max="100dp"
+        app:layout_constraintWidth_percent="0.2"
+        tools:ignore="ContentDescription" />
+
+    <android.support.v4.widget.Space
+        android:id="@+id/spaceright"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@id/aboutPanel"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_percent="0.4" />
+
+    <TextView
+        android:id="@+id/tVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/iAppIcon" />
+
+    <TextView
+        android:id="@+id/tAboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="serif"
+        android:text="@string/about_app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tVersion" />
+
+    <WebView
+        android:id="@+id/tAboutText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="@+id/aboutPanel"
+        app:layout_constraintTop_toBottomOf="@+id/tAboutTitle" />
+</android.support.constraint.ConstraintLayout>

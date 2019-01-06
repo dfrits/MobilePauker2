@@ -89,6 +89,7 @@
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">Mobile Pauker++って何</string>
     <string name="repeat_type_description">Repeat Type Image</string>
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>

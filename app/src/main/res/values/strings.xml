@@ -93,6 +93,7 @@
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">What is Mobile Pauker++</string>
     <string name="repeat_type_description">Repeat Type Image</string>
     <string name="sync_manually">Syncronize with Dropbox</string>
     <string name="add_new_card">New card</string>
@@ -154,7 +155,7 @@
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
     <string name="auto_save" translatable="false">Auto Save</string>
-    <string name="about" translatable="false">About MobilePauker++</string>
+    <string name="about" translatable="false">About</string>
     <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
     <string name="auto_sync" translatable="false">Auto Synchronisation</string>
     <string name="expire_toast" translatable="false">Enable Expire Toast</string>

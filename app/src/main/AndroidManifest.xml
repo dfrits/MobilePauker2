@@ -54,7 +54,13 @@
         <activity
             android:name=".activities.About"
             android:label="@string/about"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="com.daniel.mobilepauker2.activities.about" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activities.SettingsActivity"
