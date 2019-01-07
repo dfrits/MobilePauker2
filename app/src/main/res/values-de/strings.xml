@@ -27,6 +27,10 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
+    <string name="wrong_answer">Your Answer was wrong!</string>
+    <string name="put_back">Zurücklegen</string>
+    <string name="put_further">Weiterlegen</string>
     <string name="dialog_input_message">Gib deine Antwort ein.</string>
     <string name="dialog_result_message">Deine Antwort ist falsch!</string>
     <string name="dialog_result_right_answer">Richtige ist:</string>

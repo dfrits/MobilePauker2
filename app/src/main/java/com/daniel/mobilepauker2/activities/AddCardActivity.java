@@ -39,14 +39,14 @@ public class AddCardActivity extends AEditCardActivity {
         String sideBText = sideBEditText.getText().toString();
 
         if (sideAText.isEmpty() && sideBText.isEmpty()) {
-            finish();
+            resetCardAndFinish();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage("Card is not added yet. Do you really want to leave?")
+            builder.setMessage(R.string.finish_add_card_message)
                     .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            finish();
+                            resetCardAndFinish();
                         }
                     })
                     .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {

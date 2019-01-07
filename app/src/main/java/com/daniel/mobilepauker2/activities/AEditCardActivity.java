@@ -78,6 +78,16 @@ public abstract class AEditCardActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        resetCardAndFinish();
+    }
+
+    protected void resetCardAndFinish() {
+        resetCardSides(null);
+        finish();
+    }
+
     /**
      * Überprüft beide Felder ob Änderungen zum Initialstatus vorhanden sind. Die Schriftart wird
      * dabei nicht überprüft.

@@ -27,15 +27,16 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="dialog_input_message">Type in your answer.</string>
     <string name="dialog_result_message">Your answer is wrong!</string>
     <string name="dialog_result_right_answer">Right answer is:</string>
     <string name="dialog_result_input_answer">Your answer is:</string>
     <string name="sr_repeat_type">Repeat type:</string>
     <string name="wrong_answer">Your Answer was wrong!</string>
-    <string name="zurücklegen">Put back</string>
+    <string name="put_back">Put back</string>
     <string name="skipWaiting">Timer still running…</string>
-    <string name="weiterlegen">Still continue</string>
+    <string name="put_further">Still continue</string>
     <string name="compare_ques_answ">Right answer: %s\nYour answer: %s</string>
     <string name="put_in_your_answer">Type in your Answer</string>
     <string name="learned">Learned</string>

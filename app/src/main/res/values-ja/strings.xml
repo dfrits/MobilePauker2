@@ -27,8 +27,8 @@
     <!-- region Infos -->
     <string name="put_in_your_answer">答を入れてください</string>
     <string name="wrong_answer">間違いました!</string>
-    <string name="zurücklegen">戻します</string>
-    <string name="weiterlegen">それでも続けます</string>
+    <string name="put_back">戻します</string>
+    <string name="put_further">それでも続けます</string>
     <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
     <string name="learned">勉強した</string>
     <string name="expired">失効した</string>
@@ -182,5 +182,6 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <!-- endregion -->
 </resources>
