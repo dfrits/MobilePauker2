@@ -184,5 +184,6 @@
     <string name="New">Neu</string>
     <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="error_upload">Error while uploading File</string>
+    <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
     <!-- endregion -->
 </resources>

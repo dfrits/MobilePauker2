@@ -3,6 +3,7 @@
     <string name="error_upload">Error while uploading File</string>
     <string name="reopen_lesson_error">Dataset of the lesson can\'t be updatet automatically!
         Please reopen the lesson manually.</string>
+    <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
     <string name="number_format_error">Please type in just numbers</string>
     <string name="no_lesson_found">No Lesson found…</string>
     <string name="load_card_data_error">Erro while loading card!</string>

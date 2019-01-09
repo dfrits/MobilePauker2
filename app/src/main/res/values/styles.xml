@@ -22,4 +22,9 @@
     <style name="ResultDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/box_background</item>
     </style>
+
+    <style name="NamingDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:background">@color/defaultBackground</item>
+        <item name="android:textColor">@color/color_selector_buttons_dialog</item>
+    </style>
 </resources>

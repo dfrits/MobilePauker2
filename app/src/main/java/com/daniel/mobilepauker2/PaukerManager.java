@@ -163,18 +163,22 @@ public class PaukerManager {
     }
 
     public boolean setCurrentFileName(String filename) {
+        if (!filename.endsWith(".pau.gz"))
+            filename += ".pau.gz";
 
         // Validate the filename
-        if (filename == null) {
-            return false;
-        }
-
-        if (!filename.endsWith(".pau.gz")) {
-            return false;
-        }
+        if (!isNameValid(filename)) return false;
 
         mCurrentFileName = filename;
         return true;
+    }
+
+    public boolean isNameValid(String filename) {
+        if (filename == null || filename.isEmpty() || filename.equals(Constants.PAUKER_FILE_ENDING)) {
+            return false;
+        }
+
+        return filename.endsWith(".pau.gz");
     }
 
     public String getCurrentFileName() {
@@ -192,7 +196,7 @@ public class PaukerManager {
     public String getReadableFileName() {
         String filename = mCurrentFileName;
 
-        if (filename.endsWith(".pau.gz")) {
+        if (filename.endsWith(Constants.PAUKER_FILE_ENDING)) {
             return filename.substring(0, filename.length() - 7);
         } else if (filename.endsWith(".pau") || filename.endsWith(".xml")) {
             return filename.substring(0, filename.length() - 4);
@@ -207,7 +211,7 @@ public class PaukerManager {
             return false;
         }
 
-        if (!filename.endsWith(".pau.gz")) {
+        if (!filename.endsWith(Constants.PAUKER_FILE_ENDING)) {
             Log.d("Validate Filename", "File not ending with .pau.gz");
             return false;
         }
@@ -235,5 +239,16 @@ public class PaukerManager {
             return null;
         }
         return files;
+    }
+
+    public boolean isFileExisting(Context context, String fileName) {
+        File[] files = listFiles(context);
+
+        for (File file : files) {
+            if (file.getName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

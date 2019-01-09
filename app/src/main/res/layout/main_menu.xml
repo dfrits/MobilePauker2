@@ -114,7 +114,7 @@
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_add_card"
-                android:tint="@color/color_selector" />
+                android:tint="@color/color_selector_buttons_homescreen" />
 
             <TextView
                 android:id="@+id/tAddNewCardsDesc"
@@ -156,7 +156,7 @@
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_learn_new_cards"
-                android:tint="@color/color_selector"
+                android:tint="@color/color_selector_buttons_homescreen"
                 android:tintMode="src_in" />
 
             <TextView
@@ -199,7 +199,7 @@
                 android:padding="5dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_repeat_cards"
-                android:tint="@color/color_selector"
+                android:tint="@color/color_selector_buttons_homescreen"
                 android:tintMode="src_in" />
 
             <TextView

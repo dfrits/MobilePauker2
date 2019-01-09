@@ -24,6 +24,9 @@ public class Constants {
     // Datei, in der die Namen der lokal gelöschten Lektionen stehen
     public static final String DELETED_FILES_NAMES_FILE_NAME = "trash";
 
+    // Datei, in der die Namen der lokal neuhinzugefügten Lektionen stehen
+    public static final String ADDED_FILES_NAMES_FILE_NAME = "news";
+
     // Name einer neuen, nicht gespeicherten Lektion
     public static final String DEFAULT_FILE_NAME = "NONE";
 
@@ -46,4 +49,5 @@ public class Constants {
     public static final String LAST_TEXT_COLOR_CHOICE = "LAST_TEXT_COLOR_CHOICE";
     public static final String LAST_BACK_COLOR_CHOICE = "LAST_BACK_COLOR_CHOICE";
     public static final String KEEP_OPEN_KEY = "KEEP_OPEN_KEY";
+    public static final String PAUKER_FILE_ENDING = ".pau.gz";
 }

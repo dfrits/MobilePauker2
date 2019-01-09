@@ -316,60 +316,7 @@ public class MainMenu extends AppCompatActivity {
      * @param requestCode Wird für onActivityResult benötigt
      */
     private void saveLesson(final int requestCode) {
-        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
-            final LayoutInflater inflater = getLayoutInflater();
-
-            @SuppressLint("InflateParams")
-            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
-            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.give_lesson_name_dialog_title)
-                    .setView(view)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            String newLessonName = textField.getText().toString();
-
-                            if (!newLessonName.endsWith(".pau.gz"))
-                                newLessonName = newLessonName + ".pau.gz";
-
-                            if (paukerManager.setCurrentFileName(newLessonName))
-                                startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
-                            else
-                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-            final AlertDialog dialog = builder.create();
-
-            textField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
-                }
-            });
-
-            dialog.show();
-            textField.setText("");
-        } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
-        }
+        startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
     }
 
     /**
@@ -428,28 +375,28 @@ public class MainMenu extends AppCompatActivity {
                     syncIntent.putExtra(SyncDialog.FILES, files);
                     startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
                 }
-            } else {
-                if (paukerManager.isSaveRequired()) {
-                    builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.lesson_not_saved_dialog_title)
-                            .setMessage(R.string.lesson_not_saved_dialog_message)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(context, LessonImportActivity.class));
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    builder.create().show();
-                } else
-                    startActivity(new Intent(context, LessonImportActivity.class));
-            }
+            } else {*/
+            if (paukerManager.isSaveRequired()) {
+                builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.lesson_not_saved_dialog_title)
+                        .setMessage(R.string.lesson_not_saved_dialog_message)
+                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(context, LessonImportActivity.class));
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+            } else
+                startActivity(new Intent(context, LessonImportActivity.class));
+            //}
         }
     }
 
