@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,19 +23,20 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**  * Created by dfritsch on 21.11.2018.  * MobilePauker++  */
+/**
+ * Created by dfritsch on 21.11.2018.
+ * MobilePauker++
+ */
 
 public class SyncDialog extends Activity {
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
@@ -44,7 +44,6 @@ public class SyncDialog extends Activity {
     private final Context context = this;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
-    private String accessToken;
     private File[] files;
     private Timer timeout;
     private TimerTask timerTask;
@@ -55,40 +54,42 @@ public class SyncDialog extends Activity {
 
         setContentView(R.layout.progress_dialog);
 
-        RelativeLayout progressBar = findViewById(R.id.pFrame);
-        progressBar.setVisibility(View.VISIBLE);
-        TextView title = findViewById(R.id.pTitle);
-        title.setText(R.string.synchronizing);
-
         Intent intent = getIntent();
-        accessToken = intent.getStringExtra(ACCESS_TOKEN);
+        String accessToken = intent.getStringExtra(ACCESS_TOKEN);
         if (accessToken == null) {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet");
             setResult(RESULT_CANCELED);
             finish();
+            return;
         }
 
+        DropboxClientFactory.init(accessToken);
         Serializable serializableExtra = intent.getSerializableExtra(FILES);
         if (serializableExtra instanceof File[]) {
+            RelativeLayout progressBar = findViewById(R.id.pFrame);
+            progressBar.setVisibility(View.VISIBLE);
+            TextView title = findViewById(R.id.pTitle);
+            title.setText(R.string.synchronizing);
             files = (File[]) serializableExtra;
+            startTimer();
+            loadData();
+        } else if (serializableExtra instanceof File) {
+            List<File> list = new ArrayList<>();
+            list.add((File) serializableExtra);
+            uploadFiles(list);
+            finish();
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
             setResult(RESULT_CANCELED);
             finish();
         }
-
-        startTimer();
-
-        loadData();
     }
 
     /**
      * Sucht nach allen Dateien im Dropboxordner, validiert sie und ruft dann
-     * {@link SyncDialog#syncWithFiles(List, List) synWithFiles()} auf.
+     * {@link SyncDialog#syncWithFiles(List, Map) synWithFiles()} auf.
      */
     private void loadData() {
-        DropboxClientFactory.init(accessToken);
-
         new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
@@ -144,7 +145,7 @@ public class SyncDialog extends Activity {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void deleteFiles(List<Metadata> deletedFiles, final List<Metadata> validatedFiles) {
-        final List<File> lokalDeletedFiles = getLokalDeletedFiles(); // Dateien, die lokal gelöscht wurden
+        final Map<File, String> lokalDeletedFiles = modelManager.getLokalDeletedFiles(context); // Dateien, die lokal gelöscht wurden
 
         if (files != null) {
             List<File> filesTMP = new ArrayList<>(Arrays.asList(files));
@@ -159,8 +160,8 @@ public class SyncDialog extends Activity {
             }
         }
 
-        File[] data = new File[lokalDeletedFiles.size()];
-        data = lokalDeletedFiles.toArray(data);
+        File[] data = new File[lokalDeletedFiles.keySet().size()];
+        data = lokalDeletedFiles.keySet().toArray(data);
 
         new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
@@ -175,33 +176,13 @@ public class SyncDialog extends Activity {
         }).execute(data);
     }
 
-    @NonNull
-    private List<File> getLokalDeletedFiles() {
-        final List<File> filesToDelete = new ArrayList<>();
-        try {
-            FileInputStream fis = openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String fileName = reader.readLine();
-            while (fileName != null) {
-                if (!fileName.trim().isEmpty()) {
-                    filesToDelete.add(new File(fileName));
-                }
-                fileName = reader.readLine();
-            }
-            modelManager.resetDeletedFilesData(context);
-        } catch (IOException e) {
-            // TODO Error
-        }
-        return filesToDelete;
-    }
-
     /**
      * Aktualisiert die Files und ladet gegebenenfalls runter bzw hoch.
      * @param metadataList      Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
      *                          Dateien verglichen werden sollen
      * @param lokalDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
      */
-    private void syncWithFiles(List<Metadata> metadataList, List<File> lokalDeletedFiles) {
+    private void syncWithFiles(List<Metadata> metadataList, Map<File, String> lokalDeletedFiles) {
         // Lokale Files kopieren, damit nichts verloren geht
         List<File> filesTMP;
         if (files != null) {
@@ -222,7 +203,7 @@ public class SyncDialog extends Activity {
                     int fileIndex = getFileIndex(metadata.getName(), filesTMP);
 
                     if (fileIndex == -1) {
-                        if (getFileIndex(metadata.getName(), lokalDeletedFiles) == -1) {
+                        if (getFileIndex(metadata.getName(), lokalDeletedFiles.keySet()) == -1) {
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
@@ -306,13 +287,13 @@ public class SyncDialog extends Activity {
         new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
             @Override
             public void onUploadComplete(List<Metadata> result) {
-                System.out.println();
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e("LessonImportActivity::uploadFiles",
                         "Failed to upload file.", e);
+                Toast.makeText(context, R.string.error_upload, Toast.LENGTH_LONG).show();
             }
         }).execute(data);
     }
@@ -323,9 +304,11 @@ public class SyncDialog extends Activity {
      * @param list     Liste in der gesucht werden soll
      * @return Index. -1, falls File nicht vorhanden ist
      */
-    private int getFileIndex(String fileName, List<File> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(fileName)) return i;
+    private int getFileIndex(String fileName, Collection<File> list) {
+        int i = 0;
+        for (File file : list) {
+            if (file.getName().equals(fileName)) return i;
+            i++;
         }
 
         return -1;

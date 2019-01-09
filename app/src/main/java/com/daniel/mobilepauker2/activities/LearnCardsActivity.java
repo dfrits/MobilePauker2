@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.danilomendes.progressbar.InvertedTextProgressbar;
 
+import java.io.File;
 import java.util.Locale;
 import java.util.Random;
 
@@ -136,6 +138,17 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
+
+                if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+                    Intent intent = new Intent(context, SyncDialog.class);
+                    intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
+                    intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
+                }
+            } else {
+                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
             finish();
         }

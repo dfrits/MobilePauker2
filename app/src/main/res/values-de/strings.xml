@@ -1,5 +1,6 @@
 <resources>
     <!-- region Errors -->
+    <string name="error_upload">Fehler beim Upload</string>
     <string name="reopen_lesson_error">Datensatz der geöffneten Lektion kann nicht automatisch
         aktualisiert werden! Bitte manuell Lektion erneut öffnen.</string>
     <string name="number_format_error">Bitte nur Ziffern eingeben</string>

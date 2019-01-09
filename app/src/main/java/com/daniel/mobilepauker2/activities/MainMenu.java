@@ -1,7 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -18,17 +17,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,7 +42,6 @@ import java.io.File;
 
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 
 /**
@@ -268,19 +259,30 @@ public class MainMenu extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
                 paukerManager.setSaveRequired(false);
-                invalidateOptionsMenu();
                 modelManager.showExpireToast(context);
+
+                modelManager.addLesson(context);
+
+                if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+                    Intent intent = new Intent(context, SyncDialog.class);
+                    intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
+                    intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
+                    startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
+                }
             }
+            invalidateOptionsMenu();
         } else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             if (resultCode == RESULT_OK) {
-                Log.d("OpenLesson", "Synchro erfolgreich");
+                Log.d("SyncLesson", "Synchro erfolgreich");
             } else {
-                Log.d("OpenLesson", "Synchro nicht erfolgreich");
+                Log.d("SyncLesson", "Synchro nicht erfolgreich");
                 Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
             }
-        } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
+        } /*else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
-        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
+        }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
             if (resultCode == RESULT_OK) {
                 createNewLesson();
             } else {
@@ -416,7 +418,7 @@ public class MainMenu extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
         } else {
-            if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
+            /*if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
                 String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                         .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
                 if (accessToken != null) {
