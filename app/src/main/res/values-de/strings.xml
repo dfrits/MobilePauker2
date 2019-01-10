@@ -128,6 +128,7 @@
     <string name="exit_learning_dialog">Lernen beenden?</string>
     <string name="delete_card">Karte löschen</string>
     <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
+    <string name="create_new_lesson_not_saved_dialog_message">Willst du die Lektion vorher speichern?</string>
     <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
     <!-- endregion -->
 

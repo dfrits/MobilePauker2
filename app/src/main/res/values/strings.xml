@@ -130,6 +130,8 @@
     <string name="exit_learning_dialog">Exit Learning?</string>
     <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
+    <string name="create_new_lesson_not_saved_dialog_message">Do you want to save before creating a
+        new Lesson?</string>
     <string name="delete_card">Delete card</string>
     <!-- endregion -->
 

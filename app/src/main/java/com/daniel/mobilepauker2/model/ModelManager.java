@@ -58,7 +58,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
@@ -680,7 +679,15 @@ public class ModelManager {
     }
 
     public boolean isLessonSetup() {
-        return (mLesson != null);
+        return mLesson != null;
+    }
+
+    /**
+     * Prüft ob die Lektion leer ist.
+     * @return True, wenn keine Karten vorhanden sind und die Beschreibung leer ist
+     */
+    public boolean isLessonEmpty() {
+        return isLessonSetup() && mLesson.getCards().isEmpty() && mLesson.getDescription().isEmpty();
     }
 
 

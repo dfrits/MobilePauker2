@@ -177,11 +177,8 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
-        if (modelManager.isLessonNotNew()) {
-            menu.setGroupEnabled(R.id.mGroup, true);
-        } else {
-            menu.setGroupEnabled(R.id.mGroup, false);
-        }
+
+        menu.setGroupEnabled(R.id.mGroup, modelManager.isLessonNotNew() || !modelManager.isLessonEmpty());
 
         if (modelManager.getLessonSize() > 0) {
             search.setVisible(true);
@@ -239,6 +236,7 @@ public class MainMenu extends AppCompatActivity {
             initButtons();
             initView();
             initChartList();
+            invalidateOptionsMenu();
         }
         firstStart = false;
     }
@@ -285,8 +283,6 @@ public class MainMenu extends AppCompatActivity {
         }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
             if (resultCode == RESULT_OK) {
                 createNewLesson();
-            } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -450,26 +446,24 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mNewLessonClicked(MenuItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.new_lesson_dialog_title)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (paukerManager.isSaveRequired()) {
+        if (paukerManager.isSaveRequired()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.lesson_not_saved_dialog_title)
+                    .setMessage(R.string.create_new_lesson_not_saved_dialog_message)
+                    .setPositiveButton(R.string.save_lesson, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
-                        } else {
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             createNewLesson();
                         }
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
+                    });
+            builder.create().show();
+        } else createNewLesson();
     }
 
     public void mEditInfoTextClicked(@Nullable MenuItem ignored) {
