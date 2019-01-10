@@ -78,10 +78,8 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                 String orientation = parser.getAttributeValue(null, "Orientation");
                                 orientation = orientation == null ? Constants.STANDARD_ORIENTATION : orientation;
                                 String repeatByTyping = parser.getAttributeValue(null, "RepeatByTyping");
-                                repeatByTyping = repeatByTyping == null ? Constants.STANDARD_REPEAT : repeatByTyping;
+                                boolean bRepeatByTyping = repeatByTyping == null ? Constants.STANDARD_REPEAT : repeatByTyping.equals("true");
                                 String learnedTimestamp = parser.getAttributeValue(null, "LearnedTimestamp");
-
-                                currentFlashCard.setRepeatByTyping(repeatByTyping.equals("true"));
 
                                 if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.FRONTSIDE)) {
                                     SIDEA = true;
@@ -91,9 +89,11 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                         currentFlashCard.getFrontSide().setOrientation(new ComponentOrientation(orientation));
                                     }
 
+                                    currentFlashCard.setRepeatByTyping(bRepeatByTyping);
+
                                     if (learnedTimestamp != null) {
                                         long l = Long.parseLong(learnedTimestamp.trim());
-                                        currentFlashCard.getFrontSide().setLearnedTimestamp(l);
+                                        currentFlashCard.setLearnedTimeStamp(l);
                                     }
 
                                 } else if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.REVERSESIDE)) {
@@ -104,9 +104,11 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                         currentFlashCard.getReverseSide().setOrientation(new ComponentOrientation(orientation));
                                     }
 
+                                    currentFlashCard.getReverseSide().setRepeatByTyping(bRepeatByTyping);
+
                                     if (learnedTimestamp != null) {
                                         long l = Long.parseLong(learnedTimestamp.trim());
-                                        currentFlashCard.getReverseSide().setLearnedTimestamp(l);
+                                        currentFlashCard.getReverseSide().setLearnedTimeStamp(l);
                                     }
                                 }
 

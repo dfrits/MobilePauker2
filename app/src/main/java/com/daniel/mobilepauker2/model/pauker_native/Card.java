@@ -114,27 +114,11 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * sets the front side of the card
-     * @param frontSide the front side of the card
-     */
-    public void setFrontSide(CardSide frontSide) {
-        this.frontSide = frontSide;
-    }
-
-    /**
      * returns the front side of the card
      * @return the front side of the card
      */
     public CardSide getFrontSide() {
         return frontSide;
-    }
-
-    /**
-     * sets the reverse side of the card
-     * @param reverseSide the reverse side of the card
-     */
-    public void setReverseSide(CardSide reverseSide) {
-        this.reverseSide = reverseSide;
     }
 
     /**
@@ -154,7 +138,7 @@ public class Card implements Comparable<Card> {
     }
 
     public void setLearnedTimeStamp(long learnedTimeStamp) {
-        frontSide.setLearnedTimestamp(learnedTimeStamp);
+        frontSide.setLearnedTimeStamp(learnedTimeStamp);
     }
 
     /**
@@ -177,7 +161,7 @@ public class Card implements Comparable<Card> {
     public void setLearned(boolean learned) {
         frontSide.setLearned(learned);
         if (learned) {
-            frontSide.setLearnedTimestamp(System.currentTimeMillis());
+            frontSide.setLearnedTimeStamp(System.currentTimeMillis());
         }
     }
 
@@ -186,7 +170,7 @@ public class Card implements Comparable<Card> {
      * from one long term batch to the next one)
      */
     public void updateLearnedTimeStamp() {
-        frontSide.setLearnedTimestamp(System.currentTimeMillis());
+        frontSide.setLearnedTimeStamp(System.currentTimeMillis());
     }
 
     /**
@@ -201,7 +185,7 @@ public class Card implements Comparable<Card> {
      * sets the number of the batch this card is part of
      * @param batchNumber the number of the batch this card is part of
      */
-    public void setLongTermBatchNumber(int batchNumber) {
+    void setLongTermBatchNumber(int batchNumber) {
         if (batchNumber > -1) {
             frontSide.setLongTermBatchNumber(batchNumber);
         }
@@ -219,7 +203,7 @@ public class Card implements Comparable<Card> {
      * sets the expiration time of this card
      * @param expirationTime the expiration time of this card
      */
-    public void setExpirationTime(long expirationTime) {
+    void setExpirationTime(long expirationTime) {
         this.expirationTime = expirationTime;
     }
 
@@ -237,10 +221,10 @@ public class Card implements Comparable<Card> {
     /**
      * expires this card
      */
-    public void expire() {
+    void expire() {
         long expiredTime = System.currentTimeMillis() - expirationTime - 60000;
         frontSide.setLearned(true);
-        frontSide.setLearnedTimestamp(expiredTime);
+        frontSide.setLearnedTimeStamp(expiredTime);
     }
 
     /**
@@ -291,7 +275,7 @@ public class Card implements Comparable<Card> {
      * returns a list of search hits at this card side
      * @return a list of search hits at this card side
      */
-    public List<SearchHit> getSearchHits() {
+    List<SearchHit> getSearchHits() {
         List<SearchHit> searchHits = new LinkedList<>();
         searchHits.addAll(frontSide.getSearchHits());
         searchHits.addAll(reverseSide.getSearchHits());
@@ -301,7 +285,7 @@ public class Card implements Comparable<Card> {
     /**
      * clears the search hits list on both card sides
      */
-    public void stopSearching() {
+    void stopSearching() {
         frontSide.cancelSearch();
         reverseSide.cancelSearch();
     }
@@ -309,7 +293,7 @@ public class Card implements Comparable<Card> {
     /**
      * flips the card sides
      */
-    public void flip() {
+    void flip() {
         long learnedTimestamp = frontSide.getLearnedTimestamp();
         int longTermBatchNumber = frontSide.getLongTermBatchNumber();
         ComponentOrientation orientation = frontSide.getOrientation();
@@ -322,7 +306,7 @@ public class Card implements Comparable<Card> {
         reverseSide = tmpCardSide;
 
 
-        frontSide.setLearnedTimestamp(learnedTimestamp);
+        frontSide.setLearnedTimeStamp(learnedTimestamp);
         frontSide.setLongTermBatchNumber(longTermBatchNumber);
         frontSide.setOrientation(orientation);
         frontSide.setLearned(learned);

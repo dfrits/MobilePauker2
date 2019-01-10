@@ -58,7 +58,7 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
                 sideB.setCard(card.getReverseSide());
             }
 
-            // learnedAt
+            // learnedAt und stackNumber
             long learnedTime = card.getLearnedTimestamp();
             if (learnedTime != 0) {
                 Calendar cal = Calendar.getInstance(Locale.getDefault());
@@ -66,6 +66,11 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
                 String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                 String text = context.getString(R.string.learned_at).concat(" ").concat(date);
                 learnedAt.setText(text);
+
+                int stack = card.getLongTermBatchNumber();
+                stackNumber.setVisibility(View.VISIBLE);
+                text = context.getString(R.string.stack).concat(" ").concat(String.valueOf(stack + 1));
+                stackNumber.setText(text);
             }
 
             // expireAt
@@ -90,14 +95,6 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
             // repeatType
             int drawable = card.isRepeatedByTyping() ? R.drawable.rt_typing : R.drawable.rt_thinking;
             repeatType.setImageResource(drawable);
-
-            // stackNumber
-            int stack = card.getLongTermBatchNumber();
-            if (stack >= 0) {
-                stackNumber.setVisibility(View.VISIBLE);
-                String text = context.getString(R.string.stack).concat(" ").concat(String.valueOf(stack + 1));
-                stackNumber.setText(text);
-            }
         }
         return v;
     }

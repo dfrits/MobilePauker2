@@ -13,7 +13,7 @@ public class Constants {
 
     // Standard-XML-Werte
     public static final String STANDARD_ORIENTATION = "LTR";
-    public static final String STANDARD_REPEAT = "false";
+    public static final boolean STANDARD_REPEAT = false;
 
     // Dropboxkonstanten
     public final static String DROPBOX_APP_KEY = "9rqxyyq8cty3cf1";

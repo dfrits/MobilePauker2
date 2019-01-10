@@ -166,7 +166,7 @@ public class FlashCardXMLStreamWriter {
 
             try {
                 serializer.attribute("", "Orientation", String.valueOf(card.getFrontSide().getOrientation().getOrientation()));
-                serializer.attribute("", "RepeatByTyping", String.valueOf(card.getFrontSide().isRepeatedByTyping()));
+                serializer.attribute("", "RepeatByTyping", String.valueOf(card.isRepeatedByTyping()));
             } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
                 Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Frontsideoptions!");
             }
@@ -201,8 +201,8 @@ public class FlashCardXMLStreamWriter {
             // ReverseSide
             serializer.startTag("", "ReverseSide");
             try {
-                serializer.attribute("", "Orientation", String.valueOf(card.getFrontSide().getOrientation().getOrientation()));
-                serializer.attribute("", "RepeatByTyping", String.valueOf(card.getFrontSide().isRepeatedByTyping()));
+                serializer.attribute("", "Orientation", String.valueOf(card.getReverseSide().getOrientation().getOrientation()));
+                serializer.attribute("", "RepeatByTyping", String.valueOf(card.isRepeatedByTyping()));
             } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
                 Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Backsideoptions!");
             }

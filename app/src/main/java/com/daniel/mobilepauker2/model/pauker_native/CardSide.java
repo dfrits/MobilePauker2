@@ -9,20 +9,6 @@ import java.util.List;
 
 
 public class CardSide implements Comparable<CardSide> {
-
-    public class Color {
-        String Color = " ";
-
-        public String getColor() {
-            return Color;
-        }
-
-        public void setColor(String color) {
-            Color = color;
-        }
-    }
-
-
     // content
     private String text;
     // style
@@ -47,7 +33,7 @@ public class CardSide implements Comparable<CardSide> {
      * creates a new CardSide
      * @param text the card side text
      */
-    public CardSide(String text) {
+    private CardSide(String text) {
         this.text = text;
         searchHits = new LinkedList<>();
     }
@@ -166,7 +152,7 @@ public class CardSide implements Comparable<CardSide> {
      * the frontside
      * @return the batch number this card belongs to if this card side would be the frontside
      */
-    public int getLongTermBatchNumber() {
+    int getLongTermBatchNumber() {
         return longTermBatchNumber;
     }
 
@@ -191,7 +177,7 @@ public class CardSide implements Comparable<CardSide> {
      * sets the timestamp when the cardside was learned
      * @param learnedTimestamp the timestamp when the cardside was learned
      */
-    public void setLearnedTimestamp(long learnedTimestamp) {
+    public void setLearnedTimeStamp(long learnedTimestamp) {
         this.learnedTimestamp = learnedTimestamp;
     }
 
@@ -201,7 +187,7 @@ public class CardSide implements Comparable<CardSide> {
      * @return <CODE>true</CODE>, if the cardside should be repeated by typing instead of
      * memorizing, <CODE>false</CODE> otherwise
      */
-    public boolean isRepeatedByTyping() {
+    boolean isRepeatedByTyping() {
         return repeatByTyping;
     }
 
@@ -210,7 +196,7 @@ public class CardSide implements Comparable<CardSide> {
      * @param repeatByTyping <CODE>true</CODE>, if the cardside should be repeated by typing instead
      *                       of memorizing, <CODE>false</CODE> otherwise
      */
-    void setRepeatByTyping(boolean repeatByTyping) {
+    public void setRepeatByTyping(boolean repeatByTyping) {
         this.repeatByTyping = repeatByTyping;
     }
 
@@ -245,14 +231,14 @@ public class CardSide implements Comparable<CardSide> {
      * returns a List of search match indices
      * @return a List of search match indices
      */
-    public List<SearchHit> getSearchHits() {
+    List<SearchHit> getSearchHits() {
         return searchHits;
     }
 
     /**
      * cancels the search process
      */
-    public void cancelSearch() {
+    void cancelSearch() {
         searchHits.clear();
     }
 

@@ -244,8 +244,8 @@ public class ModelManager {
         }
     }
 
-    void addCard(String sideA, String sideB, String rowID, String index, String learnStatus) {
-        FlashCard newCard = new FlashCard(sideA, sideB, index, rowID, learnStatus);
+    void addCard(String sideA, String sideB, String index, String learnStatus) {
+        FlashCard newCard = new FlashCard(sideA, sideB, index, learnStatus);
         mLesson.getUnlearnedBatch().addCard(newCard);
     }
 
