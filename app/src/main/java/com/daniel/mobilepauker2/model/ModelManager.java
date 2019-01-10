@@ -41,18 +41,24 @@ import com.daniel.mobilepauker2.statistics.BatchStatistics;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import static android.content.Context.MODE_APPEND;
 import static android.content.Context.MODE_PRIVATE;
@@ -506,20 +512,135 @@ public class ModelManager {
     }
 
     public boolean deleteLesson(Context context, File file) {
+        String filename = file.getName();
         try {
-            String filename = file.getName();
             if (file.delete()) {
                 FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_APPEND);
                 String text = "\n" + filename + ";*;" + System.currentTimeMillis();
                 fos.write(text.getBytes());
                 fos.close();
-                return true;
             } else return false;
+        } catch (IOException e) {
+            return false;
+        }
+        try {
+            List<String> list = getLokalAddedFiles(context);
+            if (list.contains(filename)) {
+                resetAddedFilesData(context);
+                FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+                for (String name : list) {
+                    if (!name.equals(filename)) {
+                        String newText = "\n" + name;
+                        fos.write(newText.getBytes());
+                    }
+                }
+                fos.close();
+            }
+
+            return true;
         } catch (IOException e) {
             return false;
         }
     }
 
+    public void addLesson(Context context) {
+        String filename = paukerManager.getCurrentFileName();
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+            String text = "\n" + filename;
+            fos.write(text.getBytes());
+            fos.close();
+        } catch (IOException ignored) {
+            System.out.println();
+        }
+
+        try {
+            Map<String, String> map = getLokalDeletedFiles(context);
+            if (map.keySet().contains(filename)) {
+                resetDeletedFilesData(context);
+                FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    if (!entry.getKey().equals(filename)) {
+                        String newText = "\n" + filename + ";*;" + System.currentTimeMillis();
+                        fos.write(newText.getBytes());
+                    }
+                }
+                fos.close();
+            }
+        } catch (IOException e) {
+            System.out.println();
+        }
+    }
+
+    @NonNull
+    public Map<String, String> getLokalDeletedFiles(Context context) {
+        Map<String, String> filesToDelete = new HashMap<>();
+        try {
+            FileInputStream fis = context.openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String fileName = reader.readLine();
+            while (fileName != null) {
+                if (!fileName.trim().isEmpty()) {
+                    try {
+                        String[] split = fileName.split(";*;");
+                        String name = split[0] == null ? "" : split[0];
+                        String time = split[1] == null ? "-1" : split[1];
+                        filesToDelete.put(name, time);
+                    } catch (Exception e) {
+                        filesToDelete.put(fileName, "-1");
+                    }
+                }
+                fileName = reader.readLine();
+            }
+        } catch (IOException ignored) {
+        }
+        return filesToDelete;
+    }
+
+    public List<String> getLokalAddedFiles(Context context) {
+        List<String> filesToAdd = new ArrayList<>();
+        try {
+            FileInputStream fis = context.openFileInput(Constants.ADDED_FILES_NAMES_FILE_NAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String fileName = reader.readLine();
+            while (fileName != null) {
+                if (!fileName.trim().isEmpty()) {
+                    filesToAdd.add(fileName);
+                }
+                fileName = reader.readLine();
+            }
+        } catch (IOException ignored) {
+        }
+        return filesToAdd;
+    }
+
+    private boolean resetDeletedFilesData(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
+            String text = "\n";
+            fos.write(text.getBytes());
+            fos.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private boolean resetAddedFilesData(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
+            String text = "\n";
+            fos.write(text.getBytes());
+            fos.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean resetIndexFiles(Context context) {
+        return resetDeletedFilesData(context) && resetAddedFilesData(context);
+    }
 
     /**
      * Move all cards in USTM and STM back to unlearned batch
@@ -748,16 +869,4 @@ public class ModelManager {
         return mLearningPhase == LearningPhase.REPEATING_LTM
                 && settingsManager.getBoolPreference(context, LEARN_NEW_CARDS_RANDOMLY);
     }
-
-    public void resetDeletedFilesData(Context context) {
-        try {
-            FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
-            String text = "\n";
-            fos.write(text.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            // TODO ERROR
-        }
-    }
-
 }

@@ -267,7 +267,7 @@ public class LessonImportActivity extends AppCompatActivity {
                                 if (file.isFile()) {
                                     if (modelManager.deleteLesson(context, file)) {
                                         init();
-                                        resetSelection(null);
+                                        resetSelection(null);//TODO Nur wenn geöffnete Lektion gelöscht wird!!
                                         paukerManager.setupNewApplicationLesson();
                                         paukerManager.setSaveRequired(false);
                                     } else {

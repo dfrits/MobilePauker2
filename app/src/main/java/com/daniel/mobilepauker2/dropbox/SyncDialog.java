@@ -95,6 +95,7 @@ public class SyncDialog extends Activity {
             public void onDataLoaded(ListFolderResult result) {
                 List<Metadata> dbFiles = new ArrayList<>(); // Dateien in Dropbox mit der passenden Endung
                 List<Metadata> dbDeletedFiles = new ArrayList<>(); // Dateien, die in Dropbox gelöscht wurden
+                List<String> lokalAddedFiles = modelManager.getLokalAddedFiles(context);
 
                 while (true) {
                     List<Metadata> entries = result.getEntries();
@@ -102,7 +103,9 @@ public class SyncDialog extends Activity {
                     for (Metadata entry : entries) {
                         if (paukerManager.validateFilename(context, entry.getName())) {
                             if (entry instanceof DeletedMetadata) {
-                                dbDeletedFiles.add(entry);
+                                if (!lokalAddedFiles.contains(entry.getName())) {
+                                    dbDeletedFiles.add(entry);
+                                }
                             } else {
                                 dbFiles.add(entry);
                             }
@@ -145,14 +148,14 @@ public class SyncDialog extends Activity {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void deleteFiles(List<Metadata> deletedFiles, final List<Metadata> validatedFiles) {
-        final Map<File, String> lokalDeletedFiles = modelManager.getLokalDeletedFiles(context); // Dateien, die lokal gelöscht wurden
+        final Map<String, String> lokalDeletedFiles = modelManager.getLokalDeletedFiles(context); // Dateien, die lokal gelöscht wurden
 
         if (files != null) {
             List<File> filesTMP = new ArrayList<>(Arrays.asList(files));
             for (int i = 0; i < deletedFiles.size(); i++) {
                 if (deletedFiles.get(i) instanceof DeletedMetadata) {
                     DeletedMetadata metadata = (DeletedMetadata) deletedFiles.get(i);
-                    int index = getFileIndex(metadata.getName(), filesTMP);
+                    int index = getFileIndex(new File(metadata.getName()), filesTMP);
                     if (index > -1) {
                         filesTMP.get(index).delete();
                     }
@@ -160,7 +163,7 @@ public class SyncDialog extends Activity {
             }
         }
 
-        File[] data = new File[lokalDeletedFiles.keySet().size()];
+        String[] data = new String[lokalDeletedFiles.keySet().size()];
         data = lokalDeletedFiles.keySet().toArray(data);
 
         new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
@@ -182,7 +185,7 @@ public class SyncDialog extends Activity {
      *                          Dateien verglichen werden sollen
      * @param lokalDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
      */
-    private void syncWithFiles(List<Metadata> metadataList, Map<File, String> lokalDeletedFiles) {
+    private void syncWithFiles(List<Metadata> metadataList, Map<String, String> lokalDeletedFiles) {
         // Lokale Files kopieren, damit nichts verloren geht
         List<File> filesTMP;
         if (files != null) {
@@ -200,7 +203,7 @@ public class SyncDialog extends Activity {
                 FileMetadata metadata = (FileMetadata) metadataList.get(i);
 
                 if (paukerManager.validateFilename(context, metadata.getName())) {
-                    int fileIndex = getFileIndex(metadata.getName(), filesTMP);
+                    int fileIndex = getFileIndex(new File(metadata.getName()), filesTMP);
 
                     if (fileIndex == -1) {
                         if (getFileIndex(metadata.getName(), lokalDeletedFiles.keySet()) == -1) {
@@ -229,7 +232,7 @@ public class SyncDialog extends Activity {
         if (!dropB.isEmpty()) {
             downloadFiles(dropB, downloadSize);
         } else {
-            setResult(RESULT_OK);
+            setResult(modelManager.resetIndexFiles(context) ? RESULT_OK : RESULT_CANCELED);
             finish();
         }
     }
@@ -299,15 +302,31 @@ public class SyncDialog extends Activity {
     }
 
     /**
-     * Sucht nach dem ersten Index des File mit dem übergebenen Namen.
+     * Sucht nach dem ersten Index des Files mit dem übergebenen Namen.
+     * @param file Name des Files
+     * @param list Liste in der gesucht werden soll
+     * @return Index. -1, falls File nicht vorhanden ist
+     */
+    private int getFileIndex(File file, Collection<File> list) {
+        int i = 0;
+        for (File item : list) {
+            if (item.getName().equals(file.getName())) return i;
+            i++;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sucht nach dem ersten Index des Files mit dem übergebenen Namen.
      * @param fileName Name des Files
      * @param list     Liste in der gesucht werden soll
      * @return Index. -1, falls File nicht vorhanden ist
      */
-    private int getFileIndex(String fileName, Collection<File> list) {
+    private int getFileIndex(String fileName, Collection<String> list) {
         int i = 0;
-        for (File file : list) {
-            if (file.getName().equals(fileName)) return i;
+        for (String name : list) {
+            if (name.equals(fileName)) return i;
             i++;
         }
 

@@ -22,10 +22,10 @@ public class UploadFileTask extends AsyncTask<File, Void, List<Metadata>> {
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
-    private Exception mException;
 
     public interface Callback {
         void onUploadComplete(List<Metadata> result);
+
         void onError(Exception e);
     }
 
@@ -37,13 +37,7 @@ public class UploadFileTask extends AsyncTask<File, Void, List<Metadata>> {
     @Override
     protected void onPostExecute(List<Metadata> result) {
         super.onPostExecute(result);
-        if (mException != null) {
-            mCallback.onError(mException);
-        } else if (result == null) {
-            mCallback.onError(null);
-        } else {
-            mCallback.onUploadComplete(result);
-        }
+        mCallback.onUploadComplete(result);
     }
 
     @Override
@@ -60,7 +54,7 @@ public class UploadFileTask extends AsyncTask<File, Void, List<Metadata>> {
                             .withMode(WriteMode.OVERWRITE)
                             .uploadAndFinish(inputStream));
                 } catch (DbxException | IOException e) {
-                    mException = e;
+                    mCallback.onError(e);
                 }
             }
         }
