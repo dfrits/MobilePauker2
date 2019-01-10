@@ -290,13 +290,14 @@ public class SyncDialog extends Activity {
         new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
             @Override
             public void onUploadComplete(List<Metadata> result) {
+                System.out.println();
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e("LessonImportActivity::uploadFiles",
                         "Failed to upload file.", e);
-                Toast.makeText(context, R.string.error_upload, Toast.LENGTH_LONG).show();
+                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }).execute(data);
     }

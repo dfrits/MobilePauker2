@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SaveLessonThreaded;
 import com.daniel.mobilepauker2.utils.Constants;
 
@@ -73,6 +74,7 @@ public class SaveDialog extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                         if (paukerManager.setCurrentFileName(textField.getText().toString())) {
+                            ModelManager.instance().addLesson(context);
                             saveLesson();
                         } else {
                             setResult(RESULT_CANCELED);
