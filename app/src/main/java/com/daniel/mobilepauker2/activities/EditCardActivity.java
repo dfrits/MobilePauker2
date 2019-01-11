@@ -1,5 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -11,6 +12,8 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
+
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 
 /**
  * Created by dfritsch on 22.03.2018.
@@ -33,7 +36,7 @@ public class EditCardActivity extends AEditCardActivity {
 
         if (flashCard == null) {
             Log.w("EditCardsActivity::OnCreate", "Flash Card set to null");
-            Toast.makeText(context, getString(R.string.edit_cards_no_card_available), Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, getString(R.string.edit_cards_no_card_available), Toast.LENGTH_SHORT);
             finish();
         } else {
             init();
@@ -69,7 +72,7 @@ public class EditCardActivity extends AEditCardActivity {
 
     public void okClicked(View view) {
         if (sideAEditText.getText().toString().trim().isEmpty() || sideBEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(context, R.string.add_card_sides_empty_error, Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, R.string.add_card_sides_empty_error, Toast.LENGTH_SHORT);
             return;
         }
         if (cardPosition >= 0) {

@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,6 +40,7 @@ import java.util.Random;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_A;
 import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_B;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
@@ -141,7 +143,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                showToast((Activity)context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
@@ -154,7 +156,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
                 }
             } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
+                showToast((Activity)context, R.string.saving_error, Toast.LENGTH_SHORT);
             }
             finish();
         }
@@ -565,7 +567,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         } catch (Exception e) {
             Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception");
-            Toast.makeText(context, R.string.load_card_data_error, Toast.LENGTH_SHORT).show();
+            showToast((Activity)context, R.string.load_card_data_error, Toast.LENGTH_SHORT);
             ErrorReporter.instance().AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?");
             finish();
         }
@@ -834,7 +836,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                                 updateLearningPhase();
                             }
                         } else {
-                            Toast.makeText(context, "Löschen nicht möglich!", Toast.LENGTH_SHORT).show();
+                            showToast((Activity)context, "Löschen nicht möglich!", Toast.LENGTH_SHORT);
                         }
                         dialog.cancel();
                     }
@@ -848,7 +850,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             item.setVisible(false);
             restartButton.setVisible(true);
         } else {
-            Toast.makeText(context, R.string.pause_timer_error, Toast.LENGTH_LONG).show();
+            showToast((Activity)context, R.string.pause_timer_error, Toast.LENGTH_LONG);
         }
     }
 
@@ -858,7 +860,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             item.setVisible(false);
             pauseButton.setVisible(true);
         } else {
-            Toast.makeText(context, R.string.restart_timer_error, Toast.LENGTH_LONG).show();
+            showToast((Activity) context, R.string.restart_timer_error, Toast.LENGTH_LONG);
         }
     }
 

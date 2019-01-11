@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.MPEditText;
@@ -255,8 +257,8 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                             cardSide.setFont(font);
                             fontChanged = true;
                         } catch (NumberFormatException e) {
-                            Toast.makeText(context, R.string.number_format_error
-                                    , Toast.LENGTH_SHORT).show();
+                            PaukerManager.showToast((Activity) context, R.string.number_format_error
+                                    , Toast.LENGTH_SHORT);
                         }
                     }
                 })

@@ -25,6 +25,8 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SaveLessonThreaded;
 import com.daniel.mobilepauker2.utils.Constants;
 
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
+
 /**
  * Created by dfritsch on 20.03.2018.
  * veesy.de
@@ -144,7 +146,7 @@ public class SaveDialog extends Activity {
                 if (result) {
                     setResult(RESULT_OK);
                 } else {
-                    Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
+                    showToast((Activity)context, R.string.saving_error, Toast.LENGTH_SHORT);
                     setResult(RESULT_CANCELED);
                 }
                 finish();

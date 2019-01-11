@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import com.daniel.mobilepauker2.utils.Constants;
 import com.dropbox.core.DbxException;
+import com.dropbox.core.NetworkIOException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.Metadata;
 import com.dropbox.core.v2.files.WriteMode;

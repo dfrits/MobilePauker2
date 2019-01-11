@@ -82,7 +82,7 @@ public class SyncDialog extends Activity {
                 setResult(RESULT_OK);
                 finish();
             } else {
-                Toast.makeText(context, R.string.error_file_not_found, Toast.LENGTH_LONG).show();
+                showToast((Activity)context, R.string.error_file_not_found, Toast.LENGTH_LONG);
                 setResult(RESULT_CANCELED);
                 finish();
             }
@@ -140,10 +140,10 @@ public class SyncDialog extends Activity {
 
                 Log.d("LessonImportActivity::loadData::onError"
                         , "Error loading Files: " + e.getMessage());
-                Toast.makeText(context,
+                showToast((Activity)context,
                         R.string.simple_error_message,
                         Toast.LENGTH_SHORT)
-                        .show();
+                        ;
             }
         }).execute(Constants.DROPBOX_PATH);
     }
@@ -279,10 +279,10 @@ public class SyncDialog extends Activity {
                         Log.e("LessonImportActivity::downloadFiles",
                                 "Failed to download file.", e);
 
-                        Toast.makeText(context,
+                        showToast((Activity)context,
                                 R.string.simple_error_message,
                                 Toast.LENGTH_SHORT)
-                                .show();
+                                ;
                         setResult(RESULT_CANCELED);
                         finish();
                     }

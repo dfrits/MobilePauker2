@@ -76,7 +76,7 @@ public class AddCardActivity extends AEditCardActivity {
 
         if (!sideAText.isEmpty() && !sideBText.isEmpty()) {
             ModelManager.instance().addCard(flashCard, sideAText, sideBText);
-            Toast.makeText(context, R.string.card_added, Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, R.string.card_added, Toast.LENGTH_SHORT);
 
             sideAEditText.setText("");
             sideBEditText.setText("");
@@ -86,7 +86,7 @@ public class AddCardActivity extends AEditCardActivity {
 
             if (checkBox != null && !checkBox.isChecked()) finish();
         } else {
-            Toast.makeText(context, R.string.add_card_side_empty, Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, R.string.add_card_side_empty, Toast.LENGTH_SHORT);
         }
     }
 

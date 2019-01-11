@@ -18,6 +18,7 @@
 
 package com.daniel.mobilepauker2.model;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -504,7 +505,7 @@ public class ModelManager {
                 String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                 String text = context.getString(R.string.next_expire_date);
                 text = text.concat(" ").concat(date);
-                Toast.makeText(context, text, Toast.LENGTH_LONG * 2).show();
+                PaukerManager.showToast((Activity)context, text, Toast.LENGTH_LONG * 2);
             }
         } catch (MalformedURLException ignored) {
         }

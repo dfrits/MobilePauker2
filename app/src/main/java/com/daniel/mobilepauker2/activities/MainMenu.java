@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -40,6 +41,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 import java.io.File;
 
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
@@ -255,7 +257,7 @@ public class MainMenu extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                showToast((Activity)context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
@@ -269,7 +271,7 @@ public class MainMenu extends AppCompatActivity {
                 Log.d("SyncLesson", "Synchro erfolgreich");
             } else {
                 Log.d("SyncLesson", "Synchro nicht erfolgreich");
-                Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
             }
         } /*else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
@@ -412,7 +414,7 @@ public class MainMenu extends AppCompatActivity {
         initButtons();
         initChartList();
         initView();
-        Toast.makeText(context, R.string.new_lession_created, Toast.LENGTH_SHORT).show();
+        showToast((Activity)context, R.string.new_lession_created, Toast.LENGTH_SHORT);
     }
 
     public void mSaveFileClicked(@Nullable MenuItem ignored) {
@@ -439,7 +441,7 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        Toast.makeText(context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT).show();
+                        showToast((Activity)context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })
@@ -499,7 +501,7 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        Toast.makeText(context, R.string.flip_sides_complete, Toast.LENGTH_SHORT).show();
+                        showToast((Activity)context, R.string.flip_sides_complete, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })

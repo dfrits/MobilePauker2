@@ -168,7 +168,7 @@ public class PaukerManager {
                 }
             });
         } else {
-            Toast.makeText(context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG).show();
+            showToast((Activity) context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG);
             return null;
         }
         return files;
@@ -183,5 +183,20 @@ public class PaukerManager {
             }
         }
         return false;
+    }
+
+    public static void showToast(final Activity context, final String text, final int duration) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (text != null && !text.isEmpty()) {
+                    Toast.makeText(context, text, duration).show();
+                }
+            }
+        });
+    }
+
+    public static void showToast(Activity context, int textResource, int duration) {
+        showToast(context, context.getString(textResource), duration);
     }
 }

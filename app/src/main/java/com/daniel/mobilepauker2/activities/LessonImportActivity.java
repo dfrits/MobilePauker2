@@ -1,5 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +44,8 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Locale;
+
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 
 /**
  * Created by Daniel on 04.03.2018.
@@ -138,7 +141,7 @@ public class LessonImportActivity extends AppCompatActivity {
                     text = text.concat(" ").concat(getString(R.string.nothing_learned_yet));
                 }
             } catch (IOException | RuntimeException ignored) {
-                Toast.makeText(context, R.string.error_reading_from_xml, Toast.LENGTH_SHORT).show();
+                showToast((Activity)context, R.string.error_reading_from_xml, Toast.LENGTH_SHORT);
                 resetSelection(null);
                 init();
                 text = null;
@@ -215,7 +218,7 @@ public class LessonImportActivity extends AppCompatActivity {
     private File getFilePath(String filename) throws IOException {
         // Validate the filename
         if (!paukerManager.validateFilename(filename)) {
-            Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_LONG).show();
+            showToast((Activity)context, R.string.error_filename_invalid, Toast.LENGTH_LONG);
             throw new IOException("Filename invalid");
         }
 
@@ -274,7 +277,7 @@ public class LessonImportActivity extends AppCompatActivity {
                                             paukerManager.setSaveRequired(false);
                                         }
                                     } else {
-                                        Toast.makeText(context, R.string.delete_lesson_error, Toast.LENGTH_SHORT).show();
+                                        showToast((Activity)context, R.string.delete_lesson_error, Toast.LENGTH_SHORT);
                                     }
                                 }
                             }
@@ -319,7 +322,7 @@ public class LessonImportActivity extends AppCompatActivity {
     @Override
     public void finish() {
         if (errorMessage != null) {
-            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+            showToast((Activity)this, errorMessage, Toast.LENGTH_LONG);
         }
 
         super.finish();
@@ -332,7 +335,7 @@ public class LessonImportActivity extends AppCompatActivity {
                 Log.d("OpenLesson", "Synchro erfolgreich");
             } else {
                 Log.d("OpenLesson", "Synchro nicht erfolgreich");
-                Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
+                showToast((Activity)context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
             }
             init();
             if (modelManager.isLessonNotNew())
@@ -341,7 +344,7 @@ public class LessonImportActivity extends AppCompatActivity {
                         loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
                         paukerManager.setSaveRequired(false);
                     } catch (IOException ignored) {
-                        Toast.makeText(context, R.string.reopen_lesson_error, Toast.LENGTH_LONG).show();
+                        showToast((Activity)context, R.string.reopen_lesson_error, Toast.LENGTH_LONG);
                         ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
                     }
                 } else {
@@ -392,13 +395,13 @@ public class LessonImportActivity extends AppCompatActivity {
     private void openLesson(int position) {
         String filename = (String) listView.getItemAtPosition(position);
         try {
-            Toast.makeText(context, R.string.open_lesson_hint, Toast.LENGTH_SHORT).show();
+            showToast((Activity)context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
             loadLessonFromFile(getFilePath(filename));
             paukerManager.setSaveRequired(false);
             finish();
         } catch (IOException e) {
             resetSelection(null);
-            Toast.makeText(context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT).show();
+            showToast((Activity)context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);
             ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
         }
     }
