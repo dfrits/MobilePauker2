@@ -9,7 +9,7 @@ package com.daniel.mobilepauker2.utils;
  */
 
 public class Constants {
-    public static final String DEFAULT_APP_FILE_DIRECTORY = "/MobilePauker/";
+    public static final String DEFAULT_APP_FILE_DIRECTORY = "/MobilePauker++/";
 
     // Standard-XML-Werte
     public static final String STANDARD_ORIENTATION = "LTR";

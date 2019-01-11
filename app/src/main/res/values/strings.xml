@@ -1,5 +1,6 @@
 <resources>
     <!-- region Errors -->
+    <string name="error_file_not_found">The File was not found, please try again manually</string>
     <string name="error_upload">Error while uploading File</string>
     <string name="reopen_lesson_error">Dataset of the lesson can\'t be updatet automatically!
         Please reopen the lesson manually.</string>

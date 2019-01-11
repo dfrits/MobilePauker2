@@ -186,5 +186,6 @@
     <string name="error_upload">Error while uploading File</string>
     <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
     <string name="create_new_lesson_not_saved_dialog_message">Do you want to save before creating a new Lesson?</string>
+    <string name="error_file_not_found">The File was not found, please try again manually</string>
     <!-- endregion -->
 </resources>

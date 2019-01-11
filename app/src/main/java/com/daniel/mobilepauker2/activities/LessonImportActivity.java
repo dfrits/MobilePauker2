@@ -214,7 +214,7 @@ public class LessonImportActivity extends AppCompatActivity {
      */
     private File getFilePath(String filename) throws IOException {
         // Validate the filename
-        if (!paukerManager.validateFilename(context, filename)) {
+        if (!paukerManager.validateFilename(filename)) {
             Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_LONG).show();
             throw new IOException("Filename invalid");
         }

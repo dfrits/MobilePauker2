@@ -1,6 +1,8 @@
 <resources>
     <!-- region Errors -->
+    <string name="datei_ist_bereits_vorhanden">Datei ist bereits vorhanden!</string>
     <string name="error_upload">Fehler beim Upload</string>
+    <string name="error_file_not_found">Die Datei wurde nicht gefunden. Bitte versuche es erneut manuell</string>
     <string name="reopen_lesson_error">Datensatz der geöffneten Lektion kann nicht automatisch
         aktualisiert werden! Bitte manuell Lektion erneut öffnen.</string>
     <string name="number_format_error">Bitte nur Ziffern eingeben</string>
@@ -188,6 +190,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
-    <string name="datei_ist_bereits_vorhanden">Datei ist bereits vorhanden!</string>
     <!-- endregion -->
 </resources>

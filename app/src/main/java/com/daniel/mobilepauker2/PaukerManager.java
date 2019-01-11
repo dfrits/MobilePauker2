@@ -1,20 +1,20 @@
-/* 
+/*
  * Copyright 2011 Brian Ford
- * 
+ *
  * This file is part of Pocket Pauker.
- * 
- * Pocket Pauker is free software: you can redistribute it and/or modify it under the 
- * terms of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Pocket Pauker is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * 
- * Pocket Pauker is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *
+ * Pocket Pauker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * See http://www.gnu.org/licenses/.
 
-*/
+ */
 
 package com.daniel.mobilepauker2;
 
@@ -35,13 +35,10 @@ public class PaukerManager {
 
     private String mCurrentFileName = Constants.DEFAULT_FILE_NAME;
     private String mFileAbsolutePath = null;
-    private String mFileDropboxPath = null;
     private boolean mSaveRequired = false;
 
-    // The application data directory can change when a file is loaded
-    private String mApplicationDataDirectory = Constants.DEFAULT_APP_FILE_DIRECTORY;
-
-    private PaukerManager() {}
+    private PaukerManager() {
+    }
 
     public static PaukerManager instance() {
         if (instance == null) {
@@ -51,53 +48,14 @@ public class PaukerManager {
     }
 
     /**
-     * Checks if the App directory exists.
-     * <p>
-     * App directory name is set in GlobalPreferences.APP_FILE_DIRECTORY
-     */
-    public boolean checkAppDataDirectory() {
-        File appDirectory = new File(Environment.getExternalStorageDirectory() + mApplicationDataDirectory);
-
-        return appDirectory.exists() && appDirectory.isDirectory();
-    }
-
-    public void killLesson() {
-        ModelManager.instance().clearLesson();
-        mFileAbsolutePath = null;
-        mFileDropboxPath = null;
-        mCurrentFileName = null;
-
-    }
-
-    public boolean createDefaultAppDataDirectory() {
-        File appDirectory = new File(Environment.getExternalStorageDirectory() + Constants.DEFAULT_APP_FILE_DIRECTORY);
-
-        if (appDirectory.exists() && appDirectory.isDirectory()) {
-            return true;
-        } else {
-            File parentDirectory = new File(Environment.getExternalStorageDirectory().getPath());
-
-            if (parentDirectory.exists() && parentDirectory.canWrite()) {
-                if (appDirectory.mkdir()) {
-                    return true;
-                } else {
-                    Log.e("AndyPaukerApplication::createAppDirectory", "Unable to create directory");
-                }
-            }
-        }
-
-        return false;
-
-    }
-
-    /**
      * Get the default application data directory.
      * <p>
      * Note that this is not necessarily where the current file has been loaded from.
      * @return Default application data directory
      */
     public String getApplicationDataDirectory() {
-        return mApplicationDataDirectory;
+        // The application data directory can change when a file is loaded
+        return Constants.DEFAULT_APP_FILE_DIRECTORY;
     }
 
     /**
@@ -123,43 +81,18 @@ public class PaukerManager {
         ModelManager.instance().createNewLesson();
     }
 
-
     public String getFileAbsolutePath() {
         return mFileAbsolutePath;
     }
 
-    public String getFileDropboxPath() {
-        return mFileDropboxPath;
-    }
-
-    public boolean openedWithDB() {
-        return mFileDropboxPath != null;
-    }
-
     // Todo replace this with the File Class
-    public boolean setFileAbsolutePath(String fileAbsolutePath) {
+    public void setFileAbsolutePath(String fileAbsolutePath) {
         // Validate the filename
         if (fileAbsolutePath == null) {
-            return false;
+            return;
         }
 
         mFileAbsolutePath = fileAbsolutePath;
-        return true;
-    }
-
-    /**
-     * Setzt den Pfad der Datei in Dropboy incl. Dateinamen.
-     * @param fileDropboxPath Pfad plus Name
-     * @return True, wenn Pfad gesetzt werden konnte
-     */
-    public boolean setFileDropboxPath(String fileDropboxPath) {
-        // Validate the filename
-        if (fileDropboxPath == null) {
-            return false;
-        }
-
-        mFileDropboxPath = fileDropboxPath;
-        return true;
     }
 
     public boolean setCurrentFileName(String filename) {
@@ -205,7 +138,7 @@ public class PaukerManager {
         }
     }
 
-    public boolean validateFilename(Context context, String filename) {
+    public boolean validateFilename(String filename) {
         if (filename == null) {
             Log.d("Validate Filename", "File name is invalid");
             return false;
@@ -231,7 +164,7 @@ public class PaukerManager {
             files = appDirectory.listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File file) {
-                    return validateFilename(context, file.getName());
+                    return validateFilename(file.getName());
                 }
             });
         } else {

@@ -47,14 +47,18 @@ public class UploadFileTask extends AsyncTask<File, Void, List<Metadata>> {
 
         for (File localFile : params) {
             if (localFile != null) {
-                try (InputStream inputStream = new FileInputStream(localFile)) {
-                    // Note - this is not ensuring the name is a valid dropbox file name
-                    String remoteFileName = localFile.getName();
-                    data.add(mDbxClient.files().uploadBuilder(remoteFolderPath + "/" + remoteFileName)
-                            .withMode(WriteMode.OVERWRITE)
-                            .uploadAndFinish(inputStream));
-                } catch (DbxException | IOException e) {
-                    mCallback.onError(e);
+                if (localFile.exists()) {
+                    try (InputStream inputStream = new FileInputStream(localFile)) {
+                        // Note - this is not ensuring the name is a valid dropbox file name
+                        String remoteFileName = localFile.getName();
+                        data.add(mDbxClient.files().uploadBuilder(remoteFolderPath + "/" + remoteFileName)
+                                .withMode(WriteMode.OVERWRITE)
+                                .uploadAndFinish(inputStream));
+                    } catch (DbxException | IOException e) {
+                        mCallback.onError(e);
+                    }
+                } else {
+                    mCallback.onError(new DbxException("File not found"));
                 }
             }
         }

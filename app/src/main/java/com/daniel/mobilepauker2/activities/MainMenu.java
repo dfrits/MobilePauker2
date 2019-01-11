@@ -288,7 +288,9 @@ public class MainMenu extends AppCompatActivity {
                 .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
         Intent intent = new Intent(context, SyncDialog.class);
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-        intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
+        String path = paukerManager.getFileAbsolutePath();
+        File file = path == null ? modelManager.getFilePath() : new File(path);
+        intent.putExtra(SyncDialog.FILES, file);
         startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
     }
 

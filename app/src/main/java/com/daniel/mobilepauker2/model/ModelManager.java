@@ -613,7 +613,7 @@ public class ModelManager {
         return filesToAdd;
     }
 
-    private boolean resetDeletedFilesData(Context context) {
+    public boolean resetDeletedFilesData(Context context) {
         try {
             FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
             String text = "\n";
@@ -625,7 +625,7 @@ public class ModelManager {
         }
     }
 
-    private boolean resetAddedFilesData(Context context) {
+    public boolean resetAddedFilesData(Context context) {
         try {
             FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
             String text = "\n";

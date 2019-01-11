@@ -75,9 +75,17 @@ public class SyncDialog extends Activity {
             loadData();
         } else if (serializableExtra instanceof File) {
             List<File> list = new ArrayList<>();
-            list.add((File) serializableExtra);
-            uploadFiles(list);
-            finish();
+            File file = (File) serializableExtra;
+            if (file.exists()) {
+                list.add((File) serializableExtra);
+                uploadFiles(list);
+                setResult(RESULT_OK);
+                finish();
+            } else {
+                Toast.makeText(context, R.string.error_file_not_found, Toast.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
+                finish();
+            }
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
             setResult(RESULT_CANCELED);
@@ -101,7 +109,7 @@ public class SyncDialog extends Activity {
                     List<Metadata> entries = result.getEntries();
 
                     for (Metadata entry : entries) {
-                        if (paukerManager.validateFilename(context, entry.getName())) {
+                        if (paukerManager.validateFilename(entry.getName())) {
                             if (entry instanceof DeletedMetadata) {
                                 if (!lokalAddedFiles.contains(entry.getName())) {
                                     dbDeletedFiles.add(entry);
@@ -169,6 +177,7 @@ public class SyncDialog extends Activity {
         new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
             public void onDeleteComplete(List<Metadata> result) {
+                modelManager.resetDeletedFilesData(context);
                 syncWithFiles(validatedFiles, lokalDeletedFiles);
             }
 
@@ -202,7 +211,7 @@ public class SyncDialog extends Activity {
             if (metadataList.get(i) instanceof FileMetadata) {
                 FileMetadata metadata = (FileMetadata) metadataList.get(i);
 
-                if (paukerManager.validateFilename(context, metadata.getName())) {
+                if (paukerManager.validateFilename(metadata.getName())) {
                     int fileIndex = getFileIndex(new File(metadata.getName()), filesTMP);
 
                     if (fileIndex == -1) {
@@ -290,7 +299,7 @@ public class SyncDialog extends Activity {
         new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
             @Override
             public void onUploadComplete(List<Metadata> result) {
-                System.out.println();
+                modelManager.resetAddedFilesData(context);
             }
 
             @Override
