@@ -40,6 +40,7 @@ import java.util.Random;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_A;
+import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_B;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.NOTHING;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.REPEATING_LTM;
@@ -132,6 +133,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             updateCurrentCard();
             fillInData(flipCardSides);
             setButtonsVisibility();
+            if (bShowMe.getVisibility() == VISIBLE
+                    && ((flipCardSides && currentCard.getSide() == SIDE_A)
+                    || (!flipCardSides && currentCard.getSide() == SIDE_B))) {
+                bShowMe.setVisibility(GONE);
+                lRepeatButtons.setVisibility(VISIBLE);
+            }
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
                 Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
@@ -653,9 +660,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         noClicked(null);
                     }
-                });
-        ((TextView) view.findViewById(R.id.tVRightAnswer)).setText(cardText);
-        ((TextView) view.findViewById(R.id.tVInput)).setText(input);
+                })
+                .setCancelable(false);
+        ((TextView) view.findViewById(R.id.tVRightAnswerText)).setText(cardText);
+        ((TextView) view.findViewById(R.id.tVInputText)).setText(input);
         builder.create().show();
     }
 

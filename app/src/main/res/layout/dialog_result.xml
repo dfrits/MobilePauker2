@@ -16,18 +16,13 @@
         android:textStyle="bold"
         android:gravity="center"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginTop="10dp">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
             <TextView
+                android:id="@+id/tRightAnswer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/dialog_result_right_answer"
@@ -37,6 +32,9 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tInputAnswer"
+                android:layout_alignStart="@+id/tRightAnswer"
+                android:layout_below="@+id/tVRightAnswerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -45,33 +43,30 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tVRightAnswer"
+                android:id="@+id/tVRightAnswerText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tRightAnswer"
                 android:fontFamily="serif"
                 android:layout_marginStart="5dp"
+                android:layout_alignTop="@id/tRightAnswer"
                 android:textColor="@android:color/holo_green_light"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/tVInput"
+                android:id="@+id/tVInputText"
                 android:layout_width="match_parent"
+                android:layout_toEndOf="@+id/tInputAnswer"
+                android:layout_alignStart="@+id/tVRightAnswerText"
+                android:layout_below="@id/tVRightAnswerText"
                 android:layout_height="wrap_content"
                 android:fontFamily="serif"
-                android:layout_marginTop="5dp"
-                android:layout_marginStart="5dp"
+                android:layout_alignTop="@id/tInputAnswer"
                 android:textColor="@android:color/holo_red_light"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
-        </LinearLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>
