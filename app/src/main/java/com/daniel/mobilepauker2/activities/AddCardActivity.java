@@ -1,5 +1,6 @@
 package com.daniel.mobilepauker2.activities;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +17,8 @@ import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
+
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 
 /**
  * Created by dfritsch on 22.03.2018.

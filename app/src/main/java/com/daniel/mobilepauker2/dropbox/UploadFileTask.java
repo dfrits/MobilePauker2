@@ -59,7 +59,7 @@ public class UploadFileTask extends AsyncTask<File, Void, List<Metadata>> {
                         mCallback.onError(e);
                     }
                 } else {
-                    mCallback.onError(new DbxException("File not found"));
+                    mCallback.onError(new Exception("File not found"));
                 }
             }
         }

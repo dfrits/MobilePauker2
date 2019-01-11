@@ -3,6 +3,10 @@ package com.daniel.mobilepauker2.dropbox;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
@@ -33,6 +37,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
+
 /**
  * Created by dfritsch on 21.11.2018.
  * MobilePauker++
@@ -47,6 +53,10 @@ public class SyncDialog extends Activity {
     private File[] files;
     private Timer timeout;
     private TimerTask timerTask;
+    private NetworkStateReceiver networkStateReceiver;
+
+    // Hintergrundtasks
+    private List<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +72,26 @@ public class SyncDialog extends Activity {
             finish();
             return;
         }
+
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            final NetworkInfo ni = cm.getActiveNetworkInfo();
+            if (ni == null || !ni.isConnected()) {
+                showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
+                setResult(RESULT_CANCELED);
+                finish();
+                return;
+            }
+        }
+
+        networkStateReceiver = new NetworkStateReceiver(new NetworkStateReceiver.ReceiverCallback() {
+            @Override
+            public void connectionLost() {
+                showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
+                finish();
+            }
+        });
+        registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         DropboxClientFactory.init(accessToken);
         Serializable serializableExtra = intent.getSerializableExtra(FILES);
@@ -98,7 +128,8 @@ public class SyncDialog extends Activity {
      * {@link SyncDialog#syncWithFiles(List, Map) synWithFiles()} auf.
      */
     private void loadData() {
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+        AsyncTask<String, Void, ListFolderResult> listFolderTask;
+        listFolderTask = new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 List<Metadata> dbFiles = new ArrayList<>(); // Dateien in Dropbox mit der passenden Endung
@@ -146,6 +177,7 @@ public class SyncDialog extends Activity {
                         ;
             }
         }).execute(Constants.DROPBOX_PATH);
+        tasks.add(listFolderTask);
     }
 
     /**
@@ -174,7 +206,8 @@ public class SyncDialog extends Activity {
         String[] data = new String[lokalDeletedFiles.keySet().size()];
         data = lokalDeletedFiles.keySet().toArray(data);
 
-        new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
+        AsyncTask<String, Void, List<Metadata>> deleteTask;
+        deleteTask = new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
             public void onDeleteComplete(List<Metadata> result) {
                 modelManager.resetDeletedFilesData(context);
@@ -186,6 +219,7 @@ public class SyncDialog extends Activity {
                 System.out.println();
             }
         }).execute(data);
+        tasks.add(deleteTask);
     }
 
     /**
@@ -254,7 +288,8 @@ public class SyncDialog extends Activity {
         FileMetadata[] data = new FileMetadata[list.size()];
         data = list.toArray(data);
         final ProgressBar progressBar = findViewById(R.id.pBar);
-        new DownloadFileTask(DropboxClientFactory.getClient(),
+        AsyncTask<FileMetadata, FileMetadata, File[]> downloadTask;
+        downloadTask = new DownloadFileTask(DropboxClientFactory.getClient(),
                 new DownloadFileTask.Callback() {
                     @Override
                     public void onDownloadStartet() {
@@ -287,6 +322,7 @@ public class SyncDialog extends Activity {
                         finish();
                     }
                 }).execute(data);
+        tasks.add(downloadTask);
     }
 
     /**
@@ -295,20 +331,30 @@ public class SyncDialog extends Activity {
      */
     private void uploadFiles(List<File> list) {
         File[] data = new File[list.size()];
-        data = list.toArray(data);
-        new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+        for (int i = 0; i < list.size(); i++) {
+            File file = list.get(i);
+            if (file.exists()) data[i] = file;
+        }
+        AsyncTask<File, Void, List<Metadata>> uploadTask;
+        uploadTask = new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
             @Override
             public void onUploadComplete(List<Metadata> result) {
                 modelManager.resetAddedFilesData(context);
             }
 
             @Override
-            public void onError(Exception e) {
+            public void onError(final Exception e) {
                 Log.e("LessonImportActivity::uploadFiles",
                         "Failed to upload file.", e);
-                Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast((Activity)context, e.getMessage(), Toast.LENGTH_LONG);
+                    }
+                });
             }
         }).execute(data);
+        tasks.add(uploadTask);
     }
 
     /**
@@ -358,6 +404,23 @@ public class SyncDialog extends Activity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (timeout != null && timerTask != null) {
+            timeout.cancel();
+        }
+        if (networkStateReceiver != null) {
+            unregisterReceiver(networkStateReceiver);
+        }
+        cancelTasks();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
     private void startTimer() {
         timeout = new Timer();
         timerTask = new TimerTask() {
@@ -366,7 +429,7 @@ public class SyncDialog extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, R.string.synchro_timeout, Toast.LENGTH_SHORT).show();
+                        showToast((Activity)context, R.string.synchro_timeout, Toast.LENGTH_SHORT);
                     }
                 });
 
@@ -377,16 +440,11 @@ public class SyncDialog extends Activity {
         timeout.schedule(timerTask, 60000);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timeout != null && timerTask != null) {
-            timeout.cancel();
+    private void cancelTasks() {
+        for (AsyncTask task : tasks) {
+            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+                task.cancel(true);
+            }
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return false;
     }
 }

@@ -18,6 +18,7 @@
 
 package com.daniel.mobilepauker2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;

@@ -8,9 +8,13 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,6 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
-    private Exception mException;
 
     DownloadFileTask(DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
@@ -32,11 +35,7 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
     @Override
     protected void onPostExecute(File[] result) {
         super.onPostExecute(result);
-        if (mException != null) {
-            mCallback.onError(mException);
-        } else {
-            mCallback.onDownloadComplete(result);
-        }
+        mCallback.onDownloadComplete(result);
     }
 
     @Override
@@ -53,6 +52,7 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
 
     @Override
     protected File[] doInBackground(FileMetadata... params) {
+        File downloadFile = null;
         try {
             List<File> list = new ArrayList<>();
 
@@ -63,17 +63,20 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
 
                 // Make sure the Downloads directory exists.
                 if (!path.exists()) {
-                    mException = new RuntimeException("Unable to access directory: " + path);
+                    mCallback.onError(new RuntimeException("Unable to access directory: " + path));
                     return null;
                 } else if (!path.isDirectory()) {
-                    mException = new IllegalStateException("Download path is not a directory: " + path);
+                    mCallback.onError(new IllegalStateException("Download path is not a directory: " + path));
                     return null;
                 }
 
                 // Download the file.
-                try (OutputStream outputStream = new FileOutputStream(file)) {
+                downloadFile = new File(file.getParent(), "downloadFile.pau.gz");
+                try (OutputStream outputStream = new FileOutputStream(downloadFile)) {
                     mDbxClient.files().download(metadata.getPathLower(), metadata.getRev())
                             .download(outputStream);
+                    outputStream.close();
+                    downloadFile.renameTo(file);
                 }
 
                 list.add(file);
@@ -83,7 +86,11 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
             File[] result = new File[list.size()];
             return list.toArray(result);
         } catch (DbxException | IOException e) {
-            mException = e;
+            mCallback.onError(e);
+        } finally {
+            if (downloadFile != null && downloadFile.exists()) {
+                downloadFile.delete();
+            }
         }
 
         return null;
