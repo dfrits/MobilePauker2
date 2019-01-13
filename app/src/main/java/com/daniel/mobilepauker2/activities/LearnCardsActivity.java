@@ -113,6 +113,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!firstStart && !restartButton.isVisible()) {
             restartTimer();
+
+            if (mCardCursor != null && mSavedCursorPosition != -1) {
+                refreshCursor();
+            }
         }
 
         LearningPhase learningPhase = modelManager.getLearningPhase();
@@ -796,11 +800,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     protected void cursorLoaded() {
-        if (mSavedCursorPosition == 0) {
+        if (mSavedCursorPosition == -1) {
             setCursorToFirst();
         } else {
             mCardCursor.moveToPosition(mSavedCursorPosition);
         }
+        mSavedCursorPosition = -1;
         updateCurrentCard();
         fillData();
     }
