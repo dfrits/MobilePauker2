@@ -443,7 +443,7 @@ public class SyncDialog extends Activity {
     private void cancelTasks() {
         for (AsyncTask task : tasks) {
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
-                task.cancel(true);
+                task.cancel(false);
             }
         }
     }

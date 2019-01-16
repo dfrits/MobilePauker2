@@ -147,7 +147,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
-                showToast((Activity)context, R.string.saving_success, Toast.LENGTH_SHORT);
+                showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
@@ -160,7 +160,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
                 }
             } else {
-                showToast((Activity)context, R.string.saving_error, Toast.LENGTH_SHORT);
+                showToast((Activity) context, R.string.saving_error, Toast.LENGTH_SHORT);
             }
             finish();
         }
@@ -571,7 +571,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         } catch (Exception e) {
             Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception");
-            showToast((Activity)context, R.string.load_card_data_error, Toast.LENGTH_SHORT);
+            showToast((Activity) context, R.string.load_card_data_error, Toast.LENGTH_SHORT);
             ErrorReporter.instance().AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?");
             finish();
         }
@@ -802,12 +802,21 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     protected void cursorLoaded() {
         if (mSavedCursorPosition == -1) {
             setCursorToFirst();
+            updateCurrentCard();
+            fillData();
         } else {
             mCardCursor.moveToPosition(mSavedCursorPosition);
+            updateCurrentCard();
+            fillInData(flipCardSides);
+            setButtonsVisibility();
+            if (bShowMe.getVisibility() == VISIBLE
+                    && ((flipCardSides && currentCard.getSide() == SIDE_A)
+                    || (!flipCardSides && currentCard.getSide() == SIDE_B))) {
+                bShowMe.setVisibility(GONE);
+                lRepeatButtons.setVisibility(VISIBLE);
+            }
         }
         mSavedCursorPosition = -1;
-        updateCurrentCard();
-        fillData();
     }
 
     public void mEditClicked(MenuItem item) {
@@ -841,7 +850,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                                 updateLearningPhase();
                             }
                         } else {
-                            showToast((Activity)context, "Löschen nicht möglich!", Toast.LENGTH_SHORT);
+                            showToast((Activity) context, "Löschen nicht möglich!", Toast.LENGTH_SHORT);
                         }
                         dialog.cancel();
                     }
@@ -855,7 +864,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             item.setVisible(false);
             restartButton.setVisible(true);
         } else {
-            showToast((Activity)context, R.string.pause_timer_error, Toast.LENGTH_LONG);
+            showToast((Activity) context, R.string.pause_timer_error, Toast.LENGTH_LONG);
         }
     }
 
