@@ -426,6 +426,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     }
 
                     updateLearningPhase();
+                } else if (mCardPackAdapter.isLastCard()) {
+                    setLearningPhase(REPEATING_USTM);
                 }
 
                 break;
@@ -449,8 +451,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             case REPEATING_STM: {
                 if (zeroSTMCards) {
                     finishLearning();
-                } else {
-                    setButtonVisibilityRepeating();
+                } else if (mCardPackAdapter.isLastCard()) {
+                    setLearningPhase(REPEATING_STM);
                 }
                 break;
             }
@@ -470,6 +472,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         //Neue Phase dem Modelmanager mitteilen und Deck aktualisieren
         modelManager.setLearningPhase(context, newLearningsPhase);
         //Cursor an erste Stelle setzen
+        mSavedCursorPosition = -1;
         refreshCursor();
     }
 
