@@ -13,6 +13,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="@id/aboutPanel"
+        app:layout_constraintTop_toTopOf="@+id/aboutPanel"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.4" />
 
@@ -21,9 +22,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:scaleType="fitCenter"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toStartOf="@id/spaceright"
         app:layout_constraintStart_toEndOf="@id/spaceleft"
+        app:layout_constraintTop_toTopOf="@+id/aboutPanel"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_max="100dp"
         app:layout_constraintWidth_percent="0.2"
@@ -34,6 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@id/aboutPanel"
+        app:layout_constraintTop_toTopOf="@+id/aboutPanel"
         app:layout_constraintWidth_default="percent"
         app:layout_constraintWidth_percent="0.4" />
 
@@ -56,6 +59,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/aboutPanel"
         app:layout_constraintTop_toBottomOf="@+id/tVersion" />
 
     <WebView
