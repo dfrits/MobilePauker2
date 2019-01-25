@@ -410,7 +410,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
 
             case REPEATING_USTM: {
-                setButtonVisibilityRepeating();
+                setButtonsVisibility();
 
                 if (zeroUSTMCards) // We have learned all the ustm cards
                 {
@@ -449,6 +449,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
 
             case REPEATING_STM: {
+                setButtonsVisibility();
                 if (zeroSTMCards) {
                     finishLearning();
                 } else if (mCardPackAdapter.isLastCard()) {
@@ -461,7 +462,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 if (modelManager.getExpiredCardsSize() <= 0) {
                     finishLearning();
                 } else {
-                    setButtonVisibilityRepeating();
+                    setButtonsVisibility();
                 }
                 break;
             }
