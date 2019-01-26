@@ -187,5 +187,11 @@
     <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
     <string name="create_new_lesson_not_saved_dialog_message">Do you want to save before creating a new Lesson?</string>
     <string name="error_file_not_found">The File was not found, please try again manually</string>
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
+    <string name="import_title">Lektion wird importiert. Bitte warten…</string>
+    <string name="lesson_import_success">Lesson imported</string>
     <!-- endregion -->
 </resources>

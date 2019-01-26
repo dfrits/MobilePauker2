@@ -261,31 +261,31 @@ public class MainMenu extends AppCompatActivity {
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
-                if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
                     uploadCurrentFile();
-                }
+                }*/
             }
             invalidateOptionsMenu();
-        } else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
+        } /*else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             if (resultCode == RESULT_OK) {
                 Log.d("SyncLesson", "Synchro erfolgreich");
             } else {
                 Log.d("SyncLesson", "Synchro nicht erfolgreich");
-                Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
+                PaukerManager.showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
             }
-        } /*else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
+        } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
         }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
             if (resultCode == RESULT_OK) {
-                if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
                     uploadCurrentFile();
-                }
+                }*/
                 createNewLesson();
             }
         }
     }
 
-    private void uploadCurrentFile() {
+    /*private void uploadCurrentFile() {
         String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                 .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
         Intent intent = new Intent(context, SyncDialog.class);
@@ -294,7 +294,7 @@ public class MainMenu extends AppCompatActivity {
         File file = path == null ? modelManager.getFilePath() : new File(path);
         intent.putExtra(SyncDialog.FILES, file);
         startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
-    }
+    }*/
 
     public void addNewCard(View view) {
         startActivity(new Intent(context, AddCardActivity.class));

@@ -68,8 +68,7 @@ public class SyncDialog extends Activity {
         String accessToken = intent.getStringExtra(ACCESS_TOKEN);
         if (accessToken == null) {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet");
-            setResult(RESULT_CANCELED);
-            finish();
+            finishDialog(RESULT_CANCELED);
             return;
         }
 
@@ -78,8 +77,7 @@ public class SyncDialog extends Activity {
             final NetworkInfo ni = cm.getActiveNetworkInfo();
             if (ni == null || !ni.isConnected()) {
                 showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
-                setResult(RESULT_CANCELED);
-                finish();
+                finishDialog(RESULT_CANCELED);
                 return;
             }
         }
@@ -88,7 +86,7 @@ public class SyncDialog extends Activity {
             @Override
             public void connectionLost() {
                 showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
-                finish();
+                finishDialog(RESULT_CANCELED);
             }
         });
         registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -104,22 +102,22 @@ public class SyncDialog extends Activity {
             startTimer();
             loadData();
         } else if (serializableExtra instanceof File) {
+            Log.d("SyncDialog:onCreate", "Upload just one file");
             List<File> list = new ArrayList<>();
             File file = (File) serializableExtra;
             if (file.exists()) {
+                Log.d("SyncDialog:onCreate", "file exists");
                 list.add((File) serializableExtra);
                 uploadFiles(list);
-                setResult(RESULT_OK);
-                finish();
+                finishDialog(RESULT_OK);
             } else {
+                Log.d("SyncDialog:onCreate", "file does not exist");
                 showToast((Activity)context, R.string.error_file_not_found, Toast.LENGTH_LONG);
-                setResult(RESULT_CANCELED);
-                finish();
+                finishDialog(RESULT_CANCELED);
             }
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
-            setResult(RESULT_CANCELED);
-            finish();
+            finishDialog(RESULT_CANCELED);
         }
     }
 
@@ -166,8 +164,7 @@ public class SyncDialog extends Activity {
 
             @Override
             public void onError(Exception e) {
-                setResult(RESULT_CANCELED);
-                finish();
+                finishDialog(RESULT_CANCELED);
 
                 Log.d("LessonImportActivity::loadData::onError"
                         , "Error loading Files: " + e.getMessage());
@@ -318,8 +315,7 @@ public class SyncDialog extends Activity {
                                 R.string.simple_error_message,
                                 Toast.LENGTH_SHORT)
                                 ;
-                        setResult(RESULT_CANCELED);
-                        finish();
+                        finishDialog(RESULT_CANCELED);
                     }
                 }).execute(data);
         tasks.add(downloadTask);
@@ -340,12 +336,13 @@ public class SyncDialog extends Activity {
             @Override
             public void onUploadComplete(List<Metadata> result) {
                 modelManager.resetAddedFilesData(context);
+                Log.d("SyncDialog:uploadFiles", "upload success");
             }
 
             @Override
             public void onError(final Exception e) {
-                Log.e("LessonImportActivity::uploadFiles",
-                        "Failed to upload file.", e);
+                Log.e("SyncDialog::uploadFiles",
+                        "upload error: ", e);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -433,8 +430,7 @@ public class SyncDialog extends Activity {
                     }
                 });
 
-                setResult(RESULT_CANCELED);
-                finish();
+                finishDialog(RESULT_CANCELED);
             }
         };
         timeout.schedule(timerTask, 60000);
@@ -446,5 +442,10 @@ public class SyncDialog extends Activity {
                 task.cancel(false);
             }
         }
+    }
+
+    private void finishDialog(int result) {
+        setResult(result);
+        finish();
     }
 }

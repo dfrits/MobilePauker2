@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,9 +23,13 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SaveLessonThreaded;
+import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.utils.Constants;
+
+import java.io.File;
 
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
 
@@ -145,6 +151,9 @@ public class SaveDialog extends Activity {
                 boolean result = msg.getData().getBoolean(Constants.MESSAGE_BOOL_KEY);
                 if (result) {
                     setResult(RESULT_OK);
+                    if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                        uploadCurrentFile();
+                    }
                 } else {
                     showToast((Activity)context, R.string.saving_error, Toast.LENGTH_SHORT);
                     setResult(RESULT_CANCELED);
@@ -154,5 +163,16 @@ public class SaveDialog extends Activity {
             }
         }));
         saveThread.run();
+    }
+
+    private void uploadCurrentFile() {
+        String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+                .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+        Intent intent = new Intent(context, SyncDialog.class);
+        intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
+        String path = PaukerManager.instance().getFileAbsolutePath();
+        File file = path == null ? ModelManager.instance().getFilePath() : new File(path);
+        intent.putExtra(SyncDialog.FILES, file);
+        startActivity(intent);
     }
 }

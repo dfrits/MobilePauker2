@@ -151,14 +151,14 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
-                if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
                     String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                             .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
                     Intent intent = new Intent(context, SyncDialog.class);
                     intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
                     intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
-                    startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
-                }
+                    startActivity(intent);
+                }*/
             } else {
                 showToast((Activity) context, R.string.saving_error, Toast.LENGTH_SHORT);
             }
