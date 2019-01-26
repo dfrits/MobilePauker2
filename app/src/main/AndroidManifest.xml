@@ -91,5 +91,42 @@
             android:label="@string/add_new_card"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
+            android:name=".activities.LessonReceiver"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/x-gzip" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\.pau" />
+                <data android:pathPattern=".*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

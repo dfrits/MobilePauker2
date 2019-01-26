@@ -39,7 +39,12 @@ public class LessonImportAdapter extends ArrayAdapter<String> {
 
         TextView tv = view.findViewById(android.R.id.text1);
         String name = data.get(position);
-        tv.setText(name.substring(0, name.indexOf(".pau.gz")));
+
+        int index = name.endsWith(".xml.gz") ? name.indexOf(".xml") : name.indexOf(".pau");
+        if (index != -1) {
+            name = name.substring(0, index);
+            tv.setText(name.substring(0, index));
+        }
 
         return view;
     }

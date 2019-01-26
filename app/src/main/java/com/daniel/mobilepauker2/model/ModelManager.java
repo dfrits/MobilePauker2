@@ -543,32 +543,43 @@ public class ModelManager {
         }
     }
 
+    public void addLesson(Context context, File file) {
+        String filename = file.getName();
+        int index = filename.endsWith(".xml") ? filename.indexOf(".xml") : filename.indexOf(".pau");
+        if (index != -1) {
+            filename = filename.substring(0, index);
+            addLesson(context, filename);
+        }
+    }
+
     public void addLesson(Context context) {
         String filename = paukerManager.getCurrentFileName();
+        addLesson(context, filename);
+    }
+
+    private void addLesson(Context context, String fileName) {
         try {
             FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
-            String text = "\n" + filename;
+            String text = "\n" + fileName;
             fos.write(text.getBytes());
             fos.close();
         } catch (IOException ignored) {
-            System.out.println();
         }
 
         try {
             Map<String, String> map = getLokalDeletedFiles(context);
-            if (map.keySet().contains(filename)) {
+            if (map.keySet().contains(fileName)) {
                 resetDeletedFilesData(context);
                 FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_APPEND);
                 for (Map.Entry<String, String> entry : map.entrySet()) {
-                    if (!entry.getKey().equals(filename)) {
-                        String newText = "\n" + filename + ";*;" + System.currentTimeMillis();
+                    if (!entry.getKey().equals(fileName)) {
+                        String newText = "\n" + fileName + ";*;" + System.currentTimeMillis();
                         fos.write(newText.getBytes());
                     }
                 }
                 fos.close();
             }
-        } catch (IOException e) {
-            System.out.println();
+        } catch (IOException ignored) {
         }
     }
 
@@ -689,14 +700,6 @@ public class ModelManager {
      */
     public boolean isLessonEmpty() {
         return isLessonSetup() && mLesson.getCards().isEmpty() && mLesson.getDescription().isEmpty();
-    }
-
-
-    /**
-     * Delete from memory current lesson - To be used when trying to recover from errors!
-     */
-    public void clearLesson() {
-        mLesson = null;
     }
 
     public void createNewLesson() {

@@ -30,6 +30,12 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="download_file_dialog_message"><![CDATA[Du kannst online neue Lektionen von Pauker
+    herunterladen und mit der App öffnen. Allerdings ist es besser für den Lernprozess Lektionen
+    selbst zu erstellen und zu füllen.  Mit einem Tap auf <b>\"WEITER\"</b> wirst du auf die
+    offizielle Seite von Pauker weitergeleitet]]></string>
+    <string name="lesson_import_success">Lektion importiert</string>
+    <string name="import_title">Lektion wird importiert. Bitte warten…</string>
     <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="wrong_answer">Your Answer was wrong!</string>
     <string name="put_back">Zurücklegen</string>

@@ -23,12 +23,17 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.daniel.mobilepauker2.activities.LessonImportActivity;
 import com.daniel.mobilepauker2.model.ModelManager;
+import com.daniel.mobilepauker2.model.pauker_native.Lesson;
+import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.net.URI;
 
 public class PaukerManager {
 
@@ -108,11 +113,17 @@ public class PaukerManager {
     }
 
     public boolean isNameValid(String filename) {
-        if (filename == null || filename.isEmpty() || filename.equals(Constants.PAUKER_FILE_ENDING)) {
+        if (filename == null || filename.isEmpty() || isNameEmpty(filename)) {
             return false;
         }
+        return validateFileEnding(filename);
+    }
 
-        return filename.endsWith(".pau.gz");
+    public boolean isNameEmpty(String fileName) {
+        for (String ending : Constants.PAUKER_FILE_ENDING) {
+            if (fileName.equals(ending)) return true;
+        }
+        return false;
     }
 
     public String getCurrentFileName() {
@@ -130,7 +141,7 @@ public class PaukerManager {
     public String getReadableFileName() {
         String filename = mCurrentFileName;
 
-        if (filename.endsWith(Constants.PAUKER_FILE_ENDING)) {
+        if (validateFileEnding(filename)) {
             return filename.substring(0, filename.length() - 7);
         } else if (filename.endsWith(".pau") || filename.endsWith(".xml")) {
             return filename.substring(0, filename.length() - 4);
@@ -145,12 +156,21 @@ public class PaukerManager {
             return false;
         }
 
-        if (!filename.endsWith(Constants.PAUKER_FILE_ENDING)) {
+        if (!validateFileEnding(filename)) {
             Log.d("Validate Filename", "File not ending with .pau.gz");
             return false;
         }
 
         return true;
+    }
+
+    private boolean validateFileEnding(String fileName) {
+        for (String ending : Constants.PAUKER_FILE_ENDING) {
+            if (fileName.endsWith(ending)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public File[] listFiles(final Context context) throws SecurityException {
@@ -199,5 +219,14 @@ public class PaukerManager {
 
     public static void showToast(Activity context, int textResource, int duration) {
         showToast(context, context.getString(textResource), duration);
+    }
+
+    public void loadLessonFromFile(File file) throws IOException {
+        URI uri = file.toURI();
+        FlashCardXMLPullFeedParser xmlFlashCardFeedParser = new FlashCardXMLPullFeedParser(uri.toURL());
+        Lesson lesson = xmlFlashCardFeedParser.parse();
+        setCurrentFileName(file.getName());
+        setFileAbsolutePath(file.getAbsolutePath());
+        ModelManager.instance().setLesson(lesson);
     }
 }

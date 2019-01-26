@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.text.format.DateFormat;
 import android.util.SparseLongArray;
 import android.view.ContextMenu;
@@ -29,7 +31,6 @@ import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.LessonImportAdapter;
 import com.daniel.mobilepauker2.model.ModelManager;
-import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
@@ -45,7 +46,6 @@ import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Locale;
 
-import static com.daniel.mobilepauker2.PaukerManager.showToast;
 
 /**
  * Created by Daniel on 04.03.2018.
@@ -141,7 +141,7 @@ public class LessonImportActivity extends AppCompatActivity {
                     text = text.concat(" ").concat(getString(R.string.nothing_learned_yet));
                 }
             } catch (IOException | RuntimeException ignored) {
-                showToast((Activity)context, R.string.error_reading_from_xml, Toast.LENGTH_SHORT);
+                PaukerManager.showToast((Activity) context, R.string.error_reading_from_xml, Toast.LENGTH_SHORT);
                 resetSelection(null);
                 init();
                 text = null;
@@ -218,21 +218,12 @@ public class LessonImportActivity extends AppCompatActivity {
     private File getFilePath(String filename) throws IOException {
         // Validate the filename
         if (!paukerManager.validateFilename(filename)) {
-            showToast((Activity)context, R.string.error_filename_invalid, Toast.LENGTH_LONG);
+            PaukerManager.showToast((Activity) context, R.string.error_filename_invalid, Toast.LENGTH_LONG);
             throw new IOException("Filename invalid");
         }
 
         String filePath = Environment.getExternalStorageDirectory() + paukerManager.getApplicationDataDirectory() + filename;
         return new File(filePath);
-    }
-
-    private void loadLessonFromFile(File file) throws IOException {
-        URI uri = file.toURI();
-        FlashCardXMLPullFeedParser xmlFlashCardFeedParser = new FlashCardXMLPullFeedParser(uri.toURL());
-        Lesson lesson = xmlFlashCardFeedParser.parse();
-        paukerManager.setCurrentFileName(file.getName());
-        paukerManager.setFileAbsolutePath(file.getAbsolutePath());
-        modelManager.setLesson(lesson);
     }
 
     @Override
@@ -277,7 +268,7 @@ public class LessonImportActivity extends AppCompatActivity {
                                             paukerManager.setSaveRequired(false);
                                         }
                                     } else {
-                                        showToast((Activity)context, R.string.delete_lesson_error, Toast.LENGTH_SHORT);
+                                        PaukerManager.showToast((Activity) context, R.string.delete_lesson_error, Toast.LENGTH_SHORT);
                                     }
                                 }
                             }
@@ -322,7 +313,7 @@ public class LessonImportActivity extends AppCompatActivity {
     @Override
     public void finish() {
         if (errorMessage != null) {
-            showToast((Activity)this, errorMessage, Toast.LENGTH_LONG);
+            PaukerManager.showToast(this, errorMessage, Toast.LENGTH_LONG);
         }
 
         super.finish();
@@ -335,16 +326,16 @@ public class LessonImportActivity extends AppCompatActivity {
                 Log.d("OpenLesson", "Synchro erfolgreich");
             } else {
                 Log.d("OpenLesson", "Synchro nicht erfolgreich");
-                showToast((Activity)context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
+                PaukerManager.showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
             }
             init();
             if (modelManager.isLessonNotNew())
                 if (fileNames.contains(paukerManager.getCurrentFileName())) {
                     try {
-                        loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
+                        paukerManager.loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
                         paukerManager.setSaveRequired(false);
                     } catch (IOException ignored) {
-                        showToast((Activity)context, R.string.reopen_lesson_error, Toast.LENGTH_LONG);
+                        PaukerManager.showToast((Activity) context, R.string.reopen_lesson_error, Toast.LENGTH_LONG);
                         ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
                     }
                 } else {
@@ -395,14 +386,33 @@ public class LessonImportActivity extends AppCompatActivity {
     private void openLesson(int position) {
         String filename = (String) listView.getItemAtPosition(position);
         try {
-            showToast((Activity)context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
-            loadLessonFromFile(getFilePath(filename));
+            PaukerManager.showToast((Activity) context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
+            paukerManager.loadLessonFromFile(getFilePath(filename));
             paukerManager.setSaveRequired(false);
             finish();
         } catch (IOException e) {
             resetSelection(null);
-            showToast((Activity)context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);
+            PaukerManager.showToast((Activity) context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);
             ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
         }
+    }
+
+    public void downloadNewLesson(View view) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(Html.fromHtml(getString(R.string.download_file_dialog_message), Html.FROM_HTML_MODE_LEGACY))
+                .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        openBrowserForDownload();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null);
+        builder.create().show();
+    }
+
+    private void openBrowserForDownload() {
+        String url = "http://pauker.sourceforge.net/pauker.php?page=lessons";
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        startActivity(browserIntent);
     }
 }

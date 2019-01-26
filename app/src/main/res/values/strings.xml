@@ -30,6 +30,12 @@
     <!-- endregion -->
 
     <!-- region Infos -->
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
+    <string name="lesson_import_success">Lesson imported</string>
+    <string name="import_title">Lesson is imported. Please wait…</string>
     <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="dialog_input_message">Type in your answer.</string>
     <string name="dialog_result_message">Your answer is wrong!</string>
