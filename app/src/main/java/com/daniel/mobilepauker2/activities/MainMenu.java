@@ -130,21 +130,33 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void initChartList() {
-        final RecyclerView chartView = findViewById(R.id.chartListView);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
-                LinearLayoutManager.HORIZONTAL, false);
-        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
+        // Im Thread laufen lassen um MainThread zu entlasten
+        Thread initthread = new Thread(new Runnable() {
             @Override
-            public void onClick(int position) {
-                showBatchDetails(position);
+            public void run() {
+                chartView = findViewById(R.id.chartListView);
+                final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+                        LinearLayoutManager.HORIZONTAL, false);
+                chartView.setLayoutManager(layoutManager);
+                chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                chartView.setScrollContainer(true);
+                chartView.setNestedScrollingEnabled(true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                showBatchDetails(position);
+                            }
+                        };
+                        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
+                        chartView.setAdapter(adapter);
+                    }
+                });
             }
-        };
-        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
-        chartView.setLayoutManager(layoutManager);
-        chartView.setAdapter(adapter);
-        chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        chartView.setScrollContainer(true);
-        chartView.setNestedScrollingEnabled(true);
+        });
+        initthread.run();
     }
 
     private void showBatchDetails(int index) {
