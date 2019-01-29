@@ -28,7 +28,6 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.statistics.ChartAdapter;
@@ -38,8 +37,6 @@ import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-
-import java.io.File;
 
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
@@ -61,6 +58,7 @@ public class MainMenu extends AppCompatActivity {
     private final Context context = this;
     private boolean firstStart = true;
     private MenuItem search;
+    private RecyclerView chartView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -236,6 +234,12 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        chartView = null;
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         Log.d("MainMenuActivity::onResume", "ENTRY");
         super.onResume();
@@ -269,13 +273,9 @@ public class MainMenu extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
-                showToast((Activity)context, R.string.saving_success, Toast.LENGTH_SHORT);
+                showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
-
-                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
-                    uploadCurrentFile();
-                }*/
             }
             invalidateOptionsMenu();
         } /*else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
@@ -287,26 +287,12 @@ public class MainMenu extends AppCompatActivity {
             }
         } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
-        }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
-            if (resultCode == RESULT_OK) {
-                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
-                    uploadCurrentFile();
-                }*/
-                createNewLesson();
-            }
+        }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
+            createNewLesson();
+        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == RESULT_OK) {
+            startActivity(new Intent(context, LessonImportActivity.class));
         }
     }
-
-    /*private void uploadCurrentFile() {
-        String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-        Intent intent = new Intent(context, SyncDialog.class);
-        intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-        String path = paukerManager.getFileAbsolutePath();
-        File file = path == null ? modelManager.getFilePath() : new File(path);
-        intent.putExtra(SyncDialog.FILES, file);
-        startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
-    }*/
 
     public void addNewCard(View view) {
         startActivity(new Intent(context, AddCardActivity.class));
@@ -396,12 +382,11 @@ public class MainMenu extends AppCompatActivity {
             if (paukerManager.isSaveRequired()) {
                 builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
-                        .setMessage(R.string.lesson_not_saved_dialog_message)
-                        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        .setMessage(R.string.save_lesson_before_question)
+                        .setPositiveButton(R.string.go_on, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(context, LessonImportActivity.class));
-                                dialog.dismiss();
+                                saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_OPEN);
                             }
                         })
                         .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -426,7 +411,7 @@ public class MainMenu extends AppCompatActivity {
         initButtons();
         initChartList();
         initView();
-        showToast((Activity)context, R.string.new_lession_created, Toast.LENGTH_SHORT);
+        showToast((Activity) context, R.string.new_lession_created, Toast.LENGTH_SHORT);
     }
 
     public void mSaveFileClicked(@Nullable MenuItem ignored) {
@@ -445,7 +430,7 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.reset_lesson_dialog_title)
                 .setMessage(R.string.reset_lesson_dialog_info)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         modelManager.forgetAllCards();
@@ -453,7 +438,7 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        showToast((Activity)context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT);
+                        showToast((Activity) context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })
@@ -470,17 +455,17 @@ public class MainMenu extends AppCompatActivity {
         if (paukerManager.isSaveRequired()) {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(R.string.lesson_not_saved_dialog_title)
-                    .setMessage(R.string.create_new_lesson_not_saved_dialog_message)
+                    .setMessage(R.string.save_lesson_before_question)
                     .setPositiveButton(R.string.save_lesson, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
                         }
                     })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            createNewLesson();
+                            dialog.dismiss();
                         }
                     });
             builder.create().show();
@@ -505,7 +490,7 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.reverse_sides_dialog_title)
                 .setMessage(R.string.reverse_sides_dialog_info)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.flip_cards, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         modelManager.flipAllCards();
@@ -513,7 +498,7 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        showToast((Activity)context, R.string.flip_sides_complete, Toast.LENGTH_SHORT);
+                        showToast((Activity) context, R.string.flip_sides_complete, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })

@@ -94,6 +94,8 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="no">No</string>
+    <string name="proof">Proof</string>
+    <string name="delete">Delete</string>
     <string name="text_size">Text size</string>
     <string name="background">Background</string>
     <string name="text_color">Text color</string>
@@ -137,8 +139,7 @@
     <string name="exit_learning_dialog">Exit Learning?</string>
     <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
-    <string name="create_new_lesson_not_saved_dialog_message">Do you want to save before creating a
-        new Lesson?</string>
+    <string name="save_lesson_before_question">Do you want to save before?</string>
     <string name="delete_card">Delete card</string>
     <!-- endregion -->
 
@@ -150,6 +151,7 @@
     <string name="add">Add</string>
     <string name="learn">Learn</string>
     <string name="repeat">Repeat</string>
+    <string name="go_on">Go on</string>
     <!-- endregion -->
 
     <!-- region Settings -->
@@ -221,5 +223,7 @@
 
     <!-- region Neue Strings -->
     <string name="New">New</string>
+    <string name="proof">Proof</string>
+    <string name="delete">Löschen</string>
     <!-- endregion -->
 </resources>

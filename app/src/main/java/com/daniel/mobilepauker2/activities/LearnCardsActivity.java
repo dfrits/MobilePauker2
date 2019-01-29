@@ -612,7 +612,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         View view = getLayoutInflater().inflate(R.layout.dialog_input, null);
         final MPEditText inputField = view.findViewById(R.id.eTInput);
         builder.setView(view)
-                .setPositiveButton("Proof", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.proof, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String cardText;
@@ -838,7 +838,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         dialog.cancel();
                     }
                 })
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         // Muss vorher gespeichert werden, da sonst im Nachhinein der Wert

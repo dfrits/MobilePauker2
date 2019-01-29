@@ -182,10 +182,11 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="go_on">Go on</string>
     <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="error_upload">Error while uploading File</string>
     <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
-    <string name="create_new_lesson_not_saved_dialog_message">Do you want to save before creating a new Lesson?</string>
+    <string name="save_lesson_before_question">Do you want to save before?</string>
     <string name="error_file_not_found">The File was not found, please try again manually</string>
     <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
     and open them in the App. But it would be better for the learning process to create a Lesson and
@@ -193,5 +194,7 @@
     Pauker]]></string>
     <string name="import_title">Lektion wird importiert. Bitte warten…</string>
     <string name="lesson_import_success">Lesson imported</string>
+    <string name="proof">Proof</string>
+    <string name="delete">Delete</string>
     <!-- endregion -->
 </resources>

@@ -91,6 +91,8 @@
     <!-- region Sonstiges -->
     <string name="yes">Ja</string>
     <string name="cancel">Abbrechen</string>
+    <string name="proof">Prüfen</string>
+    <string name="delete">Löschen</string>
     <string name="ok">OK</string>
     <string name="text_size">Textgröße</string>
     <string name="background">Hintergrund</string>
@@ -136,7 +138,7 @@
     <string name="exit_learning_dialog">Lernen beenden?</string>
     <string name="delete_card">Karte löschen</string>
     <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
-    <string name="create_new_lesson_not_saved_dialog_message">Willst du die Lektion vorher speichern?</string>
+    <string name="save_lesson_before_question">Willst du die Lektion vorher speichern?</string>
     <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
     <!-- endregion -->
 
@@ -149,6 +151,7 @@
     <string name="learn">Lernen</string>
     <string name="repeat">Wiederholen</string>
     <string name="reset">Zurücksetzen</string>
+    <string name="go_on">Weiter</string>
     <!-- endregion -->
 
     <!-- region Settings -->

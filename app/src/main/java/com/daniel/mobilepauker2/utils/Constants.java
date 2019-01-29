@@ -39,6 +39,7 @@ public class Constants {
     public static final int REQUEST_CODE_EDIT_CARD = 3;
     //public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
     public static final int REQUEST_CODE_SAVE_DIALOG_NEW_LESSON = 5;
+    public static final int REQUEST_CODE_SAVE_DIALOG_OPEN = 6;
 
     // Messagekey für den Handler
     public static final String MESSAGE_BOOL_KEY = "RESULT";
