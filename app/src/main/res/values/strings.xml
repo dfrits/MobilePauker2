@@ -223,7 +223,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">New</string>
-    <string name="proof">Proof</string>
-    <string name="delete">Löschen</string>
     <!-- endregion -->
 </resources>
