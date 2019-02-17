@@ -383,13 +383,13 @@ public class MainMenu extends AppCompatActivity {
                 builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
                         .setMessage(R.string.save_lesson_before_question)
-                        .setPositiveButton(R.string.go_on, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_OPEN);
                             }
                         })
-                        .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -456,18 +456,13 @@ public class MainMenu extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle(R.string.lesson_not_saved_dialog_title)
                     .setMessage(R.string.save_lesson_before_question)
-                    .setPositiveButton(R.string.save_lesson, new DialogInterface.OnClickListener() {
+                    .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
                         }
                     })
-                    .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    .setNegativeButton(R.string.cancel, null);
             builder.create().show();
         } else createNewLesson();
     }
