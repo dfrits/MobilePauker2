@@ -196,5 +196,9 @@
     <string name="lesson_import_success">Lesson imported</string>
     <string name="proof">Proof</string>
     <string name="delete">Delete</string>
+    <string name="unlink_dropbox_title">Unlink Dropbox</string>
+    <string name="save">Speichern</string>
+    <string name="association">Association</string>
+    <string name="unlinking">Unlinking</string>
     <!-- endregion -->
 </resources>

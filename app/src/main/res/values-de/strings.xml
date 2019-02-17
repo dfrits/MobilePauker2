@@ -101,6 +101,9 @@
     <string name="italic">Kursiv</string>
     <string name="no">Nein</string>
     <string name="repeat_type">Wiederholungsart</string>
+    <string name="save">Speichern</string>
+    <string name="association">Verbinden</string>
+    <string name="unlinking">Trennen</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -163,6 +166,7 @@
     <!-- endregion -->
 
     <!-- region Titles -->
+    <string name="unlink_dropbox_title">Dropbox trennen</string>
     <string name="offen_lassen_checkbox">Offen lassen</string>
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>

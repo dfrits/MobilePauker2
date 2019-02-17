@@ -18,15 +18,18 @@ import com.daniel.mobilepauker2.R;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Random;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     private String VersionName;
@@ -49,7 +52,6 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     private String User;
     private final HashMap<String, String> CustomParameters = new HashMap<>();
 
-    private Thread.UncaughtExceptionHandler PreviousHandler;
     private static ErrorReporter instance;
     private Context context;
 
@@ -74,7 +76,6 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     }
 
     public void init(Context context) {
-        PreviousHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         this.context = context;
     }
@@ -95,7 +96,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         return totalBlocks * blockSize;
     }
 
-    private void RecoltInformations(Context context) {
+    private void RecoltInformations() {
         try {
             PackageManager pm = context.getPackageManager();
             PackageInfo pi;
@@ -132,7 +133,7 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
     }
 
     private String CreateInformationString() {
-        RecoltInformations(context);
+        RecoltInformations();
 
         String ReturnVal = "";
         ReturnVal += "Version : " + VersionName;
@@ -221,33 +222,30 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         printWriter.close();
         Report.append("****  End of current Report ***");
         SaveAsFile(Report.toString());
-        PreviousHandler.uncaughtException(t, e);
     }
 
-    private void SendErrorMail(Context _context, String ErrorContent) {
-        String body = _context.getResources().getString(R.string.crash_report_mail_body) +
+    private void SendErrorMail(String ErrorContent) {
+        String body = context.getResources().getString(R.string.crash_report_mail_body) +
                 "\n\n" +
                 ErrorContent +
                 "\n\n";
 
-		 /* Create the Intent */
+        /* Create the Intent */
         final Intent emailIntent = new Intent(Intent.ACTION_SEND);
-		
-		/* Fill it with Data */
+
+        /* Fill it with Data */
         emailIntent.setType("plain/text");
         emailIntent.putExtra(Intent.EXTRA_TEXT, body);
         emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"fritsch_daniel@gmx.de"});
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, _context.getString(R.string.crash_report_mail_subject));
-				
-		/* Send it off to the Activity-Chooser */
-        _context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, context.getString(R.string.crash_report_mail_subject));
+
+        /* Send it off to the Activity-Chooser */
+        context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
     }
 
     private void SaveAsFile(String ErrorContent) {
         try {
-            Random generator = new Random();
-            int random = generator.nextInt(99999);
-            String FileName = "stack-" + random + ".stacktrace";
+            String FileName = "error.stacktrace";
             FileOutputStream trace = context.openFileOutput(FileName, Context.MODE_PRIVATE);
             trace.write(ErrorContent.getBytes());
             trace.close();
@@ -256,38 +254,37 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    private String[] GetErrorFileList() {
-        File dir = new File(FilePath + "/");
-        // Try to create the files folder if it doesn't exist
-        if(!dir.mkdir()) return new String[]{};
-        // Filter for ".stacktrace" files
-        FilenameFilter filter = new FilenameFilter() {
-            public boolean accept(File dir, String name) {
-                return name.endsWith(".stacktrace");
-            }
-        };
-        return dir.list(filter);
-    }
-
     private boolean bIsThereAnyErrorFile() {
-        return GetErrorFileList().length > 0;
+        BufferedReader bis = null;
+        try {
+            FileInputStream inputStream = context.openFileInput("error.stacktrace");
+            bis = new BufferedReader(new InputStreamReader(inputStream));
+            return !bis.readLine().equals("");
+        } catch (FileNotFoundException e) {
+            return false;
+        } catch (IOException e) {
+            return false;
+        } finally {
+            try {
+                if (bis != null) bis.close();
+            } catch (IOException ignored) {
+            }
+        }
     }
 
-    public boolean isThereAnyErrorsToReport(Context _context) {
-        FilePath = _context.getFilesDir().getAbsolutePath();
+    public boolean isThereAnyErrorsToReport() {
+        FilePath = context.getFilesDir().getAbsolutePath();
         return (bIsThereAnyErrorFile());
     }
 
-    public void deleteErrorFiles(Context _context) {
+    public void deleteErrorFiles() {
         try {
-            FilePath = _context.getFilesDir().getAbsolutePath();
+            FilePath = context.getFilesDir().getAbsolutePath();
             if (bIsThereAnyErrorFile()) {
-                String[] ErrorFileList = GetErrorFileList();
-                for (String curString : ErrorFileList) {
-                    File curFile = new File(FilePath + "/" + curString);
-                    //noinspection ResultOfMethodCallIgnored
-                    curFile.delete();
-                }
+                FileOutputStream fos = context.openFileOutput("error.stacktrace", MODE_PRIVATE);
+                String text = "\n";
+                fos.write(text.getBytes());
+                fos.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -295,34 +292,24 @@ public class ErrorReporter implements Thread.UncaughtExceptionHandler {
         }
     }
 
-    public void CheckErrorAndSendMail(Context _context) {
+    public void CheckErrorAndSendMail() {
         try {
-            FilePath = _context.getFilesDir().getAbsolutePath();
+            FilePath = context.getFilesDir().getAbsolutePath();
             if (bIsThereAnyErrorFile()) {
                 StringBuilder WholeErrorText = new StringBuilder();
-                // on limite à N le nombre d'envois de rapports ( car trop lent )
-                String[] ErrorFileList = GetErrorFileList();
-                int curIndex = 0;
-                final int MaxSendMail = 5;
-                for (String curString : ErrorFileList) {
-                    if (curIndex++ <= MaxSendMail) {
-                        WholeErrorText.append("New Trace collected :\n");
-                        WholeErrorText.append("=====================\n ");
-                        String filePath = FilePath + "/" + curString;
-                        BufferedReader input = new BufferedReader(new FileReader(filePath));
-                        String line;
-                        while ((line = input.readLine()) != null) {
-                            WholeErrorText.append(line).append("\n");
-                        }
-                        input.close();
-                    }
-
-                    // DELETE FILES !!!!
-                    File curFile = new File(FilePath + "/" + curString);
-                    //noinspection ResultOfMethodCallIgnored
-                    curFile.delete();
+                WholeErrorText.append("New Trace collected :\n");
+                WholeErrorText.append("=====================\n ");
+                BufferedReader input = new BufferedReader(new InputStreamReader(context.openFileInput("error.stacktrace")));
+                String line;
+                while ((line = input.readLine()) != null) {
+                    WholeErrorText.append(line).append("\n");
                 }
-                SendErrorMail(_context, WholeErrorText.toString());
+                input.close();
+
+                // DELETE FILES !!!!
+                deleteErrorFiles();
+
+                SendErrorMail(WholeErrorText.toString());
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -41,7 +41,7 @@
             android:defaultValue="@bool/case_sensitive_default"
             android:key="@string/case_sensitive"
             android:summary="@string/case_sensitive_summ"
-            android:title="@string/case_sensitive_title"/>
+            android:title="@string/case_sensitive_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/times">
@@ -95,13 +95,12 @@
             android:key="@string/expire_toast"
             android:summary="@string/expire_toast_summ"
             android:title="@string/expire_toast_title" />
-        // Button zum verknüpfen des Acc
+        // Button zum verwalten des DB-Acc
         <Preference
             android:key="@string/associate_dropbox"
             android:title="@string/associate_dropbox_title" />
         // About
-        <Preference
-            android:title="@string/about">
+        <Preference android:title="@string/about">
             <intent android:action="com.daniel.mobilepauker2.activities.about" />
         </Preference>
     </PreferenceCategory>

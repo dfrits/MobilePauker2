@@ -13,15 +13,15 @@ public class ListFolderTask extends AsyncTask<String, Void, ListFolderResult> {
 
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
-    private Exception mException;
+    private DbxException mException;
 
     public interface Callback {
         void onDataLoaded(ListFolderResult result);
 
-        void onError(Exception e);
+        void onError(DbxException e);
     }
 
-    public ListFolderTask(DbxClientV2 dbxClient, Callback callback) {
+    ListFolderTask(DbxClientV2 dbxClient, Callback callback) {
         mDbxClient = dbxClient;
         mCallback = callback;
     }

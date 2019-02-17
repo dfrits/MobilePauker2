@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.dropbox.DropboxAccDialog;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.LessonImportAdapter;
 import com.daniel.mobilepauker2.model.ModelManager;
@@ -294,15 +295,6 @@ public class LessonImportActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-        if (accessToken == null) {
-            accessToken = Auth.getOAuth2Token();
-            if (accessToken != null) {
-                preferences.edit().putString(Constants.DROPBOX_ACCESS_TOKEN, accessToken).apply();
-                startSync();
-            }
-        }
-
         String uid = Auth.getUid();
         String storedUid = preferences.getString(Constants.DROPBOX_USER_ID, null);
         if (uid != null && !uid.equals(storedUid)) {
@@ -343,6 +335,12 @@ public class LessonImportActivity extends AppCompatActivity {
                     paukerManager.setSaveRequired(false);
                 }
         }
+        if (requestCode == Constants.REQUEST_CODE_DB_ACC_DIALOG && resultCode == RESULT_OK) {
+            accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+            if (accessToken != null) {
+                startSync();
+            }
+        }
     }
 
     @Override
@@ -361,8 +359,11 @@ public class LessonImportActivity extends AppCompatActivity {
      * Syncronisation statt.
      */
     public void syncManuallyClicked(MenuItem item) {
+        accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
         if (accessToken == null) {
-            Auth.startOAuth2Authentication(this, Constants.DROPBOX_APP_KEY);
+            Intent assIntent = new Intent(context, DropboxAccDialog.class);
+            assIntent.putExtra(DropboxAccDialog.AUTH_MODE, true);
+            startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG);
         } else {
             startSync();
         }

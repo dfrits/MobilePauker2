@@ -45,7 +45,7 @@ public class SettingsManager {
                 return context.getString(R.string.case_sensitive);
             case FLIP_CARD_SIDES:
                 return context.getString(R.string.flip_card_sides);
-            case START_ASSOCIATION:
+            case DB_PREFERENCE:
                 return context.getString(R.string.associate_dropbox);
             case RETURN_FORGOTTEN_CARDS:
                 return context.getString(R.string.return_forgotten_cards);
@@ -120,6 +120,6 @@ public class SettingsManager {
         LEARN_NEW_CARDS_RANDOMLY,
         ENABLE_EXPIRE_TOAST,
         AUTO_SYNC,
-        START_ASSOCIATION;
+        DB_PREFERENCE
     }
 }

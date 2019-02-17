@@ -81,6 +81,10 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
+            android:name=".dropbox.DropboxAccDialog"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <activity
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
             android:screenOrientation="portrait"

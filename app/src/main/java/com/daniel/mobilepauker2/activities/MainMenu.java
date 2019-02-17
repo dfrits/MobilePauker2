@@ -508,20 +508,20 @@ public class MainMenu extends AppCompatActivity {
 
     private void checkErrors() {
         final ErrorReporter errorReporter = ErrorReporter.instance();
-        if (errorReporter.isThereAnyErrorsToReport(this)) {
+        if (errorReporter.isThereAnyErrorsToReport()) {
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 
             alt_bld.setMessage(getString(R.string.crash_report_message));
             alt_bld.setCancelable(false);
             alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.CheckErrorAndSendMail(context);
+                    errorReporter.CheckErrorAndSendMail();
                 }
             });
 
             alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.deleteErrorFiles(getApplicationContext());
+                    errorReporter.deleteErrorFiles();
                     dialog.cancel();
                 }
             });

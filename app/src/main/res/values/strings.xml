@@ -102,6 +102,9 @@
     <string name="bold">Bold</string>
     <string name="italic">Italic</string>
     <string name="repeat_type">Repeat type</string>
+    <string name="save">Save</string>
+    <string name="association">Association</string>
+    <string name="unlinking">Unlinking</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -174,6 +177,7 @@
     <string name="auto_sync" translatable="false">Auto Synchronisation</string>
     <string name="expire_toast" translatable="false">Enable Expire Toast</string>
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
+    <string name="unlink_dropbox" translatable="false">Unlink Dropbox</string>
     <string name="stm_key" translatable="false">STM</string>
     <string name="ustm_key" translatable="false">USTM</string>
     <!-- endregion -->
@@ -194,6 +198,7 @@
     <string name="stm_title">STM</string>
     <string name="ustm_title">USTM</string>
     <string name="flip_cards">Flip sides</string>
+    <string name="unlink_dropbox_title">Unlink Dropbox</string>
     <!-- endregion -->
 
     <!-- region Beschreibungen -->

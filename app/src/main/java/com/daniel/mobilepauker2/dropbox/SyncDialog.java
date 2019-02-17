@@ -1,13 +1,16 @@
 package com.daniel.mobilepauker2.dropbox;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +23,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
+import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.DeletedMetadata;
@@ -112,7 +116,7 @@ public class SyncDialog extends Activity {
                 finishDialog(RESULT_OK);
             } else {
                 Log.d("SyncDialog:onCreate", "file does not exist");
-                showToast((Activity)context, R.string.error_file_not_found, Toast.LENGTH_LONG);
+                showToast((Activity) context, R.string.error_file_not_found, Toast.LENGTH_LONG);
                 finishDialog(RESULT_CANCELED);
             }
         } else {
@@ -163,15 +167,42 @@ public class SyncDialog extends Activity {
             }
 
             @Override
-            public void onError(Exception e) {
-                finishDialog(RESULT_CANCELED);
-
+            public void onError(final DbxException e) {
                 Log.d("LessonImportActivity::loadData::onError"
                         , "Error loading Files: " + e.getMessage());
-                showToast((Activity)context,
+                showToast((Activity) context,
                         R.string.simple_error_message,
-                        Toast.LENGTH_SHORT)
-                        ;
+                        Toast.LENGTH_SHORT);
+                cancelTasks();
+                if (e.getRequestId().equals("401")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Dropbox token is invalid!")
+                            .setMessage("There is something wrong with the dropbox token. Maybe it is " +
+                                    "solved by the next try. If this doesn't work" +
+                                    "please contact me.")
+                            .setPositiveButton(R.string.ok, null)
+                            .setNeutralButton("Send E-Mail", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ErrorReporter reporter = ErrorReporter.instance();
+                                    reporter.init(context);
+                                    reporter.uncaughtException(null, e);
+                                    reporter.CheckErrorAndSendMail();
+                                }
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    PreferenceManager.getDefaultSharedPreferences(context).edit()
+                                            .putString(Constants.DROPBOX_ACCESS_TOKEN, null).apply();
+                                    finishDialog(RESULT_CANCELED);
+                                }
+                            })
+                            .setCancelable(false);
+                    builder.create().show();
+                } else {
+                    finishDialog(RESULT_CANCELED);
+                }
             }
         }).execute(Constants.DROPBOX_PATH);
         tasks.add(listFolderTask);
@@ -311,10 +342,10 @@ public class SyncDialog extends Activity {
                         Log.e("LessonImportActivity::downloadFiles",
                                 "Failed to download file.", e);
 
-                        showToast((Activity)context,
+                        showToast((Activity) context,
                                 R.string.simple_error_message,
                                 Toast.LENGTH_SHORT)
-                                ;
+                        ;
                         finishDialog(RESULT_CANCELED);
                     }
                 }).execute(data);
@@ -346,7 +377,7 @@ public class SyncDialog extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast((Activity)context, e.getMessage(), Toast.LENGTH_LONG);
+                        showToast((Activity) context, e.getMessage(), Toast.LENGTH_LONG);
                     }
                 });
             }
@@ -426,7 +457,7 @@ public class SyncDialog extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast((Activity)context, R.string.synchro_timeout, Toast.LENGTH_SHORT);
+                        showToast((Activity) context, R.string.synchro_timeout, Toast.LENGTH_SHORT);
                     }
                 });
 
@@ -440,6 +471,7 @@ public class SyncDialog extends Activity {
         for (AsyncTask task : tasks) {
             if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
                 task.cancel(false);
+                tasks.remove(task);
             }
         }
     }
