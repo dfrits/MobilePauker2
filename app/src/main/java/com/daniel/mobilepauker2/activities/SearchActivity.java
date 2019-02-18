@@ -20,7 +20,6 @@ import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -135,9 +134,9 @@ public class SearchActivity extends AppCompatActivity {
                 String frontSide = card.getFrontSide().getText().toLowerCase();
                 String backSide = card.getReverseSide().getText().toLowerCase();
 
-                frontSide = Normalizer.normalize(frontSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
-                backSide = Normalizer.normalize(backSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
-                query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
+                //frontSide = Normalizer.normalize(frontSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
+                //backSide = Normalizer.normalize(backSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
+                //query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
 
                 if (frontSide.contains(query.toLowerCase())
                         || backSide.contains(query.toLowerCase())) {
