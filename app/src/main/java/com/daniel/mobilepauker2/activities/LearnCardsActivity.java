@@ -403,6 +403,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     private void stopSTMTimer() {
+        notificationManager.cancel(TIME_BAR_ID);
         if (stmTimer != null && !stmTimerFinished) {
             stmTimer.stopTimer();
             stmTimerFinished = true;
