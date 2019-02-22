@@ -47,7 +47,7 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
     protected GestureDetector gestureDetector;
     protected CardPackRamAdapter mCardPackAdapter;
     protected boolean mActivitySetupOk = false;
-    protected int mSavedCursorPosition = 0;
+    protected int mSavedCursorPosition = -1;
     private int LOADER_ID = -1;
 
     @Override

@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.ankushgrover.hourglass.Hourglass;
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.CardPackAdapter;
 import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.MPEditText;
@@ -38,7 +37,6 @@ import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.danilomendes.progressbar.InvertedTextProgressbar;
 
-import java.io.File;
 import java.util.Locale;
 import java.util.Random;
 
@@ -80,6 +78,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private Hourglass stmTimer;
     private int ustmTotalTime;
     private int stmTotalTime;
+    private int initStackSize;
     private InvertedTextProgressbar ustmTimerBar;
     private InvertedTextProgressbar stmTimerBar;
     private Button bNext;
@@ -535,6 +534,17 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 if (modelManager.getExpiredCardsSize() <= 0) {
                     finishLearning();
                 } else {
+                    /*initStackSize -= 1;
+                    Log.d("LearnCardsActivity::updateLearningPhase", "repeatingLTM: " +
+                            "savedPos= " + mSavedCursorPosition + ",\n" +
+                            "cursorPos= " + mCardCursor.getPosition() + ",\n" +
+                            "currentStackSize= " + modelManager.getExpiredCardsSize() + ",\n" +
+                            "initSize= " + initStackSize);
+                    if (modelManager.getExpiredCardsSize() != initStackSize) {
+                        Log.d("LearnCardsActivity::updateLearningPhase", "refresh cursor");
+                        mSavedCursorPosition = -1;
+                        refreshCursor();
+                    }*/
                     setButtonsVisibility();
                 }
                 break;
@@ -858,7 +868,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         String text;
         if (repeatingLTM) {
             text = getString(R.string.expired).concat(": %d");
-            text = String.format(text, modelManager.getExpiredCardsSize());
+            text = String.format(text, mCardCursor.getCount() - mCardCursor.getPosition());
             allCards.setText(text);
             ustmCards.setVisibility(GONE);
             stmCards.setVisibility(GONE);
@@ -877,7 +887,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     @Override
     protected void cursorLoaded() {
+        Log.d("LearnCardsActivity::cursorLoaded", "cursor loaded: " +
+                "savedPos= " + mSavedCursorPosition);
         if (mSavedCursorPosition == -1) {
+            initStackSize = mCardCursor.getCount();
             setCursorToFirst();
             updateCurrentCard();
             fillData();
