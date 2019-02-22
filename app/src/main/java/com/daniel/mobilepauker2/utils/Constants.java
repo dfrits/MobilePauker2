@@ -9,7 +9,12 @@ package com.daniel.mobilepauker2.utils;
  */
 
 public class Constants {
+    //APP-Konstansten
     public static final String DEFAULT_APP_FILE_DIRECTORY = "/Mobile Pauker++/";
+    public static final String TIMER_NOTIFY_CHANNEL_ID = "Timers";
+    public static final String TIMER_BAR_CHANNEL_ID = "Timerbar";
+    public static final int TIME_NOTIFY_ID = 0;
+    public static final int TIME_BAR_ID = 1;
 
     // Standard-XML-Werte
     public static final String STANDARD_ORIENTATION = "LTR";

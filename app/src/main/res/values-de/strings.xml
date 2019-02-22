@@ -180,11 +180,14 @@
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
     <string name="stm_title">KZG</string>
+    <string name="show_notification_title">Show Notification</string>
     <string name="ustm_title">UKZG</string>
     <string name="flip_cards">Seiten vertauschen</string>
     <!-- endregion -->
 
     <!-- region Beschreibungen -->
+    <string name="show_notification_summ">Benachrichtigt dich, wenn die Zeit abgelaufen und die App
+        nicht offen ist.</string>
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
@@ -199,6 +202,19 @@
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem Speichern an</string>
     <!-- endregion -->
 
+    <!-- endregion -->
+
+    <!-- redion Notifications -->
+    <string name="channel_notify_name">Stoppuhren</string>
+    <string name="channel_notify_description">Benachrichtigt dich, wenn die Zeiten abgelaufen sind. Nur,
+        wenn die App nicht im Vordergrund ist.</string>
+    <string name="ustm_expired_notify_message">Zeit vom Ultra-Kurzzeit-Gedächtnis ist abgelaufen.
+        Tippen zum Wiederholen.</string>
+    <string name="stm_expired_notify_message">Zeit vom Kurzzeit-Gedächtnis ist abgelaufen. Tippen
+        zum Wiederholen.</string>
+    <string name="channel_timerbar_description">Zeigt die Zeiten in der Benachrichtungsleiste an,
+        wenn die App nicht im Vordergrund ist.</string>
+    <string name="channel_timerbar_name">Zeitleiste</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->

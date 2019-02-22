@@ -180,6 +180,9 @@
 
     <!-- endregion -->
 
+    <!-- redion Notifications -->
+    <!-- endregion -->
+
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
     <string name="go_on">Go on</string>
@@ -200,5 +203,14 @@
     <string name="save">Speichern</string>
     <string name="association">Association</string>
     <string name="unlinking">Unlinking</string>
+    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App is not
+        shown.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="show_notification_summ">Notifys you, when the timers expire and the app is not opend</string>
+    <string name="show_notification_title">Show Notification</string>
+    <string name="channel_timerbar_name">Timer bar</string>
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is not shown.</string>
     <!-- endregion -->
 </resources>

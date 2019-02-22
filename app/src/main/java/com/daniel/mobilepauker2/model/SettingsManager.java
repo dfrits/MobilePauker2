@@ -53,6 +53,8 @@ public class SettingsManager {
                 return context.getString(R.string.learn_new_cards_randomly);
             case ENABLE_EXPIRE_TOAST:
                 return context.getString(R.string.expire_toast);
+            case SHOW_NOTIFY:
+                return context.getString(R.string.show_notification);
             default:
                 return "";
         }
@@ -90,6 +92,8 @@ public class SettingsManager {
                 return context.getResources().getBoolean(R.bool.learn_new_cards_randomly_default);
             case ENABLE_EXPIRE_TOAST:
                 return context.getResources().getBoolean(R.bool.expire_toast_default);
+            case SHOW_NOTIFY:
+                return context.getResources().getBoolean(R.bool.show_notification_default);
             default:
                 return false;
         }
@@ -120,6 +124,7 @@ public class SettingsManager {
         LEARN_NEW_CARDS_RANDOMLY,
         ENABLE_EXPIRE_TOAST,
         AUTO_SYNC,
-        DB_PREFERENCE
+        DB_PREFERENCE,
+        SHOW_NOTIFY
     }
 }

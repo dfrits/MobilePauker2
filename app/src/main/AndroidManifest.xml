@@ -69,6 +69,7 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:launchMode="singleTop"
             android:name=".activities.LearnCardsActivity"
             android:screenOrientation="portrait" />
 

@@ -169,6 +169,7 @@
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="hide_times" translatable="false">Hide times</string>
+    <string name="show_notification" translatable="false">Show Notification</string>
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
     <string name="auto_save" translatable="false">Auto Save</string>
@@ -190,6 +191,7 @@
     <string name="repeat_cards_mode_title">Repeat cards</string>
     <string name="return_forgotten_cards_title">Return forgotten cards</string>
     <string name="auto_save_title">Auto Save</string>
+    <string name="show_notification_title">Show Notification</string>
     <string name="about_title">About MobilePauker++</string>
     <string name="learn_new_cards_randomly_title">Learn new cards randomly</string>
     <string name="auto_sync_title">Auto Synchronisation</string>
@@ -205,6 +207,7 @@
     <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
     <string name="case_sensitive_summ">If cards are repeated by input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
+    <string name="show_notification_summ">Notifys you, when the timers expire and the app is not opend</string>
     <string name="auto_save_summ">Save automatically after every session</string>
     <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>
     <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
@@ -213,7 +216,8 @@
     <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
     <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
-    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the lesson</string>
+    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
+        lesson</string>
     <!-- endregion -->
 
     <!-- region Defaultwerte -->
@@ -224,6 +228,16 @@
     <string name="stm_default" translatable="false">12</string>
     <!-- endregion -->
 
+    <!-- endregion -->
+
+    <!-- redion Notifications -->
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is not shown.</string>
+    <string name="channel_timerbar_name">Timer bar</string>
+    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App is not
+        shown.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->

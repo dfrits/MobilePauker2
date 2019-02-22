@@ -3,11 +3,15 @@ package com.daniel.mobilepauker2.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +42,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.Random;
 
+import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
@@ -54,15 +59,21 @@ import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
+import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID;
+import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
+import static com.daniel.mobilepauker2.utils.Constants.TIME_NOTIFY_ID;
 
 public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final Context context = this;
+    private NotificationManagerCompat notificationManager;
     private boolean flipCardSides = false;
     private boolean completedLearning = false;
     private boolean repeatingLTM = false;
     private boolean stopWaiting = false;
     private boolean firstStart = true;
+    private boolean isActivityVisible;
+    private boolean showNotify;
     private boolean ustmTimerFinished = true;
     private boolean stmTimerFinished = true;
     private Hourglass ustmTimer;
@@ -82,6 +93,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        createNotificationChannel();
+        createTimerBarChannel();
+        showNotify = settingsManager.getBoolPreference(context, SettingsManager.Keys.SHOW_NOTIFY);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.learn_cards);
@@ -111,6 +126,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     protected void onResume() {
         super.onResume();
 
+        isActivityVisible = true;
+        if (notificationManager == null) {
+            notificationManager = NotificationManagerCompat.from(context);
+        }
+        notificationManager.cancelAll();
+
         if (!firstStart && !restartButton.isVisible()) {
             restartTimer();
 
@@ -130,6 +151,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        isActivityVisible = false;
         mSavedCursorPosition = mCardCursor.getPosition();
     }
 
@@ -173,6 +195,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        stopSTMTimer();
+                        stopUSTMTimer();
                         finish();
                     }
                 })
@@ -233,6 +257,20 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 @Override
                 public void onTimerFinish() {
+                    Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
+                    if (!isActivityVisible && ustmTimerFinished && showNotify) {
+                        Log.d("LearnActivity::USTM-Timer finished", "Acivity is not visible");
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, TIMER_BAR_CHANNEL_ID)
+                                .setContentText(getString(R.string.ustm_expired_notify_message))
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setContentTitle(getString(R.string.app_name))
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                .setVisibility(VISIBILITY_PUBLIC);
+                        Log.d("LearnActivity::USTM-Timer finished", "Notification created");
+                        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+                        Log.d("LearnActivity::USTM-Timer finished", "Show Notification");
+                    }
                 }
             };
             ustmTimerBar = findViewById(R.id.UKZGTimerBar);
@@ -261,6 +299,26 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         }
                         stmTimerBar.setProgress(timeElapsed);
                         stmTimerBar.setText(timerText);
+
+                        // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
+                        if (!isActivityVisible && !stmTimerFinished) {
+                            Log.d("LearnActivity::STM-onTimerClick", "Acivity is not visible");
+                            String ustmTimerText = ustmTimerFinished ? ""
+                                    : getString(R.string.ustm) + " " + String.format(Locale.getDefault()
+                                    , "%d / %ds", sec, ustmTotalTime);
+                            String timerbarText = ustmTimerText + "  " +
+                                    getString(R.string.stm) + " " + timerText;
+                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
+                                    .setContentText(timerbarText)
+                                    .setSmallIcon(R.drawable.notify_icon)
+                                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                    .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                    .setAutoCancel(true)
+                                    .setOngoing(true);
+                            Log.d("LearnActivity::STM-onTimerClick", "Notification created");
+                            notificationManager.notify(TIME_BAR_ID, mBuilder.build());
+                            Log.d("LearnActivity::STM-onTimerClick", "Show Notification");
+                        }
                     } else {
                         stopSTMTimer();
                         if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
@@ -272,6 +330,21 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
                 @Override
                 public void onTimerFinish() {
+                    Log.d("LearnActivity::STM-Timer finished", "Timer finished");
+                    if (!isActivityVisible && stmTimerFinished && showNotify) {
+                        Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_NOTIFY_CHANNEL_ID)
+                                .setContentText(getString(R.string.stm_expired_notify_message))
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setContentTitle(getString(R.string.app_name))
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                .setAutoCancel(true)
+                                .setVisibility(VISIBILITY_PUBLIC);
+                        Log.d("LearnActivity::STM-Timer finished", "Notification created");
+                        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+                        Log.d("LearnActivity::STM-Timer finished", "Show Notification");
+                    }
                 }
             };
             stmTimerBar = findViewById(R.id.KZGTimerBar);
@@ -821,6 +894,41 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
         }
         mSavedCursorPosition = -1;
+    }
+
+    /**
+     * Create the NotificationChannel
+     */
+    private void createNotificationChannel() {
+        CharSequence name = getString(R.string.channel_notify_name);
+        String description = getString(R.string.channel_notify_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(Constants.TIMER_NOTIFY_CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /**
+     * Create the Channel for Times in the Notificationbar
+     */
+    private void createTimerBarChannel() {
+        CharSequence name = getString(R.string.channel_timerbar_name);
+        String description = getString(R.string.channel_timerbar_description);
+        int importance = NotificationManager.IMPORTANCE_LOW;
+        NotificationChannel channel = new NotificationChannel(Constants.TIMER_BAR_CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        channel.setSound(null, null);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
     }
 
     public void mEditClicked(MenuItem item) {
