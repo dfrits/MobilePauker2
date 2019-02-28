@@ -1,0 +1,246 @@
+<resources>
+    <!-- region Errors -->
+    <string name="error_file_not_found">Bestand niet gevonden; probeer het opnieuw.</string>
+    <string name="error_upload">Kan bestand niet uploaden</string>
+    <string name="reopen_lesson_error">De gegevens van de les kunnen niet automatisch worden bijgewerkt!
+        Herstart de les handmatig.</string>
+    <string name="datei_ist_bereits_vorhanden">Bestand bestaat al!</string>
+    <string name="number_format_error">Typ alleen getallen</string>
+    <string name="no_lesson_found">Geen les aangetroffen…</string>
+    <string name="load_card_data_error">Kan kaart niet laden!</string>
+    <string name="error_importflashcardfile_directory">Kan map op SD-kaart niet benaderen</string>
+    <string name="error_filename_not_pauker">Bestand is niet compatibel (.pau.gz)</string>
+    <string name="error_reading_from_xml">Bestand is ongeldig of beschadigd</string>
+    <string name="saving_error">Fout tijdens opslaan van les</string>
+    <string name="error_synchronizing">Kan niet synchroniseren</string>
+    <string name="synchro_timeout">Synchronisatie verlopen</string>
+    <string name="edit_cards_no_card_available">Geen kaart beschikbaar</string>
+    <string name="error_filename_invalid">Ongeldige bestandsnaam</string>
+    <string name="add_card_sides_empty_error">Eén zijde is of beide zijden zijn leeg</string>
+    <string name="delete_lesson_error">Kan les niet verwijderen</string>
+    <string name="add_card_side_empty">Eén zijde is of beide zijden zijn nog steeds leeg!</string>
+    <string name="pause_timer_error">De tijd kan momenteel niet worden stopgezet</string>
+    <string name="simple_error_message">Er is een fout opgetreden</string>
+    <string name="restart_timer_error">De tijd kan momenteel niet worden herstart</string>
+    <string name="crash_report_message">Oeps! Mobile Pauker++ is de vorige keer gecrasht! E-mail de foutrapportage
+        om te helpen dit op te lossen…</string>
+    <string name="crash_report_title">Crashrapportage</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: Crashrapportage</string>
+    <string name="crash_report_mail_body">Bedankt voor het versturen van de crashrapportage!</string>
+    <!-- endregion -->
+
+    <!-- region Infos -->
+    <string name="download_file_dialog_message"><![CDATA[Je kunt online nieuwe lessen downloaden en
+    deze openen in de app. Maar het beter voor het leerproces als je zélf een les met bijbehorende kaarten
+    creëert. Druk op <b>\"VOLGENDE\"</b> om de officiële website van
+    Pauker te openen]]></string>
+    <string name="lesson_import_success">Les geïmporteerd</string>
+    <string name="import_title">De les is geïmporteerd. Even geduld…</string>
+    <string name="finish_add_card_message">Nog geen kaart toegevoegd. Weet je zeker dat je wilt stoppen?</string>
+    <string name="dialog_input_message">Voer je antwoord in.</string>
+    <string name="dialog_result_message">Het antwoord is fout!</string>
+    <string name="dialog_result_right_answer">Het juiste antwoord is:</string>
+    <string name="dialog_result_input_answer">Jouw antwoord is:</string>
+    <string name="sr_repeat_type">Soort herhaling:</string>
+    <string name="wrong_answer">Het antwoord is fout!</string>
+    <string name="put_back">TeAchterzijdezetten</string>
+    <string name="skipWaiting">Timer loopt nog…</string>
+    <string name="put_further">Doorgaan</string>
+    <string name="compare_ques_answ">Het juiste antwoord is: %s\nJouw antwoord is: %s</string>
+    <string name="put_in_your_answer">Voer je antwoord in</string>
+    <string name="learned">Geleerd</string>
+    <string name="expired">Verlopen</string>
+    <string name="sum">Som</string>
+    <string name="untrained">Ongetraind</string>
+    <string name="ustm">USTM</string>
+    <string name="stm">STM</string>
+    <string name="stack">Stapel</string>
+    <string name="info_text_hint">Omschrijving van de les</string>
+    <string name="next_expire_date">Volgende vervaldatum:</string>
+    <string name="nothing_learned_yet">Nog niks geleerd!</string>
+    <string name="not_learned_yet">Nog niet geleerd!</string>
+    <string name="no_description">Nog geen omschrijving…</string>
+    <string name="expired_cards">Aantal verlopen kaarten:</string>
+    <string name="search_hint">Kaart zoeken</string>
+    <string name="learned_at">Geleerd op:</string>
+    <string name="expire_at">Vervalt op:</string>
+    <string name="expired_at">Vervallen op:</string>
+    <string name="synchronizing">Bezig met synchroniseren…</string>
+    <string name="write_permission_rational_message">Als je deze machtiging niet verleend, dan kun
+        je geen lessen openen!</string>
+    <string name="write_permission_info_message">MobilePauker++ heeft toegang nodig tot je opslag om lessen te openen en op te slaan.</string>
+    <string name="learncards_waiting_stm_timer">Wachten op timer van kortetermijngeheugen</string>
+    <string name="learncards_finished_learning">Klaar met leren</string>
+    <string name="saving_success">Bestand opgeslagen</string>
+    <string name="card_added">Kaart toegevoegd</string>
+    <string name="learncards_show_hint">Probeer de achterzijde van deze kaart te onthouden!</string>
+    <string name="delete_lesson_message">Weet je zeker dat je de les wilt verwijderen?</string>
+    <string name="delete_card_message">Weet je zeker dat je de kaart wilt verwijderen?</string>
+    <string name="open_lesson_hint">Les wordt geopend</string>
+    <string name="new_lession_created">Nieuwe les gecreëerd</string>
+    <string name="lektion_zurückgesetzt">Les hersteld</string>
+    <string name="flip_sides_complete">Kaarten zijn omgedraaid</string>
+    <string name="reverse_sides_dialog_info">Je kunt in de instellingen aangeven dat je de achterzijde
+        eerst wilt tonen</string>
+    <string name="reset_lesson_dialog_info">Elke kaart wordt verplaatst naar de stapel \'Nog niet geleerd\'</string>
+    <string name="timer_finished">\"Afgerond!\"</string>
+    <string name="ustm_timer_paused">USTM \"Pauzeren\"</string>
+    <string name="stm_timer_paused">STM \"Pauzeren\"</string>
+    <!-- endregion -->
+
+    <!-- region Sonstiges -->
+    <string name="app_name" translatable="false">Mobile Pauker ++</string>
+    <string name="yes">Ja</string>
+    <string name="cancel">Annuleren</string>
+    <string name="ok">Oké</string>
+    <string name="no">Nee</string>
+    <string name="proof">Antwoord</string>
+    <string name="delete">Verwijderen</string>
+    <string name="text_size">Tekstgrootte</string>
+    <string name="background">Achtergrond</string>
+    <string name="text_color">Tekstkleur</string>
+    <string name="bold">Vetgedrukt</string>
+    <string name="italic">Cursief</string>
+    <string name="repeat_type">Soort herhaling</string>
+    <string name="save">Opslaan</string>
+    <string name="association">Koppelen</string>
+    <string name="unlinking">Ontkoppelen</string>
+    <!-- endregion -->
+
+    <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">Wat is Mobile Pauker++?</string>
+    <string name="repeat_type_description">Afbeelding van soort herhaling</string>
+    <string name="sync_manually">Synchroniseren met Dropbox</string>
+    <string name="add_new_card">Nieuwe kaart</string>
+    <string name="front">Voorzijde</string>
+    <string name="back">Achterzijde</string>
+    <string name="learn_new_card">Nieuwe kaarten leren</string>
+    <string name="repeat_expired_cards">Verlopen kaarten herhalen</string>
+    <string name="open_lesson">Les openen</string>
+    <string name="pause_timer">Tijd stopzetten</string>
+    <string name="restart_timer">Tijd herstarten</string>
+    <string name="save_lesson">Les opslaan</string>
+    <string name="search">Zoeken</string>
+    <string name="reset_cards">Les herstellen</string>
+    <string name="change_sides">Kaarten omdraaien</string>
+    <string name="edit_info_text">Informatietekst bewerken</string>
+    <string name="settings">Instellingen</string>
+    <string name="edit_description_title">Lesomschrijving</string>
+    <string name="new_lesson">Nieuwe les</string>
+    <string name="not_now">Niet nu</string>
+    <string name="next">Volgende</string>
+    <string name="repeat_question">Wist je het?</string>
+    <string name="saving_title">Bezig met opslaan; even geduld…</string>
+    <string name="give_lesson_name_dialog_title">Voorzie de les van een naam</string>
+    <string name="edit_card">Kaart bewerken</string>
+    <string name="bar_chart_title">Statistieken</string>
+    <string name="lessons">Lessen</string>
+    <string name="reverse_sides_dialog_title">Wil je alle kaarten omdraaien?</string>
+    <string name="new_lesson_dialog_title">Wil je een nieuwe les creëren?</string>
+    <string name="reset_lesson_dialog_title">Wil je de les herstellen?</string>
+    <string name="lektion_verwalten_titel">Les beheren</string>
+    <string name="exit_learning_dialog">Wil je stoppen met leren?</string>
+    <string name="lesson_not_saved_dialog_title">De les is nog niet opgeslagen! Wil je tóch doorgaan?</string>
+    <string name="lesson_not_saved_dialog_message">Niet-opgeslagen wijzigingen gaan verloren!</string>
+    <string name="save_lesson_before_question">Wil je de les eerst opslaan?</string>
+    <string name="delete_card">Kaart verwijderen</string>
+    <!-- endregion -->
+
+    <!-- region Buttontexte -->
+    <string name="next_card">Volgende kaart -&gt;</string>
+    <string name="show_me">Laat het me zien!</string>
+    <string name="skip_waiting_button">Maakt niet uit; ga door!</string>
+    <string name="reset">Herstellen</string>
+    <string name="add">Toevoegen</string>
+    <string name="learn">Leren</string>
+    <string name="repeat">Herhalen</string>
+    <string name="go_on">Doorgaan</string>
+    <!-- endregion -->
+
+    <!-- region Settings -->
+
+    <!-- region Gruppentitel -->
+    <string name="learning_cards">Leerkaarten</string>
+    <string name="times">Tijden</string>
+    <string name="other">Overig</string>
+    <!-- endregion -->
+
+    <!-- region Keys -->
+    <string name="flip_card_sides" translatable="false">Kaarten omdraaien</string>
+    <string name="case_sensitive" translatable="false">Hoofdlettergevoelig</string>
+    <string name="hide_times" translatable="false">Tijden verbergen</string>
+    <string name="show_notification" translatable="false">Melding tonen</string>
+    <string name="repeat_cards_mode" translatable="false">Kaarten herhalen</string>
+    <string name="return_forgotten_cards" translatable="false">Vergeten kaarten terughalen</string>
+    <string name="auto_save" translatable="false">Automatisch opslaan</string>
+    <string name="about" translatable="false">Over</string>
+    <string name="learn_new_cards_randomly" translatable="false">Nieuwe kaarten in willekeurige volgorde leren</string>
+    <string name="auto_sync" translatable="false">Automatische synchronisatie</string>
+    <string name="expire_toast" translatable="false">Meldingsballon tonen bij verlopen</string>
+    <string name="associate_dropbox" translatable="false">Koppelen aan Dropbox</string>
+    <string name="unlink_dropbox" translatable="false">Dropbox ontkoppelen</string>
+    <string name="stm_key" translatable="false">STM</string>
+    <string name="ustm_key" translatable="false">USTM</string>
+    <!-- endregion -->
+
+    <!-- region Titles -->
+    <string name="offen_lassen_checkbox">Openhouden</string>
+    <string name="flip_card_sides_title">Eerst getoonde kaartzijde</string>
+    <string name="case_sensitive_title">Hoofdlettergevoelig</string>
+    <string name="hide_times_title">Tijden verbergen</string>
+    <string name="repeat_cards_mode_title">Kaarten herhalen</string>
+    <string name="return_forgotten_cards_title">Vergeten kaarten terughalen</string>
+    <string name="auto_save_title">Automatisch opslaan</string>
+    <string name="show_notification_title">Melding tonen</string>
+    <string name="about_title">Over MobilePauker++</string>
+    <string name="learn_new_cards_randomly_title">Nieuwe kaarten in willekeurige volgorde leren</string>
+    <string name="auto_sync_title">Automatische synchronisatie</string>
+    <string name="expire_toast_title">Meldingsballon tonen bij verlopen</string>
+    <string name="associate_dropbox_title">Koppelen aan Dropbox</string>
+    <string name="stm_title">STM</string>
+    <string name="ustm_title">USTM</string>
+    <string name="flip_cards">Omdraaien</string>
+    <string name="unlink_dropbox_title">Dropbox ontkoppelen</string>
+    <!-- endregion -->
+
+    <!-- region Beschreibungen -->
+    <string name="flip_card_sides_summ">Welke zijde er tijdens het leren eerst moet worden getoond (%s)</string>
+    <string name="case_sensitive_summ">Of kaarten moeten worden herhaald op basis van invoer</string>
+    <string name="hide_times_summ">Verberg USTM- STM-timers tijdens het leren</string>
+    <string name="show_notification_summ">Toont een melding als de timers verlopen en de app niet geopend is</string>
+    <string name="auto_save_summ">Automatisch opslaan na elke les</string>
+    <string name="learn_new_cards_randomly_summ">Schud de kaarten vóór elke les begint</string>
+    <string name="ustm_summ">Superkortetermijngeheugen: %ss</string>
+    <string name="stm_summ">Kortetermijngeheugen: %smin</string>
+    <string name="repeat_cards_summ">De volgorde waarin kaarten herhaald moeten worden (%s)</string>
+    <string name="return_forgotten_cards_summ">Waar vergeten kaarten naar teruggehaald moeten worden (%s)</string>
+    <string name="auto_sync_enabled_summ">Synchroniseer elke keer voordat je een les opent</string>
+    <string name="auto_sync_disabled_summ">Nog geen account gekoppeld</string>
+    <string name="expire_toast_summ">Toont een informatieregel bij de volgende vervaldatum na het opslaan van de
+        les</string>
+    <!-- endregion -->
+
+    <!-- region Defaultwerte -->
+    <string name="repeat_cards_default" translatable="false">0</string>
+    <string name="return_forgotten_cards_default" translatable="false">0</string>
+    <string name="flip_card_sides_default" translatable="false">0</string>
+    <string name="ustm_default" translatable="false">18</string>
+    <string name="stm_default" translatable="false">12</string>
+    <!-- endregion -->
+
+    <!-- endregion -->
+
+    <!-- redion Notifications -->
+    <string name="channel_timerbar_description">Toont de tijd in de meldingsbalk als de app niet geopend is.</string>
+    <string name="channel_timerbar_name">Tijdbalk</string>
+    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_description">Toont een melding als de timers verlopen zijn, maar alleen als de app niet
+        geopend is.</string>
+    <string name="ustm_expired_notify_message">De superkortetermijngeheugen-timer is verlopen. Druk om kaarten te herhalen.</string>
+    <string name="stm_expired_notify_message">De kortetermijngeheugen-timer is verlopen. Druk om kaarten te herhalen.</string>
+    <!-- endregion -->
+
+    <!-- region Neue Strings -->
+    <string name="New">Nieuw</string>
+    <!-- endregion -->
+</resources>
