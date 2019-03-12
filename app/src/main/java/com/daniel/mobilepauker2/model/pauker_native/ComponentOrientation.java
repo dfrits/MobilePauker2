@@ -1,7 +1,7 @@
 package com.daniel.mobilepauker2.model.pauker_native;
 
 public class ComponentOrientation {
-    String m_Orientation = " ";
+    private String m_Orientation;
 
     public ComponentOrientation(String orientation) {
         m_Orientation = orientation;

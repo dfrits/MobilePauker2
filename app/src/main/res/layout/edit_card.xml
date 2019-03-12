@@ -15,7 +15,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50">
+            android:layout_marginBottom="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/tFront"
@@ -28,27 +30,44 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <ImageButton
+                android:id="@+id/mSideA"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/eTSideA"
+                android:layout_alignTop="@+id/tFront"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <com.daniel.mobilepauker2.model.MPEditText
                 android:id="@+id/eTSideA"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tFront"
-                android:layout_marginBottom="3dp"
                 android:background="@drawable/box_background"
                 android:focusable="true"
+                android:fontFamily="serif"
                 android:gravity="top"
+                android:importantForAutofill="no"
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
-                android:paddingEnd="0dp"
                 android:paddingStart="5dp"
-                android:textSize="16sp" />
+                android:paddingEnd="0dp"
+                android:textColor="@color/black" />
         </RelativeLayout>
-
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="50">
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/tBack"
@@ -61,21 +80,37 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <EditText
+            <ImageButton
+                android:id="@+id/mSideB"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/eTSideB"
+                android:layout_alignTop="@+id/tBack"
+                android:layout_alignEnd="@+id/eTSideB"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontB"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <com.daniel.mobilepauker2.model.MPEditText
                 android:id="@+id/eTSideB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tBack"
-                android:layout_marginTop="3dp"
                 android:background="@drawable/box_background"
                 android:focusable="true"
+                android:fontFamily="serif"
                 android:gravity="top"
+                android:importantForAutofill="no"
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
-                android:paddingEnd="0dp"
                 android:paddingStart="5dp"
+                android:paddingEnd="0dp"
                 android:scrollHorizontally="false"
-                android:textSize="16sp" />
+                android:textColor="@color/black" />
         </RelativeLayout>
     </LinearLayout>
 

@@ -1,11 +1,8 @@
 package com.daniel.mobilepauker2.activities;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.SettingsFragment;
 
 /**

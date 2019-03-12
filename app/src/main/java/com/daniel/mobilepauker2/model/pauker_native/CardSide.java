@@ -2,31 +2,17 @@ package com.daniel.mobilepauker2.model.pauker_native;
 
 import android.support.annotation.NonNull;
 
+import com.daniel.mobilepauker2.utils.Constants;
+
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class CardSide implements Comparable<CardSide> {
-
-    public class Color {
-        String Color = " ";
-
-        public String getColor() {
-            return Color;
-        }
-
-        public void setColor(String color) {
-            Color = color;
-        }
-    }
-
-
     // content
     private String text;
     // style
     private Font font;
-    private Color foregroundColor;
-    private Color backgroundColor;
     private ComponentOrientation orientation;
     // learning
     private boolean repeatByTyping;
@@ -47,7 +33,7 @@ public class CardSide implements Comparable<CardSide> {
      * creates a new CardSide
      * @param text the card side text
      */
-    public CardSide(String text) {
+    private CardSide(String text) {
         this.text = text;
         searchHits = new LinkedList<>();
     }
@@ -137,18 +123,6 @@ public class CardSide implements Comparable<CardSide> {
         return font;
     }
 
-    //    /**
-    //     * returns the cardside font family
-    //     * @return the cardside font family
-    //     */
-    //    public String getFontFamily() {
-    ////        return font == null
-    ////                ? PaukerFrame.DEFAULT_FONT.getFamily()
-    ////                : font.getFamily();
-    //
-    //    	return null;
-    //    }
-
     /**
      * sets the cardside font
      * @param font the cardside font
@@ -157,44 +131,12 @@ public class CardSide implements Comparable<CardSide> {
         this.font = font;
     }
 
-    //    /**
-    //     * returns the cardside foreground color
-    //     * @return the cardside foreground color
-    //     */
-    //    public Color getForegroundColor() {
-    //        return foregroundColor;
-    //    }
-    //
-    //    /**
-    //     * sets the cardside foreground color
-    //     * @param foregroundColor the cardside foreground color
-    //     */
-    //    public void setForegroundColor(Color foregroundColor) {
-    //        this.foregroundColor = foregroundColor;
-    //    }
-    //
-    //    /**
-    //     * returns the cardside background color
-    //     * @return the cardside background color
-    //     */
-    //    public Color getBackgroundColor() {
-    //        return backgroundColor;
-    //    }
-    //
-    //    /**
-    //     * sets the cardside background color
-    //     * @param backgroundColor the cardside background color
-    //     */
-    //    public void setBackgroundColor(Color backgroundColor) {
-    //        this.backgroundColor = backgroundColor;
-    //    }
-
     /**
      * returns the cardside orientation
      * @return the cardside orientation
      */
     public ComponentOrientation getOrientation() {
-        return orientation;
+        return orientation==null? new ComponentOrientation(Constants.STANDARD_ORIENTATION):orientation;
     }
 
     /**
@@ -210,7 +152,7 @@ public class CardSide implements Comparable<CardSide> {
      * the frontside
      * @return the batch number this card belongs to if this card side would be the frontside
      */
-    public int getLongTermBatchNumber() {
+    int getLongTermBatchNumber() {
         return longTermBatchNumber;
     }
 
@@ -219,7 +161,7 @@ public class CardSide implements Comparable<CardSide> {
      * would be the frontside
      * @param longTermBatchNumber the long term batch number
      */
-    public void setLongTermBatchNumber(int longTermBatchNumber) {
+    void setLongTermBatchNumber(int longTermBatchNumber) {
         this.longTermBatchNumber = longTermBatchNumber;
     }
 
@@ -235,7 +177,7 @@ public class CardSide implements Comparable<CardSide> {
      * sets the timestamp when the cardside was learned
      * @param learnedTimestamp the timestamp when the cardside was learned
      */
-    public void setLearnedTimestamp(long learnedTimestamp) {
+    public void setLearnedTimeStamp(long learnedTimestamp) {
         this.learnedTimestamp = learnedTimestamp;
     }
 
@@ -245,7 +187,7 @@ public class CardSide implements Comparable<CardSide> {
      * @return <CODE>true</CODE>, if the cardside should be repeated by typing instead of
      * memorizing, <CODE>false</CODE> otherwise
      */
-    public boolean isRepeatedByTyping() {
+    boolean isRepeatedByTyping() {
         return repeatByTyping;
     }
 
@@ -289,14 +231,14 @@ public class CardSide implements Comparable<CardSide> {
      * returns a List of search match indices
      * @return a List of search match indices
      */
-    public List<SearchHit> getSearchHits() {
+    List<SearchHit> getSearchHits() {
         return searchHits;
     }
 
     /**
      * cancels the search process
      */
-    public void cancelSearch() {
+    void cancelSearch() {
         searchHits.clear();
     }
 

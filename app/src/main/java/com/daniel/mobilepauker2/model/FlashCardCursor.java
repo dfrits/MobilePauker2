@@ -57,7 +57,6 @@ public class FlashCardCursor extends AbstractCursor {
         modelManager.addCard(
                 columnValues[CardPackAdapter.KEY_SIDEA_ID],
                 columnValues[CardPackAdapter.KEY_SIDEB_ID],
-                columnValues[CardPackAdapter.KEY_ROWID_ID],
                 columnValues[CardPackAdapter.KEY_INDEX_ID],
                 columnValues[CardPackAdapter.KEY_LEARN_STATUS_ID]);
     }

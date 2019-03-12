@@ -9,19 +9,23 @@
         android:id="@+id/tNothingFound"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:autoSizeMaxTextSize="22sp"
+        android:autoSizeTextType="uniform"
         android:fontFamily="serif"
         android:text="@string/no_lesson_found"
         android:textColor="@color/black"
-        android:textSize="22sp"
         android:visibility="gone" />
 
-    <com.daniel.mobilepauker2.model.AutoSizeTextView
+    <TextView
         android:id="@+id/infoText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/next_expire_date"
+        android:autoSizeMaxTextSize="22sp"
+        android:autoSizeMinTextSize="18sp"
+        android:autoSizeTextType="uniform"
         android:fontFamily="serif"
         android:maxLines="1"
+        android:text="@string/next_expire_date"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:visibility="gone" />
@@ -32,4 +36,14 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/infoText" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fBDownloadNewLesson"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp"
+        android:onClick="downloadNewLesson"
+        android:src="@drawable/button_download_lesson"
+        android:scaleType="fitCenter"/>
 </RelativeLayout>

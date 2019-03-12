@@ -1,6 +1,13 @@
 <resources>
-    <!-- Errors -->
+    <!-- region Errors -->
+    <string name="error_file_not_found">The File was not found, please try again manually</string>
+    <string name="error_upload">Error while uploading File</string>
+    <string name="reopen_lesson_error">Dataset of the lesson can\'t be updatet automatically!
+        Please reopen the lesson manually.</string>
+    <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
+    <string name="number_format_error">Please type in just numbers</string>
     <string name="no_lesson_found">No Lesson found…</string>
+    <string name="load_card_data_error">Erro while loading card!</string>
     <string name="error_importflashcardfile_directory">Unable to access directory on SD card</string>
     <string name="error_filename_not_pauker">File is not compatible (.pau.gz)</string>
     <string name="error_reading_from_xml">File is invalid or corrupted</string>
@@ -12,8 +19,35 @@
     <string name="add_card_sides_empty_error">One or both sides are empty</string>
     <string name="delete_lesson_error">Can\'t delete Lesson</string>
     <string name="add_card_side_empty">One side or both are still empty!</string>
+    <string name="pause_timer_error">Time cannot be paused now</string>
+    <string name="simple_error_message">An error has occurred</string>
+    <string name="restart_timer_error">Time cannot be resarted now</string>
+    <string name="crash_report_message">Oops! Mobile Pauker++ crashed last time, please e-mail the error
+        report to help fix this…</string>
+    <string name="crash_report_title">Crash Report</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: Crash report</string>
+    <string name="crash_report_mail_body">Thanks for sending a crash report!</string>
+    <!-- endregion -->
 
-    <!-- Infos -->
+    <!-- region Infos -->
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
+    <string name="lesson_import_success">Lesson imported</string>
+    <string name="import_title">Lesson is imported. Please wait…</string>
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="sr_repeat_type">Repeat type:</string>
+    <string name="wrong_answer">Your Answer was wrong!</string>
+    <string name="put_back">Put back</string>
+    <string name="skipWaiting">Timer still running…</string>
+    <string name="put_further">Still continue</string>
+    <string name="compare_ques_answ">Right answer: %s\nYour answer: %s</string>
+    <string name="put_in_your_answer">Type in your Answer</string>
     <string name="learned">Learned</string>
     <string name="expired">Expired</string>
     <string name="sum">Sum</string>
@@ -21,7 +55,7 @@
     <string name="ustm">USTM</string>
     <string name="stm">STM</string>
     <string name="stack">Stack</string>
-    <string name="info_text_hint">Description of the lesson (LongTap to edit)</string>
+    <string name="info_text_hint">Description of the lesson</string>
     <string name="next_expire_date">Next expire date:</string>
     <string name="nothing_learned_yet">Nothing learned yet!</string>
     <string name="not_learned_yet">Not learned yet!</string>
@@ -34,9 +68,7 @@
     <string name="synchronizing">Synchronizing…</string>
     <string name="write_permission_rational_message">You can\'t open Lessons if you don\'t grant
         this Permission!</string>
-    <string name="write_permission_info_message">To open and save lessons MobilePauker++ needs the permission to save files on the storage.</string>
-    <string name="learncards_repeat_ustm">Time to repeat Ultra Short Term Memory</string>
-    <string name="learncards_repeat_stm">Time to repeat Short Term Memory</string>
+    <string name="write_permission_info_message">To open and save lessons MobilePauker++ needs the permission to access the storage.</string>
     <string name="learncards_waiting_stm_timer">Waiting on short term memory timer</string>
     <string name="learncards_finished_learning">Finished Learning</string>
     <string name="saving_success">File saved</string>
@@ -51,21 +83,42 @@
     <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side have
         to be shown first</string>
     <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="timer_finished">\"Finished!\"</string>
+    <string name="ustm_timer_paused">USTM \"Pause\"</string>
+    <string name="stm_timer_paused">STM \"Pause\"</string>
+    <!-- endregion -->
 
-    <!-- Sonstiges -->
-    <string name="app_name" translatable="false">MobilePauker++</string>
+    <!-- region Sonstiges -->
+    <string name="app_name" translatable="false">Mobile Pauker ++</string>
     <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="no">No</string>
+    <string name="proof">Proof</string>
+    <string name="delete">Delete</string>
+    <string name="text_size">Text size</string>
+    <string name="background">Background</string>
+    <string name="text_color">Text color</string>
+    <string name="bold">Bold</string>
+    <string name="italic">Italic</string>
+    <string name="repeat_type">Repeat type</string>
+    <string name="save">Save</string>
+    <string name="association">Association</string>
+    <string name="unlinking">Unlinking</string>
+    <!-- endregion -->
 
-    <!-- Content Descriptions und Titles-->
+    <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">What is Mobile Pauker++</string>
+    <string name="repeat_type_description">Repeat Type Image</string>
     <string name="sync_manually">Syncronize with Dropbox</string>
-    <string name="add_new_card">Add new card</string>
+    <string name="add_new_card">New card</string>
     <string name="front">Front</string>
     <string name="back">Back</string>
     <string name="learn_new_card">Learn new cards</string>
     <string name="repeat_expired_cards">Repeat expired cards</string>
     <string name="open_lesson">Open lesson</string>
+    <string name="pause_timer">Pause Time</string>
+    <string name="restart_timer">Restart Time</string>
     <string name="save_lesson">Save lesson</string>
     <string name="search">Search</string>
     <string name="reset_cards">Reset lesson</string>
@@ -89,53 +142,56 @@
     <string name="exit_learning_dialog">Exit Learning?</string>
     <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
-    <string name="delete_card">Karte löschen</string>
+    <string name="save_lesson_before_question">Do you want to save before?</string>
+    <string name="delete_card">Delete card</string>
+    <!-- endregion -->
 
-    <!-- Buttontexte -->
+    <!-- region Buttontexte -->
     <string name="next_card">Next card -&gt;</string>
     <string name="show_me">Show me!</string>
-    <string name="skipWaiting">Timer still running…</string>
     <string name="skip_waiting_button">Doesn\'t matter! Go on!</string>
     <string name="reset">Reset</string>
     <string name="add">Add</string>
     <string name="learn">Learn</string>
     <string name="repeat">Repeat</string>
+    <string name="go_on">Go on</string>
+    <!-- endregion -->
 
-    <!-- Settings Anfang -->
+    <!-- region Settings -->
 
-    <!-- Gruppentitel -->
+    <!-- region Gruppentitel -->
     <string name="learning_cards">Learning cards</string>
     <string name="times">Times</string>
     <string name="other">Other</string>
+    <!-- endregion -->
 
-    <!-- Keys -->
+    <!-- region Keys -->
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="hide_times" translatable="false">Hide times</string>
-    <string name="center_text" translatable="false">Center text</string>
-    <string name="font_size" translatable="false">Font size</string>
-    <string name="enable_split_screen" translatable="false">Enable split screen</string>
+    <string name="show_notification" translatable="false">Show Notification</string>
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
     <string name="auto_save" translatable="false">Auto Save</string>
-    <string name="about" translatable="false">About MobilePauker++</string>
+    <string name="about" translatable="false">About</string>
     <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
     <string name="auto_sync" translatable="false">Auto Synchronisation</string>
     <string name="expire_toast" translatable="false">Enable Expire Toast</string>
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
+    <string name="unlink_dropbox" translatable="false">Unlink Dropbox</string>
     <string name="stm_key" translatable="false">STM</string>
     <string name="ustm_key" translatable="false">USTM</string>
+    <!-- endregion -->
 
-    <!-- Titles -->
-    <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
+    <!-- region Titles -->
+    <string name="offen_lassen_checkbox">Keep open</string>
+    <string name="flip_card_sides_title">First shown card side</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="hide_times_title">Hide times</string>
-    <string name="center_text_title">Center text</string>
-    <string name="font_size_title">Font size</string>
-    <string name="enable_split_screen_title">Enable split screen</string>
     <string name="repeat_cards_mode_title">Repeat cards</string>
     <string name="return_forgotten_cards_title">Return forgotten cards</string>
     <string name="auto_save_title">Auto Save</string>
+    <string name="show_notification_title">Show Notification</string>
     <string name="about_title">About MobilePauker++</string>
     <string name="learn_new_cards_randomly_title">Learn new cards randomly</string>
     <string name="auto_sync_title">Auto Synchronisation</string>
@@ -144,14 +200,15 @@
     <string name="stm_title">STM</string>
     <string name="ustm_title">USTM</string>
     <string name="flip_cards">Flip sides</string>
+    <string name="unlink_dropbox_title">Unlink Dropbox</string>
+    <!-- endregion -->
 
-    <!-- Beschreibungen -->
-    <string name="flip_card_sides_summ">Which side to show first when repeating (%s)</string>
-    <string name="case_sensitive_summ">If cards are repeated with input</string>
+    <!-- region Beschreibungen -->
+    <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
+    <string name="case_sensitive_summ">If cards are repeated by input</string>
     <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
-    <string name="enable_split_screen_summ">Show both sides on same screen</string>
+    <string name="show_notification_summ">Notifys you, when the timers expire and the app is not opend</string>
     <string name="auto_save_summ">Save automatically after every session</string>
-    <string name="font_size_sum">Set the size of the card text (%s)</string>
     <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>
     <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
     <string name="stm_summ">Short Term Memory: %smin</string>
@@ -159,21 +216,31 @@
     <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
     <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
-    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the lesson</string>
+    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
+        lesson</string>
+    <!-- endregion -->
 
-    <!-- Defaultwerte -->
+    <!-- region Defaultwerte -->
     <string name="repeat_cards_default" translatable="false">0</string>
     <string name="return_forgotten_cards_default" translatable="false">0</string>
     <string name="flip_card_sides_default" translatable="false">0</string>
-    <string name="font_size_sum_default" translatable="false">18</string>
     <string name="ustm_default" translatable="false">18</string>
     <string name="stm_default" translatable="false">12</string>
+    <!-- endregion -->
 
-    <!-- Settings Ende -->
+    <!-- endregion -->
 
-    <!-- Nur für die Zeit der Entwicklung -->
-    <string name="CrashReport_MailBody">Thanks for sending a crash report!</string>
+    <!-- redion Notifications -->
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is not shown.</string>
+    <string name="channel_timerbar_name">Timer bar</string>
+    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App is not
+        shown.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <!-- endregion -->
 
-    <!-- Neue Strings -->
+    <!-- region Neue Strings -->
     <string name="New">New</string>
+    <!-- endregion -->
 </resources>

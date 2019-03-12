@@ -18,16 +18,23 @@
 
 package com.daniel.mobilepauker2.model;
 
+import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.SparseLongArray;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
+import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
@@ -35,18 +42,22 @@ import com.daniel.mobilepauker2.statistics.BatchStatistics;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.EOFException;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import static android.content.Context.MODE_APPEND;
@@ -234,9 +245,15 @@ public class ModelManager {
         }
     }
 
-    public void addCard(String sideA, String sideB, String rowID, String index, String learnStatus) {
-        FlashCard newCard = new FlashCard(sideA, sideB, index, rowID, learnStatus);
+    void addCard(String sideA, String sideB, String index, String learnStatus) {
+        FlashCard newCard = new FlashCard(sideA, sideB, index, learnStatus);
         mLesson.getUnlearnedBatch().addCard(newCard);
+    }
+
+    public void addCard(FlashCard flashCard, String sideA, String sideB) {
+        flashCard.setSideAText(sideA);
+        flashCard.setSideBText(sideB);
+        mLesson.getUnlearnedBatch().addCard(flashCard);
     }
 
     public List<BatchStatistics> getBatchStatistics() {
@@ -273,7 +290,7 @@ public class ModelManager {
      * correctly, we have to move the current card one batch further
      * @param position .
      */
-    public void setCardLearned(int position) {
+    void setCardLearned(int position) {
         if (position < 0 || position >= mCurrentPack.size()) {
             Log.e("AndyPaukerApplication::learnedCard", "request to update a card with position outside the pack");
             return;
@@ -488,26 +505,153 @@ public class ModelManager {
                 String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                 String text = context.getString(R.string.next_expire_date);
                 text = text.concat(" ").concat(date);
-                Toast.makeText(context, text, Toast.LENGTH_LONG * 2).show();
+                PaukerManager.showToast((Activity)context, text, Toast.LENGTH_LONG * 2);
             }
-        } catch (MalformedURLException | EOFException ignored) {}
+        } catch (MalformedURLException ignored) {
+        }
     }
 
     public boolean deleteLesson(Context context, File file) {
+        String filename = file.getName();
         try {
-            String filename = file.getName();
             if (file.delete()) {
                 FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_APPEND);
                 String text = "\n" + filename + ";*;" + System.currentTimeMillis();
                 fos.write(text.getBytes());
                 fos.close();
-                return true;
             } else return false;
+        } catch (IOException e) {
+            return false;
+        }
+        try {
+            List<String> list = getLokalAddedFiles(context);
+            if (list.contains(filename)) {
+                resetAddedFilesData(context);
+                FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+                for (String name : list) {
+                    if (!name.equals(filename)) {
+                        String newText = "\n" + name;
+                        fos.write(newText.getBytes());
+                    }
+                }
+                fos.close();
+            }
+
+            return true;
         } catch (IOException e) {
             return false;
         }
     }
 
+    public void addLesson(Context context, File file) {
+        String filename = file.getName();
+        int index = filename.endsWith(".xml") ? filename.indexOf(".xml") : filename.indexOf(".pau");
+        if (index != -1) {
+            filename = filename.substring(0, index);
+            addLesson(context, filename);
+        }
+    }
+
+    public void addLesson(Context context) {
+        String filename = paukerManager.getCurrentFileName();
+        addLesson(context, filename);
+    }
+
+    private void addLesson(Context context, String fileName) {
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+            String text = "\n" + fileName;
+            fos.write(text.getBytes());
+            fos.close();
+        } catch (IOException ignored) {
+        }
+
+        try {
+            Map<String, String> map = getLokalDeletedFiles(context);
+            if (map.keySet().contains(fileName)) {
+                resetDeletedFilesData(context);
+                FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_APPEND);
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    if (!entry.getKey().equals(fileName)) {
+                        String newText = "\n" + fileName + ";*;" + System.currentTimeMillis();
+                        fos.write(newText.getBytes());
+                    }
+                }
+                fos.close();
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    @NonNull
+    public Map<String, String> getLokalDeletedFiles(Context context) {
+        Map<String, String> filesToDelete = new HashMap<>();
+        try {
+            FileInputStream fis = context.openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String fileName = reader.readLine();
+            while (fileName != null) {
+                if (!fileName.trim().isEmpty()) {
+                    try {
+                        String[] split = fileName.split(";*;");
+                        String name = split[0] == null ? "" : split[0];
+                        String time = split[1] == null ? "-1" : split[1];
+                        filesToDelete.put(name, time);
+                    } catch (Exception e) {
+                        filesToDelete.put(fileName, "-1");
+                    }
+                }
+                fileName = reader.readLine();
+            }
+        } catch (IOException ignored) {
+        }
+        return filesToDelete;
+    }
+
+    public List<String> getLokalAddedFiles(Context context) {
+        List<String> filesToAdd = new ArrayList<>();
+        try {
+            FileInputStream fis = context.openFileInput(Constants.ADDED_FILES_NAMES_FILE_NAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String fileName = reader.readLine();
+            while (fileName != null) {
+                if (!fileName.trim().isEmpty()) {
+                    filesToAdd.add(fileName);
+                }
+                fileName = reader.readLine();
+            }
+        } catch (IOException ignored) {
+        }
+        return filesToAdd;
+    }
+
+    public boolean resetDeletedFilesData(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
+            String text = "\n";
+            fos.write(text.getBytes());
+            fos.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean resetAddedFilesData(Context context) {
+        try {
+            FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
+            String text = "\n";
+            fos.write(text.getBytes());
+            fos.close();
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    public boolean resetIndexFiles(Context context) {
+        return resetDeletedFilesData(context) && resetAddedFilesData(context);
+    }
 
     /**
      * Move all cards in USTM and STM back to unlearned batch
@@ -547,15 +691,15 @@ public class ModelManager {
     }
 
     public boolean isLessonSetup() {
-        return (mLesson != null);
+        return mLesson != null;
     }
 
-
     /**
-     * Delete from memory current lesson - To be used when trying to recover from errors!
+     * Prüft ob die Lektion leer ist.
+     * @return True, wenn keine Karten vorhanden sind und die Beschreibung leer ist
      */
-    public void clearLesson() {
-        mLesson = null;
+    public boolean isLessonEmpty() {
+        return isLessonSetup() && mLesson.getCards().isEmpty() && mLesson.getDescription().isEmpty();
     }
 
     public void createNewLesson() {
@@ -581,6 +725,10 @@ public class ModelManager {
         } else {
             if (mLesson.getUnlearnedBatch().removeCard(mCurrentCard)) {
                 Log.d("AndyPaukerApplication::deleteCard", "Deleted from unlearned batch");
+            } else if (mLesson.getUltraShortTermList().remove(mCurrentCard)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from ultra short term batch");
+            } else if (mLesson.getShortTermList().remove(mCurrentCard)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from short term batch");
             } else {
                 Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from unlearned batch  ");
                 return false;
@@ -590,7 +738,6 @@ public class ModelManager {
         mCurrentPack.remove(position);
 
         return true;
-
     }
 
     public void setLearningPhase(Context context, LearningPhase learningPhase) {
@@ -620,6 +767,58 @@ public class ModelManager {
         } else {
             return mCurrentPack.get(position);
         }
+    }
+
+    public Font getCardFont(int side_ID, int position) {
+        FlashCard flashCard = getCard(position);
+
+        if (flashCard == null) return new Font();
+
+        Font font;
+        font = side_ID == CardPackAdapter.KEY_SIDEA_ID ?
+                flashCard.getFrontSide().getFont() :
+                flashCard.getReverseSide().getFont();
+        return font == null ? new Font() : font;
+    }
+
+    /**
+     * Setzt die entsprechende Font-Werte bei der Karte, falls sie vorhanden sind. Sonst werden
+     * Standartwerte gesetzt. Gesetzt werden Textgröße, Textfarbe, Fett, Kursiv, Font und
+     * Hintergrundfarbe.
+     * @param font     Seite, bei der die Werte gesetzt werden sollen
+     * @param cardSide Hiervon werden die Werte ausgelesen
+     */
+    void setFont(@Nullable Font font, TextView cardSide) {
+        font = font == null ? new Font() : font;
+
+        int textSize = font.getTextSize();
+        cardSide.setTextSize(textSize > 16 ? textSize : 16);
+
+        cardSide.setTextColor(font.getTextColor());
+
+        boolean bold = font.isBold();
+        boolean italic = font.isItalic();
+        if (bold && italic)
+            cardSide.setTypeface(Typeface.create(font.getFamily(), Typeface.BOLD_ITALIC));
+        else if (bold) cardSide.setTypeface(Typeface.create(font.getFamily(), Typeface.BOLD));
+        else if (italic)
+            cardSide.setTypeface(Typeface.create(font.getFamily(), Typeface.ITALIC));
+        else cardSide.setTypeface(Typeface.create(font.getFamily(), Typeface.NORMAL));
+
+        int backgroundColor = font.getBackgroundColor();
+        if (backgroundColor != -1)
+            cardSide.setBackground(createBoxBackground(backgroundColor));
+        else cardSide.setBackgroundResource(R.drawable.box_background);
+    }
+
+    @NonNull
+    private GradientDrawable createBoxBackground(int backgroundColor) {
+        GradientDrawable background = new GradientDrawable();
+        background.setShape(GradientDrawable.RECTANGLE);
+        background.setCornerRadius(2);
+        background.setStroke(3, Color.BLACK);
+        background.setColor(backgroundColor);
+        return background;
     }
 
     public int getCurrentBatchSize() {
@@ -681,16 +880,4 @@ public class ModelManager {
         return mLearningPhase == LearningPhase.REPEATING_LTM
                 && settingsManager.getBoolPreference(context, LEARN_NEW_CARDS_RANDOMLY);
     }
-
-    public void resetDeletedFilesData(Context context) {
-        try {
-            FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
-            String text = "\n";
-            fos.write(text.getBytes());
-            fos.close();
-        } catch (IOException e) {
-            // TODO ERROR
-        }
-    }
-
 }

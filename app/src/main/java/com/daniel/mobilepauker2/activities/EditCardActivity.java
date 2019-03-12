@@ -1,45 +1,30 @@
 package com.daniel.mobilepauker2.activities;
 
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.model.FlashCard;
 import com.daniel.mobilepauker2.model.ModelManager;
-import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
+
 /**
  * Created by dfritsch on 22.03.2018.
- * veesy.de
- * hs-augsburg
  */
 
-public class EditCardActivity extends AppCompatActivity {
-    private final Context context = this;
+public class EditCardActivity extends AEditCardActivity {
     private int cardPosition;
-    private FlashCard flashCard;
-    private EditText sideAEditText;
-    private EditText sideBEditText;
-    private String sideAText;
-    private String sideBText;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.edit_card);
 
         cardPosition = getIntent().getIntExtra(Constants.CURSOR_POSITION, -1);
 
@@ -51,55 +36,43 @@ public class EditCardActivity extends AppCompatActivity {
 
         if (flashCard == null) {
             Log.w("EditCardsActivity::OnCreate", "Flash Card set to null");
-            Toast.makeText(context, getString(R.string.edit_cards_no_card_available), Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, getString(R.string.edit_cards_no_card_available), Toast.LENGTH_SHORT);
             finish();
         } else {
             init();
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (sideAEditText != null && sideBEditText != null) {
-            SettingsManager settingsManager = SettingsManager.instance();
-            sideAEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
-            sideBEditText.setTextSize(Float.parseFloat(settingsManager.getStringPreference(context, SettingsManager.Keys.FONT_SIZE)));
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null && getCurrentFocus() != null && imm.isAcceptingText()) {
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.settings, menu);
-
-        return true;
-    }
-
     private void init() {
-        sideAEditText = findViewById(R.id.eTSideA);
-        sideBEditText = findViewById(R.id.eTSideB);
+        //SideA
+        String text = flashCard.getSideAText();
+        Font font = flashCard.getFrontSide().getFont();
+        font = font == null ? new Font() : font;
+        initSideAText = text;
+        initSideATSize = font.getTextSize();
+        initSideATColor = font.getTextColor();
+        initSideABColor = font.getBackgroundColor();
+        initSideABold = font.isBold();
+        initSideAItalic = font.isItalic();
+        sideAEditText.setCard(flashCard.getFrontSide());
+        initIsRepeatedByTyping = flashCard.isRepeatedByTyping();
 
-        sideAText = flashCard.getSideAText();
-        sideBText = flashCard.getSideBText();
-
-        sideAEditText.setText(flashCard.getSideAText());
-        sideBEditText.setText(flashCard.getSideBText());
+        //SideB
+        text = flashCard.getSideBText();
+        font = flashCard.getReverseSide().getFont();
+        font = font == null ? new Font() : font;
+        initSideBText = text;
+        initSideBTSize = font.getTextSize();
+        initSideBTColor = font.getTextColor();
+        initSideBBColor = font.getBackgroundColor();
+        initSideBBold = font.isBold();
+        initSideBItalic = font.isItalic();
+        sideBEditText.setCard(flashCard.getReverseSide());
     }
 
     public void okClicked(View view) {
         if (sideAEditText.getText().toString().trim().isEmpty() || sideBEditText.getText().toString().trim().isEmpty()) {
-            Toast.makeText(context, R.string.add_card_sides_empty_error, Toast.LENGTH_SHORT).show();
+            showToast((Activity) context, R.string.add_card_sides_empty_error, Toast.LENGTH_SHORT);
             return;
         }
         if (cardPosition >= 0) {
@@ -107,18 +80,11 @@ public class EditCardActivity extends AppCompatActivity {
                     cardPosition,
                     sideAEditText.getText().toString(),
                     sideBEditText.getText().toString());
-            PaukerManager.instance().setSaveRequired(true);
-            setResult(RESULT_OK);
+            if (detectChanges()) {
+                PaukerManager.instance().setSaveRequired(true);
+                setResult(RESULT_OK);
+            }
             finish();
         }
-    }
-
-    public void resetCardSides(View view) {
-        sideAEditText.setText(sideAText);
-        sideBEditText.setText(sideBText);
-    }
-
-    public void mSettingsClicked(MenuItem item) {
-        startActivity(new Intent(context, SettingsActivity.class));
     }
 }

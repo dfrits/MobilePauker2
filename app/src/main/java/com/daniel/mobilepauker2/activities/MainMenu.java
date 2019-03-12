@@ -1,7 +1,7 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -19,22 +18,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.statistics.ChartAdapter;
@@ -42,12 +35,12 @@ import com.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
-import java.io.File;
-
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 
 /**
@@ -65,11 +58,13 @@ public class MainMenu extends AppCompatActivity {
     private final Context context = this;
     private boolean firstStart = true;
     private MenuItem search;
+    private RecyclerView chartView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ErrorReporter.instance().init(context);
+        checkErrors();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main_menu);
@@ -110,14 +105,13 @@ public class MainMenu extends AppCompatActivity {
         boolean hasCardsToLearn = modelManager.getUnlearnedBatchSize() != 0;
         boolean hasExpiredCards = modelManager.getExpiredCardsSize() != 0;
 
-        RelativeLayout button;
-        Drawable disabledImg = getDrawable(R.drawable.button_disabled_foreground);
-        button = findViewById(R.id.bLearnNewCardFrame);
-        button.setClickable(hasCardsToLearn);
-        button.setForeground(button.isClickable() ? null : disabledImg);
-        button = findViewById(R.id.bRepeatExpiredCardsFrame);
-        button.setClickable(hasExpiredCards);
-        button.setForeground(button.isClickable() ? null : disabledImg);
+        findViewById(R.id.bLearnNewCard).setEnabled(hasCardsToLearn);
+        findViewById(R.id.bLearnNewCard).setClickable(hasCardsToLearn);
+        findViewById(R.id.tLearnNewCardDesc).setEnabled(hasCardsToLearn);
+
+        findViewById(R.id.bRepeatExpiredCards).setEnabled(hasExpiredCards);
+        findViewById(R.id.bRepeatExpiredCards).setClickable(hasExpiredCards);
+        findViewById(R.id.tRepeatExpiredCardsDesc).setEnabled(hasExpiredCards);
     }
 
     private void initView() {
@@ -125,16 +119,28 @@ public class MainMenu extends AppCompatActivity {
 
         String description = modelManager.getDescription();
         TextView descriptionView = findViewById(R.id.infoText);
-        descriptionView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                infoTextClicked(v);
-                return true;
-            }
-        });
         descriptionView.setText(description);
         if (!description.isEmpty()) {
             descriptionView.setMovementMethod(new ScrollingMovementMethod());
+        }
+
+        SlidingUpPanelLayout drawer = findViewById(R.id.drawerPanel);
+        if (drawer != null) {
+            drawer.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+                @Override
+                public void onPanelSlide(View panel, float slideOffset) {
+
+                }
+
+                @Override
+                public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
+                    if (newState == PanelState.EXPANDED)
+                        findViewById(R.id.drawerImage).setRotation(180);
+                    if (newState == PanelState.COLLAPSED)
+                        findViewById(R.id.drawerImage).setRotation(0);
+                }
+            });
+            drawer.setPanelState(PanelState.COLLAPSED);
         }
 
         String title = getString(R.string.app_name);
@@ -145,21 +151,33 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void initChartList() {
-        final RecyclerView chartView = findViewById(R.id.chartListView);
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
-                LinearLayoutManager.HORIZONTAL, false);
-        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
+        // Im Thread laufen lassen um MainThread zu entlasten
+        Thread initthread = new Thread(new Runnable() {
             @Override
-            public void onClick(int position) {
-                showBatchDetails(position);
+            public void run() {
+                chartView = findViewById(R.id.chartListView);
+                final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+                        LinearLayoutManager.HORIZONTAL, false);
+                chartView.setLayoutManager(layoutManager);
+                chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+                chartView.setScrollContainer(true);
+                chartView.setNestedScrollingEnabled(true);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
+                            @Override
+                            public void onClick(int position) {
+                                showBatchDetails(position);
+                            }
+                        };
+                        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
+                        chartView.setAdapter(adapter);
+                    }
+                });
             }
-        };
-        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
-        chartView.setLayoutManager(layoutManager);
-        chartView.setAdapter(adapter);
-        chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-        chartView.setScrollContainer(true);
-        chartView.setNestedScrollingEnabled(true);
+        });
+        initthread.run();
     }
 
     private void showBatchDetails(int index) {
@@ -179,11 +197,6 @@ public class MainMenu extends AppCompatActivity {
         startActivity(browseIntent);
     }
 
-    private void editInfoText() {
-        startActivity(new Intent(context, EditDescrptionActivity.class));
-        overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
-    }
-
     /**
      * Startet die Permissionanfrage
      */
@@ -199,33 +212,23 @@ public class MainMenu extends AppCompatActivity {
         MenuItem save = menu.findItem(R.id.mSaveFile);
         search = menu.findItem(R.id.mSearch);
         MenuItem open = menu.findItem(R.id.mOpenLesson);
-        if (modelManager.isLessonNotNew()) {
-            menu.setGroupEnabled(R.id.mGroup, true);
-        } else {
-            menu.setGroupEnabled(R.id.mGroup, false);
-        }
+
+        menu.setGroupEnabled(R.id.mGroup, modelManager.isLessonNotNew() || !modelManager.isLessonEmpty());
 
         if (modelManager.getLessonSize() > 0) {
             search.setVisible(true);
-            open.setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+            open.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
         } else {
             search.setVisible(false);
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
-        if (paukerManager.isSaveRequired()) {
-            save.setEnabled(true);
-            save.setIcon(R.drawable.menu_save_enabled);
-            //            save.setIconTintList(ColorStateList.valueOf(Color.DKGRAY));
-        } else {
-            save.setEnabled(false);
-            save.setIcon(R.drawable.menu_save_disabled);
-            //             save.setIconTintList(ColorStateList.valueOf(Color.WHITE));
-        }
+        save.setVisible(paukerManager.isSaveRequired());
 
         if (search.isVisible()) {
             final SearchView searchView = (SearchView) search.getActionView();
             searchView.setIconifiedByDefault(false);
+            searchView.setIconified(false);
             searchView.setQueryHint(getString(R.string.search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -254,6 +257,12 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        chartView = null;
+        super.onPause();
+    }
+
+    @Override
     public void onResume() {
         Log.d("MainMenuActivity::onResume", "ENTRY");
         super.onResume();
@@ -268,12 +277,9 @@ public class MainMenu extends AppCompatActivity {
             initButtons();
             initView();
             initChartList();
+            invalidateOptionsMenu();
         }
         firstStart = false;
-
-        if (paukerManager.isSaveRequired()) {
-            setTitle(getTitle() + "*");
-        }
     }
 
     @Override
@@ -290,40 +296,24 @@ public class MainMenu extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
-                Toast.makeText(context, R.string.saving_success, Toast.LENGTH_SHORT).show();
+                showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
-                invalidateOptionsMenu();
                 modelManager.showExpireToast(context);
-
-                /*if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
-                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-                    if (accessToken != null) {
-                        File[] files = paukerManager.listFiles(context);
-                        Intent syncIntent = new Intent(context, SyncDialog.class);
-                        syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-                        syncIntent.putExtra(SyncDialog.FILES, files);
-                        startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG);
-                    }
-                }*/
-            } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
+            invalidateOptionsMenu();
+        } /*else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             if (resultCode == RESULT_OK) {
-                Log.d("OpenLesson", "Synchro erfolgreich");
+                Log.d("SyncLesson", "Synchro erfolgreich");
             } else {
-                Log.d("OpenLesson", "Synchro nicht erfolgreich");
-                Toast.makeText(context, R.string.error_synchronizing, Toast.LENGTH_SHORT).show();
+                Log.d("SyncLesson", "Synchro nicht erfolgreich");
+                PaukerManager.showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
             }
         } else if (resultCode == RESULT_OK && requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             startActivity(new Intent(context, LessonImportActivity.class));
-        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) {
-            if (resultCode == RESULT_OK) {
-                createNewLesson();
-            } else {
-                Toast.makeText(context, R.string.saving_error, Toast.LENGTH_SHORT).show();
-            }
+        }*/ else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
+            createNewLesson();
+        } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == RESULT_OK) {
+            startActivity(new Intent(context, LessonImportActivity.class));
         }
     }
 
@@ -352,60 +342,7 @@ public class MainMenu extends AppCompatActivity {
      * @param requestCode Wird für onActivityResult benötigt
      */
     private void saveLesson(final int requestCode) {
-        if (paukerManager.getReadableFileName().equals(Constants.DEFAULT_FILE_NAME)) {
-            final LayoutInflater inflater = getLayoutInflater();
-
-            @SuppressLint("InflateParams")
-            View view = inflater.inflate(R.layout.give_lesson_name_dialog, null);
-            final EditText textField = view.findViewById(R.id.eTGiveLessonName);
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle(R.string.give_lesson_name_dialog_title)
-                    .setView(view)
-                    .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            String newLessonName = textField.getText().toString();
-
-                            if (!newLessonName.endsWith(".pau.gz"))
-                                newLessonName = newLessonName + ".pau.gz";
-
-                            if (paukerManager.setCurrentFileName(newLessonName))
-                                startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
-                            else
-                                Toast.makeText(context, R.string.error_filename_invalid, Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
-
-            final AlertDialog dialog = builder.create();
-
-            textField.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(s.length() > 0);
-                }
-            });
-
-            dialog.show();
-            textField.setText("");
-        } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
-        }
+        startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
     }
 
     /**
@@ -454,7 +391,7 @@ public class MainMenu extends AppCompatActivity {
             AlertDialog dialog = builder.create();
             dialog.show();
         } else {
-            if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
+            /*if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
                 String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                         .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
                 if (accessToken != null) {
@@ -464,28 +401,27 @@ public class MainMenu extends AppCompatActivity {
                     syncIntent.putExtra(SyncDialog.FILES, files);
                     startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
                 }
-            } else {
-                if (paukerManager.isSaveRequired()) {
-                    builder = new AlertDialog.Builder(context);
-                    builder.setTitle(R.string.lesson_not_saved_dialog_title)
-                            .setMessage(R.string.lesson_not_saved_dialog_message)
-                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    startActivity(new Intent(context, LessonImportActivity.class));
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                    builder.create().show();
-                } else
-                    startActivity(new Intent(context, LessonImportActivity.class));
-            }
+            } else {*/
+            if (paukerManager.isSaveRequired()) {
+                builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.lesson_not_saved_dialog_title)
+                        .setMessage(R.string.save_lesson_before_question)
+                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_OPEN);
+                            }
+                        })
+                        .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                builder.create().show();
+            } else
+                startActivity(new Intent(context, LessonImportActivity.class));
+            //}
         }
     }
 
@@ -498,7 +434,7 @@ public class MainMenu extends AppCompatActivity {
         initButtons();
         initChartList();
         initView();
-        Toast.makeText(context, R.string.new_lession_created, Toast.LENGTH_SHORT).show();
+        showToast((Activity) context, R.string.new_lession_created, Toast.LENGTH_SHORT);
     }
 
     public void mSaveFileClicked(@Nullable MenuItem ignored) {
@@ -517,7 +453,7 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.reset_lesson_dialog_title)
                 .setMessage(R.string.reset_lesson_dialog_info)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.reset, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         modelManager.forgetAllCards();
@@ -525,11 +461,11 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        Toast.makeText(context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT).show();
+                        showToast((Activity) context, R.string.lektion_zurückgesetzt, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -539,38 +475,28 @@ public class MainMenu extends AppCompatActivity {
     }
 
     public void mNewLessonClicked(MenuItem item) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.new_lesson_dialog_title)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (paukerManager.isSaveRequired()) {
+        if (paukerManager.isSaveRequired()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle(R.string.lesson_not_saved_dialog_title)
+                    .setMessage(R.string.save_lesson_before_question)
+                    .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
-                        } else {
-                            createNewLesson();
                         }
-                        dialog.cancel();
-                    }
-                })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-        builder.create().show();
+                    })
+                    .setNegativeButton(R.string.cancel, null);
+            builder.create().show();
+        } else createNewLesson();
     }
 
     public void mEditInfoTextClicked(@Nullable MenuItem ignored) {
-        editInfoText();
+        startActivity(new Intent(context, EditDescrptionActivity.class));
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
     }
 
     public void mSettingsClicked(MenuItem item) {
         startActivity(new Intent(context, SettingsActivity.class));
-    }
-
-    public void infoTextClicked(@Nullable View ignored) {
-        editInfoText();
     }
 
     public void mOpenSearchClicked(MenuItem item) {
@@ -582,7 +508,7 @@ public class MainMenu extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.reverse_sides_dialog_title)
                 .setMessage(R.string.reverse_sides_dialog_info)
-                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.flip_cards, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         modelManager.flipAllCards();
@@ -590,16 +516,43 @@ public class MainMenu extends AppCompatActivity {
                         initButtons();
                         initChartList();
                         initView();
-                        Toast.makeText(context, R.string.flip_sides_complete, Toast.LENGTH_SHORT).show();
+                        showToast((Activity) context, R.string.flip_sides_complete, Toast.LENGTH_SHORT);
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });
         builder.create().show();
+    }
+
+    private void checkErrors() {
+        final ErrorReporter errorReporter = ErrorReporter.instance();
+        if (errorReporter.isThereAnyErrorsToReport()) {
+            AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
+
+            alt_bld.setMessage(getString(R.string.crash_report_message));
+            alt_bld.setCancelable(false);
+            alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.CheckErrorAndSendMail();
+                }
+            });
+
+            alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.deleteErrorFiles();
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alert = alt_bld.create();
+            alert.setTitle(getString(R.string.crash_report_title));
+            alert.setIcon(R.mipmap.ic_launcher);
+            alert.show();
+        }
     }
 }

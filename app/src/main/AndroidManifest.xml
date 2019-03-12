@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.daniel.mobilepauker2">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -26,7 +27,7 @@
         <activity
             android:name=".activities.LessonImportActivity"
             android:label="@string/lessons"
-            android:screenOrientation="portrait" />
+            android:theme="@style/OpenLessonTheme" />
 
         <activity
             android:name=".activities.EditDescrptionActivity"
@@ -54,14 +55,23 @@
         <activity
             android:name=".activities.About"
             android:label="@string/about"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="com.daniel.mobilepauker2.activities.about" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <activity
             android:name=".activities.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait" />
 
-        <activity android:name=".activities.LearnCardsActivity" />
+        <activity
+            android:launchMode="singleTop"
+            android:name=".activities.LearnCardsActivity"
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".activities.SaveDialog"
@@ -72,15 +82,56 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
+            android:name=".dropbox.DropboxAccDialog"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <activity
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
             android:name=".activities.AddCardActivity"
             android:label="@string/add_new_card"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"  />
+            android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
+
+        <activity
+            android:name=".activities.LessonReceiver"
+            android:icon="@mipmap/ic_launcher"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="application/x-gzip" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:pathPattern=".*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.pau\\.gz" />
+                <data android:pathPattern=".*\\.pau" />
+                <data android:pathPattern=".*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.pau" />
+                <data android:pathPattern=".*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

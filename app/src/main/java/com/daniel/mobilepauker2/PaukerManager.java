@@ -1,33 +1,39 @@
-/* 
+/*
  * Copyright 2011 Brian Ford
- * 
+ *
  * This file is part of Pocket Pauker.
- * 
- * Pocket Pauker is free software: you can redistribute it and/or modify it under the 
- * terms of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Pocket Pauker is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
  * either version 3 of the License, or (at your option) any later version.
- * 
- * Pocket Pauker is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY 
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more 
+ *
+ * Pocket Pauker is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
+ * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more
  * details.
- * 
+ *
  * See http://www.gnu.org/licenses/.
 
-*/
+ */
 
 package com.daniel.mobilepauker2;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.daniel.mobilepauker2.activities.LessonImportActivity;
 import com.daniel.mobilepauker2.model.ModelManager;
+import com.daniel.mobilepauker2.model.pauker_native.Lesson;
+import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.net.URI;
 
 public class PaukerManager {
 
@@ -35,13 +41,10 @@ public class PaukerManager {
 
     private String mCurrentFileName = Constants.DEFAULT_FILE_NAME;
     private String mFileAbsolutePath = null;
-    private String mFileDropboxPath = null;
     private boolean mSaveRequired = false;
 
-    // The application data directory can change when a file is loaded
-    private String mApplicationDataDirectory = Constants.DEFAULT_APP_FILE_DIRECTORY;
-
-    private PaukerManager() {}
+    private PaukerManager() {
+    }
 
     public static PaukerManager instance() {
         if (instance == null) {
@@ -51,53 +54,14 @@ public class PaukerManager {
     }
 
     /**
-     * Checks if the App directory exists.
-     * <p>
-     * App directory name is set in GlobalPreferences.APP_FILE_DIRECTORY
-     */
-    public boolean checkAppDataDirectory() {
-        File appDirectory = new File(Environment.getExternalStorageDirectory() + mApplicationDataDirectory);
-
-        return appDirectory.exists() && appDirectory.isDirectory();
-    }
-
-    public void killLesson() {
-        ModelManager.instance().clearLesson();
-        mFileAbsolutePath = null;
-        mFileDropboxPath = null;
-        mCurrentFileName = null;
-
-    }
-
-    public boolean createDefaultAppDataDirectory() {
-        File appDirectory = new File(Environment.getExternalStorageDirectory() + Constants.DEFAULT_APP_FILE_DIRECTORY);
-
-        if (appDirectory.exists() && appDirectory.isDirectory()) {
-            return true;
-        } else {
-            File parentDirectory = new File(Environment.getExternalStorageDirectory().getPath());
-
-            if (parentDirectory.exists() && parentDirectory.canWrite()) {
-                if (appDirectory.mkdir()) {
-                    return true;
-                } else {
-                    Log.e("AndyPaukerApplication::createAppDirectory", "Unable to create directory");
-                }
-            }
-        }
-
-        return false;
-
-    }
-
-    /**
      * Get the default application data directory.
      * <p>
      * Note that this is not necessarily where the current file has been loaded from.
      * @return Default application data directory
      */
     public String getApplicationDataDirectory() {
-        return mApplicationDataDirectory;
+        // The application data directory can change when a file is loaded
+        return Constants.DEFAULT_APP_FILE_DIRECTORY;
     }
 
     /**
@@ -123,58 +87,43 @@ public class PaukerManager {
         ModelManager.instance().createNewLesson();
     }
 
-
     public String getFileAbsolutePath() {
         return mFileAbsolutePath;
     }
 
-    public String getFileDropboxPath() {
-        return mFileDropboxPath;
-    }
-
-    public boolean openedWithDB() {
-        return mFileDropboxPath != null;
-    }
-
     // Todo replace this with the File Class
-    public boolean setFileAbsolutePath(String fileAbsolutePath) {
+    public void setFileAbsolutePath(String fileAbsolutePath) {
         // Validate the filename
         if (fileAbsolutePath == null) {
-            return false;
+            return;
         }
 
         mFileAbsolutePath = fileAbsolutePath;
-        return true;
-    }
-
-    /**
-     * Setzt den Pfad der Datei in Dropboy incl. Dateinamen.
-     * @param fileDropboxPath Pfad plus Name
-     * @return True, wenn Pfad gesetzt werden konnte
-     */
-    public boolean setFileDropboxPath(String fileDropboxPath) {
-        // Validate the filename
-        if (fileDropboxPath == null) {
-            return false;
-        }
-
-        mFileDropboxPath = fileDropboxPath;
-        return true;
     }
 
     public boolean setCurrentFileName(String filename) {
+        if (!filename.endsWith(".pau.gz"))
+            filename += ".pau.gz";
 
         // Validate the filename
-        if (filename == null) {
-            return false;
-        }
-
-        if (!filename.endsWith(".pau.gz")) {
-            return false;
-        }
+        if (!isNameValid(filename)) return false;
 
         mCurrentFileName = filename;
         return true;
+    }
+
+    public boolean isNameValid(String filename) {
+        if (filename == null || filename.isEmpty() || isNameEmpty(filename)) {
+            return false;
+        }
+        return validateFileEnding(filename);
+    }
+
+    public boolean isNameEmpty(String fileName) {
+        for (String ending : Constants.PAUKER_FILE_ENDING) {
+            if (fileName.equals(ending)) return true;
+        }
+        return false;
     }
 
     public String getCurrentFileName() {
@@ -192,7 +141,7 @@ public class PaukerManager {
     public String getReadableFileName() {
         String filename = mCurrentFileName;
 
-        if (filename.endsWith(".pau.gz")) {
+        if (validateFileEnding(filename)) {
             return filename.substring(0, filename.length() - 7);
         } else if (filename.endsWith(".pau") || filename.endsWith(".xml")) {
             return filename.substring(0, filename.length() - 4);
@@ -201,18 +150,27 @@ public class PaukerManager {
         }
     }
 
-    public boolean validateFilename(Context context, String filename) {
+    public boolean validateFilename(String filename) {
         if (filename == null) {
             Log.d("Validate Filename", "File name is invalid");
             return false;
         }
 
-        if (!filename.endsWith(".pau.gz")) {
+        if (!validateFileEnding(filename)) {
             Log.d("Validate Filename", "File not ending with .pau.gz");
             return false;
         }
 
         return true;
+    }
+
+    private boolean validateFileEnding(String fileName) {
+        for (String ending : Constants.PAUKER_FILE_ENDING) {
+            if (fileName.endsWith(ending)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public File[] listFiles(final Context context) throws SecurityException {
@@ -227,13 +185,48 @@ public class PaukerManager {
             files = appDirectory.listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File file) {
-                    return validateFilename(context, file.getName());
+                    return validateFilename(file.getName());
                 }
             });
         } else {
-            Toast.makeText(context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG).show();
+            showToast((Activity) context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG);
             return null;
         }
         return files;
+    }
+
+    public boolean isFileExisting(Context context, String fileName) {
+        File[] files = listFiles(context);
+
+        for (File file : files) {
+            if (file.getName().equals(fileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static void showToast(final Activity context, final String text, final int duration) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (text != null && !text.isEmpty()) {
+                    Toast.makeText(context, text, duration).show();
+                }
+            }
+        });
+    }
+
+    public static void showToast(Activity context, int textResource, int duration) {
+        showToast(context, context.getString(textResource), duration);
+    }
+
+    public void loadLessonFromFile(File file) throws IOException {
+        URI uri = file.toURI();
+        FlashCardXMLPullFeedParser xmlFlashCardFeedParser = new FlashCardXMLPullFeedParser(uri.toURL());
+        Lesson lesson = xmlFlashCardFeedParser.parse();
+        setCurrentFileName(file.getName());
+        setFileAbsolutePath(file.getAbsolutePath());
+        ModelManager.instance().setLesson(lesson);
     }
 }

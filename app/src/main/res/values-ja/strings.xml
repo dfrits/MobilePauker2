@@ -1,0 +1,216 @@
+<resources>
+    <!-- region Errors -->
+    <string name="reopen_lesson_error">現在のレッソンのデータは更新されることができません！ 自分でもう一度　開けてください。</string>
+    <string name="number_format_error">数字だけ入れてください</string>
+    <string name="load_card_data_error">カードの読み込みにエラー</string>
+    <string name="no_lesson_found">レッソンが見つかりません…</string>
+    <string name="error_importflashcardfile_directory">SD－カードを使えません</string>
+    <string name="error_filename_not_pauker">ファイルは互換性ではありません</string>
+    <string name="error_reading_from_xml">ファイルは無効またわ破損です</string>
+    <string name="saving_error">レッスンの保存中にエラー</string>
+    <string name="error_synchronizing">同期をできません</string>
+    <string name="synchro_timeout">同期は切れました</string>
+    <string name="edit_cards_no_card_available">かーどがありません</string>
+    <string name="error_filename_invalid">ファイルネームは無効です</string>
+    <string name="add_card_sides_empty_error">面や後は空です！</string>
+    <string name="delete_lesson_error">レッソンを削除できません</string>
+    <string name="add_card_side_empty">面や後は空です！</string>
+    <string name="pause_timer_error">時間を止められません</string>
+    <string name="restart_timer_error">時間を続けられません</string>
+    <string name="crash_report_message">アラ! Mobile Pauker++ は前回クラッシュした、エラーレポートを送ってください…</string>
+    <string name="crash_report_title">エラーレポート</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: エラーレポート</string>
+    <string name="crash_report_mail_body">エラーレポートを送りましたありがとうございます!</string>
+    <string name="simple_error_message">An error has occurred</string>
+    <!-- endregion -->
+
+    <!-- region Infos -->
+    <string name="put_in_your_answer">答を入れてください</string>
+    <string name="wrong_answer">間違いました!</string>
+    <string name="put_back">戻します</string>
+    <string name="put_further">それでも続けます</string>
+    <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
+    <string name="learned">勉強した</string>
+    <string name="expired">失効した</string>
+    <string name="sum">全部</string>
+    <string name="untrained">勉強したない</string>
+    <string name="ustm_timer_paused">超短期記憶 \"途切れてます\"</string>
+    <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
+    <string name="ustm">超短期記憶</string>
+    <string name="stm">短期記憶</string>
+    <string name="stack">スタック</string>
+    <string name="card_added">カードを足しました</string>
+    <string name="learncards_show_hint">カードの後を覚えて見てください!</string>
+    <string name="info_text_hint">レッソンの説明</string>
+    <string name="next_expire_date">次の有効期限:</string>
+    <string name="nothing_learned_yet">まだ何も勉強してません!</string>
+    <string name="not_learned_yet">まだ勉強してません!</string>
+    <string name="no_description">説明がありません…</string>
+    <string name="expired_cards">有効期限したカードの数:</string>
+    <string name="search_hint">カードを探す</string>
+    <string name="learned_at">学んだ:</string>
+    <string name="expire_at">有効期限:</string>
+    <string name="expired_at">経った:</string>
+    <string name="synchronizing">同期</string>
+    <string name="write_permission_rational_message">許可を与えないと、レッスンを開くことができません!</string>
+    <string name="write_permission_info_message">レッソンを開くと保存するための,
+        Mobile　Pauker++ がストレージにアクセスするためのアクセス許可が必要です.</string>
+    <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
+    <string name="learncards_finished_learning">Lernen beendet</string>
+    <string name="saving_success">Datei gespeichert</string>
+    <string name="delete_lesson_message">Lektion wirklich löschen?</string>
+    <string name="delete_card_message">Karte wirklich löschen?</string>
+    <string name="open_lesson_hint">Lektion wird geöffnet</string>
+    <string name="new_lession_created">Neue Lektion erstellt</string>
+    <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
+    <string name="flip_sides_complete">Seiten vertauscht</string>
+    <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite
+        zuerst gezeigt werden soll</string>
+    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="timer_finished">\"Abgelaufen!\"</string>
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="sr_repeat_type">Repeat type:</string>
+    <!-- endregion -->
+
+    <!-- region Sonstiges -->
+    <string name="yes">Ja</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="ok">OK</string>
+    <string name="text_size">Textgröße</string>
+    <string name="background">Hintergrund</string>
+    <string name="text_color">Schriftfarbe</string>
+    <string name="bold">Fett</string>
+    <string name="italic">Kursiv</string>
+    <string name="no">Nein</string>
+    <string name="repeat_type">Repeat type</string>
+    <!-- endregion -->
+
+    <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">Mobile Pauker++って何</string>
+    <string name="repeat_type_description">Repeat Type Image</string>
+    <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
+    <string name="sync_manually">Mit Dropbox synchronisieren</string>
+    <string name="add_new_card">Neue Karte</string>
+    <string name="front">Vorderseite</string>
+    <string name="pause_timer">Zeit pausieren</string>
+    <string name="restart_timer">Zeit fortsetzen</string>
+    <string name="back">Rückseite</string>
+    <string name="learn_new_card">Neue Karten lernen</string>
+    <string name="repeat_expired_cards">Abgelaufene Karten wiederholen</string>
+    <string name="open_lesson">Lektion öffnen</string>
+    <string name="save_lesson">Lektion speichern</string>
+    <string name="search">Suche</string>
+    <string name="reset_cards">Lektion zurücksetzen</string>
+    <string name="change_sides">Seiten der Karte vertauschen</string>
+    <string name="edit_info_text">Infotext bearbeiten</string>
+    <string name="settings">Einstellungen</string>
+    <string name="edit_description_title">Lektionsbeschreibung</string>
+    <string name="new_lesson">Neue Lektion</string>
+    <string name="not_now">Nicht jetzt</string>
+    <string name="next">Weiter</string>
+    <string name="repeat_question">Haben Sie es gewusst?</string>
+    <string name="saving_title">Speichern… Bitte warten!</string>
+    <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
+    <string name="edit_card">Karte bearbeiten</string>
+    <string name="bar_chart_title">Statistiken</string>
+    <string name="lessons">Lektionen</string>
+    <string name="new_lesson_dialog_title">Neue Lektion erstellen?</string>
+    <string name="reset_lesson_dialog_title">Lektion zurücksetzen?</string>
+    <string name="lektion_verwalten_titel">Lektion verwalten</string>
+    <string name="exit_learning_dialog">Lernen beenden?</string>
+    <string name="delete_card">Karte löschen</string>
+    <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
+    <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
+    <!-- endregion -->
+
+    <!-- region Buttontexte -->
+    <string name="next_card">Nächste Karte -&gt;</string>
+    <string name="show_me">Zeigs mir!</string>
+    <string name="skipWaiting">Timer laufen noch…</string>
+    <string name="skip_waiting_button">Egal! Mach weiter!</string>
+    <string name="add">Hinzufügen</string>
+    <string name="learn">Lernen</string>
+    <string name="repeat">Wiederholen</string>
+    <string name="reset">Zurücksetzen</string>
+    <!-- endregion -->
+
+    <!-- region Settings -->
+
+    <!-- region Gruppentitel -->
+    <string name="learning_cards">Karten lernen</string>
+    <string name="times">Zeiten</string>
+    <string name="other">Sonstiges</string>
+    <!-- endregion -->
+
+    <!-- region Titles -->
+    <string name="offen_lassen_checkbox">Offen lassen</string>
+    <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
+    <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
+    <string name="hide_times_title">Zeiten ausblenden</string>
+    <string name="repeat_cards_mode_title">Karten wiederholen</string>
+    <string name="return_forgotten_cards_title">Vergessene Karten zurücklegen</string>
+    <string name="auto_save_title">Automatisches Speichern</string>
+    <string name="about_title">Über MobilePauker++</string>
+    <string name="learn_new_cards_randomly_title">Neue Karten zufällig lernen</string>
+    <string name="auto_sync_title">Automatische Synchronisation</string>
+    <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
+    <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
+    <string name="stm_title">KZG</string>
+    <string name="ustm_title">UKZG</string>
+    <string name="flip_cards">Seiten vertauschen</string>
+    <!-- endregion -->
+
+    <!-- region Beschreibungen -->
+    <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
+    <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
+    <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
+    <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
+    <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm lernen</string>
+    <string name="ustm_summ">Ultrakurzzeit-Gedächtnis: %ss</string>
+    <string name="stm_summ">Kurzzeit-Gedächtnis: %smin</string>
+    <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
+    <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
+    <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
+    <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem Speichern an</string>
+    <!-- endregion -->
+
+    <!-- endregion -->
+
+    <!-- redion Notifications -->
+    <!-- endregion -->
+
+    <!-- region Neue Strings -->
+    <string name="New">Neu</string>
+    <string name="go_on">Go on</string>
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
+    <string name="error_upload">Error while uploading File</string>
+    <string name="datei_ist_bereits_vorhanden">File is already existing!</string>
+    <string name="save_lesson_before_question">Do you want to save before?</string>
+    <string name="error_file_not_found">The File was not found, please try again manually</string>
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
+    <string name="import_title">Lektion wird importiert. Bitte warten…</string>
+    <string name="lesson_import_success">Lesson imported</string>
+    <string name="proof">Proof</string>
+    <string name="delete">Delete</string>
+    <string name="unlink_dropbox_title">Unlink Dropbox</string>
+    <string name="save">Speichern</string>
+    <string name="association">Association</string>
+    <string name="unlinking">Unlinking</string>
+    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App is not
+        shown.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="show_notification_summ">Notifys you, when the timers expire and the app is not opend</string>
+    <string name="show_notification_title">Show Notification</string>
+    <string name="channel_timerbar_name">Timer bar</string>
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is not shown.</string>
+    <!-- endregion -->
+</resources>

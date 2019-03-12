@@ -6,6 +6,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Batch;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
+import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
 import com.daniel.mobilepauker2.utils.Log;
@@ -22,7 +23,7 @@ import java.util.zip.GZIPOutputStream;
 public class FlashCardXMLStreamWriter {
 
     //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
-    public static void saveLesson() {
+    public static void saveLesson() throws SecurityException {
         final ModelManager modelManager = ModelManager.instance();
         final PaukerManager paukerManager = PaukerManager.instance();
         if (modelManager.isLessonNotNew()) {
@@ -46,10 +47,16 @@ public class FlashCardXMLStreamWriter {
 
                 FileOutputStream fos = new FileOutputStream(newxmlfile);
                 gzipOutputStream = new GZIPOutputStream(fos);
+                boolean isRenamed = false;
                 if (FlashCardXMLStreamWriter.writeXML(modelManager.getLesson(), gzipOutputStream)) {
-                    newxmlfile.renameTo(modelManager.getFilePath());
+                    isRenamed = newxmlfile.renameTo(modelManager.getFilePath());
                 }
+                //noinspection ResultOfMethodCallIgnored
                 newxmlfile.delete();
+                if (!isRenamed) {
+
+                    throw new SecurityException("Saving not possible. Unkown error.");
+                }
 
                 gzipOutputStream.close();
             } catch (FileNotFoundException e) {
@@ -62,7 +69,7 @@ public class FlashCardXMLStreamWriter {
         }
     }
 
-    public static boolean writeXML(Lesson lesson, OutputStream outputStream) {
+    private static boolean writeXML(Lesson lesson, OutputStream outputStream) {
 
         XmlSerializer serializer = Xml.newSerializer();
 
@@ -112,7 +119,9 @@ public class FlashCardXMLStreamWriter {
             for (LongTermBatch longTermBatch : lesson.getLongTermBatches()) {
                 serializer.startTag("", "Batch");
                 for (Card card : longTermBatch.getCards()) {
-                    serializeCard(card, serializer);
+                    if (!serializeCard(card, serializer)) {
+                        Log.w("FlashCardXMLStreamWriter::writeXML", "Failed to serialise card");
+                    }
                 }
                 serializer.endTag("", "Batch");
             }
@@ -130,6 +139,7 @@ public class FlashCardXMLStreamWriter {
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean serializeCard(Card card, XmlSerializer serializer) {
         if (serializer == null) {
             return false;
@@ -154,8 +164,12 @@ public class FlashCardXMLStreamWriter {
                 serializer.attribute("", "LearnedTimestamp", Long.toString(timeStamp));
             }
 
-            serializer.attribute("", "Orientation", "LTR"); // TODO this should not default
-            serializer.attribute("", "RepeatByTyping", "false"); // TODO this should not default
+            try {
+                serializer.attribute("", "Orientation", String.valueOf(card.getFrontSide().getOrientation().getOrientation()));
+                serializer.attribute("", "RepeatByTyping", String.valueOf(card.isRepeatedByTyping()));
+            } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
+                Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Frontsideoptions!");
+            }
 
             serializer.startTag("", "Text");
 
@@ -165,25 +179,33 @@ public class FlashCardXMLStreamWriter {
 
             serializer.endTag("", "Text");
 
-            if (isFrontSideFontValid(card)) {
-                serializer.startTag("", "Font");
-                serializer.attribute("", "Background", card.getFrontSide().getFont().getBackgroundColor());
-                serializer.attribute("", "Bold", card.getFrontSide().getFont().getBold());
-                serializer.attribute("", "Family", card.getFrontSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", card.getFrontSide().getFont().getForeground());
-                serializer.attribute("", "Italic", card.getFrontSide().getFont().getItalic());
-                serializer.attribute("", "Size", card.getFrontSide().getFont().getSize());
-                serializer.endTag("", "Font");
-            } else {
-                Log.w("FlashCardXMLStreamWriter::serialiseCard", "card front font null");
+            Font font;
+            try {
+                font = card.getFrontSide().getFont();
+                if (font != null) {
+                    serializer.startTag("", "Font");
+                    serializer.attribute("", "Background", String.valueOf(font.getBackgroundColor()));
+                    serializer.attribute("", "Bold", String.valueOf(font.isBold()));
+                    serializer.attribute("", "Family", font.getFamily());
+                    serializer.attribute("", "Foreground", String.valueOf(font.getTextColor()));
+                    serializer.attribute("", "Italic", String.valueOf(font.isItalic()));
+                    serializer.attribute("", "Size", String.valueOf(font.getTextSize()));
+                    serializer.endTag("", "Font");
+                }
+            } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
+                Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Font of Frontside!");
             }
 
             serializer.endTag("", "FrontSide");
 
             // ReverseSide
             serializer.startTag("", "ReverseSide");
-            serializer.attribute("", "Orientation", "LTR"); // TODO defaults
-            serializer.attribute("", "RepeatByTyping", "false"); // TODO defaults
+            try {
+                serializer.attribute("", "Orientation", String.valueOf(card.getReverseSide().getOrientation().getOrientation()));
+                serializer.attribute("", "RepeatByTyping", String.valueOf(card.isRepeatedByTyping()));
+            } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
+                Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Backsideoptions!");
+            }
 
             // BugFix*******************
             // 11/12/2011 - bf
@@ -202,86 +224,46 @@ public class FlashCardXMLStreamWriter {
             }
             serializer.endTag("", "Text");
 
-
-            if (isReverseSideFontValid(card)) {
-                serializer.startTag("", "Font");
-                serializer.attribute("", "Background", card.getReverseSide().getFont().getBackgroundColor());
-                serializer.attribute("", "Bold", card.getReverseSide().getFont().getBold());
-                serializer.attribute("", "Family", card.getReverseSide().getFont().getFamily());
-                serializer.attribute("", "Foreground", card.getReverseSide().getFont().getForeground());
-                serializer.attribute("", "Italic", card.getReverseSide().getFont().getItalic());
-                serializer.attribute("", "Size", card.getReverseSide().getFont().getSize());
-                serializer.endTag("", "Font");
-            } else {
-                Log.w("FlashCArdXMLStreamWriter::serialiseCard", "card reverse font null");
+            try {
+                font = card.getReverseSide().getFont();
+                if (font != null) {
+                    serializer.startTag("", "Font");
+                    serializer.attribute("", "Background", String.valueOf(font.getBackgroundColor()));
+                    serializer.attribute("", "Bold", String.valueOf(font.isBold()));
+                    serializer.attribute("", "Family", font.getFamily());
+                    serializer.attribute("", "Foreground", String.valueOf(font.getTextColor()));
+                    serializer.attribute("", "Italic", String.valueOf(font.isItalic()));
+                    serializer.attribute("", "Size", String.valueOf(font.getTextSize()));
+                    serializer.endTag("", "Font");
+                }
+            } catch (IOException | IllegalArgumentException | IllegalStateException | NullPointerException e) {
+                Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising Font of Backside!");
             }
 
             serializer.endTag("", "ReverseSide");
 
-            serializer.endTag("", "Card");
         } catch (Exception e) {
             Log.e("FlashCardXMLStreamWriter::serialiseCard", "exception while serialising card!");
             return false;
             //throw new RuntimeException(e);
             // TODO carry on at all costs in case we lose the pack
             // TODO each serialiser call should have its own try catch
+        } finally {
+            try {
+                serializer.endTag("", "Card");
+            } catch (IOException e) {
+                Log.e("FlashCardXMLStreamWriter::serialiseCard", "Error of serializer. Can't end card");
+            }
         }
 
         return true;
-    }
-
-    private static boolean isFrontSideFontValid(Card card) {
-        boolean fontBoolean = true;
-
-        if (card.getFrontSide().getFont() == null) {
-            fontBoolean = false;
-        } else {
-
-            if (card.getFrontSide().getFont().getBackgroundColor() == null ||
-                    card.getFrontSide().getFont().getBackgroundColor() == null ||
-                    card.getFrontSide().getFont().getBold() == null ||
-                    card.getFrontSide().getFont().getFamily() == null ||
-                    card.getFrontSide().getFont().getForeground() == null ||
-                    card.getFrontSide().getFont().getItalic() == null ||
-                    card.getFrontSide().getFont().getSize() == null
-                    ) {
-                fontBoolean = false;
-            }
-        }
-
-        return fontBoolean;
-    }
-
-    private static boolean isReverseSideFontValid(Card card) {
-        boolean fontBoolean = true;
-
-        if (card.getReverseSide().getFont() == null) {
-            fontBoolean = false;
-        } else {
-
-            if (card.getReverseSide().getFont().getBackgroundColor() == null ||
-                    card.getReverseSide().getFont().getBackgroundColor() == null ||
-                    card.getReverseSide().getFont().getBold() == null ||
-                    card.getReverseSide().getFont().getFamily() == null ||
-                    card.getReverseSide().getFont().getForeground() == null ||
-                    card.getReverseSide().getFont().getItalic() == null ||
-                    card.getReverseSide().getFont().getSize() == null
-                    ) {
-                fontBoolean = false;
-            }
-        }
-
-        return fontBoolean;
     }
 
     private static boolean isCardValid(Card card) {
         if (card == null) {
             return false;
-        } else if (card.getFrontSide() == null ||
-                card.getReverseSide() == null) {
-            return false;
-        }
-        return true;
+        } else return card.getFrontSide() != null &&
+                card.getReverseSide() != null;
     }
 
 }

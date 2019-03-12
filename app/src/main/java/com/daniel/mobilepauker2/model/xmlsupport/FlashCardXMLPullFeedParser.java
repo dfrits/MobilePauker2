@@ -10,17 +10,15 @@ import com.daniel.mobilepauker2.model.pauker_native.ComponentOrientation;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.pauker_native.LongTermBatch;
+import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 
-import java.io.EOFException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
 
@@ -28,6 +26,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
         super(feedUrl);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public Lesson parse() {
 
         List<FlashCard> flashCards = null;
@@ -77,22 +76,24 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                             currentFlashCard.setInitialBatch(batchCount - 1); // This line is repeated many times!
                             if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.FRONTSIDE) || name.equalsIgnoreCase(FlashCardXMLPullFeedParser.REVERSESIDE)) {
                                 String orientation = parser.getAttributeValue(null, "Orientation");
+                                orientation = orientation == null ? Constants.STANDARD_ORIENTATION : orientation;
                                 String repeatByTyping = parser.getAttributeValue(null, "RepeatByTyping");
+                                boolean bRepeatByTyping = repeatByTyping == null ? Constants.STANDARD_REPEAT : repeatByTyping.equals("true");
                                 String learnedTimestamp = parser.getAttributeValue(null, "LearnedTimestamp");
-
-                                currentFlashCard.setRepeatByTyping(repeatByTyping.equals("true"));
 
                                 if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.FRONTSIDE)) {
                                     SIDEA = true;
                                     SIDEB = false;
 
                                     if (orientation != null) {
-                                        currentFlashCard.getFrontSide().setOrientation(new ComponentOrientation("LTR"));
+                                        currentFlashCard.getFrontSide().setOrientation(new ComponentOrientation(orientation));
                                     }
+
+                                    currentFlashCard.setRepeatByTyping(bRepeatByTyping);
 
                                     if (learnedTimestamp != null) {
                                         long l = Long.parseLong(learnedTimestamp.trim());
-                                        currentFlashCard.getFrontSide().setLearnedTimestamp(l);
+                                        currentFlashCard.setLearnedTimeStamp(l);
                                     }
 
                                 } else if (name.equalsIgnoreCase(FlashCardXMLPullFeedParser.REVERSESIDE)) {
@@ -100,12 +101,14 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
                                     SIDEB = true;
 
                                     if (orientation != null) {
-                                        currentFlashCard.getReverseSide().setOrientation(new ComponentOrientation("LTR"));
+                                        currentFlashCard.getReverseSide().setOrientation(new ComponentOrientation(orientation));
                                     }
+
+                                    currentFlashCard.getReverseSide().setRepeatByTyping(bRepeatByTyping);
 
                                     if (learnedTimestamp != null) {
                                         long l = Long.parseLong(learnedTimestamp.trim());
-                                        currentFlashCard.getReverseSide().setLearnedTimestamp(l);
+                                        currentFlashCard.getReverseSide().setLearnedTimeStamp(l);
                                     }
                                 }
 
@@ -253,9 +256,8 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
      * zurückgegeben.
      * @return Eine Map mit dem frühesten Ablaufdatum <b>(index = 0)</b> und die Anzahl abgelaufener
      * Karten (<b>index = 2)</b>
-     * @throws EOFException .
      */
-    public SparseLongArray getNextExpireDate() throws EOFException {
+    public SparseLongArray getNextExpireDate() {
 
         final XmlPullParser parser = Xml.newPullParser();
         final SparseLongArray map = new SparseLongArray(2);

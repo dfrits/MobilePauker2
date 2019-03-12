@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="learn_new_cards_randomly_default">false</bool>
-    <bool name="enable_split_screen_default">true</bool>
     <bool name="hide_times_default">false</bool>
-    <bool name="center_text_default">false</bool>
+    <bool name="show_notification_default">true</bool>
     <bool name="case_sensitive_default">true</bool>
     <bool name="auto_save_default">false</bool>
     <bool name="auto_sync_default">false</bool>

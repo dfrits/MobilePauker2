@@ -8,13 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.daniel.mobilepauker2.R;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,55 +40,61 @@ public class CardAdapter extends ArrayAdapter<FlashCard> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View v = convertView;
         if (v == null) {
-            LayoutInflater inflater = ((Activity)context).getLayoutInflater();
+            LayoutInflater inflater = ((Activity) context).getLayoutInflater();
             v = inflater.inflate(R.layout.search_result, parent, false);
         }
         FlashCard card = items.get(position);
         if (card != null) {
-            TextView sideA = v.findViewById(R.id.tCardSideA);
-            TextView sideB = v.findViewById(R.id.tCardSideB);
+            MPTextView sideA = v.findViewById(R.id.tCardSideA);
+            MPTextView sideB = v.findViewById(R.id.tCardSideB);
             TextView learnedAt = v.findViewById(R.id.tLearnedTime);
             TextView expireAt = v.findViewById(R.id.tExpireTime);
+            TextView stackNumber = v.findViewById(R.id.tStackNumber);
+            ImageView repeatType = v.findViewById(R.id.iRepeatType);
             if (sideA != null) {
-                sideA.setText(card.getSideAText());
+                sideA.setCard(card.getFrontSide());
             }
             if (sideB != null) {
-                sideB.setText(card.getSideBText());
+                sideB.setCard(card.getReverseSide());
             }
-            if (learnedAt != null) {
-                long learnedTime = card.getLearnedTimestamp();
-                String text;
-                if (learnedTime == 0) {
-                    text = context.getString(R.string.not_learned_yet);
-                } else {
-                    Calendar cal = Calendar.getInstance(Locale.getDefault());
-                    cal.setTimeInMillis(learnedTime);
-                    String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
-                    text = context.getString(R.string.learned_at).concat(" ").concat(date);
-                }
+
+            // learnedAt und stackNumber
+            long learnedTime = card.getLearnedTimestamp();
+            if (learnedTime != 0) {
+                Calendar cal = Calendar.getInstance(Locale.getDefault());
+                cal.setTimeInMillis(learnedTime);
+                String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
+                String text = context.getString(R.string.learned_at).concat(" ").concat(date);
                 learnedAt.setText(text);
+
+                int stack = card.getLongTermBatchNumber();
+                stackNumber.setVisibility(View.VISIBLE);
+                text = context.getString(R.string.stack).concat(" ").concat(String.valueOf(stack + 1));
+                stackNumber.setText(text);
             }
-            if (expireAt != null) {
-                long expirationTime = card.getExpirationTime();
-                if (expirationTime == -1) {
-                    expireAt.setVisibility(View.GONE);
+
+            // expireAt
+            long expirationTime = card.getExpirationTime();
+            if (expirationTime != -1) {
+                expireAt.setVisibility(View.VISIBLE);
+                Calendar cal = Calendar.getInstance(Locale.getDefault());
+                cal.setTimeInMillis(expirationTime);
+                String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
+
+                String text;
+                if (expirationTime < System.currentTimeMillis()) {
+                    text = context.getString(R.string.expired_at);
                 } else {
-                    expireAt.setVisibility(View.VISIBLE);
-                    Calendar cal = Calendar.getInstance(Locale.getDefault());
-                    cal.setTimeInMillis(expirationTime);
-                    String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
-
-                    String text;
-                    if (expirationTime < System.currentTimeMillis()) {
-                        text = context.getString(R.string.expired_at);
-                    } else {
-                        text = context.getString(R.string.expire_at);
-                    }
-                    text = text.concat(" ").concat(date);
-
-                    expireAt.setText(text);
+                    text = context.getString(R.string.expire_at);
                 }
+                text = text.concat(" ").concat(date);
+
+                expireAt.setText(text);
             }
+
+            // repeatType
+            int drawable = card.isRepeatedByTyping() ? R.drawable.rt_typing : R.drawable.rt_thinking;
+            repeatType.setImageResource(drawable);
         }
         return v;
     }

@@ -1,12 +1,12 @@
 package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
@@ -14,16 +14,17 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 
 import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.dropbox.DropboxAccDialog;
 import com.daniel.mobilepauker2.utils.Constants;
+import com.daniel.mobilepauker2.utils.Log;
 import com.daniel.mobilepauker2.utils.MinFilter;
-import com.dropbox.core.android.Auth;
 
+import static android.app.Activity.RESULT_OK;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FLIP_CARD_SIDES;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FONT_SIZE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.REPEAT_CARDS;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTTEN_CARDS;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.START_ASSOCIATION;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.DB_PREFERENCE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 
@@ -44,6 +45,10 @@ public class SettingsFragment extends PreferenceFragment
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.preferences);
+        PreferenceScreen preferenceScreen = getPreferenceScreen();
+        preferenceScreen.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+        init(preferenceScreen);
     }
 
     @Override
@@ -52,12 +57,10 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        PreferenceScreen preferenceScreen = getPreferenceScreen();
-        preferenceScreen.getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-
-        init(preferenceScreen);
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE_DB_ACC_DIALOG && resultCode == RESULT_OK) {
+            initSyncPrefs(getContext());
+        }
     }
 
     @Override
@@ -85,7 +88,7 @@ public class SettingsFragment extends PreferenceFragment
         if (preference == null) return;
 
         CharSequence summ = preference.getSummary();
-        Context context = getContext();
+        final Context context = getContext();
 
         if (summ != null) {
             if (preference instanceof EditTextPreference) {
@@ -107,8 +110,6 @@ public class SettingsFragment extends PreferenceFragment
                     summ = getString(R.string.return_forgotten_cards_summ);
                 } else if (s.equals(settingsManager.getSettingsKey(context, FLIP_CARD_SIDES))) {
                     summ = getString(R.string.flip_card_sides_summ);
-                } else if (s.equals(settingsManager.getSettingsKey(context, FONT_SIZE))) {
-                    summ = getString(R.string.font_size_sum);
                 }
 
                 listP.setSummary(String.format(summ.toString(), listP.getEntry()));
@@ -116,37 +117,62 @@ public class SettingsFragment extends PreferenceFragment
         }
 
         if (preference.getKey() != null
-                && preference.getKey().equals(settingsManager.getSettingsKey(context, START_ASSOCIATION))) {
-
-            SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String accessToken = pref.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-            if (accessToken == null) {
-                accessToken = Auth.getOAuth2Token();
-                if (accessToken != null) {
-                    pref.edit().putString(Constants.DROPBOX_ACCESS_TOKEN, accessToken).apply();
-                    initSyncPrefs(preference);
-                } else {
-                    preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                        @Override
-                        public boolean onPreferenceClick(Preference preference) {
-                            Auth.startOAuth2Authentication(getActivity(), Constants.DROPBOX_APP_KEY);
-                            return false;
-                        }
-                    });
-                }
-            } else {
-                getPreferenceScreen().removePreference(preference);
-                initSyncPrefs(preference);
-            }
+                && preference.getKey().equals(settingsManager.getSettingsKey(context, DB_PREFERENCE))) {
+            initSyncPrefs(context);
         }
     }
 
-    private void initSyncPrefs(Preference preference) {
-        ((PreferenceCategory) findPreference(getString(R.string.other))).removePreference(preference);
+    private void removeSyncPrefAndSetAutoSync(boolean enableAutoSync) {
         SwitchPreference switchP = (SwitchPreference) findPreference(settingsManager
                 .getSettingsKey(getContext(), AUTO_SYNC));
 
         switchP.setSummary(R.string.auto_sync_enabled_summ);
-        switchP.setEnabled(true);
+        switchP.setEnabled(enableAutoSync);
+    }
+
+    private void initSyncPrefs(final Context context) {
+        Log.d("SettingsFragment::initSyncPrefs", "init syncprefs");
+        SettingsManager instance = SettingsManager.instance();
+        Preference dbPref = findPreference(instance.getSettingsKey(context, DB_PREFERENCE));
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        final String accessToken = pref.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+
+        if (accessToken == null) {
+            setPrefAss(context, dbPref);
+        } else {
+            pref.edit().putString(Constants.DROPBOX_ACCESS_TOKEN, accessToken).apply();
+            setPrefUnlink(context, dbPref);
+            Log.d("SettingsFragment::initSyncPrefs", "enable autosync");
+            removeSyncPrefAndSetAutoSync(true);
+        }
+    }
+
+    private void setPrefAss(Context context, Preference dbPref) {
+        dbPref.setTitle(R.string.associate_dropbox_title);
+        final Intent assIntent = new Intent(context, DropboxAccDialog.class);
+        assIntent.putExtra(DropboxAccDialog.AUTH_MODE, true);
+        dbPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG);
+                return false;
+            }
+        });
+        Log.d("SettingsFragment::initSyncPrefs", "disable autosync");
+        removeSyncPrefAndSetAutoSync(false);
+    }
+
+    private void setPrefUnlink(final Context context, final Preference dbPref) {
+        dbPref.setTitle(R.string.unlink_dropbox_title);
+        final Intent unlIntent = new Intent(context, DropboxAccDialog.class);
+        unlIntent.putExtra(DropboxAccDialog.UNL_MODE, true);
+        dbPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Log.d("SettingsFragment::initSyncPrefs", "unlinkDB clicked");
+                startActivityForResult(unlIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG);
+                return false;
+            }
+        });
     }
 }

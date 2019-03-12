@@ -21,14 +21,11 @@ package com.daniel.mobilepauker2.model;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.CardSide;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
-import com.daniel.mobilepauker2.utils.Log;
 
 public class FlashCard extends Card {
 
-    int mRowId;
-
-    String mIndex;
-    int mInitialBatch = 0;
+    private String mIndex;
+    private int mInitialBatch = 0;
 
     public int getInitialBatch() {
         return mInitialBatch;
@@ -38,7 +35,7 @@ public class FlashCard extends Card {
         this.mInitialBatch = initialBatch;
     }
 
-    public FlashCard(String frontSideText, String reverseSideText, String index, String rowID, String learnStatus) {
+    public FlashCard(String frontSideText, String reverseSideText, String index, String learnStatus) {
         super(new CardSide(), new CardSide());
 
         this.frontSide.setText(frontSideText);
@@ -47,38 +44,15 @@ public class FlashCard extends Card {
         this.frontSide.setFont(new Font());
         this.reverseSide.setFont(new Font());
 
-        try {
-            this.setRowId(Integer.parseInt(rowID));
-        } catch (Exception e) {
-            Log.e("FlashCard::Constructor", "Invalid Row ID, defaulting to -1");
-            this.setRowId(-1);
-        }
-
         if (learnStatus.contentEquals("true")) {
             this.setLearned(true);
         } else {
             this.setLearned(false);
         }
-
-    }
-
-    public FlashCard(CardSide frontSide, CardSide reverseSide) {
-        super(frontSide, reverseSide);
-        this.setLearned(false);
-        this.setIndex("0");
-        this.setRowId(-1);
     }
 
     public FlashCard() {
         super(new CardSide(), new CardSide());
-    }
-
-    public int getRowId() {
-        return mRowId;
-    }
-
-    public void setRowId(int mRowId) {
-        this.mRowId = mRowId;
     }
 
     public String getIndex() {
@@ -91,7 +65,7 @@ public class FlashCard extends Card {
 
     public enum SideShowing {SIDE_A, SIDE_B}
 
-    SideShowing side = SideShowing.SIDE_A;
+    private SideShowing side = SideShowing.SIDE_A;
 
     public String getSideAText() {
         return this.frontSide.getText();
@@ -116,9 +90,4 @@ public class FlashCard extends Card {
     public void setSide(SideShowing side) {
         this.side = side;
     }
-
-    public void printToDebug() {
-        Log.d("FlashCard:PrintToDebug", getSideAText() + "," + getSideBText() + "," + mRowId);
-    }
-
 }

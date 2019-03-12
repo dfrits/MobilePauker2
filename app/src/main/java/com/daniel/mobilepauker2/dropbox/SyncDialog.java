@@ -1,11 +1,16 @@
 package com.daniel.mobilepauker2.dropbox;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +23,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.utils.Constants;
+import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.files.DeletedMetadata;
@@ -25,22 +31,21 @@ import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
 import com.dropbox.core.v2.files.Metadata;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.daniel.mobilepauker2.PaukerManager.showToast;
+
 /**
- * Created by dfritsch on 21.03.2018.
- * veesy.de
- * hs-augsburg
+ * Created by dfritsch on 21.11.2018.
+ * MobilePauker++
  */
 
 public class SyncDialog extends Activity {
@@ -49,10 +54,13 @@ public class SyncDialog extends Activity {
     private final Context context = this;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
-    private String accessToken;
-    private List<File> files = new ArrayList<>();
+    private File[] files;
     private Timer timeout;
     private TimerTask timerTask;
+    private NetworkStateReceiver networkStateReceiver;
+
+    // Hintergrundtasks
+    private List<AsyncTask> tasks = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,65 +68,87 @@ public class SyncDialog extends Activity {
 
         setContentView(R.layout.progress_dialog);
 
-        RelativeLayout progressBar = findViewById(R.id.pFrame);
-        progressBar.setVisibility(View.VISIBLE);
-        TextView title = findViewById(R.id.pTitle);
-        title.setText(R.string.synchronizing);
-
         Intent intent = getIntent();
-        accessToken = intent.getStringExtra(ACCESS_TOKEN);
+        String accessToken = intent.getStringExtra(ACCESS_TOKEN);
         if (accessToken == null) {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet");
-            setResult(RESULT_CANCELED);
-            finish();
+            finishDialog(RESULT_CANCELED);
+            return;
         }
 
+        final ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            final NetworkInfo ni = cm.getActiveNetworkInfo();
+            if (ni == null || !ni.isConnected()) {
+                showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
+                finishDialog(RESULT_CANCELED);
+                return;
+            }
+        }
+
+        networkStateReceiver = new NetworkStateReceiver(new NetworkStateReceiver.ReceiverCallback() {
+            @Override
+            public void connectionLost() {
+                showToast((Activity) context, "Internetverbindung prüfen!", Toast.LENGTH_LONG);
+                finishDialog(RESULT_CANCELED);
+            }
+        });
+        registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
+        DropboxClientFactory.init(accessToken);
         Serializable serializableExtra = intent.getSerializableExtra(FILES);
         if (serializableExtra instanceof File[]) {
-            File[] tmpFiles = (File[]) serializableExtra;
-            long lastSyncTime = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getLong(Constants.DROPBOX_LAST_SYNC_TIME, 0L);
-            for (File tmpFile : tmpFiles) {
-                if (tmpFile.lastModified() > lastSyncTime) {
-                    files.add(tmpFile);
-                }
+            RelativeLayout progressBar = findViewById(R.id.pFrame);
+            progressBar.setVisibility(View.VISIBLE);
+            TextView title = findViewById(R.id.pTitle);
+            title.setText(R.string.synchronizing);
+            files = (File[]) serializableExtra;
+            startTimer();
+            loadData();
+        } else if (serializableExtra instanceof File) {
+            Log.d("SyncDialog:onCreate", "Upload just one file");
+            List<File> list = new ArrayList<>();
+            File file = (File) serializableExtra;
+            if (file.exists()) {
+                Log.d("SyncDialog:onCreate", "file exists");
+                list.add((File) serializableExtra);
+                uploadFiles(list);
+                finishDialog(RESULT_OK);
+            } else {
+                Log.d("SyncDialog:onCreate", "file does not exist");
+                showToast((Activity) context, R.string.error_file_not_found, Toast.LENGTH_LONG);
+                finishDialog(RESULT_CANCELED);
             }
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
-            setResult(RESULT_CANCELED);
-            finish();
+            finishDialog(RESULT_CANCELED);
         }
-
-        startTimer();
-
-        loadData();
     }
 
     /**
      * Sucht nach allen Dateien im Dropboxordner, validiert sie und ruft dann
-     * {@link SyncDialog#syncWithFiles(List, List) syncWithFiles()} auf.
+     * {@link SyncDialog#syncWithFiles(List, Map) synWithFiles()} auf.
      */
     private void loadData() {
-        DropboxClientFactory.init(accessToken);
-
-        new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
+        AsyncTask<String, Void, ListFolderResult> listFolderTask;
+        listFolderTask = new ListFolderTask(DropboxClientFactory.getClient(), new ListFolderTask.Callback() {
             @Override
             public void onDataLoaded(ListFolderResult result) {
                 List<Metadata> dbFiles = new ArrayList<>(); // Dateien in Dropbox mit der passenden Endung
                 List<Metadata> dbDeletedFiles = new ArrayList<>(); // Dateien, die in Dropbox gelöscht wurden
-                long lastSyncTime = PreferenceManager.getDefaultSharedPreferences(context)
-                        .getLong(Constants.DROPBOX_LAST_SYNC_TIME, 0L);
+                List<String> lokalAddedFiles = modelManager.getLokalAddedFiles(context);
 
                 while (true) {
                     List<Metadata> entries = result.getEntries();
 
                     for (Metadata entry : entries) {
-                        if (paukerManager.validateFilename(context, entry.getName())) {
+                        if (paukerManager.validateFilename(entry.getName())) {
                             if (entry instanceof DeletedMetadata) {
-                                dbDeletedFiles.add(entry);
+                                if (!lokalAddedFiles.contains(entry.getName())) {
+                                    dbDeletedFiles.add(entry);
+                                }
                             } else {
-                                if (((FileMetadata) entry).getClientModified().getTime() > lastSyncTime)
-                                    dbFiles.add(entry);
+                                dbFiles.add(entry);
                             }
                         }
                     }
@@ -137,18 +167,45 @@ public class SyncDialog extends Activity {
             }
 
             @Override
-            public void onError(Exception e) {
-                setResult(RESULT_CANCELED);
-                finish();
-
+            public void onError(final DbxException e) {
                 Log.d("LessonImportActivity::loadData::onError"
                         , "Error loading Files: " + e.getMessage());
-                Toast.makeText(context,
-                        "An error has occurred",
-                        Toast.LENGTH_SHORT)
-                        .show();
+                showToast((Activity) context,
+                        R.string.simple_error_message,
+                        Toast.LENGTH_SHORT);
+                cancelTasks();
+                if (e.getRequestId().equals("401")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle("Dropbox token is invalid!")
+                            .setMessage("There is something wrong with the dropbox token. Maybe it is " +
+                                    "solved by the next try. If this doesn't work" +
+                                    "please contact me.")
+                            .setPositiveButton(R.string.ok, null)
+                            .setNeutralButton("Send E-Mail", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ErrorReporter reporter = ErrorReporter.instance();
+                                    reporter.init(context);
+                                    reporter.uncaughtException(null, e);
+                                    reporter.CheckErrorAndSendMail();
+                                }
+                            })
+                            .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    PreferenceManager.getDefaultSharedPreferences(context).edit()
+                                            .putString(Constants.DROPBOX_ACCESS_TOKEN, null).apply();
+                                    finishDialog(RESULT_CANCELED);
+                                }
+                            })
+                            .setCancelable(false);
+                    builder.create().show();
+                } else {
+                    finishDialog(RESULT_CANCELED);
+                }
             }
         }).execute(Constants.DROPBOX_PATH);
+        tasks.add(listFolderTask);
     }
 
     /**
@@ -159,28 +216,30 @@ public class SyncDialog extends Activity {
      */
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void deleteFiles(List<Metadata> deletedFiles, final List<Metadata> validatedFiles) {
-        final List<File> localDeletedFiles = getLokalDeletedFiles(); // Dateien, die lokal gelöscht wurden
+        final Map<String, String> lokalDeletedFiles = modelManager.getLokalDeletedFiles(context); // Dateien, die lokal gelöscht wurden
 
         if (files != null) {
+            List<File> filesTMP = new ArrayList<>(Arrays.asList(files));
             for (int i = 0; i < deletedFiles.size(); i++) {
-                Metadata metadata = deletedFiles.get(i);
-                if (metadata instanceof DeletedMetadata) {
-                    DeletedMetadata deletedMetadata = (DeletedMetadata) metadata;
-                    int index = getFileIndex(deletedMetadata.getName(), files);
+                if (deletedFiles.get(i) instanceof DeletedMetadata) {
+                    DeletedMetadata metadata = (DeletedMetadata) deletedFiles.get(i);
+                    int index = getFileIndex(new File(metadata.getName()), filesTMP);
                     if (index > -1) {
-                        files.get(index).delete();
+                        filesTMP.get(index).delete();
                     }
                 }
             }
         }
 
-        File[] data = new File[localDeletedFiles.size()];
-        data = localDeletedFiles.toArray(data);
+        String[] data = new String[lokalDeletedFiles.keySet().size()];
+        data = lokalDeletedFiles.keySet().toArray(data);
 
-        new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
+        AsyncTask<String, Void, List<Metadata>> deleteTask;
+        deleteTask = new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
             public void onDeleteComplete(List<Metadata> result) {
-                syncWithFiles(validatedFiles, localDeletedFiles);
+                modelManager.resetDeletedFilesData(context);
+                syncWithFiles(validatedFiles, lokalDeletedFiles);
             }
 
             @Override
@@ -188,68 +247,54 @@ public class SyncDialog extends Activity {
                 System.out.println();
             }
         }).execute(data);
-    }
-
-    @NonNull
-    private List<File> getLokalDeletedFiles() {
-        final List<File> filesToDelete = new ArrayList<>();
-        try {
-            FileInputStream fis = openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String fileName = reader.readLine();
-            while (fileName != null) {
-                if (!fileName.trim().isEmpty()) {
-                    filesToDelete.add(new File(fileName));
-                }
-                fileName = reader.readLine();
-            }
-            modelManager.resetDeletedFilesData(context);
-        } catch (IOException e) {
-            // TODO Error
-        }
-        return filesToDelete;
+        tasks.add(deleteTask);
     }
 
     /**
      * Aktualisiert die Files und ladet gegebenenfalls runter bzw hoch.
-     * @param validatedFiles    Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
+     * @param metadataList      Liste von Metadaten der Dateien auf Dropbox, welche mit den lokalen
      *                          Dateien verglichen werden sollen
-     * @param localDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
+     * @param lokalDeletedFiles Liste von Files, die im lokalen Speicher gelöscht wurden
      */
-    private void syncWithFiles(List<Metadata> validatedFiles, List<File> localDeletedFiles) {
+    private void syncWithFiles(List<Metadata> metadataList, Map<String, String> lokalDeletedFiles) {
+        // Lokale Files kopieren, damit nichts verloren geht
+        List<File> filesTMP;
+        if (files != null) {
+            filesTMP = new ArrayList<>(Arrays.asList(files));
+        } else {
+            filesTMP = new ArrayList<>();
+        }
+
         List<File> lokal = new ArrayList<>(); // Zum Hochladen
         List<FileMetadata> dropB = new ArrayList<>(); // Zum Runterladen
         int downloadSize = 0; // Die Gesamtgröße zum runterladen
 
-        for (int i = 0; i < validatedFiles.size(); i++) {
-            if (validatedFiles.get(i) instanceof FileMetadata) {
-                FileMetadata metadata = (FileMetadata) validatedFiles.get(i);
+        for (int i = 0; i < metadataList.size(); i++) {
+            if (metadataList.get(i) instanceof FileMetadata) {
+                FileMetadata metadata = (FileMetadata) metadataList.get(i);
 
-                if (paukerManager.validateFilename(context, metadata.getName())) {
-                    int fileIndex = getFileIndex(metadata.getName(), files);
+                if (paukerManager.validateFilename(metadata.getName())) {
+                    int fileIndex = getFileIndex(new File(metadata.getName()), filesTMP);
 
                     if (fileIndex == -1) {
-                        if (getFileIndex(metadata.getName(), localDeletedFiles) == -1) {
+                        if (getFileIndex(metadata.getName(), lokalDeletedFiles.keySet()) == -1) {
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
                     } else {
-                        long serverTime = metadata.getClientModified().getTime();
-                        long localTime = files.get(fileIndex).lastModified();
-                        if (serverTime < localTime) {
-                            lokal.add(files.get(fileIndex));
-                        } else if (serverTime > localTime) {
+                        if (metadata.getClientModified().getTime() < filesTMP.get(fileIndex).lastModified()) {
+                            lokal.add(filesTMP.get(fileIndex));
+                        } else {
                             dropB.add(metadata);
                             downloadSize += metadata.getSize();
                         }
-                        files.remove(fileIndex);
+                        filesTMP.remove(fileIndex);
                     }
                 }
             }
         }
 
-        // Alle übrigen Dateien in der Liste sind lokal neu hinzugefügt worden und werden hochgeladen.
-        if (!files.isEmpty()) lokal.addAll(files);
+        if (!filesTMP.isEmpty()) lokal.addAll(filesTMP);
 
         if (!lokal.isEmpty()) {
             uploadFiles(lokal);
@@ -258,9 +303,7 @@ public class SyncDialog extends Activity {
         if (!dropB.isEmpty()) {
             downloadFiles(dropB, downloadSize);
         } else {
-            PreferenceManager.getDefaultSharedPreferences(context).edit()
-                    .putLong(Constants.DROPBOX_LAST_SYNC_TIME, System.currentTimeMillis()).apply();
-            setResult(RESULT_OK);
+            setResult(modelManager.resetIndexFiles(context) ? RESULT_OK : RESULT_CANCELED);
             finish();
         }
     }
@@ -273,7 +316,8 @@ public class SyncDialog extends Activity {
         FileMetadata[] data = new FileMetadata[list.size()];
         data = list.toArray(data);
         final ProgressBar progressBar = findViewById(R.id.pBar);
-        new DownloadFileTask(DropboxClientFactory.getClient(),
+        AsyncTask<FileMetadata, FileMetadata, File[]> downloadTask;
+        downloadTask = new DownloadFileTask(DropboxClientFactory.getClient(),
                 new DownloadFileTask.Callback() {
                     @Override
                     public void onDownloadStartet() {
@@ -298,14 +342,14 @@ public class SyncDialog extends Activity {
                         Log.e("LessonImportActivity::downloadFiles",
                                 "Failed to download file.", e);
 
-                        Toast.makeText(context,
-                                "An error has occurred",
+                        showToast((Activity) context,
+                                R.string.simple_error_message,
                                 Toast.LENGTH_SHORT)
-                                .show();
-                        setResult(RESULT_CANCELED);
-                        finish();
+                        ;
+                        finishDialog(RESULT_CANCELED);
                     }
                 }).execute(data);
+        tasks.add(downloadTask);
     }
 
     /**
@@ -314,30 +358,60 @@ public class SyncDialog extends Activity {
      */
     private void uploadFiles(List<File> list) {
         File[] data = new File[list.size()];
-        data = list.toArray(data);
-        new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
+        for (int i = 0; i < list.size(); i++) {
+            File file = list.get(i);
+            if (file.exists()) data[i] = file;
+        }
+        AsyncTask<File, Void, List<Metadata>> uploadTask;
+        uploadTask = new UploadFileTask(DropboxClientFactory.getClient(), new UploadFileTask.Callback() {
             @Override
             public void onUploadComplete(List<Metadata> result) {
-                System.out.println();
+                modelManager.resetAddedFilesData(context);
+                Log.d("SyncDialog:uploadFiles", "upload success");
             }
 
             @Override
-            public void onError(Exception e) {
-                Log.e("LessonImportActivity::uploadFiles",
-                        "Failed to upload file.", e);
+            public void onError(final Exception e) {
+                Log.e("SyncDialog::uploadFiles",
+                        "upload error: ", e);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        showToast((Activity) context, e.getMessage(), Toast.LENGTH_LONG);
+                    }
+                });
             }
         }).execute(data);
+        tasks.add(uploadTask);
     }
 
     /**
-     * Sucht nach dem ersten Index des File mit dem übergebenen Namen.
+     * Sucht nach dem ersten Index des Files mit dem übergebenen Namen.
+     * @param file Name des Files
+     * @param list Liste in der gesucht werden soll
+     * @return Index. -1, falls File nicht vorhanden ist
+     */
+    private int getFileIndex(File file, Collection<File> list) {
+        int i = 0;
+        for (File item : list) {
+            if (item.getName().equals(file.getName())) return i;
+            i++;
+        }
+
+        return -1;
+    }
+
+    /**
+     * Sucht nach dem ersten Index des Files mit dem übergebenen Namen.
      * @param fileName Name des Files
      * @param list     Liste in der gesucht werden soll
      * @return Index. -1, falls File nicht vorhanden ist
      */
-    private int getFileIndex(String fileName, List<File> list) {
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).getName().equals(fileName)) return i;
+    private int getFileIndex(String fileName, Collection<String> list) {
+        int i = 0;
+        for (String name : list) {
+            if (name.equals(fileName)) return i;
+            i++;
         }
 
         return -1;
@@ -358,6 +432,23 @@ public class SyncDialog extends Activity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (timeout != null && timerTask != null) {
+            timeout.cancel();
+        }
+        if (networkStateReceiver != null) {
+            unregisterReceiver(networkStateReceiver);
+        }
+        cancelTasks();
+        super.onDestroy();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return false;
+    }
+
     private void startTimer() {
         timeout = new Timer();
         timerTask = new TimerTask() {
@@ -366,27 +457,27 @@ public class SyncDialog extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(context, R.string.synchro_timeout, Toast.LENGTH_SHORT).show();
+                        showToast((Activity) context, R.string.synchro_timeout, Toast.LENGTH_SHORT);
                     }
                 });
 
-                setResult(RESULT_CANCELED);
-                finish();
+                finishDialog(RESULT_CANCELED);
             }
         };
         timeout.schedule(timerTask, 60000);
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (timeout != null && timerTask != null) {
-            timeout.cancel();
+    private void cancelTasks() {
+        for (AsyncTask task : tasks) {
+            if (task != null && task.getStatus() != AsyncTask.Status.FINISHED) {
+                task.cancel(false);
+                tasks.remove(task);
+            }
         }
     }
 
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        return false;
+    private void finishDialog(int result) {
+        setResult(result);
+        finish();
     }
 }
