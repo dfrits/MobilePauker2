@@ -5,7 +5,7 @@ import android.os.AsyncTask;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
-import com.dropbox.core.v2.files.Metadata;
+import com.dropbox.core.v2.files.DeleteResult;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ import java.util.List;
  * Löscht die Dateien auf Dropbox.
  */
 
-public class DeleteFileTask extends AsyncTask<String, Void, List<Metadata>> {
+public class DeleteFileTask extends AsyncTask<String, Void, List<DeleteResult>> {
     private final DbxClientV2 mDbxClient;
     private final Callback mCallback;
 
     public interface Callback {
-        void onDeleteComplete(List<Metadata> result);
+        void onDeleteComplete(List<DeleteResult> result);
 
         void onError(Exception e);
     }
@@ -37,20 +37,20 @@ public class DeleteFileTask extends AsyncTask<String, Void, List<Metadata>> {
     }
 
     @Override
-    protected void onPostExecute(List<Metadata> result) {
+    protected void onPostExecute(List<DeleteResult> result) {
         super.onPostExecute(result);
         mCallback.onDeleteComplete(result);
     }
 
     @Override
-    protected List<Metadata> doInBackground(String... params) {
+    protected List<DeleteResult> doInBackground(String... params) {
         File remoteFolderPath = new File(Constants.DROPBOX_PATH);
-        List<Metadata> data = new ArrayList<>();
+        List<DeleteResult> data = new ArrayList<>();
 
         for (String localFile : params) {
             if (localFile != null && !localFile.isEmpty()) {
                 try {
-                    data.add(mDbxClient.files().delete(remoteFolderPath + "/" + localFile));
+                    data.add(mDbxClient.files().deleteV2(remoteFolderPath + "/" + localFile));
                 } catch (DbxException e) {
                     mCallback.onError(e);
                 }

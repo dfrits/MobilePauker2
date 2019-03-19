@@ -8,13 +8,9 @@ import com.dropbox.core.DbxException;
 import com.dropbox.core.v2.DbxClientV2;
 import com.dropbox.core.v2.files.FileMetadata;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +46,7 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
         mCallback.onProgressUpdate(values[0]);
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     @Override
     protected File[] doInBackground(FileMetadata... params) {
         File downloadFile = null;
@@ -62,7 +59,7 @@ public class DownloadFileTask extends AsyncTask<FileMetadata, FileMetadata, File
                 File file = new File(path, metadata.getName());
 
                 // Make sure the Downloads directory exists.
-                if (!path.exists()) {
+                if (!path.exists() && !path.mkdirs()) {
                     mCallback.onError(new RuntimeException("Unable to access directory: " + path));
                     return null;
                 } else if (!path.isDirectory()) {

@@ -81,22 +81,31 @@ public class MainMenu extends AppCompatActivity {
     }
 
     /**
-     * Um Fehler ohne Studio zu bekommen
+     * Prüft ob Errors vorliegen und fragt gegebenenfalls ob diese gesendet werden sollen.
      */
     private void checkErrors() {
         final ErrorReporter errorReporter = ErrorReporter.instance();
-        if (errorReporter.isThereAnyErrorsToReport(this)) {
+        if (errorReporter.isThereAnyErrorsToReport()) {
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 
+            alt_bld.setMessage(getString(R.string.crash_report_message));
             alt_bld.setCancelable(false);
             alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.CheckErrorAndSendMail(context);
-                    dialog.dismiss();
+                    errorReporter.CheckErrorAndSendMail();
+                }
+            });
+
+            alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    errorReporter.deleteErrorFiles();
+                    dialog.cancel();
                 }
             });
 
             AlertDialog alert = alt_bld.create();
+            alert.setTitle(getString(R.string.crash_report_title));
+            alert.setIcon(R.mipmap.ic_launcher);
             alert.show();
         }
     }
@@ -527,32 +536,5 @@ public class MainMenu extends AppCompatActivity {
                     }
                 });
         builder.create().show();
-    }
-
-    private void checkErrors() {
-        final ErrorReporter errorReporter = ErrorReporter.instance();
-        if (errorReporter.isThereAnyErrorsToReport()) {
-            AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
-
-            alt_bld.setMessage(getString(R.string.crash_report_message));
-            alt_bld.setCancelable(false);
-            alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.CheckErrorAndSendMail();
-                }
-            });
-
-            alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.deleteErrorFiles();
-                    dialog.cancel();
-                }
-            });
-
-            AlertDialog alert = alt_bld.create();
-            alert.setTitle(getString(R.string.crash_report_title));
-            alert.setIcon(R.mipmap.ic_launcher);
-            alert.show();
-        }
     }
 }

@@ -26,6 +26,7 @@ import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.dropbox.core.DbxException;
+import com.dropbox.core.v2.files.DeleteResult;
 import com.dropbox.core.v2.files.DeletedMetadata;
 import com.dropbox.core.v2.files.FileMetadata;
 import com.dropbox.core.v2.files.ListFolderResult;
@@ -234,10 +235,10 @@ public class SyncDialog extends Activity {
         String[] data = new String[lokalDeletedFiles.keySet().size()];
         data = lokalDeletedFiles.keySet().toArray(data);
 
-        AsyncTask<String, Void, List<Metadata>> deleteTask;
+        AsyncTask<String, Void, List<DeleteResult>> deleteTask;
         deleteTask = new DeleteFileTask(DropboxClientFactory.getClient(), new DeleteFileTask.Callback() {
             @Override
-            public void onDeleteComplete(List<Metadata> result) {
+            public void onDeleteComplete(List<DeleteResult> result) {
                 modelManager.resetDeletedFilesData(context);
                 syncWithFiles(validatedFiles, lokalDeletedFiles);
             }
