@@ -246,6 +246,7 @@ public class MainMenu extends AppCompatActivity {
                     browseIntent.setClass(context, SearchActivity.class);
                     browseIntent.putExtra(SearchManager.QUERY, query);
                     startActivity(browseIntent);
+                    searchView.setQuery("", false);
                     return true;
                 }
 
@@ -421,9 +422,10 @@ public class MainMenu extends AppCompatActivity {
                                 saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_OPEN);
                             }
                         })
-                        .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
+                        .setNeutralButton(R.string.open_lesson, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(context, LessonImportActivity.class));
                                 dialog.dismiss();
                             }
                         });
