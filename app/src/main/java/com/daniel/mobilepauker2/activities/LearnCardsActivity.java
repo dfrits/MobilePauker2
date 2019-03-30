@@ -39,6 +39,8 @@ import com.danilomendes.progressbar.InvertedTextProgressbar;
 
 import java.util.Locale;
 import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.view.View.GONE;
@@ -88,6 +90,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private MenuItem pauseButton;
     private MenuItem restartButton;
     private RelativeLayout timerAnimation;
+    private String ustmTimerText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -151,7 +154,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     protected void onPause() {
         super.onPause();
         isActivityVisible = false;
-        mSavedCursorPosition = mCardCursor.getPosition();
+        try {
+            mSavedCursorPosition = mCardCursor.getPosition();
+        } catch (Exception e) {
+            mSavedCursorPosition = -1;
+        }
     }
 
     @Override
@@ -185,6 +192,16 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
             finish();
         }
+    }
+
+    /**
+     * Falls die Acitvity vom System beendet wird, die Timer aber noch laufen.
+     */
+    @Override
+    protected void onDestroy() {
+        stopSTMTimer();
+        stopUSTMTimer();
+        super.onDestroy();
     }
 
     @Override
@@ -240,10 +257,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                             int timeElapsed = ustmTotalTime - totalSec;
                             int sec = timeElapsed % 60;
 
-                            String timerText = String.format(Locale.getDefault()
+                            ustmTimerText = String.format(Locale.getDefault()
                                     , "%d / %ds", sec, ustmTotalTime);
                             ustmTimerBar.setProgress(timeElapsed);
-                            ustmTimerBar.setText(timerText);
+                            ustmTimerBar.setText(ustmTimerText);
                         }
                     } else {
                         stopUSTMTimer();
@@ -257,7 +274,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerFinish() {
                     Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
-                    if (!isActivityVisible && ustmTimerFinished && showNotify) {
+                    /*if (!isActivityVisible && ustmTimerFinished && showNotify) {
                         Log.d("LearnActivity::USTM-Timer finished", "Acivity is not visible");
                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, TIMER_BAR_CHANNEL_ID)
                                 .setContentText(getString(R.string.ustm_expired_notify_message))
@@ -269,7 +286,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         Log.d("LearnActivity::USTM-Timer finished", "Notification created");
                         notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
                         Log.d("LearnActivity::USTM-Timer finished", "Show Notification");
-                    }
+                    }*/
                 }
             };
             ustmTimerBar = findViewById(R.id.UKZGTimerBar);
@@ -302,11 +319,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
                         if (!isActivityVisible && !stmTimerFinished) {
                             Log.d("LearnActivity::STM-onTimerClick", "Acivity is not visible");
-                            String ustmTimerText = ustmTimerFinished ? ""
-                                    : getString(R.string.ustm) + " " + String.format(Locale.getDefault()
-                                    , "%d / %ds", sec, ustmTotalTime);
-                            String timerbarText = ustmTimerText + "  " +
-                                    getString(R.string.stm) + " " + timerText;
+                            String ustmTimerBarText = ustmTimerFinished && ustmTimerText != null ? ""
+                                    : getString(R.string.ustm) + " " + ustmTimerText;
+                            String timerbarText = ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText;
                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
                                     .setContentText(timerbarText)
                                     .setSmallIcon(R.drawable.notify_icon)
@@ -332,7 +347,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     Log.d("LearnActivity::STM-Timer finished", "Timer finished");
                     if (!isActivityVisible && stmTimerFinished && showNotify) {
                         Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_NOTIFY_CHANNEL_ID)
+                        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_NOTIFY_CHANNEL_ID)
                                 .setContentText(getString(R.string.stm_expired_notify_message))
                                 .setSmallIcon(R.drawable.notify_icon)
                                 .setContentTitle(getString(R.string.app_name))
@@ -341,7 +356,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                                 .setAutoCancel(true)
                                 .setVisibility(VISIBILITY_PUBLIC);
                         Log.d("LearnActivity::STM-Timer finished", "Notification created");
-                        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+                            }
+                        }, 1000);
                         Log.d("LearnActivity::STM-Timer finished", "Show Notification");
                     }
                 }
@@ -971,6 +991,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                             if (!isLast) {
                                 updateCurrentCard();
                                 fillData();
+                                setButtonsVisibility();
                             } else {
                                 // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
                                 updateLearningPhase();
