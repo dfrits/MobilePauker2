@@ -64,7 +64,6 @@ public class MainMenu extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ErrorReporter.instance().init(context);
-        checkErrors();
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main_menu);
