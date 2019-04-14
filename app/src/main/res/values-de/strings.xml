@@ -36,8 +36,8 @@
     offizielle Seite von Pauker weitergeleitet]]></string>
     <string name="lesson_import_success">Lektion importiert</string>
     <string name="import_title">Lektion wird importiert. Bitte warten…</string>
-    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
-    <string name="wrong_answer">Your Answer was wrong!</string>
+    <string name="finish_add_card_message">Karte wurde noch nicht hinzugefügt. Möchtest du wirklich beenden?</string>
+    <string name="wrong_answer">Deine Antwort war falsch!</string>
     <string name="put_back">Zurücklegen</string>
     <string name="put_further">Weiterlegen</string>
     <string name="dialog_input_message">Gib deine Antwort ein.</string>
@@ -75,7 +75,7 @@
         benötigt Mobile Pauker++ die Berechtigung auf dem Speicher zugreifen zu dürfen.</string>
     <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
     <string name="learncards_finished_learning">Lernen beendet</string>
-    <string name="saving_success">Datei gespeichert</string>
+    <string name="saving_success">Lektion gespeichert</string>
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
     <string name="delete_card_message">Karte wirklich löschen?</string>
     <string name="open_lesson_hint">Lektion wird geöffnet</string>
@@ -84,7 +84,7 @@
     <string name="flip_sides_complete">Seiten vertauscht</string>
     <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite
         zuerst gezeigt werden soll</string>
-    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="reset_lesson_dialog_info">Es werden alle Karten auf Ungelernt zurückgesetzt</string>
     <string name="timer_finished">\"Abgelaufen!\"</string>
     <!-- endregion -->
 
@@ -180,7 +180,7 @@
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
     <string name="stm_title">KZG</string>
-    <string name="show_notification_title">Show Notification</string>
+    <string name="show_notification_title">Zeige Benachrichtigungen</string>
     <string name="ustm_title">UKZG</string>
     <string name="flip_cards">Seiten vertauschen</string>
     <!-- endregion -->
@@ -219,5 +219,9 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="reset_card">Reset Card</string>
+    <string name="repeat_card_now">Sofortwiederholung</string>
+    <string name="choose">Choose</string>
+    <string name="select_all">Select all</string>
     <!-- endregion -->
 </resources>

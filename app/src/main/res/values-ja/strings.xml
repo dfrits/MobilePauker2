@@ -19,9 +19,9 @@
     <string name="restart_timer_error">時間を続けられません</string>
     <string name="crash_report_message">アラ! Mobile Pauker++ は前回クラッシュした、エラーレポートを送ってください…</string>
     <string name="crash_report_title">エラーレポート</string>
-    <string name="crash_report_mail_subject">Mobile Pauker++: エラーレポート</string>
+    <string name="crash_report_mail_subject">モバイルポーカー++: エラーレポート</string>
     <string name="crash_report_mail_body">エラーレポートを送りましたありがとうございます!</string>
-    <string name="simple_error_message">An error has occurred</string>
+    <string name="simple_error_message">エラーが起きました</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -33,7 +33,7 @@
     <string name="learned">勉強した</string>
     <string name="expired">失効した</string>
     <string name="sum">全部</string>
-    <string name="untrained">勉強したない</string>
+    <string name="untrained">未勉強</string>
     <string name="ustm_timer_paused">超短期記憶 \"途切れてます\"</string>
     <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
     <string name="ustm">超短期記憶</string>
@@ -46,84 +46,82 @@
     <string name="nothing_learned_yet">まだ何も勉強してません!</string>
     <string name="not_learned_yet">まだ勉強してません!</string>
     <string name="no_description">説明がありません…</string>
-    <string name="expired_cards">有効期限したカードの数:</string>
+    <string name="expired_cards">失効したカードの数:</string>
     <string name="search_hint">カードを探す</string>
     <string name="learned_at">学んだ:</string>
-    <string name="expire_at">有効期限:</string>
-    <string name="expired_at">経った:</string>
+    <string name="expire_at">失効日:</string>
+    <string name="expired_at">失効時:</string>
     <string name="synchronizing">同期</string>
     <string name="write_permission_rational_message">許可を与えないと、レッスンを開くことができません!</string>
     <string name="write_permission_info_message">レッソンを開くと保存するための,
         Mobile　Pauker++ がストレージにアクセスするためのアクセス許可が必要です.</string>
-    <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
-    <string name="learncards_finished_learning">Lernen beendet</string>
-    <string name="saving_success">Datei gespeichert</string>
-    <string name="delete_lesson_message">Lektion wirklich löschen?</string>
-    <string name="delete_card_message">Karte wirklich löschen?</string>
-    <string name="open_lesson_hint">Lektion wird geöffnet</string>
-    <string name="new_lession_created">Neue Lektion erstellt</string>
-    <string name="lektion_zurückgesetzt">Lektion zurückgesetzt</string>
-    <string name="flip_sides_complete">Seiten vertauscht</string>
-    <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite
-        zuerst gezeigt werden soll</string>
-    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
-    <string name="timer_finished">\"Abgelaufen!\"</string>
-    <string name="dialog_input_message">Type in your answer.</string>
-    <string name="dialog_result_message">Your answer is wrong!</string>
-    <string name="dialog_result_right_answer">Right answer is:</string>
-    <string name="dialog_result_input_answer">Your answer is:</string>
-    <string name="sr_repeat_type">Repeat type:</string>
+    <string name="learncards_waiting_stm_timer">短期記憶のタイマーを待っています</string>
+    <string name="learncards_finished_learning">勉強を終えました</string>
+    <string name="saving_success">レッソンを法損しました</string>
+    <string name="delete_lesson_message">レッソンを本当に消したいですか?</string>
+    <string name="delete_card_message">カードを本当に消したいですか?</string>
+    <string name="open_lesson_hint">レッソンは読まれます</string>
+    <string name="new_lession_created">新しいレッソンを作りました</string>
+    <string name="lektion_zurückgesetzt">レッソンをリセットしました</string>
+    <string name="flip_sides_complete">側を交わしました</string>
+    <string name="reverse_sides_dialog_info">裏面を最初に表示するように設定で指定できます</string>
+    <string name="reset_lesson_dialog_info">全部のカードを未勉強スタックに戻します</string>
+    <string name="timer_finished">\"終了!\"</string>
+    <string name="dialog_input_message">答えを書いてください.</string>
+    <string name="dialog_result_message">答えは間違いです!</string>
+    <string name="dialog_result_right_answer">正解の答え:</string>
+    <string name="dialog_result_input_answer">あなたの答え:</string>
+    <string name="sr_repeat_type">リピートモード:</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
-    <string name="yes">Ja</string>
-    <string name="cancel">Abbrechen</string>
+    <string name="yes">はい</string>
+    <string name="cancel">打ち切る</string>
     <string name="ok">OK</string>
-    <string name="text_size">Textgröße</string>
-    <string name="background">Hintergrund</string>
-    <string name="text_color">Schriftfarbe</string>
-    <string name="bold">Fett</string>
-    <string name="italic">Kursiv</string>
-    <string name="no">Nein</string>
-    <string name="repeat_type">Repeat type</string>
+    <string name="text_size">文字サイズ</string>
+    <string name="background">バックグラウンド</string>
+    <string name="text_color">文字色</string>
+    <string name="bold">ボールド</string>
+    <string name="italic">イタリック</string>
+    <string name="no">いいえ</string>
+    <string name="repeat_type">リピートモード</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
-    <string name="about_app_name">Mobile Pauker++って何</string>
-    <string name="repeat_type_description">Repeat Type Image</string>
-    <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
-    <string name="sync_manually">Mit Dropbox synchronisieren</string>
-    <string name="add_new_card">Neue Karte</string>
-    <string name="front">Vorderseite</string>
-    <string name="pause_timer">Zeit pausieren</string>
-    <string name="restart_timer">Zeit fortsetzen</string>
-    <string name="back">Rückseite</string>
-    <string name="learn_new_card">Neue Karten lernen</string>
-    <string name="repeat_expired_cards">Abgelaufene Karten wiederholen</string>
-    <string name="open_lesson">Lektion öffnen</string>
-    <string name="save_lesson">Lektion speichern</string>
-    <string name="search">Suche</string>
-    <string name="reset_cards">Lektion zurücksetzen</string>
-    <string name="change_sides">Seiten der Karte vertauschen</string>
-    <string name="edit_info_text">Infotext bearbeiten</string>
-    <string name="settings">Einstellungen</string>
-    <string name="edit_description_title">Lektionsbeschreibung</string>
-    <string name="new_lesson">Neue Lektion</string>
-    <string name="not_now">Nicht jetzt</string>
-    <string name="next">Weiter</string>
-    <string name="repeat_question">Haben Sie es gewusst?</string>
-    <string name="saving_title">Speichern… Bitte warten!</string>
-    <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
-    <string name="edit_card">Karte bearbeiten</string>
-    <string name="bar_chart_title">Statistiken</string>
-    <string name="lessons">Lektionen</string>
-    <string name="new_lesson_dialog_title">Neue Lektion erstellen?</string>
-    <string name="reset_lesson_dialog_title">Lektion zurücksetzen?</string>
-    <string name="lektion_verwalten_titel">Lektion verwalten</string>
-    <string name="exit_learning_dialog">Lernen beenden?</string>
-    <string name="delete_card">Karte löschen</string>
-    <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
-    <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
+    <string name="about_app_name">モバイルポーカー++って何ですか？ (Mobile Pauker++)</string>
+    <string name="repeat_type_description">リピートモード</string>
+    <string name="reverse_sides_dialog_title">全部の側を交わし?</string>
+    <string name="sync_manually">Dropboxと同期</string>
+    <string name="add_new_card">新しいカード</string>
+    <string name="front">面</string>
+    <string name="pause_timer">タイマーを途切れます</string>
+    <string name="restart_timer">タイマーをｄ</string>
+    <string name="back">裏面</string>
+    <string name="learn_new_card">新しいカードを勉強</string>
+    <string name="repeat_expired_cards">失効カードを復習</string>
+    <string name="open_lesson">レッソンを開く</string>
+    <string name="save_lesson">レッソンを法損</string>
+    <string name="search">探し</string>
+    <string name="reset_cards">レッソンをリセット</string>
+    <string name="change_sides">カードの側を交わす</string>
+    <string name="edit_info_text">レッソンの情報を編集</string>
+    <string name="settings">設定</string>
+    <string name="edit_description_title">レッソンの情報</string>
+    <string name="new_lesson">新しいレッソン</string>
+    <string name="not_now">今ではない</string>
+    <string name="next">次</string>
+    <string name="repeat_question">覚えましたか?</string>
+    <string name="saving_title">法損… お待ちください!</string>
+    <string name="give_lesson_name_dialog_title">名前を付けてください</string>
+    <string name="edit_card">カードを編集</string>
+    <string name="bar_chart_title">統計</string>
+    <string name="lessons">レッソン</string>
+    <string name="new_lesson_dialog_title">新しいレッソンを作りますか?</string>
+    <string name="reset_lesson_dialog_title">レッソンをリセットしますか?</string>
+    <string name="exit_learning_dialog">勉強を止めますか?</string>
+    <string name="delete_card">カードを消す</string>
+    <string name="lesson_not_saved_dialog_title">レッソンはまだ法損されていません! 続ける?</string>
+    <string name="lesson_not_saved_dialog_message">法損しなかった編集は無くなれる!</string>
     <!-- endregion -->
 
     <!-- region Buttontexte -->
