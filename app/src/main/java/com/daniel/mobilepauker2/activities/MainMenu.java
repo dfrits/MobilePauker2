@@ -495,7 +495,12 @@ public class MainMenu extends AppCompatActivity {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
                         }
                     })
-                    .setNegativeButton(R.string.cancel, null);
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            createNewLesson();
+                        }
+                    });
             builder.create().show();
         } else createNewLesson();
     }
