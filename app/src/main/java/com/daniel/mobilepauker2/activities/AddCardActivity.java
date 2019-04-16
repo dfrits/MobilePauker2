@@ -89,7 +89,7 @@ public class AddCardActivity extends AEditCardActivity {
 
             if (checkBox != null && !checkBox.isChecked()) finish();
         } else {
-            showToast((Activity) context, R.string.add_card_side_empty, Toast.LENGTH_SHORT);
+            showToast((Activity) context, R.string.add_card_sides_empty_error, Toast.LENGTH_SHORT);
         }
     }
 
