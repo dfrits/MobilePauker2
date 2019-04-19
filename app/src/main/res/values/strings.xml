@@ -248,6 +248,6 @@
     <!-- endregion -->
 
     <!-- region Neue Strings -->
-    <string name="New">New</string>
+    <string name="New">New Strings are automatically below here</string>
     <!-- endregion -->
 </resources>
