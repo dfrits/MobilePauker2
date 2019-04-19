@@ -235,12 +235,16 @@
     <!-- endregion -->
 
     <!-- region Notifications -->
-    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App is not shown.</string>
+    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App
+        is not shown.</string>
     <string name="channel_notify_name">Timers</string>
-    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is not shown.</string>
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is
+        not shown.</string>
     <string name="channel_timerbar_name">Timer bar</string>
-    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
-    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to repeat cards.</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat
+        cards.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to
+        repeat cards.</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->
