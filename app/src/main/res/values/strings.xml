@@ -209,7 +209,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Save automatically after every session</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
-    <string name="auto_sync_enabled_summ">Synchronize every time before you open a lesson</string>
+    <string name="auto_sync_enabled_summ">Synchronize every time after you saved a lesson</string>
     <string name="case_sensitive_summ">If cards are repeated by input</string>
     <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
         lesson</string>

@@ -187,7 +187,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
-    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>

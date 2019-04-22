@@ -198,7 +198,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Automatisch opslaan na elke les</string>
     <string name="auto_sync_disabled_summ">Nog geen account gekoppeld</string>
-    <string name="auto_sync_enabled_summ">Synchroniseer elke keer voordat je een les opent</string>
+    <string name="auto_sync_enabled_summ">Synchroniseer elke keer voordat je een les opent</string> <!-- Was still wrong and has to be retranslated -->
     <string name="case_sensitive_summ">Of kaarten moeten worden herhaald op basis van invoer</string>
     <string name="expire_toast_summ">Toont een informatieregel bij de volgende vervaldatum na het opslaan van de les</string>
     <string name="flip_card_sides_summ">Welke zijde er tijdens het leren eerst moet worden getoond (%s)</string>

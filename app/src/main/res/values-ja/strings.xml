@@ -182,7 +182,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">勉強を終わったら自動で法損する</string>
     <string name="auto_sync_disabled_summ">Dropboxと接続したアカウントはありません</string>
-    <string name="auto_sync_enabled_summ">レッソンを読む前にいつもまず同期する</string>
+    <string name="auto_sync_enabled_summ">レッソンを法損したら同期する</string>
     <string name="case_sensitive_summ">かーどがインプットで復習すれば</string>
     <string name="expire_toast_summ">法損をしたら次の有効期限の情報を表示する</string>
     <string name="flip_card_sides_summ">復習でどんな側がまず見せられる (%s)</string>
