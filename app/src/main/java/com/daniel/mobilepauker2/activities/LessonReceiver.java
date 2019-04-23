@@ -81,7 +81,7 @@ public class LessonReceiver extends Activity {
                             }
                         }
                     } catch (IOException e) {
-                        PaukerManager.showToast(context, "Fehler beim einlesen", Toast.LENGTH_SHORT);
+                        PaukerManager.showToast(context, "Fehler beim Einlesen", Toast.LENGTH_SHORT);
                         finish();
                     }
                 }
