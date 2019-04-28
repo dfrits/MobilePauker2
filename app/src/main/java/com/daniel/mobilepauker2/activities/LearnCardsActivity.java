@@ -216,7 +216,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         finish();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -735,7 +735,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         dialog.dismiss();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -769,7 +769,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         yesClicked(null);
                     }
                 })
-                .setNegativeButton("Zurücklegen", new DialogInterface.OnClickListener() {
+                .setNeutralButton("Zurücklegen", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         noClicked(null);
@@ -974,12 +974,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     public void mDeleteClicked(MenuItem item) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage(R.string.delete_card_message)
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                })
                 .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -999,6 +993,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         } else {
                             showToast((Activity) context, "Löschen nicht möglich!", Toast.LENGTH_SHORT);
                         }
+                        dialog.cancel();
+                    }
+                })
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
                     }
                 });

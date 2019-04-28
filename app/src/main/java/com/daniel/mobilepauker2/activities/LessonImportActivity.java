@@ -274,7 +274,7 @@ public class LessonImportActivity extends AppCompatActivity {
                                 }
                             }
                         })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                        .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
@@ -407,7 +407,7 @@ public class LessonImportActivity extends AppCompatActivity {
                         openBrowserForDownload();
                     }
                 })
-                .setNegativeButton(R.string.cancel, null);
+                .setNeutralButton(R.string.cancel, null);
         builder.create().show();
     }
 

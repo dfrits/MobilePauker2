@@ -87,23 +87,22 @@ public class MainMenu extends AppCompatActivity {
         if (errorReporter.isThereAnyErrorsToReport()) {
             AlertDialog.Builder alt_bld = new AlertDialog.Builder(this);
 
-            alt_bld.setMessage(getString(R.string.crash_report_message));
-            alt_bld.setCancelable(false);
-            alt_bld.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.CheckErrorAndSendMail();
-                }
-            });
-
-            alt_bld.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    errorReporter.deleteErrorFiles();
-                    dialog.cancel();
-                }
-            });
+            alt_bld.setTitle(getString(R.string.crash_report_title))
+                    .setMessage(getString(R.string.crash_report_message))
+                    .setCancelable(false)
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            errorReporter.CheckErrorAndSendMail();
+                        }
+                    })
+                    .setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            errorReporter.deleteErrorFiles();
+                            dialog.cancel();
+                        }
+                    });
 
             AlertDialog alert = alt_bld.create();
-            alert.setTitle(getString(R.string.crash_report_title));
             alert.setIcon(R.mipmap.ic_launcher);
             alert.show();
         }
@@ -292,7 +291,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[],
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == RQ_WRITE_EXT) {
             if ((grantResults.length > 0) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -361,17 +360,17 @@ public class MainMenu extends AppCompatActivity {
         final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle(R.string.app_name)
-                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
                 .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         pref.edit().putBoolean("FirstTime", false).apply();
                         requestPermission();
+                        dialog.dismiss();
+                    }
+                })
+                .setNeutralButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
                     }
                 });
@@ -475,7 +474,7 @@ public class MainMenu extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -495,7 +494,7 @@ public class MainMenu extends AppCompatActivity {
                             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON);
                         }
                     })
-                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                    .setNeutralButton(R.string.no, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             createNewLesson();
@@ -535,7 +534,7 @@ public class MainMenu extends AppCompatActivity {
                         dialog.cancel();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();

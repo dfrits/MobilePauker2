@@ -90,7 +90,7 @@ public class SaveDialog extends Activity {
                         }
                     }
                 })
-                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.not_now, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

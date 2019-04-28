@@ -194,7 +194,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                                 fontChanged = true;
                             }
                         })
-                        .setNegativeButton(R.string.cancel, null);
+                        .setNeutralButton(R.string.cancel, null);
                 bcBuilder.create().show();
                 break;
             case R.id.mTextColor:
@@ -218,7 +218,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                                 fontChanged = true;
                             }
                         })
-                        .setNegativeButton(R.string.cancel, null);
+                        .setNeutralButton(R.string.cancel, null);
                 tcBuilder.create().show();
                 break;
             case R.id.mTextSize:
@@ -262,7 +262,7 @@ public abstract class AEditCardActivity extends AppCompatActivity {
                         }
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
