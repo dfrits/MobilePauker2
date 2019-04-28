@@ -927,6 +927,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 lRepeatButtons.setVisibility(VISIBLE);
             }
         }
+        setButtonsVisibility();
         mSavedCursorPosition = -1;
     }
 
