@@ -57,5 +57,5 @@ public class Constants {
     public static final String LAST_TEXT_COLOR_CHOICE = "LAST_TEXT_COLOR_CHOICE";
     public static final String LAST_BACK_COLOR_CHOICE = "LAST_BACK_COLOR_CHOICE";
     public static final String KEEP_OPEN_KEY = "KEEP_OPEN_KEY";
-    public static final String[] PAUKER_FILE_ENDING = {".pau.gz", ".xml.gz", ".pau"};
+    public static final String[] PAUKER_FILE_ENDING = {".pau.gz", ".xml.gz"};
 }
