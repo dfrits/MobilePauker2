@@ -74,7 +74,7 @@ public class DropboxAccDialog extends Activity {
                 PaukerManager.showToast(this, "Verbunden", Toast.LENGTH_SHORT);
                 setResult(RESULT_OK);
             } else {
-                PaukerManager.showToast(this, "Fehler beim verbinden", Toast.LENGTH_SHORT);
+                PaukerManager.showToast(this, "Fehler beim Verbinden", Toast.LENGTH_SHORT);
                 setResult(RESULT_CANCELED);
             }
             finish();

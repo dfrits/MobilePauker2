@@ -78,7 +78,7 @@
     <string name="untrained">Ungelernt</string>
     <string name="ustm">UKZG</string>
     <string name="ustm_timer_paused">UKZG \"Pausiert\"</string>
-    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können, benötigt Mobile Pauker++ die Berechtigung auf dem Speicher zugreifen zu dürfen.</string>
+    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können, benötigt Mobile Pauker++ die Berechtigung auf den Speicher zugreifen zu dürfen.</string>
     <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibst, kannst du keine Lektion öffnen!</string>
     <string name="wrong_answer">Deine Antwort war falsch!</string>
     <!-- endregion -->
@@ -118,7 +118,7 @@
     <string name="learn_new_card">Neue Karten lernen</string>
     <string name="lektion_verwalten_titel">Lektion verwalten</string>
     <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
-    <string name="lesson_not_saved_dialog_title">Die Lekton wurde noch nicht gespeichert! Fortfahren?</string>
+    <string name="lesson_not_saved_dialog_title">Die Lektion wurde noch nicht gespeichert! Fortfahren?</string>
     <string name="lessons">Lektionen</string>
     <string name="new_lesson">Neue Lektion</string>
     <string name="new_lesson_dialog_title">Neue Lektion erstellen?</string>
@@ -187,12 +187,12 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
-    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes Mal nach dem Speichern einer Lektion</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
-    <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
+    <string name="hide_times_summ">UKZG- und KZG-Timer werden beim Lernen ausgeblendet</string>
     <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm Lernen</string>
     <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
     <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>
