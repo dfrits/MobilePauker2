@@ -274,19 +274,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerFinish() {
                     Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
-                    /*if (!isActivityVisible && ustmTimerFinished && showNotify) {
-                        Log.d("LearnActivity::USTM-Timer finished", "Acivity is not visible");
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, TIMER_BAR_CHANNEL_ID)
-                                .setContentText(getString(R.string.ustm_expired_notify_message))
-                                .setSmallIcon(R.drawable.notify_icon)
-                                .setContentTitle(getString(R.string.app_name))
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
-                                .setVisibility(VISIBILITY_PUBLIC);
-                        Log.d("LearnActivity::USTM-Timer finished", "Notification created");
-                        notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
-                        Log.d("LearnActivity::USTM-Timer finished", "Show Notification");
-                    }*/
                 }
             };
             ustmTimerBar = findViewById(R.id.UKZGTimerBar);
