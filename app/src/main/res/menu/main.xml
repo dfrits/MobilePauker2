@@ -42,7 +42,7 @@
                 <item
                     android:onClick="mResetLessonClicked"
                     android:orderInCategory="20"
-                    android:title="@string/reset_cards"
+                    android:title="@string/reset_lesson"
                     app:showAsAction="never" />
 
                 <item

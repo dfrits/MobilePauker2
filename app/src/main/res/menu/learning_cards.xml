@@ -2,14 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:onClick="mEditClicked"
-        android:title="@string/edit_card"
-        app:showAsAction="never" />
-    <item
-        android:onClick="mDeleteClicked"
-        android:title="@string/delete_card"
-        app:showAsAction="never" />
-    <item
         android:id="@+id/mPauseButton"
         android:icon="@drawable/menu_pause"
         android:onClick="mPauseTimerClicked"
@@ -22,4 +14,17 @@
         android:title="@string/restart_timer"
         android:visible="false"
         app:showAsAction="ifRoom" />
+    <item
+        android:onClick="mEditClicked"
+        android:title="@string/edit_card"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mFlipSides"
+        android:onClick="mFlipSidesClicked"
+        android:title="@string/flip_card_sides"
+        app:showAsAction="never" />
+    <item
+        android:onClick="mDeleteClicked"
+        android:title="@string/delete_card"
+        app:showAsAction="never" />
 </menu>

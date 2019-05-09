@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
+import com.daniel.mobilepauker2.model.pauker_native.Batch;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
@@ -79,9 +80,8 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTT
  */
 
 public class ModelManager {
-    private static ModelManager instance;
     private static final PaukerManager paukerManager = PaukerManager.instance();
-
+    private static ModelManager instance;
     private final List<FlashCard> mCurrentPack = new ArrayList<>();
     private final SettingsManager settingsManager = SettingsManager.instance();
     private Lesson mLesson = null;
@@ -97,51 +97,6 @@ public class ModelManager {
             instance = new ModelManager();
         }
         return instance;
-    }
-
-    /**
-     * the learning phases
-     */
-    public enum LearningPhase {
-
-        /**
-         * not learning
-         */
-        NOTHING,
-        /**
-         * Just browsing the new cards - not learning
-         */
-        BROWSE_NEW,
-
-        /**
-         * Not using USTM or STM memory and timers
-         */
-        SIMPLE_LEARNING,
-
-        /**
-         * the phase of filling the ultra short term memory
-         */
-        FILLING_USTM,
-        /**
-         * the phase of waiting for the ultra short term memory
-         */
-        WAITING_FOR_USTM,
-        /**
-         * the phase of repeating the ultra short term memory
-         */
-        REPEATING_USTM,
-        /**
-         * the phase of waiting for the short term memory
-         */
-        WAITING_FOR_STM,
-        /**
-         * the phase of repeating the short term memory
-         */
-        REPEATING_STM,
-        /**
-         * the phase of repeating the long term memory
-         */
-        REPEATING_LTM
     }
 
     private void setupCurrentPack(Context context) {
@@ -505,7 +460,7 @@ public class ModelManager {
                 String date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString();
                 String text = context.getString(R.string.next_expire_date);
                 text = text.concat(" ").concat(date);
-                PaukerManager.showToast((Activity)context, text, Toast.LENGTH_LONG * 2);
+                PaukerManager.showToast((Activity) context, text, Toast.LENGTH_LONG * 2);
             }
         } catch (MalformedURLException ignored) {
         }
@@ -708,49 +663,78 @@ public class ModelManager {
         setLesson(newLesson);
     }
 
+    /**
+     * Sortiert den Batch, aber aktuellisiert nicht den aktuellen.
+     * @param stackIndex Index des Batchs
+     * @param sortByElement Nach diesem Element wird soriert
+     * @param asc_direction In welche Richtung sortiert werden soll
+     */
+    public void sortBatch(int stackIndex, Card.Element sortByElement, boolean asc_direction) {
+        Batch batch;
+        switch (stackIndex) {
+            case 0:
+                batch = mLesson.getSummaryBatch();
+                break;
+            case 1:
+                batch = mLesson.getUnlearnedBatch();
+                break;
+            default:
+                batch = mLesson.getLongTermBatch(stackIndex - 2);
+        }
+        if (batch!=null)
+            batch.sortCards(sortByElement, asc_direction);
+    }
+
+    /**
+     * Löscht die Karte an der übergebenen Position und entfernt diese aus dem aktuellen Stack.
+     * @param position Position der Karte
+     * @return True, wenn Karte erfolgreich gelöscht wurde
+     */
     public boolean deleteCard(int position) {
 
-        mCurrentCard = mCurrentPack.get(position);
+        Card card = mCurrentPack.get(position);
 
-        Log.d("AndyPaukerApplication::deleteCard", "entry");
-
-        if (mCurrentCard.isLearned()) {
-            int batchNumber = mCurrentCard.getLongTermBatchNumber();
-            LongTermBatch longTermBatch = mLesson.getLongTermBatch(batchNumber);
-            if (longTermBatch.removeCard(mCurrentCard)) {
-                Log.d("AndyPaukerApplication::deleteCard", "Deleted from long term batch" + batchNumber);
-            } else {
-                Log.e("AndyPaukerApplication::deleteCard", "Card not in long term batch" + batchNumber);
-            }
-        } else {
-            if (mLesson.getUnlearnedBatch().removeCard(mCurrentCard)) {
-                Log.d("AndyPaukerApplication::deleteCard", "Deleted from unlearned batch");
-            } else if (mLesson.getUltraShortTermList().remove(mCurrentCard)) {
-                Log.d("AndyPaukerApplication::deleteCard", "Deleted from ultra short term batch");
-            } else if (mLesson.getShortTermList().remove(mCurrentCard)) {
-                Log.d("AndyPaukerApplication::deleteCard", "Deleted from short term batch");
-            } else {
-                Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from unlearned batch  ");
-                return false;
-            }
-        }
+        if (deleteCard(card)) return false;
 
         mCurrentPack.remove(position);
 
         return true;
     }
 
+    /**
+     * Löscht die Karte, aber entfernt diese nicht aus dem aktuellen Stack.
+     * @param card Zu löschende Karte
+     * @return True, wenn Karte erfolgreich gelöscht wurde
+     */
+    public boolean deleteCard(Card card) {
+        Log.d("AndyPaukerApplication::deleteCard", "entry");
+
+        if (card.isLearned()) {
+            int batchNumber = card.getLongTermBatchNumber();
+            LongTermBatch longTermBatch = mLesson.getLongTermBatch(batchNumber);
+            if (longTermBatch.removeCard(card)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from long term batch" + batchNumber);
+            } else {
+                Log.e("AndyPaukerApplication::deleteCard", "Card not in long term batch" + batchNumber);
+            }
+        } else {
+            if (mLesson.getUnlearnedBatch().removeCard(card)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from unlearned batch");
+            } else if (mLesson.getUltraShortTermList().remove(card)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from ultra short term batch");
+            } else if (mLesson.getShortTermList().remove(card)) {
+                Log.d("AndyPaukerApplication::deleteCard", "Deleted from short term batch");
+            } else {
+                Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from unlearned batch  ");
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void setLearningPhase(Context context, LearningPhase learningPhase) {
         mLearningPhase = learningPhase;
         setupCurrentPack(context);
-    }
-
-    public void setLesson(Lesson lesson) {
-        mLesson = lesson;
-    }
-
-    public void setDescription(String s) {
-        mLesson.setDescription(s);
     }
 
     public LearningPhase getLearningPhase() {
@@ -759,6 +743,10 @@ public class ModelManager {
 
     public String getDescription() {
         return mLesson.getDescription();
+    }
+
+    public void setDescription(String s) {
+        mLesson.setDescription(s);
     }
 
     public FlashCard getCard(int position) {
@@ -829,8 +817,6 @@ public class ModelManager {
         return mLesson.getCards().size();
     }
 
-    //TODO Have an enum BATCH_TYPE and pass that into a single getBatchSize(BatchType)
-
     public int getExpiredCardsSize() {
         return mLesson.getNumberOfExpiredCards();
     }
@@ -838,6 +824,8 @@ public class ModelManager {
     public int getUnlearnedBatchSize() {
         return mLesson.getUnlearnedBatch().getCards().size();
     }
+
+    //TODO Have an enum BATCH_TYPE and pass that into a single getBatchSize(BatchType)
 
     public int getUltraShortTermMemorySize() {
         return mLesson.getUltraShortTermList().size();
@@ -853,6 +841,10 @@ public class ModelManager {
 
     public Lesson getLesson() {
         return mLesson;
+    }
+
+    public void setLesson(Lesson lesson) {
+        mLesson = lesson;
     }
 
     /*
@@ -879,5 +871,79 @@ public class ModelManager {
 
         return mLearningPhase == LearningPhase.REPEATING_LTM
                 && settingsManager.getBoolPreference(context, LEARN_NEW_CARDS_RANDOMLY);
+    }
+
+    public void forgetCard(Card card) {
+        if (!card.isLearned())
+            return;
+
+        Batch batch = getBatchOfCard(card);
+        int index = batch.indexOf(card);
+        if (index != -1) {
+            mLesson.forgetCards(batch, new int[]{index});
+        }
+    }
+
+    public void instantRepeatCard(Card card) {
+        Batch batch = getBatchOfCard(card);
+        int index = batch.indexOf(card);
+        if (index != -1) {
+            mLesson.instantRepeatCards(batch, new int[]{index});
+        }
+    }
+
+    public Batch getBatchOfCard(Card card) {
+        int batchNumber = card.getLongTermBatchNumber();
+        if (batchNumber == 0)
+            return mLesson.getSummaryBatch();
+        else if (batchNumber == 1)
+            return mLesson.getUnlearnedBatch();
+        else
+            return mLesson.getLongTermBatch(batchNumber);
+    }
+
+    /**
+     * the learning phases
+     */
+    public enum LearningPhase {
+
+        /**
+         * not learning
+         */
+        NOTHING,
+        /**
+         * Just browsing the new cards - not learning
+         */
+        BROWSE_NEW,
+
+        /**
+         * Not using USTM or STM memory and timers
+         */
+        SIMPLE_LEARNING,
+
+        /**
+         * the phase of filling the ultra short term memory
+         */
+        FILLING_USTM,
+        /**
+         * the phase of waiting for the ultra short term memory
+         */
+        WAITING_FOR_USTM,
+        /**
+         * the phase of repeating the ultra short term memory
+         */
+        REPEATING_USTM,
+        /**
+         * the phase of waiting for the short term memory
+         */
+        WAITING_FOR_STM,
+        /**
+         * the phase of repeating the short term memory
+         */
+        REPEATING_STM,
+        /**
+         * the phase of repeating the long term memory
+         */
+        REPEATING_LTM
     }
 }

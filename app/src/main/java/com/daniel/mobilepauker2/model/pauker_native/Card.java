@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -14,49 +15,11 @@ import java.util.List;
  */
 public class Card implements Comparable<Card> {
 
-    private class UID {}
-
-    /**
-     * the elements of a card
-     */
-    public enum Element {
-
-        /**
-         * the front side
-         */
-        FRONT_SIDE,
-        /**
-         * the reverse side
-         */
-        REVERSE_SIDE,
-        /**
-         * both sides
-         */
-        BOTH_SIDES,
-        /**
-         * the batchnumber
-         */
-        BATCH_NUMBER,
-        /**
-         * the date when the card was learned
-         */
-        LEARNED_DATE,
-        /**
-         * the date when the card expires
-         */
-        EXPIRED_DATE,
-        /**
-         * the way a card has to be repeated
-         */
-        REPEATING_MODE
-    }
-
     protected CardSide frontSide;
     protected CardSide reverseSide;
     // for indexing; unique id will be used to store card in the object-store
     private String id;
     private long expirationTime;
-
     /**
      * creates a new card
      * @param frontSide   the front side of the card
@@ -76,10 +39,8 @@ public class Card implements Comparable<Card> {
             return false;
         }
         final Card other = (Card) obj;
-        return !(frontSide != other.frontSide
-                && (frontSide == null || !frontSide.equals(other.frontSide)))
-                && !(reverseSide != other.reverseSide && (reverseSide == null
-                || !reverseSide.equals(other.reverseSide)))
+        return Objects.equals(frontSide, other.frontSide)
+                && Objects.equals(reverseSide, other.reverseSide)
                 && expirationTime == other.expirationTime;
     }
 
@@ -154,18 +115,6 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * sets if the card is learned or not
-     * @param learned if true the cards state is set to learned and the current date is used as
-     *                </CODE>learnedDate</CODE>
-     */
-    public void setLearned(boolean learned) {
-        frontSide.setLearned(learned);
-        if (learned) {
-            frontSide.setLearnedTimeStamp(System.currentTimeMillis());
-        }
-    }
-
-    /**
      * updates the "learned" timestamp of this card (e.g. when moving this card
      * from one long term batch to the next one)
      */
@@ -182,12 +131,14 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * sets the number of the batch this card is part of
-     * @param batchNumber the number of the batch this card is part of
+     * sets if the card is learned or not
+     * @param learned if true the cards state is set to learned and the current date is used as
+     *                </CODE>learnedDate</CODE>
      */
-    void setLongTermBatchNumber(int batchNumber) {
-        if (batchNumber > -1) {
-            frontSide.setLongTermBatchNumber(batchNumber);
+    public void setLearned(boolean learned) {
+        frontSide.setLearned(learned);
+        if (learned) {
+            frontSide.setLearnedTimeStamp(System.currentTimeMillis());
         }
     }
 
@@ -200,11 +151,13 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * sets the expiration time of this card
-     * @param expirationTime the expiration time of this card
+     * sets the number of the batch this card is part of
+     * @param batchNumber the number of the batch this card is part of
      */
-    void setExpirationTime(long expirationTime) {
-        this.expirationTime = expirationTime;
+    void setLongTermBatchNumber(int batchNumber) {
+        if (batchNumber > -1) {
+            frontSide.setLongTermBatchNumber(batchNumber);
+        }
     }
 
     /**
@@ -216,6 +169,14 @@ public class Card implements Comparable<Card> {
             return frontSide.getLearnedTimestamp() + expirationTime;
         }
         return -1;
+    }
+
+    /**
+     * sets the expiration time of this card
+     * @param expirationTime the expiration time of this card
+     */
+    void setExpirationTime(long expirationTime) {
+        this.expirationTime = expirationTime;
     }
 
     /**
@@ -251,8 +212,7 @@ public class Card implements Comparable<Card> {
      *                  Pauker.REVERSE_SIDE Pauker.BOTH_SIDES
      * @return a list with search match indices
      */
-    public List<SearchHit> search(
-            Element cardSide, String pattern, boolean matchCase) {
+    public List<SearchHit> search(Element cardSide, String pattern, boolean matchCase) {
         LinkedList<SearchHit> searchHits = new LinkedList<>();
         if (cardSide == Element.FRONT_SIDE) {
             searchHits.addAll(frontSide.search(
@@ -272,28 +232,9 @@ public class Card implements Comparable<Card> {
     }
 
     /**
-     * returns a list of search hits at this card side
-     * @return a list of search hits at this card side
-     */
-    List<SearchHit> getSearchHits() {
-        List<SearchHit> searchHits = new LinkedList<>();
-        searchHits.addAll(frontSide.getSearchHits());
-        searchHits.addAll(reverseSide.getSearchHits());
-        return searchHits;
-    }
-
-    /**
-     * clears the search hits list on both card sides
-     */
-    void stopSearching() {
-        frontSide.cancelSearch();
-        reverseSide.cancelSearch();
-    }
-
-    /**
      * flips the card sides
      */
-    void flip() {
+    public void flip() {
         long learnedTimestamp = frontSide.getLearnedTimestamp();
         int longTermBatchNumber = frontSide.getLongTermBatchNumber();
         ComponentOrientation orientation = frontSide.getOrientation();
@@ -311,6 +252,40 @@ public class Card implements Comparable<Card> {
         frontSide.setOrientation(orientation);
         frontSide.setLearned(learned);
         frontSide.setRepeatByTyping(repeatedByTyping);
+    }
+
+    /**
+     * the elements of a card
+     */
+    public enum Element {
+
+        /**
+         * the front side
+         */
+        FRONT_SIDE,
+        /**
+         * the reverse side
+         */
+        REVERSE_SIDE,
+        /**
+         * the batchnumber
+         */
+        BATCH_NUMBER,
+        /**
+         * the date when the card was learned
+         */
+        LEARNED_DATE,
+        /**
+         * the date when the card expires
+         */
+        EXPIRED_DATE,
+        /**
+         * the way a card has to be repeated
+         */
+        REPEATING_MODE
+    }
+
+    private class UID {
     }
 
     //    /**

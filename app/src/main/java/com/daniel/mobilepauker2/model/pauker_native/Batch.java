@@ -28,7 +28,7 @@ public class Batch {
 
         private boolean ascending = true;
 
-        public void setAscending(boolean ascending) {
+        void setAscending(boolean ascending) {
             this.ascending = ascending;
         }
 
@@ -126,7 +126,7 @@ public class Batch {
      * constructs a new Batch with all the cards in <CODE>cards</CODE>
      * @param cards initial batch cards
      */
-    public Batch(List<Card> cards) {
+    Batch(List<Card> cards) {
         if (cards == null) {
             this.cards = new ArrayList<>();
         } else {
@@ -149,7 +149,7 @@ public class Batch {
      * @param index the index of the returned card
      * @return the card at index <CODE>i</CODE>
      */
-    public Card getCard(int index) {
+    Card getCard(int index) {
         return cards.get(index);
     }
 
@@ -184,7 +184,7 @@ public class Batch {
      * adds cards to the batch
      * @param cards the new cards
      */
-    public void addCards(List<Card> cards) {
+    void addCards(List<Card> cards) {
         for (Card card : cards) {
             addCard(card);
         }
@@ -236,83 +236,11 @@ public class Batch {
     }
 
     /**
-     * empties the batch
-     */
-    public void clear() {
-        cards.clear();
-    }
-
-    /**
-     * moves certain cards a certain offset
-     * @param rows   the rows to be moved
-     * @param offset the offset of the movement
-     */
-    public void moveCards(int[] rows, int offset) {
-        // save current search hit
-        savedSearchHit = getCurrentSearchHit();
-
-        // move
-        if (offset > 0) {
-            // move down (bottom up)
-            for (int i = rows.length - 1; i >= 0; i--) {
-                cards.add(rows[i] + offset, cards.remove(rows[i]));
-            }
-        } else {
-            // move up (top down)
-            for (int row : rows) {
-                cards.add(row + offset, cards.remove(row));
-            }
-        }
-
-        // reload search hits (without searching)
-        reloadSearchHits();
-
-        // restore current search hit
-        restoreSearchHit();
-    }
-
-    /**
-     * shuffles the cards in the batch
-     * @param selectedCards the selected cards
-     * @return an array which contains the new index for every card after mixing
-     * them up
-     */
-    public int[] shuffle(int[] selectedCards) {
-        // save current search hit
-        savedSearchHit = getCurrentSearchHit();
-
-        // remember original sorting
-        Object[] originalSorting = cards.toArray();
-
-        // actual shuffling
-        Collections.shuffle(cards);
-
-        // determine new sorting
-        // (needed for scrolling to the previously selected cards)
-        int indices = selectedCards.length;
-        int[] newIndices = new int[indices];
-        for (int i = 0; i < indices; i++) {
-            int selectedIndex = selectedCards[i];
-            Card selectedCard = (Card) originalSorting[selectedIndex];
-            newIndices[i] = cards.indexOf(selectedCard);
-        }
-
-        // reload search hits (without searching)
-        reloadSearchHits();
-
-        // restore current search hit
-        restoreSearchHit();
-
-        return newIndices;
-    }
-
-    /**
      * sorts the cards in the batch according to an <CODE>sortIndex</CODE>
      * @param cardElement the card element that must be used for sorting the cards
      * @param ascending   if true the cards are sorted ascending otherwise descending
-     * @return an array which contains the new index for every card after mixing them up
      */
-    public int[] sortCards(Card.Element cardElement, boolean ascending) {
+    public void sortCards(Card.Element cardElement, boolean ascending) {
 
         AbstractCardComparator<Card> comparator = null;
         switch (cardElement) {
@@ -339,23 +267,8 @@ public class Batch {
                         "unknown cardElement {0}", cardElement);
         }
 
-        if (comparator != null) {
-
-            comparator.setAscending(ascending);
-
-            Card[] originalSorting = (Card[]) cards.toArray();
-            Collections.sort(cards, comparator);
-
-            int numberOfCards = cards.size();
-            int[] newIndices = new int[numberOfCards];
-            for (int i = 0; i < numberOfCards; i++) {
-                newIndices[i] = cards.indexOf(originalSorting[i]);
-            }
-
-            return newIndices;
-        }
-
-        return null;
+        comparator.setAscending(ascending);
+        Collections.sort(cards, comparator);
     }
 
     /**
@@ -379,145 +292,14 @@ public class Batch {
     }
 
     /**
-     * returns the search pattern
-     * @return the search pattern
-     */
-    public String getSearchPattern() {
-        return searchPattern;
-    }
-
-    /**
-     * indicates, if searching is case sensitive or not
-     * @return returns <CODE>true</CODE>, if searching is case sensitive,
-     * otherwise <CODE>false</CODE>
-     */
-    public boolean isMatchCase() {
-        return matchCase;
-    }
-
-    /**
-     * returns the card side for searching
-     * @return the card side for searching
-     */
-    public Card.Element getSearchSide() {
-        return searchSide;
-    }
-
-    /**
      * returns the current search hit
      * @return the current search hit
      */
-    public SearchHit getCurrentSearchHit() {
+    private SearchHit getCurrentSearchHit() {
         if ((currentSearchHit > -1) && (currentSearchHit < searchHits.size())) {
             return searchHits.get(currentSearchHit);
         }
         return null;
-    }
-
-    /**
-     * continues a search
-     * @param forward if <CODE>true</CODE>, the search is continued in forward direction,
-     *                otherwise in backwards direction
-     * @return <CODE>true</CODE>, if the search was successful,
-     * <CODE>false</CODE> otherwise
-     */
-    public boolean continueSearch(boolean forward) {
-        int numberOfSearchHits = searchHits.size();
-        if (numberOfSearchHits == 0) {
-            // we have no search hits, so we can not continue the search
-            return false;
-        } else {
-            if (forward) {
-                // we move the reference in the searchHits list
-                currentSearchHit++;
-                if (currentSearchHit == numberOfSearchHits) {
-                    // we reached the end of the list and must loop
-                    currentSearchHit = 0;
-                }
-            } else {
-                // we move the reference in the searchHits list
-                currentSearchHit--;
-                if (currentSearchHit == -1) {
-                    // we reached the top of the list and must loop
-                    currentSearchHit = numberOfSearchHits - 1;
-                }
-            }
-            return true;
-        }
-    }
-
-    /**
-     * sets the card side for searching
-     * @param cardSide the card side for searching
-     * @return <CODE>true</CODE>, if there is still a search hit,
-     * <CODE>false</CODE> otherwise
-     */
-    public boolean setSearchCardSide(Card.Element cardSide) {
-        // early return
-        if (searchPattern == null) {
-            return false;
-        }
-        searchSide = cardSide;
-        return repeatSearch();
-    }
-
-    /**
-     * determines if searching is case-sensitive
-     * @param matchCase if <CODE>true</CODE>, searching is case sensitive, otherwise searching is
-     *                  not case sensitive
-     * @return <CODE>true</CODE>, if there is still a search hit,
-     * <CODE>false</CODE> otherwise
-     */
-    public boolean setMatchCase(boolean matchCase) {
-        // early return
-        if (searchPattern == null) {
-            return false;
-        }
-        this.matchCase = matchCase;
-        return repeatSearch();
-    }
-
-    /**
-     * stops any search process
-     */
-    public void stopSearching() {
-        for (Card card : cards) {
-            card.stopSearching();
-        }
-        searchPattern = null;
-        searchHits.clear();
-        currentSearchHit = -1;
-    }
-
-    /**
-     * repeats the current search (e.g. when a card or search parameter changed)
-     * @return <CODE>true</CODE>, if there is still a search hit,
-     * <CODE>false</CODE> otherwise
-     */
-    public boolean repeatSearch() {
-        // remember old searchHit
-        SearchHit oldSearchHit = null;
-        if ((currentSearchHit > -1) && (currentSearchHit < searchHits.size())) {
-            Object tmpObject = searchHits.get(currentSearchHit);
-            if (tmpObject != null) {
-                oldSearchHit = (SearchHit) tmpObject;
-            }
-        }
-
-        // re-fill the searchHits list
-        if (refreshSearchHits()) {
-            if (oldSearchHit != null) {
-                // is oldSearchHit still in there?
-                int tmpIndex = searchHits.indexOf(oldSearchHit);
-                if (tmpIndex == -1) {
-                    currentSearchHit = 0;
-                } else {
-                    currentSearchHit = tmpIndex;
-                }
-            }
-            return true;
-        }
-        return false;
     }
 
     private boolean refreshSearchHits() {
@@ -527,14 +309,6 @@ public class Batch {
         }
         for (Card card : cards) {
             searchHits.addAll(card.search(searchSide, searchPattern, matchCase));
-        }
-        return !searchHits.isEmpty();
-    }
-
-    private boolean reloadSearchHits() {
-        searchHits.clear();
-        for (Card card : cards) {
-            searchHits.addAll(card.getSearchHits());
         }
         return !searchHits.isEmpty();
     }

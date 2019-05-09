@@ -39,15 +39,21 @@
     <string name="dialog_result_input_answer">Deine Antwort:</string>
     <string name="dialog_result_message">Deine Antwort ist falsch!</string>
     <string name="dialog_result_right_answer">Richtige ist:</string>
-    <string name="download_file_dialog_message"><![CDATA[Du kannst online neue Lektionen von Pauker herunterladen und mit der App öffnen. Allerdings ist es besser für den Lernprozess Lektionen selbst zu erstellen und zu füllen.  Mit einem Tap auf <b>\"WEITER\"</b> wirst du auf die offizielle Seite von Pauker weitergeleitet]]></string>
+    <string name="download_file_dialog_message"><![CDATA[Du kannst online neue Lektionen von Pauker
+    herunterladen und mit der App öffnen. Allerdings ist es besser für den Lernprozess Lektionen
+    selbst zu erstellen und zu füllen.  Mit einem Tap auf <b>\"WEITER\"</b> wirst du auf die
+    offizielle Seite von Pauker weitergeleitet]]></string>
     <string name="expire_at">Läuft ab am:</string>
     <string name="expired">Abgelaufen</string>
     <string name="expired_at">Abgelaufen am:</string>
     <string name="expired_cards">Anzahl abgelaufener Karten:</string>
-    <string name="finish_add_card_message">Karte wurde noch nicht hinzugefügt. Möchtest du wirklich beenden?</string>
+    <string name="finish_add_card_message">Karte wurde noch nicht hinzugefügt. Möchtest du wirklich
+        beenden?</string>
+    <string name="flip_cards_message">Willst du die Kartenseiten vertauschen?</string>
     <string name="flip_sides_complete">Seiten vertauscht</string>
     <string name="import_title">Lektion wird importiert. Bitte warten…</string>
     <string name="info_text_hint">Beschreibung der Lektion</string>
+    <string name="instant_repeat_message">Willst du die Karten jetzt sofort wiederholen?</string>
     <string name="learncards_finished_learning">Lernen beendet</string>
     <string name="learncards_show_hint">Versuchen Sie sich an die Rückseite dieser Karte zu erinnern!</string>
     <string name="learncards_waiting_stm_timer">Warten auf den Timer vom Kurzzeit-Gedächtnis</string>
@@ -64,8 +70,10 @@
     <string name="put_back">Zurücklegen</string>
     <string name="put_further">Weiterlegen</string>
     <string name="put_in_your_answer">Gib deine Antwort ein</string>
+    <string name="reset_cards_message">Willst du die Karten zurücksetzen?</string>
     <string name="reset_lesson_dialog_info">Es werden alle Karten auf Ungelernt zurückgesetzt</string>
-    <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die Rückseite zuerst gezeigt werden soll</string>
+    <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die
+        Rückseite zuerst gezeigt werden soll</string>
     <string name="saving_success">Lektion gespeichert</string>
     <string name="search_hint">Karte suchen</string>
     <string name="sr_repeat_type">Wiederholungsart:</string>
@@ -78,8 +86,10 @@
     <string name="untrained">Ungelernt</string>
     <string name="ustm">UKZG</string>
     <string name="ustm_timer_paused">UKZG \"Pausiert\"</string>
-    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können, benötigt Mobile Pauker++ die Berechtigung auf den Speicher zugreifen zu dürfen.</string>
-    <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibst, kannst du keine Lektion öffnen!</string>
+    <string name="write_permission_info_message">Um Lektionen öffnen und speichern zu können,
+        benötigt Mobile Pauker++ die Berechtigung auf dem Speicher zugreifen zu dürfen.</string>
+    <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibst, kannst du
+        keine Lektion öffnen!</string>
     <string name="wrong_answer">Deine Antwort war falsch!</string>
     <!-- endregion -->
 
@@ -104,18 +114,24 @@
     <!-- region Content Descriptions und Titles-->
     <string name="about_app_name">Was ist Mobile Pauker++</string>
     <string name="add_new_card">Neue Karte</string>
+    <string name="asc">Aufsteigend</string>
     <string name="back">Rückseite</string>
     <string name="bar_chart_title">Statistiken</string>
+    <string name="batchnumber">Stapelnummer</string>
     <string name="change_sides">Seiten der Karte vertauschen</string>
     <string name="choose">Auswählen</string>
     <string name="delete_card">Karte löschen</string>
+    <string name="dsc">Absteigend</string>
     <string name="edit_card">Karte bearbeiten</string>
     <string name="edit_description_title">Lektionsbeschreibung</string>
     <string name="edit_info_text">Infotext bearbeiten</string>
     <string name="exit_learning_dialog">Lernen beenden?</string>
+    <string name="expired_date">Ablaufdatum</string>
     <string name="front">Vorderseite</string>
     <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
+    <string name="instant_repeat">Sofortwiederholung</string>
     <string name="learn_new_card">Neue Karten lernen</string>
+    <string name="learned_date">Lerndatum</string>
     <string name="lektion_verwalten_titel">Lektion verwalten</string>
     <string name="lesson_not_saved_dialog_message">Nicht gespeicherte Änderungen können verloren gehen!</string>
     <string name="lesson_not_saved_dialog_title">Die Lektion wurde noch nicht gespeichert! Fortfahren?</string>
@@ -130,8 +146,11 @@
     <string name="repeat_expired_cards">Abgelaufene Karten wiederholen</string>
     <string name="repeat_question">Gewusst?</string>
     <string name="repeat_type_description">Wiederholungsartbild</string>
+    <string name="repeat_type_input">Wiederholen durch Eingabe</string>
+    <string name="repeat_type_thinking">Wiederholen durch Erinnern</string>
     <string name="reset_card">Karte zurücksetzen</string>
-    <string name="reset_cards">Lektion zurücksetzen</string>
+    <string name="reset_cards">Karten zurücksetzen</string>
+    <string name="reset_lesson">Lektion zurücksetzen</string>
     <string name="reset_lesson_dialog_title">Lektion zurücksetzen?</string>
     <string name="restart_timer">Zeit fortsetzen</string>
     <string name="reverse_sides_dialog_title">Alle Kartenseiten vertauschen?</string>
@@ -141,11 +160,13 @@
     <string name="search">Suche</string>
     <string name="select_all">Alles auswählen</string>
     <string name="settings">Einstellungen</string>
+    <string name="sort_by">Sortieren nach</string>
     <string name="sync_manually">Mit Dropbox synchronisieren</string>
     <!-- endregion -->
 
     <!-- region Buttontexte -->
     <string name="add">Hinzufügen</string>
+    <string name="enter_answer">Antwort eingeben</string>
     <string name="go_on">Weiter</string>
     <string name="learn">Lernen</string>
     <string name="repeat">Wiederholen</string>
@@ -187,12 +208,12 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
-    <string name="auto_sync_enabled_summ">Synchronisiert jedes Mal nach dem Speichern einer Lektion</string>
+    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
-    <string name="hide_times_summ">UKZG- und KZG-Timer werden beim Lernen ausgeblendet</string>
+    <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
     <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm Lernen</string>
     <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
     <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>

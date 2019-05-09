@@ -81,7 +81,6 @@
     <!-- endregion -->
 
     <!-- region Sonstiges -->
-    <string name="app_name" translatable="false">Mobile Pauker ++</string>
     <string name="association">Koppelen</string>
     <string name="background">Achtergrond</string>
     <string name="bold">Vetgedrukt</string>
@@ -126,7 +125,7 @@
     <string name="repeat_expired_cards">Verlopen kaarten herhalen</string>
     <string name="repeat_question">Wist je het?</string>
     <string name="repeat_type_description">Afbeelding van soort herhaling</string>
-    <string name="reset_cards">Les herstellen</string>
+    <string name="reset_lesson">Les herstellen</string>
     <string name="reset_lesson_dialog_title">Wil je de les herstellen?</string>
     <string name="restart_timer">Tijd herstarten</string>
     <string name="reverse_sides_dialog_title">Wil je alle kaarten omdraaien?</string>
@@ -155,24 +154,6 @@
     <string name="learning_cards">Leerkaarten</string>
     <string name="other">Overig</string>
     <string name="times">Tijden</string>
-    <!-- endregion -->
-
-    <!-- region Keys -->
-    <string name="about" translatable="false">Over</string>
-    <string name="associate_dropbox" translatable="false">Koppelen aan Dropbox</string>
-    <string name="auto_save" translatable="false">Automatisch opslaan</string>
-    <string name="auto_sync" translatable="false">Automatische synchronisatie</string>
-    <string name="case_sensitive" translatable="false">Hoofdlettergevoelig</string>
-    <string name="expire_toast" translatable="false">Meldingsballon tonen bij verlopen</string>
-    <string name="flip_card_sides" translatable="false">Kaarten omdraaien</string>
-    <string name="hide_times" translatable="false">Tijden verbergen</string>
-    <string name="learn_new_cards_randomly" translatable="false">Nieuwe kaarten in willekeurige volgorde leren</string>
-    <string name="repeat_cards_mode" translatable="false">Kaarten herhalen</string>
-    <string name="return_forgotten_cards" translatable="false">Vergeten kaarten terughalen</string>
-    <string name="show_notification" translatable="false">Melding tonen</string>
-    <string name="stm_key" translatable="false">STM</string>
-    <string name="unlink_dropbox" translatable="false">Dropbox ontkoppelen</string>
-    <string name="ustm_key" translatable="false">USTM</string>
     <!-- endregion -->
 
     <!-- region Titles -->
@@ -222,9 +203,24 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
+
     <string name="choose">Choose</string>
     <string name="reset_card">Reset Card</string>
     <string name="select_all">Choose all</string>
     <string name="repeat_card_now">Instant repeat</string>
+    <string name="repeat_type_thinking">Repeat by remembering</string>
+    <string name="repeat_type_input">Repeat by input</string>
+    <string name="sort_by">Sort by</string>
+    <string name="asc">Ascending</string>
+    <string name="batchnumber">Stacknumber</string>
+    <string name="learned_date">Learned date</string>
+    <string name="expired_date">Expired date</string>
+    <string name="dsc">Descending</string>
+    <string name="enter_answer">Enter answer</string>
+    <string name="reset_cards">Reset Cards</string>
+    <string name="reset_cards_message">Do you want to reset the selected cards?</string>
+    <string name="instant_repeat">Instant Repeat</string>
+    <string name="instant_repeat_message">Do you want to repeat the selected cards now?</string>
+    <string name="flip_cards_message">Do you want to flip the sides of the selected cards?</string>
     <!-- endregion -->
 </resources>

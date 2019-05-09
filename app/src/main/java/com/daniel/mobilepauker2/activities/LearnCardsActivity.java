@@ -31,6 +31,7 @@ import com.daniel.mobilepauker2.model.MPEditText;
 import com.daniel.mobilepauker2.model.MPTextView;
 import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
@@ -59,7 +60,6 @@ import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
-import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_NOTIFY_ID;
 
@@ -542,8 +542,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 if (modelManager.getExpiredCardsSize() <= 0) {
                     finishLearning();
                 } else {
-                    /*initStackSize -= 1;
-                    Log.d("LearnCardsActivity::updateLearningPhase", "repeatingLTM: " +
+                    initStackSize -= 1;
+                    /*Log.d("LearnCardsActivity::updateLearningPhase", "repeatingLTM: " +
                             "savedPos= " + mSavedCursorPosition + ",\n" +
                             "cursorPos= " + mCardCursor.getPosition() + ",\n" +
                             "currentStackSize= " + modelManager.getExpiredCardsSize() + ",\n" +
@@ -609,7 +609,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         bNext.setVisibility(GONE);
         bShowMe.setVisibility(VISIBLE);
         String text = mCardCursor != null && modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping() ?
-                "Enter answer" : getString(R.string.show_me);
+                getString(R.string.enter_answer) : getString(R.string.show_me);
         bShowMe.setText(text);
         lRepeatButtons.setVisibility(GONE);
         lSkipWaiting.setVisibility(GONE);
@@ -687,7 +687,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 if (flipCardSides) {
                     currentCard.setSide(SIDE_A);
                 } else {
-                    currentCard.setSide(FlashCard.SideShowing.SIDE_B);
+                    currentCard.setSide(SIDE_B);
                 }
 
                 fillInData(flipCardSides);
@@ -801,7 +801,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             fillSideA(R.string.front, currentCard.getSideAText(), fontA);
 
             String sideBText = "";
-            if (currentCard.getSide() == FlashCard.SideShowing.SIDE_B
+            if (currentCard.getSide() == SIDE_B
                     || learningPhase == SIMPLE_LEARNING
                     || learningPhase == FILLING_USTM) {
                 sideBText = currentCard.getSideBText();
@@ -835,7 +835,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         }
 
         if (flipCardSides) {
-            currentCard.setSide(FlashCard.SideShowing.SIDE_B);
+            currentCard.setSide(SIDE_B);
         } else {
             currentCard.setSide(SIDE_A);
         }
@@ -906,7 +906,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             mCardCursor.moveToPosition(mSavedCursorPosition);
             updateCurrentCard();
             fillInData(flipCardSides);
-            setButtonsVisibility();
             if (bShowMe.getVisibility() == VISIBLE
                     && ((flipCardSides && currentCard.getSide() == SIDE_A)
                     || (!flipCardSides && currentCard.getSide() == SIDE_B))) {
@@ -1013,10 +1012,29 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         }
     }
 
+    public void mFlipSidesClicked(MenuItem item) {
+        modelManager.getCard(mCardCursor.getPosition()).flip();
+        paukerManager.setSaveRequired(true);
+        updateCurrentCard();
+        LearningPhase learningPhase = modelManager.getLearningPhase();
+        if (learningPhase == REPEATING_LTM || learningPhase == REPEATING_STM || learningPhase == REPEATING_USTM) {
+            flipCardSides = !flipCardSides;
+            if (flipCardSides) {
+                currentCard.setSide(SIDE_B);
+            } else {
+                currentCard.setSide(SIDE_A);
+            }
+        }
+        fillInData(flipCardSides);
+        setButtonsVisibility();
+    }
+
     // Aktionen der Buttons
     public void nextCard(View view) {
         // Karte ein Deck weiterschieben
         mCardPackAdapter.setCardLearned(mCardCursor.getLong(CardPackAdapter.KEY_ROWID_ID));
+
+        checkStackSize();
 
         if (!mCardCursor.isLast() && !ustmTimerFinished) {
             mCardCursor.moveToNext();
@@ -1025,6 +1043,16 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         } else {
             // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
             updateLearningPhase();
+        }
+    }
+
+    private void checkStackSize() {
+        if (modelManager.getLearningPhase()!=REPEATING_LTM) return;
+
+        if (modelManager.getCurrentPack().size() != initStackSize) {
+            Card card = modelManager.getCard(mCardCursor.getPosition());
+            mSavedCursorPosition = modelManager.getBatchOfCard(card).indexOf(card);
+            refreshCursor();
         }
     }
 

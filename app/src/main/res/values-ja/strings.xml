@@ -27,56 +27,62 @@
     <!-- endregion -->
 
     <!-- region Infos -->
-    <string name="finish_add_card_message">かーどはまだ足されなかった。 本当に出たいですか?</string>
-    <string name="put_in_your_answer">答を入れてください</string>
-    <string name="wrong_answer">間違いました!</string>
-    <string name="put_back">戻します</string>
-    <string name="put_further">それでも続けます</string>
-    <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
-    <string name="learned">勉強した</string>
-    <string name="expired">失効した</string>
-    <string name="sum">全部</string>
-    <string name="import_title">レッソンを読んでる。 お待ちください…</string>
-    <string name="lesson_import_success">レッソンを読んだ</string>
-    <string name="download_file_dialog_message"><![CDATA[オンラインで新しいレッソンをダウンロードできて、 アップリーで開ける。 でもより良い勉強のために新しいレッソンを作って、自分でかーどを足して方がよいです。 <b>次</b>を押したらあなたはぽーかー(Pauker)の公式サイトに送られる]]></string>
-    <string name="untrained">未勉強</string>
-    <string name="ustm_timer_paused">超短期記憶 \"途切れてます\"</string>
-    <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
-    <string name="ustm">超短期記憶</string>
-    <string name="stm">短期記憶</string>
-    <string name="stack">スタック</string>
     <string name="card_added">カードを足しました</string>
-    <string name="learncards_show_hint">カードの後を覚えて見てください!</string>
-    <string name="info_text_hint">レッソンの説明</string>
-    <string name="next_expire_date">次の有効期限:</string>
-    <string name="nothing_learned_yet">まだ何も勉強してません!</string>
-    <string name="not_learned_yet">まだ勉強してません!</string>
-    <string name="no_description">説明がありません…</string>
-    <string name="expired_cards">失効したカードの数:</string>
-    <string name="search_hint">カードを探す</string>
-    <string name="learned_at">学んだ:</string>
-    <string name="expire_at">失効日:</string>
-    <string name="expired_at">失効時:</string>
-    <string name="synchronizing">同期</string>
-    <string name="write_permission_rational_message">許可を与えないと、レッスンを開くことができません!</string>
-    <string name="write_permission_info_message">レッソンを開くと保存するための, Mobile　Pauker++ がストレージにアクセスするためのアクセス許可が必要です.</string>
-    <string name="learncards_waiting_stm_timer">短期記憶のタイマーを待っています</string>
-    <string name="learncards_finished_learning">勉強を終えました</string>
-    <string name="saving_success">レッソンを法損しました</string>
-    <string name="delete_lesson_message">レッソンを本当に消したいですか?</string>
+    <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
     <string name="delete_card_message">カードを本当に消したいですか?</string>
-    <string name="open_lesson_hint">レッソンは読まれます</string>
-    <string name="new_lession_created">新しいレッソンを作りました</string>
-    <string name="lektion_zurückgesetzt">レッソンをリセットしました</string>
-    <string name="flip_sides_complete">側を交わしました</string>
-    <string name="reverse_sides_dialog_info">裏面を最初に表示するように設定で指定できます</string>
-    <string name="reset_lesson_dialog_info">全部のカードを未勉強スタックに戻します</string>
-    <string name="timer_finished">\"タイマー終了!\"</string>
+    <string name="delete_lesson_message">レッソンを本当に消したいですか?</string>
     <string name="dialog_input_message">答えを書いてください.</string>
+    <string name="dialog_result_input_answer">あなたの答え:</string>
     <string name="dialog_result_message">答えは間違いです!</string>
     <string name="dialog_result_right_answer">正解の答え:</string>
-    <string name="dialog_result_input_answer">あなたの答え:</string>
+    <string name="download_file_dialog_message"><![CDATA[オンラインで新しいレッソンをダウンロードできて、
+    アップリーで開ける。 でもより良い勉強のために新しいレッソンを作って、自分でかーどを足して方がよいです。
+    <b>次</b>を押したらあなたはぽーかー(Pauker)の公式サイトに送られる]]></string>
+    <string name="expire_at">失効日:</string>
+    <string name="expired">失効した</string>
+    <string name="expired_at">失効時:</string>
+    <string name="expired_cards">失効したカードの数:</string>
+    <string name="finish_add_card_message">かーどはまだ足されなかった。 本当に出たいですか?</string>
+    <string name="flip_cards_message">選んだカードの側を交わすつもりですか?</string>
+    <string name="flip_sides_complete">側を交わしました</string>
+    <string name="import_title">レッソンを読んでる。 お待ちください…</string>
+    <string name="info_text_hint">レッソンの説明</string>
+    <string name="instant_repeat_message">選んだカードを直ちに復習つもりですか?</string>
+    <string name="learncards_finished_learning">勉強を終えました</string>
+    <string name="learncards_show_hint">カードの後を覚えて見てください!</string>
+    <string name="learncards_waiting_stm_timer">短期記憶のタイマーを待っています</string>
+    <string name="learned">勉強した</string>
+    <string name="learned_at">学んだ:</string>
+    <string name="lektion_zurückgesetzt">レッソンをリセットしました</string>
+    <string name="lesson_import_success">レッソンを読んだ</string>
+    <string name="new_lession_created">新しいレッソンを作りました</string>
+    <string name="next_expire_date">次の有効期限:</string>
+    <string name="no_description">説明がありません…</string>
+    <string name="not_learned_yet">まだ勉強してません!</string>
+    <string name="nothing_learned_yet">まだ何も勉強してません!</string>
+    <string name="open_lesson_hint">レッソンは読まれます</string>
+    <string name="put_back">戻します</string>
+    <string name="put_further">それでも続けます</string>
+    <string name="put_in_your_answer">答を入れてください</string>
+    <string name="reset_cards_message">選んだカードをリセットつもりですか?</string>
+    <string name="reset_lesson_dialog_info">全部のカードを未勉強スタックに戻します</string>
+    <string name="reverse_sides_dialog_info">裏面を最初に表示するように設定で指定できます</string>
+    <string name="saving_success">レッソンを法損しました</string>
+    <string name="search_hint">カードを探す</string>
     <string name="sr_repeat_type">リピートモード:</string>
+    <string name="stack">スタック</string>
+    <string name="stm">短期記憶</string>
+    <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
+    <string name="sum">全部</string>
+    <string name="synchronizing">同期</string>
+    <string name="timer_finished">\"タイマー終了!\"</string>
+    <string name="untrained">未勉強</string>
+    <string name="ustm">超短期記憶</string>
+    <string name="ustm_timer_paused">超短期記憶 \"途切れてます\"</string>
+    <string name="write_permission_info_message">レッソンを開くと保存するための, Mobile　Pauker++
+        がストレージにアクセスするためのアクセス許可が必要です.</string>
+    <string name="write_permission_rational_message">許可を与えないと、レッスンを開くことができません!</string>
+    <string name="wrong_answer">間違いました!</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -100,18 +106,24 @@
     <!-- region Content Descriptions und Titles-->
     <string name="about_app_name">モバイルポーカー++って何ですか？ (Mobile Pauker++)</string>
     <string name="add_new_card">新しいカード</string>
+    <string name="asc">昇順</string>
     <string name="back">裏面</string>
     <string name="bar_chart_title">統計</string>
+    <string name="batchnumber">スタック番号</string>
     <string name="change_sides">カードの側を交わす</string>
     <string name="choose">選ぶ</string>
     <string name="delete_card">カードを消す</string>
+    <string name="dsc">降順</string>
     <string name="edit_card">カードを編集</string>
     <string name="edit_description_title">レッソンの情報</string>
     <string name="edit_info_text">レッソンの情報を編集</string>
     <string name="exit_learning_dialog">勉強を止めますか?</string>
+    <string name="expired_date">有効期限日</string>
     <string name="front">面</string>
     <string name="give_lesson_name_dialog_title">名前を付けてください</string>
+    <string name="instant_repeat">インスタント復習</string>
     <string name="learn_new_card">新しいカードを勉強</string>
+    <string name="learned_date">学習日</string>
     <string name="lektion_verwalten_titel">レッスンを管理する</string>
     <string name="lesson_not_saved_dialog_message">法損しなかった編集は無くなれる!</string>
     <string name="lesson_not_saved_dialog_title">レッソンはまだ法損されていません! 続ける?</string>
@@ -126,8 +138,11 @@
     <string name="repeat_expired_cards">失効カードを復習</string>
     <string name="repeat_question">覚えましたか?</string>
     <string name="repeat_type_description">リピートモード</string>
+    <string name="repeat_type_input">入力で繰り返す</string>
+    <string name="repeat_type_thinking">思い出して繰り返す</string>
     <string name="reset_card">かーどをリセットする</string>
-    <string name="reset_cards">レッソンをリセット</string>
+    <string name="reset_cards">カードをリセット</string>
+    <string name="reset_lesson">レッソンをリセット</string>
     <string name="reset_lesson_dialog_title">レッソンをリセットしますか?</string>
     <string name="restart_timer">タイマーをｄ</string>
     <string name="reverse_sides_dialog_title">全部の側を交わし?</string>
@@ -137,11 +152,13 @@
     <string name="search">探し</string>
     <string name="select_all">全部を選ぶ</string>
     <string name="settings">設定</string>
+    <string name="sort_by">並び替え</string>
     <string name="sync_manually">Dropboxと同期</string>
     <!-- endregion -->
 
     <!-- region Buttontexte -->
     <string name="add">付ける</string>
+    <string name="enter_answer">答えを入って</string>
     <string name="go_on">進め</string>
     <string name="learn">勉強</string>
     <string name="next_card">次のカード -&gt;</string>
@@ -183,7 +200,7 @@
     <string name="auto_save_summ">勉強を終わったら自動で法損する</string>
     <string name="auto_sync_disabled_summ">Dropboxと接続したアカウントはありません</string>
     <string name="auto_sync_enabled_summ">レッソンを法損したら同期する</string>
-    <string name="case_sensitive_summ">かーどがインプットで復習すれば</string>
+    <string name="case_sensitive_summ">カードが入力によって繰り返される場合</string>
     <string name="expire_toast_summ">法損をしたら次の有効期限の情報を表示する</string>
     <string name="flip_card_sides_summ">復習でどんな側がまず見せられる (%s)</string>
     <string name="hide_times_summ">超短期記憶と短期記憶のタイマーが勉強で欠かされる</string>
