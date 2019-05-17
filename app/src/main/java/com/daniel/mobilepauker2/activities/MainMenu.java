@@ -42,6 +42,7 @@ import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
+import static com.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL;
 
 /**
  * Created by Daniel on 24.02.2018.
@@ -51,7 +52,8 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
  */
 
 public class MainMenu extends AppCompatActivity {
-    private static final int RQ_WRITE_EXT = 99;
+    private static final int RQ_WRITE_EXT_SAVE = 98;
+    private static final int RQ_WRITE_EXT_OPEN = 99;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final SettingsManager settingsManager = SettingsManager.instance();
@@ -204,14 +206,6 @@ public class MainMenu extends AppCompatActivity {
         startActivity(browseIntent);
     }
 
-    /**
-     * Startet die Permissionanfrage
-     */
-    private void requestPermission() {
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                RQ_WRITE_EXT);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -293,16 +287,19 @@ public class MainMenu extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
-        if (requestCode == RQ_WRITE_EXT) {
-            if ((grantResults.length > 0) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openLesson();
-            }
+        if (requestCode == RQ_WRITE_EXT_OPEN
+                && (grantResults.length > 0) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openLesson();
+        }
+        if (requestCode == RQ_WRITE_EXT_SAVE
+                && (grantResults.length > 0) && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            saveLesson(REQUEST_CODE_SAVE_DIALOG_NORMAL);
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
+        if (requestCode == REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == RESULT_OK) {
                 showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
@@ -350,54 +347,19 @@ public class MainMenu extends AppCompatActivity {
      * @param requestCode Wird für onActivityResult benötigt
      */
     private void saveLesson(final int requestCode) {
-        startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            checkPermission(RQ_WRITE_EXT_SAVE);
+        } else {
+            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
+        }
     }
 
     /**
      * Fragt, wenn notwendig, die Permission ab und zeigt davor einen passenden Infodialog an.
      */
     private void openLesson() {
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle(R.string.app_name)
-                .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        pref.edit().putBoolean("FirstTime", false).apply();
-                        requestPermission();
-                        dialog.dismiss();
-                    }
-                })
-                .setNeutralButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                builder.setMessage(R.string.write_permission_rational_message);
-            } else {
-                if (pref.getBoolean("FirstTime", true)) {
-                    builder.setMessage(R.string.write_permission_info_message);
-                } else {
-                    builder.setMessage(R.string.write_permission_rational_message)
-                            .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                                    Uri uri = Uri.fromParts("package", getPackageName(), null);
-                                    intent.setData(uri);
-                                    startActivity(intent);
-                                    dialog.dismiss();
-                                }
-                            });
-                }
-            }
-            AlertDialog dialog = builder.create();
-            dialog.show();
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            checkPermission(RQ_WRITE_EXT_OPEN);
         } else {
             /*if (settingsManager.getBoolPreference(context, AUTO_SYNC)) {
                 String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
@@ -411,7 +373,7 @@ public class MainMenu extends AppCompatActivity {
                 }
             } else {*/
             if (paukerManager.isSaveRequired()) {
-                builder = new AlertDialog.Builder(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
                         .setMessage(R.string.save_lesson_before_question)
                         .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
@@ -446,8 +408,55 @@ public class MainMenu extends AppCompatActivity {
         showToast((Activity) context, R.string.new_lession_created, Toast.LENGTH_SHORT);
     }
 
+    /**
+     * Fragt den Nutzer nach der Erlaubnis.
+     * @param requestCode Welche Funktion danach ausgeführt werden soll.
+     */
+    private void checkPermission(final int requestCode) {
+        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.app_name)
+                .setPositiveButton(R.string.next, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        pref.edit().putBoolean("FirstTime", false).apply();
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                requestCode);
+                        dialog.dismiss();
+                    }
+                })
+                .setNeutralButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            builder.setMessage(R.string.write_permission_rational_message);
+        } else {
+            if (pref.getBoolean("FirstTime", true)) {
+                builder.setMessage(R.string.write_permission_info_message);
+            } else {
+                builder.setMessage(R.string.write_permission_rational_message)
+                        .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent();
+                                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package", getPackageName(), null);
+                                intent.setData(uri);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        });
+            }
+        }
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
     public void mSaveFileClicked(@Nullable MenuItem ignored) {
-        saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL);
+        saveLesson(REQUEST_CODE_SAVE_DIALOG_NORMAL);
     }
 
     /**

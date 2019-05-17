@@ -24,7 +24,8 @@
             android:paddingTop="2dp"
             android:paddingBottom="5dp"
             app:layout_constraintHeight_default="percent"
-            app:layout_constraintHeight_percent="0.3">
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageButton
                 android:id="@+id/bAddNewCard"
@@ -253,7 +254,7 @@
                     android:paddingBottom="5dp"
                     android:scaleType="centerInside"
                     android:src="@drawable/arrow"
-                    layout:ignore="ContentDescription"/>
+                    layout:ignore="ContentDescription" />
 
                 <ScrollView
                     android:id="@+id/infoTextPanel"
