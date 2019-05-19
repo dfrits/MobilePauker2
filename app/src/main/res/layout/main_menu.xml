@@ -104,12 +104,13 @@
                 android:layout_height="0dp"
                 android:layout_above="@+id/bLearnNewCardFrame"
                 android:layout_alignParentStart="true"
-                android:maxHeight="70dp"
                 android:layout_marginBottom="5dp"
                 app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_max="70dp"
                 app:layout_constraintHeight_percent="0.3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/bLearnNewCardFrame">
 
                 <ImageButton
                     android:id="@+id/bAddNewCard"
@@ -153,12 +154,14 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_marginTop="5dp"
-                android:maxHeight="70dp"
-                app:layout_constraintBottom_toTopOf="@+id/bRepeatExpiredCardsFrame"
+                android:gravity="center"
                 app:layout_constraintHeight_default="percent"
+                app:layout_constraintHeight_max="70dp"
                 app:layout_constraintHeight_percent="0.3"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bAddNewCardFrame">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageButton
                     android:id="@+id/bLearnNewCard"
@@ -202,11 +205,12 @@
                 android:layout_below="@+id/bLearnNewCardFrame"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="5dp"
-                android:maxHeight="70dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="@+id/buttonPanel"
+                app:layout_constraintTop_toBottomOf="@+id/bLearnNewCardFrame"
                 app:layout_constraintHeight_default="percent"
-                app:layout_constraintHeight_percent="0.3">
+                app:layout_constraintHeight_max="70dp"
+                app:layout_constraintHeight_percent="0.3"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <ImageButton
                     android:id="@+id/bRepeatExpiredCards"
