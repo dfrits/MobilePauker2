@@ -175,12 +175,12 @@ public class SyncDialog extends Activity {
                         R.string.simple_error_message,
                         Toast.LENGTH_SHORT);
                 cancelTasks();
-                if (e.getRequestId().equals("401")) {
+                if (e.getRequestId() != null && e.getRequestId().equals("401")) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Dropbox token is invalid!")
                             .setMessage("There is something wrong with the dropbox token. Maybe it is " +
                                     "solved by the next try. If this doesn't work" +
-                                    "please contact me.")
+                                    "please get in contact.")
                             .setPositiveButton(R.string.ok, null)
                             .setNeutralButton("Send E-Mail", new DialogInterface.OnClickListener() {
                                 @Override

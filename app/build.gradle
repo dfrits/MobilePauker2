@@ -35,4 +35,5 @@ dependencies {
     implementation 'com.ankushgrover:Hourglass:2.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+    implementation 'org.mockito:mockito-core:2.27.0'
 }
