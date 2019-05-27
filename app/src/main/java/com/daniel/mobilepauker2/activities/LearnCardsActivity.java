@@ -608,9 +608,14 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private void setButtonVisibilityRepeating() {
         bNext.setVisibility(GONE);
         bShowMe.setVisibility(VISIBLE);
-        FlashCard currentCard = modelManager.getCard(mCardCursor.getPosition());
-        String text = mCardCursor != null && currentCard != null && currentCard.isRepeatedByTyping() ?
-                getString(R.string.enter_answer) : getString(R.string.show_me);
+        String text;
+        if (mCardCursor != null) {
+            FlashCard currentCard = modelManager.getCard(mCardCursor.getPosition());
+            text = currentCard != null && currentCard.isRepeatedByTyping() ?
+                    getString(R.string.enter_answer) : getString(R.string.show_me);
+        } else {
+            text = getString(R.string.show_me);
+        }
         bShowMe.setText(text);
         lRepeatButtons.setVisibility(GONE);
         lSkipWaiting.setVisibility(GONE);
