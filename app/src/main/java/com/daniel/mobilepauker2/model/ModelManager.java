@@ -175,7 +175,7 @@ public class ModelManager {
             mCurrentPack.clear();
             switch (stackIndex) {
                 case 0:
-                    cardIterator = mLesson.getCards().iterator();
+                    cardIterator = mLesson.getSummaryBatch().getCards().iterator();
                     break;
                 case 1:
                     cardIterator = mLesson.getUnlearnedBatch().getCards().iterator();
@@ -207,7 +207,7 @@ public class ModelManager {
     public void addCard(FlashCard flashCard, String sideA, String sideB) {
         flashCard.setSideAText(sideA);
         flashCard.setSideBText(sideB);
-        mLesson.getUnlearnedBatch().addCard(flashCard);
+        getLesson().addCard(flashCard);
     }
 
     public List<BatchStatistics> getBatchStatistics() {
@@ -664,7 +664,7 @@ public class ModelManager {
 
     /**
      * Sortiert den Batch, aber aktuellisiert nicht den aktuellen.
-     * @param stackIndex Index des Batchs
+     * @param stackIndex    Index des Batchs
      * @param sortByElement Nach diesem Element wird soriert
      * @param asc_direction In welche Richtung sortiert werden soll
      */
@@ -680,7 +680,7 @@ public class ModelManager {
             default:
                 batch = mLesson.getLongTermBatch(stackIndex - 2);
         }
-        if (batch!=null)
+        if (batch != null)
             batch.sortCards(sortByElement, asc_direction);
     }
 

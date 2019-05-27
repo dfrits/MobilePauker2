@@ -341,7 +341,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     /**
-     * Sortiert die Liste nach dem angebenen Element aufsteigen oder absteigend.
+     * Sortiert die Liste nach dem angebenen Element aufsteigend oder absteigend.
      * @param sortByElement Element nach dem sortiert werden soll
      * @param asc_direction Gibt an ob aufsteigend oder absteigen. True ist aufsteigend und
      *                      false absteigend
