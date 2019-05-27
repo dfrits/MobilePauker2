@@ -608,7 +608,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private void setButtonVisibilityRepeating() {
         bNext.setVisibility(GONE);
         bShowMe.setVisibility(VISIBLE);
-        String text = mCardCursor != null && modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping() ?
+        FlashCard currentCard = modelManager.getCard(mCardCursor.getPosition());
+        String text = mCardCursor != null && currentCard != null && currentCard.isRepeatedByTyping() ?
                 getString(R.string.enter_answer) : getString(R.string.show_me);
         bShowMe.setText(text);
         lRepeatButtons.setVisibility(GONE);
@@ -969,13 +970,13 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         boolean isLast = mCardCursor.isLast();
 
                         if (modelManager.deleteCard(mCardCursor.getPosition())) {
-                            if (!isLast) {
+                            if (isLast) {
+                                // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
+                                updateLearningPhase();
+                            } else {
                                 updateCurrentCard();
                                 fillData();
                                 setButtonsVisibility();
-                            } else {
-                                // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
-                                updateLearningPhase();
                             }
                         } else {
                             showToast((Activity) context, "Löschen nicht möglich!", Toast.LENGTH_SHORT);

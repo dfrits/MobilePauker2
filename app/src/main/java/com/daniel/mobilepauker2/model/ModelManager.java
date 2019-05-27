@@ -144,9 +144,8 @@ public class ModelManager {
                 }
 
                 case WAITING_FOR_STM: {
-                    //noinspection UnusedAssignment
                     cardIterator = mLesson.getShortTermList().listIterator(); // Need to put something in the iterator for requery
-                    return;
+                    break;
                 }
 
                 case REPEATING_STM: {
@@ -892,7 +891,7 @@ public class ModelManager {
         }
     }
 
-    public Batch getBatchOfCard(Card card) {
+    private Batch getBatchOfCard(Card card) {
         int batchNumber = card.getLongTermBatchNumber();
         if (batchNumber == 0)
             return mLesson.getSummaryBatch();
