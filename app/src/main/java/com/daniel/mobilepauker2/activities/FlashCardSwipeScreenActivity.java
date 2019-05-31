@@ -94,6 +94,7 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
 
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         mCardCursor = mCardPackAdapter.fetchAllFlashCards();
+        //mCardCursor = cursor;
         if (mCardCursor == null || mCardCursor.getCount() <= 0) // no cards available
         {
             Log.d("FlashCardSwipeScreenActivity::onCreate", "No cards available so stopping");
@@ -112,6 +113,16 @@ public abstract class FlashCardSwipeScreenActivity extends AppCompatActivity
 
     public boolean isCardCursorAvailable() {
         return !(mCardCursor == null || mCardCursor.isClosed() || mCardCursor.getCount() <= 0);
+    }
+
+    /**
+     * Lädt des Stack neu.
+     */
+    protected void reloadStack() {
+        mCardPackAdapter = new CardPackRamAdapter(context);
+        mSavedCursorPosition = -1;
+        getLoaderManager().destroyLoader(LOADER_ID);
+        refreshCursor();
     }
 
     public void refreshCursor() {
