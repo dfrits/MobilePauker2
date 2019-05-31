@@ -23,7 +23,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.widget.Toast;
 
-import com.daniel.mobilepauker2.activities.LessonImportActivity;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.pauker_native.Lesson;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
@@ -51,6 +50,21 @@ public class PaukerManager {
             instance = new PaukerManager();
         }
         return instance;
+    }
+
+    public static void showToast(final Activity context, final String text, final int duration) {
+        context.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (text != null && !text.isEmpty()) {
+                    Toast.makeText(context, text, duration).show();
+                }
+            }
+        });
+    }
+
+    public static void showToast(Activity context, int textResource, int duration) {
+        showToast(context, context.getString(textResource), duration);
     }
 
     /**
@@ -92,7 +106,7 @@ public class PaukerManager {
     }
 
     // Todo replace this with the File Class
-    public void setFileAbsolutePath(String fileAbsolutePath) {
+    private void setFileAbsolutePath(String fileAbsolutePath) {
         // Validate the filename
         if (fileAbsolutePath == null) {
             return;
@@ -138,9 +152,38 @@ public class PaukerManager {
         mSaveRequired = saveRequired;
     }
 
+    /**
+     * Gibt den Namen der aktuellen Lektion ohne Endungen zurück.
+     * @return Lektionsname ohne Endungen
+     */
     public String getReadableFileName() {
         String filename = mCurrentFileName;
 
+        return getReadableFileName(filename);
+    }
+
+    /**
+     * Loads a lesson from a file
+     * @param filename Name der Datei, die importiert werden soll
+     * @return <b>True</b> if lesson loaded ok
+     */
+    public File getFilePath(Context context, String filename) throws IOException {
+        // Validate the filename
+        if (!validateFilename(filename)) {
+            PaukerManager.showToast((Activity) context, R.string.error_filename_invalid, Toast.LENGTH_LONG);
+            throw new IOException("Filename invalid");
+        }
+
+        String filePath = Environment.getExternalStorageDirectory() + getApplicationDataDirectory() + filename;
+        return new File(filePath);
+    }
+
+    /**
+     * Gibt den Namen der Lektion ohne Endungen zurück.
+     * @param filename Lektionsname
+     * @return Lektionsname ohne Endungen
+     */
+    public String getReadableFileName(String filename) {
         if (validateFileEnding(filename)) {
             return filename.substring(0, filename.length() - 7);
         } else if (filename.endsWith(".pau") || filename.endsWith(".xml")) {
@@ -204,21 +247,6 @@ public class PaukerManager {
             }
         }
         return false;
-    }
-
-    public static void showToast(final Activity context, final String text, final int duration) {
-        context.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (text != null && !text.isEmpty()) {
-                    Toast.makeText(context, text, duration).show();
-                }
-            }
-        });
-    }
-
-    public static void showToast(Activity context, int textResource, int duration) {
-        showToast(context, context.getString(textResource), duration);
     }
 
     public void loadLessonFromFile(File file) throws IOException {

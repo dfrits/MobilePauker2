@@ -31,7 +31,6 @@ import com.daniel.mobilepauker2.model.MPEditText;
 import com.daniel.mobilepauker2.model.MPTextView;
 import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
-import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
@@ -64,8 +63,10 @@ import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_NOTIFY_ID;
 
 public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
+    private static boolean isLearningRunning;
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final Context context = this;
+    private Intent pendingIntent = null;
     private NotificationManagerCompat notificationManager;
     private boolean flipCardSides = false;
     private boolean completedLearning = false;
@@ -92,9 +93,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private RelativeLayout timerAnimation;
     private String ustmTimerText;
 
+    public static boolean isLearningRunning() {
+        return isLearningRunning;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        isLearningRunning = true;
 
         createNotificationChannel();
         createTimerBarChannel();
@@ -201,6 +208,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     protected void onDestroy() {
         stopSTMTimer();
         stopUSTMTimer();
+        isLearningRunning = false;
         super.onDestroy();
     }
 
@@ -309,11 +317,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                             String ustmTimerBarText = ustmTimerFinished && ustmTimerText != null ? ""
                                     : getString(R.string.ustm) + " " + ustmTimerText;
                             String timerbarText = ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText;
+                            Intent contentIntent = pendingIntent == null ? getIntent() : pendingIntent;
                             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
                                     .setContentText(timerbarText)
                                     .setSmallIcon(R.drawable.notify_icon)
                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                    .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                    .setContentIntent(PendingIntent.getActivity(context, 0, contentIntent, 0))
                                     .setAutoCancel(true)
                                     .setOngoing(true);
                             Log.d("LearnActivity::STM-onTimerClick", "Notification created");

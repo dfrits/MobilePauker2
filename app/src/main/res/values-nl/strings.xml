@@ -222,5 +222,12 @@
     <string name="instant_repeat">Instant Repeat</string>
     <string name="instant_repeat_message">Do you want to repeat the selected cards now?</string>
     <string name="flip_cards_message">Do you want to flip the sides of the selected cards?</string>
+    <string name="shortcut_remove">Remove Shortcut</string>
+    <string name="shortcut_add">Add Shortcut</string>
+    <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
+    <string name="shortcut_added">Shortcut added</string>
+    <string name="shortcut_removed">Shortcut removed</string>
+    <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
+    <string name="shortcut_open_error_permission">Permission not granted yet!</string>
     <!-- endregion -->
 </resources>

@@ -57,8 +57,10 @@ import java.util.Locale;
  */
 
 public class LessonImportActivity extends AppCompatActivity {
-    protected static final int CONTEXT_DELETE = 0;
-    protected static final int CONTEXT_OPEN = 1;
+    private static final int CONTEXT_DELETE = 0;
+    private static final int CONTEXT_OPEN = 1;
+    private static final int CONTEXT_CREATE_SHORTCUT = 2;
+    private static final int CONTEXT_DELETE_SHORTCUT = 3;
     private static String errorMessage = null;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
@@ -109,8 +111,14 @@ public class LessonImportActivity extends AppCompatActivity {
 
             public void onCreateContextMenu(ContextMenu menu, View v,
                                             ContextMenu.ContextMenuInfo menuInfo) {
-                menu.add(0, CONTEXT_DELETE, 0, "Delete");
-                menu.add(0, CONTEXT_OPEN, 0, "Open");
+                menu.add(0, CONTEXT_DELETE, 0, R.string.delete);
+                menu.add(0, CONTEXT_OPEN, 0, R.string.open_lesson);
+                int pos = ((AdapterView.AdapterContextMenuInfo) menuInfo).position;
+                if (ShortcutReceiver.hasShortcut(context, (String) listView.getItemAtPosition(pos))) {
+                    menu.add(0, CONTEXT_DELETE_SHORTCUT, 0, R.string.shortcut_remove);
+                } else {
+                    menu.add(0, CONTEXT_CREATE_SHORTCUT, 0, R.string.shortcut_add);
+                }
             }
         });
     }
@@ -122,7 +130,7 @@ public class LessonImportActivity extends AppCompatActivity {
             lastSelection = position;
             String text = getString(R.string.next_expire_date);
             try {
-                URI uri = getFilePath((String) listView.getItemAtPosition(position)).toURI();
+                URI uri = paukerManager.getFilePath(context, (String) listView.getItemAtPosition(position)).toURI();
                 FlashCardXMLPullFeedParser parser = new FlashCardXMLPullFeedParser(uri.toURL());
                 SparseLongArray map = parser.getNextExpireDate();
 
@@ -211,22 +219,6 @@ public class LessonImportActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Loads a lesson from a file
-     * @param filename Name der Datei, die importiert werden soll
-     * @return <b>True</b> if lesson loaded ok
-     */
-    private File getFilePath(String filename) throws IOException {
-        // Validate the filename
-        if (!paukerManager.validateFilename(filename)) {
-            PaukerManager.showToast((Activity) context, R.string.error_filename_invalid, Toast.LENGTH_LONG);
-            throw new IOException("Filename invalid");
-        }
-
-        String filePath = Environment.getExternalStorageDirectory() + paukerManager.getApplicationDataDirectory() + filename;
-        return new File(filePath);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.open_lesson, menu);
@@ -246,44 +238,22 @@ public class LessonImportActivity extends AppCompatActivity {
         final int position = menuInfo.position;
         switch (item.getItemId()) {
             case CONTEXT_DELETE:
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setMessage(R.string.delete_lesson_message)
-                        .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                Log.d("Import flash card file activity",
-                                        "list pos:" + position + " id:" + menuInfo.id);
-                                String filename = listView.getItemAtPosition(position).toString();
-                                String filePath = Environment.getExternalStorageDirectory() +
-                                        paukerManager.getApplicationDataDirectory() + filename;
-                                File file = new File(filePath);
-
-                                if (file.isFile()) {
-                                    if (modelManager.deleteLesson(context, file)) {
-                                        init();
-                                        resetSelection(null);
-
-                                        if (!fileNames.contains(paukerManager.getCurrentFileName())) {
-                                            paukerManager.setupNewApplicationLesson();
-                                            paukerManager.setSaveRequired(false);
-                                        }
-                                    } else {
-                                        PaukerManager.showToast((Activity) context, R.string.delete_lesson_error, Toast.LENGTH_SHORT);
-                                    }
-                                }
-                            }
-                        })
-                        .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        });
-                builder.create().show();
+                Log.d("LessonImportActivity::deleteLesson",
+                        "list pos:" + position + " id:" + menuInfo.id);
+                deleteLesson(position);
                 break;
             case CONTEXT_OPEN:
                 openLesson(position);
+                break;
+            case CONTEXT_CREATE_SHORTCUT:
+                Log.d("LessonImportActivity::createShortcut", "create new dynamic " +
+                        "shortcut for list pos:" + position + " id:" + menuInfo.id);
+                createShortCut(position);
+                break;
+            case CONTEXT_DELETE_SHORTCUT:
+                Log.d("LessonImportActivity::deleteShortcut", "delete dynamic " +
+                        "shortcut for list pos:" + position + " id:" + menuInfo.id);
+                deleteShortCut(position);
                 break;
             default:
                 return super.onContextItemSelected(item);
@@ -324,8 +294,7 @@ public class LessonImportActivity extends AppCompatActivity {
             if (modelManager.isLessonNotNew())
                 if (fileNames.contains(paukerManager.getCurrentFileName())) {
                     try {
-                        paukerManager.loadLessonFromFile(getFilePath(paukerManager.getCurrentFileName()));
-                        paukerManager.setSaveRequired(false);
+                        openLesson(paukerManager.getCurrentFileName());
                     } catch (IOException ignored) {
                         PaukerManager.showToast((Activity) context, R.string.reopen_lesson_error, Toast.LENGTH_LONG);
                         ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
@@ -384,18 +353,83 @@ public class LessonImportActivity extends AppCompatActivity {
         openLesson(lastSelection);
     }
 
+    public void deleteLesson(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.delete_lesson_message)
+                .setPositiveButton(R.string.delete, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        String filename = listView.getItemAtPosition(position).toString();
+                        String filePath = Environment.getExternalStorageDirectory() +
+                                paukerManager.getApplicationDataDirectory() + filename;
+                        File file = new File(filePath);
+
+                        if (file.isFile()) {
+                            if (modelManager.deleteLesson(context, file)) {
+                                init();
+                                resetSelection(null);
+
+                                if (!fileNames.contains(paukerManager.getCurrentFileName())) {
+                                    paukerManager.setupNewApplicationLesson();
+                                    paukerManager.setSaveRequired(false);
+                                }
+                            } else {
+                                PaukerManager.showToast((Activity) context, R.string.delete_lesson_error, Toast.LENGTH_SHORT);
+                            }
+                        }
+                    }
+                })
+                .setNeutralButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        builder.create().show();
+    }
+
     private void openLesson(int position) {
         String filename = (String) listView.getItemAtPosition(position);
         try {
             PaukerManager.showToast((Activity) context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
-            paukerManager.loadLessonFromFile(getFilePath(filename));
-            paukerManager.setSaveRequired(false);
+            openLesson(filename);
             finish();
         } catch (IOException e) {
             resetSelection(null);
             PaukerManager.showToast((Activity) context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);
             ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
         }
+    }
+
+    /**
+     * Öffnet die Lektion mit dem übergebenen Namen.
+     * @param filename Lektionsname
+     * @throws IOException .
+     */
+    private void openLesson(String filename) throws IOException {
+        paukerManager.loadLessonFromFile(paukerManager.getFilePath(context, filename));
+        paukerManager.setSaveRequired(false);
+    }
+
+    /**
+     * Erstellt einen Shortcut und fügt diesen hinzu.
+     * @param position Position der Lektion von der ein Shortcut erstellt werden soll
+     */
+    private void createShortCut(final int position) {
+        ShortcutReceiver.createShortcut(this, (String) listView.getItemAtPosition(position));
+        init();
+        resetSelection(null);
+    }
+
+    /**
+     * Entfernt den Shortcut.
+     * @param position Position in der Liste
+     */
+    private void deleteShortCut(int position) {
+        ShortcutReceiver.deleteShortcut(this, (String) listView.getItemAtPosition(position));
+        init();
+        resetSelection(null);
     }
 
     public void downloadNewLesson(View view) {

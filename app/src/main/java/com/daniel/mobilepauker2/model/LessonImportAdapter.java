@@ -1,5 +1,6 @@
 package com.daniel.mobilepauker2.model;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
+import com.daniel.mobilepauker2.PaukerManager;
 
 import java.util.ArrayList;
 
@@ -38,13 +41,8 @@ public class LessonImportAdapter extends ArrayAdapter<String> {
         }
 
         TextView tv = view.findViewById(android.R.id.text1);
-        String name = data.get(position);
-
-        int index = name.endsWith(".xml.gz") ? name.indexOf(".xml") : name.indexOf(".pau");
-        if (index != -1) {
-            name = name.substring(0, index);
-            tv.setText(name.substring(0, index));
-        }
+        String name = PaukerManager.instance().getReadableFileName(data.get(position));
+        tv.setText(name);
 
         return view;
     }

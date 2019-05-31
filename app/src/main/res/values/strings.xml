@@ -263,5 +263,12 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
+    <string name="shortcut_remove">Remove Shortcut</string>
+    <string name="shortcut_add">Add Shortcut</string>
+    <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
+    <string name="shortcut_added">Shortcut added</string>
+    <string name="shortcut_removed">Shortcut removed</string>
+    <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
+    <string name="shortcut_open_error_permission">Permission not granted yet!</string>
     <!-- endregion -->
 </resources>
