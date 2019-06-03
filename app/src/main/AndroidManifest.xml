@@ -69,8 +69,8 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:launchMode="singleTop"
             android:name=".activities.LearnCardsActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
@@ -86,9 +86,9 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:launchMode="singleTop"
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
@@ -135,6 +135,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activities.ShortcutReceiver" />
+        <activity
+            android:name=".activities.ShortcutReceiver"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
     </application>
 </manifest>

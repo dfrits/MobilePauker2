@@ -369,6 +369,7 @@ public class LessonImportActivity extends AppCompatActivity {
                             if (modelManager.deleteLesson(context, file)) {
                                 init();
                                 resetSelection(null);
+                                ShortcutReceiver.deleteShortcut(context, filename);
 
                                 if (!fileNames.contains(paukerManager.getCurrentFileName())) {
                                     paukerManager.setupNewApplicationLesson();

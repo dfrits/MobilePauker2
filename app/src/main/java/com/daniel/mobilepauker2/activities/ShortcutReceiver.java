@@ -11,7 +11,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
@@ -25,7 +29,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-public class ShortcutReceiver extends AppCompatActivity {
+public class ShortcutReceiver extends Activity {
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final Context context = this;
 
@@ -98,6 +102,17 @@ public class ShortcutReceiver extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        setContentView(R.layout.progress_dialog);
+        RelativeLayout progressBar = findViewById(R.id.pFrame);
+        progressBar.setVisibility(View.VISIBLE);
+        TextView title = findViewById(R.id.pTitle);
+        title.setText(R.string.open_lesson_hint);
     }
 
     @Override
