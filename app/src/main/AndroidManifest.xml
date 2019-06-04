@@ -86,6 +86,10 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
+            android:name=".activities.ShortcutReceiver"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <activity
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
             android:launchMode="singleTop"
@@ -134,9 +138,5 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activities.ShortcutReceiver"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
     </application>
 </manifest>

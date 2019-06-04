@@ -113,11 +113,6 @@ public class ShortcutReceiver extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         TextView title = findViewById(R.id.pTitle);
         title.setText(R.string.open_lesson_hint);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         Intent intent = getIntent();
         if (Constants.SHORTCUT_ACTION.equals(intent.getAction())) {
@@ -148,8 +143,6 @@ public class ShortcutReceiver extends Activity {
 
         try {
             if (!paukerManager.getCurrentFileName().equals(filename)) {
-                PaukerManager.showToast((Activity) context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
-
                 paukerManager.loadLessonFromFile(paukerManager.getFilePath(context, filename));
                 paukerManager.setSaveRequired(false);
             }
