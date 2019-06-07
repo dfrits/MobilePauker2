@@ -549,22 +549,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             }
 
             case REPEATING_LTM: {
-                if (modelManager.getExpiredCardsSize() <= 0) {
+                if (completedLearning && modelManager.getExpiredCardsSize() <= 0) {
                     finishLearning();
+                } else if (completedLearning) {
+                    pushCursorToNext();
                 } else {
-                    /*initStackSize -= 1;
-
-                    checkStackSize();
-                    Log.d("LearnCardsActivity::updateLearningPhase", "repeatingLTM: " +
-                            "savedPos= " + mSavedCursorPosition + ",\n" +
-                            "cursorPos= " + mCardCursor.getPosition() + ",\n" +
-                            "currentStackSize= " + modelManager.getExpiredCardsSize() + ",\n" +
-                            "initSize= " + initStackSize);
-                    if (modelManager.getExpiredCardsSize() != initStackSize) {
-                        Log.d("LearnCardsActivity::updateLearningPhase", "refresh cursor");
-                        mSavedCursorPosition = -1;
-                        refreshCursor();
-                    }*/
                     setButtonsVisibility();
                 }
                 break;
@@ -920,6 +909,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             setCursorToFirst();
             updateCurrentCard();
             fillData();
+            setButtonsVisibility();
         } else {
             mCardCursor.moveToPosition(mSavedCursorPosition);
             updateCurrentCard();
@@ -931,7 +921,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 lRepeatButtons.setVisibility(VISIBLE);
             }
         }
-        setButtonsVisibility();
         mSavedCursorPosition = -1;
     }
 
@@ -971,16 +960,23 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     /**
-     * Prüft ob neue Karten abgelaufen sind und lädt den Stack gegebenenfalls neu. Sonst wird der
-     * Cursor eine Position weitergeschoben.
+     * Werden abgelaufene Karten wiederholt, wird der Stack neugeladen. Sonst wird der Standartweg
+     * gegangen.
      */
     private void pushCursorToNext() {
-        initStackSize--;
+        /*initStackSize--;
         if (checkStackSize()) {
             setLearningPhase(modelManager.getLearningPhase());
             reloadStack();
         } else {
             mCardCursor.moveToNext();
+        }*/
+        if (modelManager.getLearningPhase() == REPEATING_LTM) {
+            modelManager.setLearningPhase(context, modelManager.getLearningPhase());
+            reloadStack();
+        } else {
+            mCardCursor.moveToNext();updateCurrentCard();
+            fillData();
         }
     }
 
@@ -1075,8 +1071,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast() && !ustmTimerFinished) {
             pushCursorToNext();
-            updateCurrentCard();
-            fillData();
+            /*updateCurrentCard();
+            fillData();*/
         } else {
             // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
             updateLearningPhase();
@@ -1094,8 +1090,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            updateCurrentCard();
-            fillData();
+            /*updateCurrentCard();
+            fillData();*/
         } else {
             completedLearning = true;
         }
@@ -1109,8 +1105,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            updateCurrentCard();
-            fillData();
+            /*updateCurrentCard();
+            fillData();*/
         } else {
             completedLearning = true;
         }

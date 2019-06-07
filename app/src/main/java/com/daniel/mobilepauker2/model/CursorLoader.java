@@ -72,6 +72,8 @@ public class CursorLoader extends AsyncTaskLoader<Cursor> {
     public void onCanceled(Cursor data) {
         super.onCanceled(data);
 
-        cursor.close();
+        if (cursor != null) {
+            cursor.close();
+        }
     }
 }
