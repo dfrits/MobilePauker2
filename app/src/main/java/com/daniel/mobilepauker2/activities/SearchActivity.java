@@ -282,7 +282,9 @@ public class SearchActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     for (FlashCard card : checkedCards) {
-                                        modelManager.deleteCard(card);
+                                        boolean cardDeleted = modelManager.deleteCard(card);
+                                        Log.d("SearchActivity::MultiChoiceListener::deleteCards",
+                                                "Card deleted: " + cardDeleted);
                                     }
                                     checkedCards = null;
                                     paukerManager.setSaveRequired(true);

@@ -725,10 +725,17 @@ public class ModelManager {
                 Log.d("AndyPaukerApplication::deleteCard", "Deleted from short term batch");
             } else {
                 Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from unlearned batch  ");
-                return true;
+                return false;
             }
         }
-        return false;
+
+        if (mLesson.getSummaryBatch().removeCard(card)) {
+            Log.d("AndyPaukerApplication::deleteCard", "Deleted from summary batch");
+        } else {
+            Log.e("AndyPaukerApplication::deleteCard", "Could not delete card from summary batch  ");
+            return false;
+        }
+        return true;
     }
 
     public void setLearningPhase(Context context, LearningPhase learningPhase) {
