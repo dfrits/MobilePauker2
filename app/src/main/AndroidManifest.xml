@@ -138,5 +138,7 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
             </intent-filter>
         </activity>
+
+        <service android:name=".model.TimerService" />
     </application>
 </manifest>
