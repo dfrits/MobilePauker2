@@ -4,11 +4,13 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
+        android:installLocation="internalOnly"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -27,6 +29,7 @@
         <activity
             android:name=".activities.LessonImportActivity"
             android:label="@string/lessons"
+            android:parentActivityName=".activities.MainMenu"
             android:theme="@style/OpenLessonTheme" />
 
         <activity
@@ -86,10 +89,6 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:name=".activities.ShortcutReceiver"
-            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
-
-        <activity
             android:name=".activities.EditCardActivity"
             android:label="@string/edit_card"
             android:launchMode="singleTop"
@@ -138,5 +137,23 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.xml\\.gz" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".model.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".activities.ShortcutReceiver"
+            android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
+
+        <!-- Notification -->
+
+        <receiver android:name=".model.notification.AlarmNotificationReceiver" />
+
+        <service
+            android:name=".model.notification.NotificationService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 </manifest>

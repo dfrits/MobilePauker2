@@ -25,10 +25,17 @@
     <string name="restart_timer_error">Time cannot be resarted now</string>
     <string name="saving_error">Error saving Lesson</string>
     <string name="simple_error_message">An error has occurred</string>
-    <string name="synchro_timeout">Synchronizing timed out</string>    <!-- endregion -->
+    <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
+    <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
+    <string name="shortcut_open_error_permission">Permission not granted yet!</string>
+    <string name="synchro_timeout">Synchronizing timed out</string>
+    <!-- endregion -->
 
     <!-- region Infos -->
     <string name="card_added">Card added</string>
+    <string name="cards_expire_notify_msg">Cards are expired.</string>
+    <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close
+        without saving?</string>
     <string name="compare_ques_answ">Right answer: %s\nYour answer: %s</string>
     <string name="delete_card_message">Do you really want to delete the card?</string>
     <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
@@ -96,6 +103,7 @@
     <string name="background">Background</string>
     <string name="bold">Bold</string>
     <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
     <string name="delete">Delete</string>
     <string name="italic">Italic</string>
     <string name="no">No</string>
@@ -158,6 +166,10 @@
     <string name="search">Search</string>
     <string name="select_all">Choose all</string>
     <string name="settings">Settings</string>
+    <string name="shortcut_add">Add Shortcut</string>
+    <string name="shortcut_added">Shortcut added</string>
+    <string name="shortcut_remove">Remove Shortcut</string>
+    <string name="shortcut_removed">Shortcut removed</string>
     <string name="sort_by">Sort by</string>
     <string name="sync_manually">Syncronize with Dropbox</string>
     <!-- endregion -->
@@ -249,9 +261,10 @@
     <!-- endregion -->
 
     <!-- region Notifications -->
-    <string name="channel_notify_description">Notifys you, when the timers expired. Only if the App
+    <string name="channel_notify_timers_description">Notifys you, when the timers expired. Only if the App
         is not shown.</string>
-    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_name_other">General</string>
+    <string name="channel_notify_name_timers">Timers</string>
     <string name="channel_timerbar_description">Shows the time in the notification bar if the App is
         not shown.</string>
     <string name="channel_timerbar_name">Timer bar</string>
@@ -263,12 +276,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
-    <string name="shortcut_remove">Remove Shortcut</string>
-    <string name="shortcut_add">Add Shortcut</string>
-    <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
-    <string name="shortcut_added">Shortcut added</string>
-    <string name="shortcut_removed">Shortcut removed</string>
-    <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
-    <string name="shortcut_open_error_permission">Permission not granted yet!</string>
     <!-- endregion -->
 </resources>

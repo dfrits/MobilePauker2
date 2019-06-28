@@ -255,7 +255,7 @@ public class FlashCardXMLPullFeedParser extends FlashCardBaseFeedParser {
      * Findet das nächste Ablaufdatum. Falls keines gefunden wird, wird {@link Long#MIN_VALUE}
      * zurückgegeben.
      * @return Eine Map mit dem frühesten Ablaufdatum <b>(index = 0)</b> und die Anzahl abgelaufener
-     * Karten (<b>index = 2)</b>
+     * Karten (<b>index = 1)</b>
      */
     public SparseLongArray getNextExpireDate() {
 

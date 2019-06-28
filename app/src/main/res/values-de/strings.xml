@@ -35,6 +35,9 @@
 
     <!-- region Infos -->
     <string name="card_added">Karte hinzugefügt</string>
+    <string name="cards_expire_notify_msg">Es sind Karten abgelaufen.</string>
+    <string name="close_without_saving_dialog_msg">Die Lektion wurde noch nicht gespeichert. Willst
+        du beenden ohne zu speichern?</string>
     <string name="compare_ques_answ">Richtig wäre gewesen: %s\nDeine Antwort war: %s</string>
     <string name="delete_card_message">Karte wirklich löschen?</string>
     <string name="delete_lesson_message">Lektion wirklich löschen?</string>
@@ -101,6 +104,7 @@
     <string name="background">Hintergrund</string>
     <string name="bold">Fett</string>
     <string name="cancel">Abbrechen</string>
+    <string name="close">Beenden</string>
     <string name="delete">Löschen</string>
     <string name="italic">Kursiv</string>
     <string name="no">Nein</string>
@@ -233,9 +237,10 @@
     <!-- endregion -->
 
     <!-- redion Notifications -->
-    <string name="channel_notify_description">Benachrichtigt dich, wenn die Zeiten abgelaufen sind.
+    <string name="channel_notify_timers_description">Benachrichtigt dich, wenn die Zeiten abgelaufen sind.
         Nur, wenn die App nicht im Vordergrund ist.</string>
-    <string name="channel_notify_name">Stoppuhren</string>
+    <string name="channel_notify_name_other">Allgemein</string>
+    <string name="channel_notify_name_timers">Stoppuhren</string>
     <string name="channel_timerbar_description">Zeigt die Zeiten in der Benachrichtungsleiste an,
         wenn die App nicht im Vordergrund ist.</string>
     <string name="channel_timerbar_name">Zeitleiste</string>

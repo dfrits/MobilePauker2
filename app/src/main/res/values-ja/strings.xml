@@ -31,6 +31,8 @@
 
     <!-- region Infos -->
     <string name="card_added">カードを足しました</string>
+    <string name="cards_expire_notify_msg">カードが失効した。</string>
+    <string name="close_without_saving_dialog_msg">レッソンはまだ法損されていません。 法損しなくて閉じりたいですか？</string>
     <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
     <string name="delete_card_message">カードを本当に消したいですか?</string>
     <string name="delete_lesson_message">レッソンを本当に消したいですか?</string>
@@ -93,6 +95,7 @@
     <string name="background">バックグラウンド</string>
     <string name="bold">ボールド</string>
     <string name="cancel">打ち切る</string>
+    <string name="close">閉</string>
     <string name="delete">消す</string>
     <string name="italic">イタリック</string>
     <string name="no">いいえ</string>
@@ -221,8 +224,9 @@
     <!-- endregion -->
 
     <!-- redion Notifications -->
-    <string name="channel_notify_description">タイマーが切れると通知します。 アップリーは開いていればだけ。</string>
-    <string name="channel_notify_name">タイマー</string>
+    <string name="channel_notify_timers_description">タイマーが切れると通知します。 アップリーは開いていればだけ。</string>
+    <string name="channel_notify_name_other">コモン</string>
+    <string name="channel_notify_name_timers">タイマー</string>
     <string name="channel_timerbar_description">アップリーは開いていなければ通知バーで時間を表示する。</string>
     <string name="channel_timerbar_name">タイマーバー</string>
     <string name="show_notification_summ">タイマーは切れるとアップリーが開いていないと通知する。</string>
@@ -232,6 +236,6 @@
     <!-- endregion -->
 
     <!-- region Neue Strings -->
-    <string name="New">Neu</string>
+    <string name="New">新</string>
     <!-- endregion -->
 </resources>

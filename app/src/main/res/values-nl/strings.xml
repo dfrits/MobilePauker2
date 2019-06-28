@@ -193,8 +193,8 @@
     <!-- endregion -->
 
     <!-- redion Notifications -->
-    <string name="channel_notify_description">Toont een melding als de timers verlopen zijn, maar alleen als de app niet geopend is.</string>
-    <string name="channel_notify_name">Timers</string>
+    <string name="channel_notify_timers_description">Toont een melding als de timers verlopen zijn, maar alleen als de app niet geopend is.</string>
+    <string name="channel_notify_name_timers">Timers</string>
     <string name="channel_timerbar_description">Toont de tijd in de meldingsbalk als de app niet geopend is.</string>
     <string name="channel_timerbar_name">Tijdbalk</string>
     <string name="stm_expired_notify_message">De kortetermijngeheugen-timer is verlopen. Druk om kaarten te herhalen.</string>
@@ -229,5 +229,9 @@
     <string name="shortcut_removed">Shortcut removed</string>
     <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
     <string name="shortcut_open_error_permission">Permission not granted yet!</string>
+    <string name="close">Close</string>
+    <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close without saving?</string>
+    <string name="cards_expire_notify_msg">Es sind Karten abgelaufen.</string>
+    <string name="channel_notify_name_other">Others</string>
     <!-- endregion -->
 </resources>

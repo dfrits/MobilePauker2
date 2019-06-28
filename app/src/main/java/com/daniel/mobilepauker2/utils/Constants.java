@@ -13,8 +13,10 @@ public class Constants {
     public static final String DEFAULT_APP_FILE_DIRECTORY = "/Mobile Pauker++/";
     public static final String TIMER_NOTIFY_CHANNEL_ID = "Timers";
     public static final String TIMER_BAR_CHANNEL_ID = "Timerbar";
+    public static final String NOTIFICATION_CHANNEL_ID = "NOTIFICATION_CHANNEL_ID";
     public static final int TIME_NOTIFY_ID = 0;
     public static final int TIME_BAR_ID = 1;
+    public static final int NOTIFICATION_ID = 2;
 
     // Standard-XML-Werte
     public static final String STANDARD_ORIENTATION = "LTR";

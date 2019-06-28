@@ -3,6 +3,8 @@ package com.daniel.mobilepauker2.activities;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -30,6 +33,7 @@ import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
+import com.daniel.mobilepauker2.model.notification.NotificationService;
 import com.daniel.mobilepauker2.statistics.ChartAdapter;
 import com.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback;
 import com.daniel.mobilepauker2.utils.Constants;
@@ -42,7 +46,10 @@ import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_LEARNING;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
+import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL;
+import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID;
+import static com.daniel.mobilepauker2.utils.Constants.TIMER_NOTIFY_CHANNEL_ID;
 
 /**
  * Created by Daniel on 24.02.2018.
@@ -54,6 +61,7 @@ import static com.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_
 public class MainMenu extends AppCompatActivity {
     private static final int RQ_WRITE_EXT_SAVE = 98;
     private static final int RQ_WRITE_EXT_OPEN = 99;
+    public static boolean isPaukerActive = false;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
     private final SettingsManager settingsManager = SettingsManager.instance();
@@ -65,6 +73,11 @@ public class MainMenu extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Channel erstellen, falls noch nicht vorhanden
+        Log.d("AlamNotificationReceiver::onReceive", "Create Channels");
+        createNotificationChannels();
+
         ErrorReporter.instance().init(context);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -282,6 +295,37 @@ public class MainMenu extends AppCompatActivity {
             invalidateOptionsMenu();
         }
         firstStart = false;
+
+        isPaukerActive = true;
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.cancelAll();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (paukerManager.isSaveRequired()) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setMessage(R.string.close_without_saving_dialog_msg)
+                    .setPositiveButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.close, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+            AlertDialog dialog = builder.create();
+            dialog.show();
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned));
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned));
+        } else super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        NotificationService.enqueueWork(context);
+        isPaukerActive = false;
+        super.onDestroy();
     }
 
     @Override
@@ -550,5 +594,52 @@ public class MainMenu extends AppCompatActivity {
                     }
                 });
         builder.create().show();
+    }
+
+    /**
+     * Erstellt alle Channels
+     */
+    public void createNotificationChannels() {
+        // Für allg. Notification
+        createNotificationChannel(getString(R.string.channel_notify_name_other),
+                null,
+                NotificationManager.IMPORTANCE_DEFAULT,
+                NOTIFICATION_CHANNEL_ID,
+                true);
+
+        // Wenn der Timer abgelaufen ist
+        createNotificationChannel(getString(R.string.channel_notify_name_timers),
+                getString(R.string.channel_notify_timers_description),
+                NotificationManager.IMPORTANCE_DEFAULT,
+                TIMER_NOTIFY_CHANNEL_ID,
+                true);
+
+        // Timerbar
+        createNotificationChannel(getString(R.string.channel_timerbar_name),
+                getString(R.string.channel_timerbar_description),
+                NotificationManager.IMPORTANCE_LOW,
+                TIMER_BAR_CHANNEL_ID,
+                false);
+    }
+
+    /**
+     * Hilfsmethode zum Erstellen der Channels
+     */
+    private void createNotificationChannel(String channelName, String description, int importance, String ID, boolean playSound) {
+        NotificationChannel channel = new NotificationChannel(ID, channelName, importance);
+
+        if (description != null) {
+            channel.setDescription(description);
+        }
+
+        if (!playSound) {
+            channel.setSound(null, null);
+        }
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.createNotificationChannel(channel);
+        }
+        Log.d("AlamNotificationReceiver::createNotificationChannel", "Channel created: " + channelName);
     }
 }

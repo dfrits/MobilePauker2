@@ -3,8 +3,6 @@ package com.daniel.mobilepauker2.activities;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -73,8 +71,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private boolean repeatingLTM = false;
     private boolean stopWaiting = false;
     private boolean firstStart = true;
-    private boolean isActivityVisible;
-    private boolean showNotify;
+    private static boolean isActivityVisible;
     private boolean ustmTimerFinished = true;
     private boolean stmTimerFinished = true;
     private Hourglass ustmTimer;
@@ -93,19 +90,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private RelativeLayout timerAnimation;
     private String ustmTimerText;
 
-    public static boolean isLearningRunning() {
-        return isLearningRunning;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         isLearningRunning = true;
-
-        createNotificationChannel();
-        createTimerBarChannel();
-        showNotify = settingsManager.getBoolPreference(context, SettingsManager.Keys.SHOW_NOTIFY);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.learn_cards);
@@ -132,40 +121,87 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    void updateCurrentCard() {
+        try {
+            if (isCardCursorAvailable()) {
+                currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
+                currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
+                String learnStatus = mCardCursor.getString(CardPackAdapter.KEY_LEARN_STATUS_ID);
 
-        isActivityVisible = true;
-        if (notificationManager == null) {
-            notificationManager = NotificationManagerCompat.from(context);
-        }
-        notificationManager.cancelAll();
-
-        if (!firstStart && !restartButton.isVisible()) {
-            restartTimer();
-
-            if (mCardCursor != null && mSavedCursorPosition != -1) {
-                refreshCursor();
+                if (learnStatus.contentEquals("1")) {
+                    currentCard.setLearned(true);
+                } else {
+                    currentCard.setLearned(false);
+                }
+            } else {
+                currentCard.setSideAText("");
+                currentCard.setSideBText("");
+                Log.d("FlashCardSwipeScreenActivity::updateCurrentCard", "Card Cursor not available");
             }
-        }
 
-        LearningPhase learningPhase = modelManager.getLearningPhase();
-        if (learningPhase == WAITING_FOR_USTM || learningPhase == WAITING_FOR_STM) {
-            showHideTimerAnimation();
+        } catch (Exception e) {
+            Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception");
+            showToast((Activity) context, R.string.load_card_data_error, Toast.LENGTH_SHORT);
+            ErrorReporter.instance().AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?");
+            finish();
         }
-
-        firstStart = false;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        isActivityVisible = false;
-        try {
-            mSavedCursorPosition = mCardCursor.getPosition();
-        } catch (Exception e) {
-            mSavedCursorPosition = -1;
+    public void screenTouched() {
+        if ((ustmTimer != null && ustmTimer.isPaused()) || (stmTimer != null && stmTimer.isPaused()))
+            return;
+        LearningPhase learningPhase = modelManager.getLearningPhase();
+        if (learningPhase == REPEATING_LTM
+                || learningPhase == REPEATING_STM
+                || learningPhase == REPEATING_USTM) {
+
+            if (modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
+                showInputDialog();
+            } else {
+                if (flipCardSides) {
+                    currentCard.setSide(SIDE_A);
+                } else {
+                    currentCard.setSide(SIDE_B);
+                }
+
+                fillInData(flipCardSides);
+                bShowMe.setVisibility(GONE);
+                lRepeatButtons.setVisibility(VISIBLE);
+            }
         }
+    }
+
+    @Override
+    protected void fillData() {
+        // Prüfen, ob getauscht werden soll
+        boolean flipCardSides = hasCardsToBeFlipped();
+
+        fillInData(flipCardSides);
+    }
+
+    @Override
+    protected void cursorLoaded() {
+        Log.d("LearnCardsActivity::cursorLoaded", "cursor loaded: " +
+                "savedPos= " + mSavedCursorPosition);
+        if (mSavedCursorPosition == -1) {
+            initStackSize = mCardCursor.getCount();
+            setCursorToFirst();
+            updateCurrentCard();
+            fillData();
+            setButtonsVisibility();
+        } else {
+            mCardCursor.moveToPosition(mSavedCursorPosition);
+            updateCurrentCard();
+            fillInData(flipCardSides);
+            if (bShowMe.getVisibility() == VISIBLE
+                    && ((flipCardSides && currentCard.getSide() == SIDE_A)
+                    || (!flipCardSides && currentCard.getSide() == SIDE_B))) {
+                bShowMe.setVisibility(GONE);
+                lRepeatButtons.setVisibility(VISIBLE);
+            }
+        }
+        mSavedCursorPosition = -1;
     }
 
     @Override
@@ -202,17 +238,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         pendingIntent = null;
     }
 
-    /**
-     * Falls die Acitvity vom System beendet wird, die Timer aber noch laufen.
-     */
-    @Override
-    protected void onDestroy() {
-        stopSTMTimer();
-        stopUSTMTimer();
-        isLearningRunning = false;
-        super.onDestroy();
-    }
-
     @Override
     public void onBackPressed() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -232,6 +257,54 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                     }
                 })
                 .create().show();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isActivityVisible = false;
+        try {
+            mSavedCursorPosition = mCardCursor.getPosition();
+        } catch (Exception e) {
+            mSavedCursorPosition = -1;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        isActivityVisible = true;
+        if (notificationManager == null) {
+            notificationManager = NotificationManagerCompat.from(context);
+        }
+        notificationManager.cancelAll();
+
+        if (!firstStart && !restartButton.isVisible()) {
+            restartTimer();
+
+            if (mCardCursor != null && mSavedCursorPosition != -1) {
+                refreshCursor();
+            }
+        }
+
+        LearningPhase learningPhase = modelManager.getLearningPhase();
+        if (learningPhase == WAITING_FOR_USTM || learningPhase == WAITING_FOR_STM) {
+            showHideTimerAnimation();
+        }
+
+        firstStart = false;
+    }
+
+    /**
+     * Falls die Acitvity vom System beendet wird, die Timer aber noch laufen.
+     */
+    @Override
+    protected void onDestroy() {
+        stopSTMTimer();
+        stopUSTMTimer();
+        isLearningRunning = false;
+        super.onDestroy();
     }
 
     @Override
@@ -319,13 +392,17 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                                     : getString(R.string.ustm) + " " + ustmTimerText;
                             String timerbarText = ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText;
                             Intent contentIntent = pendingIntent == null ? getIntent() : pendingIntent;
-                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
+
+                            NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context,
+                                    Constants.TIMER_BAR_CHANNEL_ID)
                                     .setContentText(timerbarText)
                                     .setSmallIcon(R.drawable.notify_icon)
                                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                    .setContentIntent(PendingIntent.getActivity(context, 0, contentIntent, 0))
+                                    .setContentIntent(PendingIntent.getActivity(context, 0,
+                                            contentIntent, 0))
                                     .setAutoCancel(true)
                                     .setOngoing(true);
+
                             Log.d("LearnActivity::STM-onTimerClick", "Notification created");
                             notificationManager.notify(TIME_BAR_ID, mBuilder.build());
                             Log.d("LearnActivity::STM-onTimerClick", "Show Notification");
@@ -342,16 +419,21 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerFinish() {
                     Log.d("LearnActivity::STM-Timer finished", "Timer finished");
+                    boolean showNotify = settingsManager.getBoolPreference(context, SettingsManager.Keys.SHOW_NOTIFY);
                     if (!isActivityVisible && stmTimerFinished && showNotify) {
                         Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
-                        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_NOTIFY_CHANNEL_ID)
-                                .setContentText(getString(R.string.stm_expired_notify_message))
+                        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context,
+                                Constants.TIMER_NOTIFY_CHANNEL_ID);
+
+                        mBuilder.setContentText(getString(R.string.stm_expired_notify_message))
                                 .setSmallIcon(R.drawable.notify_icon)
                                 .setContentTitle(getString(R.string.app_name))
                                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                                .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                .setContentIntent(PendingIntent.getActivity(context, 0,
+                                        getIntent(), 0))
                                 .setAutoCancel(true)
                                 .setVisibility(VISIBILITY_PUBLIC);
+
                         Log.d("LearnActivity::STM-Timer finished", "Notification created");
                         new Timer().schedule(new TimerTask() {
                             @Override
@@ -652,58 +734,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         setButtonsVisibility();
     }
 
-    @Override
-    void updateCurrentCard() {
-        try {
-            if (isCardCursorAvailable()) {
-                currentCard.setSideAText(mCardCursor.getString(CardPackAdapter.KEY_SIDEA_ID));
-                currentCard.setSideBText(mCardCursor.getString(CardPackAdapter.KEY_SIDEB_ID));
-                String learnStatus = mCardCursor.getString(CardPackAdapter.KEY_LEARN_STATUS_ID);
-
-                if (learnStatus.contentEquals("1")) {
-                    currentCard.setLearned(true);
-                } else {
-                    currentCard.setLearned(false);
-                }
-            } else {
-                currentCard.setSideAText("");
-                currentCard.setSideBText("");
-                Log.d("FlashCardSwipeScreenActivity::updateCurrentCard", "Card Cursor not available");
-            }
-
-        } catch (Exception e) {
-            Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception");
-            showToast((Activity) context, R.string.load_card_data_error, Toast.LENGTH_SHORT);
-            ErrorReporter.instance().AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?");
-            finish();
-        }
-    }
-
-    @Override
-    public void screenTouched() {
-        if ((ustmTimer != null && ustmTimer.isPaused()) || (stmTimer != null && stmTimer.isPaused()))
-            return;
-        LearningPhase learningPhase = modelManager.getLearningPhase();
-        if (learningPhase == REPEATING_LTM
-                || learningPhase == REPEATING_STM
-                || learningPhase == REPEATING_USTM) {
-
-            if (modelManager.getCard(mCardCursor.getPosition()).isRepeatedByTyping()) {
-                showInputDialog();
-            } else {
-                if (flipCardSides) {
-                    currentCard.setSide(SIDE_A);
-                } else {
-                    currentCard.setSide(SIDE_B);
-                }
-
-                fillInData(flipCardSides);
-                bShowMe.setVisibility(GONE);
-                lRepeatButtons.setVisibility(VISIBLE);
-            }
-        }
-    }
-
     @SuppressLint("InflateParams")
     private void showInputDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -773,14 +803,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         ((TextView) view.findViewById(R.id.tVRightAnswerText)).setText(cardText);
         ((TextView) view.findViewById(R.id.tVInputText)).setText(input);
         builder.create().show();
-    }
-
-    @Override
-    protected void fillData() {
-        // Prüfen, ob getauscht werden soll
-        boolean flipCardSides = hasCardsToBeFlipped();
-
-        fillInData(flipCardSides);
     }
 
     private void fillInData(boolean flipCardSides) {
@@ -900,65 +922,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         }
     }
 
-    @Override
-    protected void cursorLoaded() {
-        Log.d("LearnCardsActivity::cursorLoaded", "cursor loaded: " +
-                "savedPos= " + mSavedCursorPosition);
-        if (mSavedCursorPosition == -1) {
-            initStackSize = mCardCursor.getCount();
-            setCursorToFirst();
-            updateCurrentCard();
-            fillData();
-            setButtonsVisibility();
-        } else {
-            mCardCursor.moveToPosition(mSavedCursorPosition);
-            updateCurrentCard();
-            fillInData(flipCardSides);
-            if (bShowMe.getVisibility() == VISIBLE
-                    && ((flipCardSides && currentCard.getSide() == SIDE_A)
-                    || (!flipCardSides && currentCard.getSide() == SIDE_B))) {
-                bShowMe.setVisibility(GONE);
-                lRepeatButtons.setVisibility(VISIBLE);
-            }
-        }
-        mSavedCursorPosition = -1;
-    }
-
-    /**
-     * Create the NotificationChannel
-     */
-    private void createNotificationChannel() {
-        CharSequence name = getString(R.string.channel_notify_name);
-        String description = getString(R.string.channel_notify_description);
-        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-        NotificationChannel channel = new NotificationChannel(Constants.TIMER_NOTIFY_CHANNEL_ID, name, importance);
-        channel.setDescription(description);
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    /**
-     * Create the Channel for Times in the Notificationbar
-     */
-    private void createTimerBarChannel() {
-        CharSequence name = getString(R.string.channel_timerbar_name);
-        String description = getString(R.string.channel_timerbar_description);
-        int importance = NotificationManager.IMPORTANCE_LOW;
-        NotificationChannel channel = new NotificationChannel(Constants.TIMER_BAR_CHANNEL_ID, name, importance);
-        channel.setDescription(description);
-        channel.setSound(null, null);
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        if (notificationManager != null) {
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
     /**
      * Werden abgelaufene Karten wiederholt, wird der Stack neugeladen. Sonst wird der Standartweg
      * gegangen.
@@ -975,7 +938,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             modelManager.setLearningPhase(context, modelManager.getLearningPhase());
             reloadStack();
         } else {
-            mCardCursor.moveToNext();updateCurrentCard();
+            mCardCursor.moveToNext();
+            updateCurrentCard();
             fillData();
         }
     }
@@ -1116,5 +1080,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
     public void showCard(View view) {
         screenTouched();
+    }
+
+    public static boolean isLearningRunning() {
+        return isLearningRunning;
     }
 }
