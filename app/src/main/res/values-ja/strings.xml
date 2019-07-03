@@ -201,6 +201,9 @@
     <string name="offen_lassen_checkbox">開いたままにする</string>
     <string name="repeat_cards_mode_title">カードを復習する</string>
     <string name="return_forgotten_cards_title">忘れたカードを戻す</string>
+    <string name="show_card_notification_title">カードの有効期限が切れる</string>
+    <string name="show_timer_bar_title">タイマーバー</string>
+    <string name="show_timer_notification_title">通知をする</string>
     <string name="stm_title">短期記憶</string>
     <string name="unlink_dropbox_title">Dropboxの接続を解除する</string>
     <string name="ustm_title">超短期記憶</string>
@@ -217,6 +220,9 @@
     <string name="learn_new_cards_randomly_summ">勉強の前にカードをシャッフルする</string>
     <string name="repeat_cards_summ">カードを復習する方です (%s)</string>
     <string name="return_forgotten_cards_summ">カードを戻す所 (%s)</string>
+    <string name="show_card_notification_summ">カードの有効期限が切れたときに通知します。</string>
+    <string name="show_timer_notification_summ">Benachrichtigt dich, wenn die Zeit abgelaufen und die App
+        nicht offen ist.</string>
     <string name="stm_summ">時間: %smin</string>
     <string name="ustm_summ">時間: %ss</string>
     <!-- endregion -->
@@ -229,8 +235,6 @@
     <string name="channel_notify_name_timers">タイマー</string>
     <string name="channel_timerbar_description">アップリーは開いていなければ通知バーで時間を表示する。</string>
     <string name="channel_timerbar_name">タイマーバー</string>
-    <string name="show_notification_summ">タイマーは切れるとアップリーが開いていないと通知する。</string>
-    <string name="show_notification_title">通知をする</string>
     <string name="stm_expired_notify_message">短期記憶のタイマーは切れた。 かーどを復習するために押してください。</string>
     <string name="ustm_expired_notify_message">超短期記憶のタイマーは切れた。 かーどを復習するために押してください。</string>
     <!-- endregion -->

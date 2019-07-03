@@ -170,7 +170,7 @@
     <string name="offen_lassen_checkbox">Openhouden</string>
     <string name="repeat_cards_mode_title">Kaarten herhalen</string>
     <string name="return_forgotten_cards_title">Vergeten kaarten terughalen</string>
-    <string name="show_notification_title">Melding tonen</string>
+    <string name="show_timer_notification_title">Melding tonen</string>
     <string name="stm_title">STM</string>
     <string name="unlink_dropbox_title">Dropbox ontkoppelen</string>
     <string name="ustm_title">USTM</string>
@@ -187,7 +187,7 @@
     <string name="learn_new_cards_randomly_summ">Schud de kaarten vóór elke les begint</string>
     <string name="repeat_cards_summ">De volgorde waarin kaarten herhaald moeten worden (%s)</string>
     <string name="return_forgotten_cards_summ">Waar vergeten kaarten naar teruggehaald moeten worden (%s)</string>
-    <string name="show_notification_summ">Toont een melding als de timers verlopen en de app niet geopend is</string>
+    <string name="show_timer_notification_summ">Toont een melding als de timers verlopen en de app niet geopend is</string>
     <string name="stm_summ">Kortetermijngeheugen: %smin</string>
     <string name="ustm_summ">Superkortetermijngeheugen: %ss</string>
     <!-- endregion -->
@@ -233,5 +233,8 @@
     <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close without saving?</string>
     <string name="cards_expire_notify_msg">Es sind Karten abgelaufen.</string>
     <string name="channel_notify_name_other">Others</string>
+    <string name="show_card_notification_title">When cards expire</string>
+    <string name="show_card_notification_summ">Notifies you when a card expire</string>
+    <string name="show_timer_bar_title">Timer bar</string>
     <!-- endregion -->
 </resources>

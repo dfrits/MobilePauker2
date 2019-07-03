@@ -53,8 +53,12 @@ public class SettingsManager {
                 return context.getString(R.string.learn_new_cards_randomly);
             case ENABLE_EXPIRE_TOAST:
                 return context.getString(R.string.expire_toast);
-            case SHOW_NOTIFY:
-                return context.getString(R.string.show_notification);
+            case SHOW_TIMER_NOTIFY:
+                return context.getString(R.string.show_timer_notification);
+            case SHOW_CARD_NOTIFY:
+                return context.getString(R.string.show_card_notification);
+            case RING_TONE:
+                return context.getString(R.string.ring_tone_preference);
             default:
                 return "";
         }
@@ -92,8 +96,10 @@ public class SettingsManager {
                 return context.getResources().getBoolean(R.bool.learn_new_cards_randomly_default);
             case ENABLE_EXPIRE_TOAST:
                 return context.getResources().getBoolean(R.bool.expire_toast_default);
-            case SHOW_NOTIFY:
-                return context.getResources().getBoolean(R.bool.show_notification_default);
+            case SHOW_TIMER_NOTIFY:
+                return context.getResources().getBoolean(R.bool.show_timer_notification_default);
+            case SHOW_CARD_NOTIFY:
+                return context.getResources().getBoolean(R.bool.show_card_notification_default);
             default:
                 return false;
         }
@@ -112,19 +118,21 @@ public class SettingsManager {
     }
 
     public enum Keys {
-        FLIP_CARD_SIDES,
+        ABOUT,
+        AUTO_SAVE,
+        AUTO_SYNC,
         CASE_SENSITIV,
-        USTM,
-        STM,
+        DB_PREFERENCE,
+        ENABLE_EXPIRE_TOAST,
+        FLIP_CARD_SIDES,
         HIDE_TIMES,
+        LEARN_NEW_CARDS_RANDOMLY,
         REPEAT_CARDS,
         RETURN_FORGOTTEN_CARDS,
-        AUTO_SAVE,
-        ABOUT,
-        LEARN_NEW_CARDS_RANDOMLY,
-        ENABLE_EXPIRE_TOAST,
-        AUTO_SYNC,
-        DB_PREFERENCE,
-        SHOW_NOTIFY
+        RING_TONE,
+        SHOW_CARD_NOTIFY,
+        SHOW_TIMER_NOTIFY,
+        STM,
+        USTM
     }
 }

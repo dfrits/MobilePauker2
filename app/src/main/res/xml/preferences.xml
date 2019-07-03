@@ -71,17 +71,44 @@
             android:key="@string/hide_times"
             android:summary="@string/hide_times_summ"
             android:title="@string/hide_times_title" />
-        // Notification
-        <SwitchPreference
-            android:defaultValue="@bool/show_notification_default"
-            android:key="@string/show_notification"
-            android:summary="@string/show_notification_summ"
-            android:title="@string/show_notification_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:key="@string/other"
         android:title="@string/other">
+
+        <PreferenceScreen android:title="Benachrichtigungen">
+
+            // Zeit abgelaufen
+            <SwitchPreference
+                android:defaultValue="@bool/show_timer_notification_default"
+                android:key="@string/show_timer_notification"
+                android:summary="@string/show_timer_notification_summ"
+                android:title="@string/show_timer_notification_title" />
+
+            // Karte abgelaufen
+            <SwitchPreference
+                android:defaultValue="@bool/show_card_notification_default"
+                android:key="@string/show_card_notification"
+                android:summary="@string/show_card_notification_summ"
+                android:title="@string/show_card_notification_title" />
+
+            // Zeit in Benachrichtigungsleiste anzeigen
+            <SwitchPreference
+                android:defaultValue="@bool/show_timer_bar_default"
+                android:key="@string/show_timer_bar"
+                android:summary="@string/channel_timerbar_description"
+                android:title="@string/show_timer_bar_title" />
+
+            //Klingelton für Benachrichtungen
+            <RingtonePreference
+                android:key="@string/ring_tone_preference"
+                android:ringtoneType="notification"
+                android:showDefault="true"
+                android:showSilent="true"
+                android:title="Ring tone" />
+        </PreferenceScreen>
+
         // Autospeichern
         <SwitchPreference
             android:defaultValue="@bool/auto_save_default"

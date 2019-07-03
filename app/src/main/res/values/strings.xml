@@ -190,7 +190,7 @@
 
     <!-- region Gruppentitel -->
     <string name="learning_cards">Learning cards</string>
-    <string name="other">Other</string>
+    <string name="other">General</string>
     <string name="times">Times</string>
     <!-- endregion -->
 
@@ -206,7 +206,10 @@
     <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
-    <string name="show_notification" translatable="false">Show Notification</string>
+    <string name="ring_tone_preference" translatable="false">Ring tone preference</string>
+    <string name="show_card_notification" translatable="false">Card Expire Notification</string>
+    <string name="show_timer_bar" translatable="false">Timer Bar Notification</string>
+    <string name="show_timer_notification" translatable="false">Show Timer Notification</string>
     <string name="stm_key" translatable="false">STM</string>
     <string name="unlink_dropbox" translatable="false">Unlink Dropbox</string>
     <string name="ustm_key" translatable="false">USTM</string>
@@ -226,7 +229,9 @@
     <string name="offen_lassen_checkbox">Keep open</string>
     <string name="repeat_cards_mode_title">Repeat cards</string>
     <string name="return_forgotten_cards_title">Return forgotten cards</string>
-    <string name="show_notification_title">Show Notification</string>
+    <string name="show_card_notification_title">Card expired</string>
+    <string name="show_timer_bar_title">Timer bar</string>
+    <string name="show_timer_notification_title">Timer Notification</string>
     <string name="stm_title">STM</string>
     <string name="unlink_dropbox_title">Unlink Dropbox</string>
     <string name="ustm_title">USTM</string>
@@ -244,7 +249,8 @@
     <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>
     <string name="repeat_cards_summ">The order how to repeat expired cards (%s)</string>
     <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
-    <string name="show_notification_summ">Notifys you, when the timers expire and the app is not
+    <string name="show_card_notification_summ">Notifies you when a card expire</string>
+    <string name="show_timer_notification_summ">Notifies you, when the timers expire and the app is not
         opend</string>
     <string name="stm_summ">Short Term Memory: %smin</string>
     <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
@@ -261,7 +267,7 @@
     <!-- endregion -->
 
     <!-- region Notifications -->
-    <string name="channel_notify_timers_description">Notifys you, when the timers expired. Only if the App
+    <string name="channel_notify_timers_description">Notifies you, when the timers expired. Only if the App
         is not shown.</string>
     <string name="channel_notify_name_other">General</string>
     <string name="channel_notify_name_timers">Timers</string>
