@@ -55,6 +55,7 @@ import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_L
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_STM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_USTM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.SHOW_TIMER_BAR;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID;
@@ -386,7 +387,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         stmTimerBar.setText(timerText);
 
                         // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
-                        if (!isActivityVisible && !stmTimerFinished) {
+                        boolean showNotify = settingsManager.getBoolPreference(context, SHOW_TIMER_BAR);
+                        if (!isActivityVisible && !stmTimerFinished && showNotify) {
                             Log.d("LearnActivity::STM-onTimerClick", "Acivity is not visible");
                             String ustmTimerBarText = ustmTimerFinished && ustmTimerText != null ? ""
                                     : getString(R.string.ustm) + " " + ustmTimerText;

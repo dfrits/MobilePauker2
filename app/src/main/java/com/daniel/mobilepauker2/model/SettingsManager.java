@@ -59,6 +59,8 @@ public class SettingsManager {
                 return context.getString(R.string.show_card_notification);
             case RING_TONE:
                 return context.getString(R.string.ring_tone_preference);
+            case SHOW_TIMER_BAR:
+                return context.getString(R.string.show_timer_bar);
             default:
                 return "";
         }
@@ -100,6 +102,8 @@ public class SettingsManager {
                 return context.getResources().getBoolean(R.bool.show_timer_notification_default);
             case SHOW_CARD_NOTIFY:
                 return context.getResources().getBoolean(R.bool.show_card_notification_default);
+            case SHOW_TIMER_BAR:
+                return context.getResources().getBoolean(R.bool.show_timer_bar_default);
             default:
                 return false;
         }
@@ -131,6 +135,7 @@ public class SettingsManager {
         RETURN_FORGOTTEN_CARDS,
         RING_TONE,
         SHOW_CARD_NOTIFY,
+        SHOW_TIMER_BAR,
         SHOW_TIMER_NOTIFY,
         STM,
         USTM

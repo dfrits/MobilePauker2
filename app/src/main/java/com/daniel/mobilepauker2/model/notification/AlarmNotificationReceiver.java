@@ -10,6 +10,7 @@ import android.support.v4.app.NotificationCompat;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.activities.LessonImportActivity;
 import com.daniel.mobilepauker2.activities.MainMenu;
+import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.utils.Log;
 
 import static android.app.PendingIntent.FLAG_ONE_SHOT;
@@ -43,7 +44,8 @@ public class AlarmNotificationReceiver extends BroadcastReceiver {
 
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         Log.d("AlamNotificationReceiver::onReceive", "PaukerActive: " + MainMenu.isPaukerActive);
-        if (notificationManager != null && !MainMenu.isPaukerActive) {
+        boolean showNotify = SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.SHOW_CARD_NOTIFY);
+        if (notificationManager != null && !MainMenu.isPaukerActive && showNotify) {
             notificationManager.notify(NOTIFICATION_ID, builder.build());
             Log.d("AlamNotificationReceiver::onReceive", "Notification send");
         }
