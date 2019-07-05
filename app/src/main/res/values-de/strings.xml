@@ -240,10 +240,7 @@
     <!-- endregion -->
 
     <!-- redion Notifications -->
-    <string name="channel_notify_timers_description">Benachrichtigt dich, wenn die Zeiten abgelaufen sind.
-        Nur, wenn die App nicht im Vordergrund ist.</string>
     <string name="channel_notify_name_other">Allgemein</string>
-    <string name="channel_notify_name_timers">Stoppuhren</string>
     <string name="channel_timerbar_description">Zeigt die Zeiten in der Benachrichtungsleiste an,
         wenn die App nicht im Vordergrund ist.</string>
     <string name="channel_timerbar_name">Zeitleiste</string>

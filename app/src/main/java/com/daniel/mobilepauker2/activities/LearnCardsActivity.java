@@ -55,11 +55,10 @@ import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.SIMPLE_L
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_STM;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.WAITING_FOR_USTM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SAVE;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.SHOW_TIMER_NOTIFY;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
+import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
-import static com.daniel.mobilepauker2.utils.Constants.TIME_NOTIFY_ID;
 
 public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private static boolean isLearningRunning;
@@ -420,11 +419,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 @Override
                 public void onTimerFinish() {
                     Log.d("LearnActivity::STM-Timer finished", "Timer finished");
-                    boolean showNotify = settingsManager.getBoolPreference(context, SHOW_TIMER_NOTIFY);
+                    boolean showNotify = settingsManager.getBoolPreference(context, SettingsManager.Keys.SHOW_TIMER_NOTIFY);
                     if (!isActivityVisible && stmTimerFinished && showNotify) {
                         Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
                         final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context,
-                                Constants.TIMER_NOTIFY_CHANNEL_ID);
+                                Constants.NOTIFICATION_CHANNEL_ID);
 
                         mBuilder.setContentText(getString(R.string.stm_expired_notify_message))
                                 .setSmallIcon(R.drawable.notify_icon)
@@ -439,7 +438,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                         new Timer().schedule(new TimerTask() {
                             @Override
                             public void run() {
-                                notificationManager.notify(TIME_NOTIFY_ID, mBuilder.build());
+                                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
                             }
                         }, 1000);
                         Log.d("LearnActivity::STM-Timer finished", "Show Notification");

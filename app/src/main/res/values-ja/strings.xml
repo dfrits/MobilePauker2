@@ -230,9 +230,7 @@
     <!-- endregion -->
 
     <!-- redion Notifications -->
-    <string name="channel_notify_timers_description">タイマーが切れると通知します。 アップリーは開いていればだけ。</string>
     <string name="channel_notify_name_other">コモン</string>
-    <string name="channel_notify_name_timers">タイマー</string>
     <string name="channel_timerbar_description">アップリーは開いていなければ通知バーで時間を表示する。</string>
     <string name="channel_timerbar_name">タイマーバー</string>
     <string name="stm_expired_notify_message">短期記憶のタイマーは切れた。 かーどを復習するために押してください。</string>

@@ -15,8 +15,8 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
-import android.preference.RingtonePreference;
 import android.preference.SwitchPreference;
+import android.provider.Settings;
 
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.dropbox.DropboxAccDialog;
@@ -31,8 +31,6 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FLIP_CARD_SIDE
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.REPEAT_CARDS;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RETURN_FORGOTTEN_CARDS;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.RING_TONE;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.SHOW_CARD_NOTIFY;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.SHOW_TIMER_NOTIFY;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.STM;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.USTM;
 
@@ -60,18 +58,21 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        setRingTonePrefEnabled();
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == Constants.REQUEST_CODE_DB_ACC_DIALOG && resultCode == RESULT_OK) {
+            initSyncPrefs(getContext());
+        }
+    }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         updatePrefSummary(findPreference(key));
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.REQUEST_CODE_DB_ACC_DIALOG && resultCode == RESULT_OK) {
-            initSyncPrefs(getContext());
-        }
+    public void onResume() {
+        super.onResume();
+        updatePrefSummary(findPreference(settingsManager.getSettingsKey(getContext(), RING_TONE)));
     }
 
     @Override
@@ -90,11 +91,19 @@ public class SettingsFragment extends PreferenceFragment
             if (preference instanceof EditTextPreference) {
                 EditTextPreference editTextP = (EditTextPreference) preference;
                 editTextP.getEditText().addTextChangedListener(new MinFilter(editTextP));
-            } else if (preference instanceof RingtonePreference) {
-                initRingtonePref();
             }
             updatePrefSummary(preference);
         }
+        findPreference(settingsManager.getSettingsKey(getContext(), RING_TONE)).setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Intent intent = new Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, getContext().getPackageName());
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, Constants.NOTIFICATION_CHANNEL_ID);
+                startActivity(intent);
+                return true;
+            }
+        });
     }
 
     private void updatePrefSummary(Preference preference) {
@@ -129,9 +138,20 @@ public class SettingsFragment extends PreferenceFragment
             }
         }
 
-        if (preference.getKey() != null
-                && preference.getKey().equals(settingsManager.getSettingsKey(context, DB_PREFERENCE))) {
-            initSyncPrefs(context);
+        String preferenceKey = preference.getKey();
+        if (preferenceKey != null) {
+            if (preferenceKey.equals(settingsManager.getSettingsKey(context, DB_PREFERENCE))) {
+                initSyncPrefs(context);
+            } else if (preferenceKey.equals(settingsManager.getSettingsKey(context, RING_TONE))) {
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                if (notificationManager != null) {
+                    Uri ringtonePath = notificationManager.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID).getSound();
+                    Ringtone ringtone = RingtoneManager.getRingtone(context, ringtonePath);
+                    preference.setSummary(ringtone.getTitle(context));
+                } else {
+                    preference.setSummary("No Sound");
+                }
+            }
         }
     }
 
@@ -141,33 +161,6 @@ public class SettingsFragment extends PreferenceFragment
 
         switchP.setSummary(R.string.auto_sync_enabled_summ);
         switchP.setEnabled(enableAutoSync);
-    }
-
-    private void initRingtonePref() {
-        final Context context = getContext();
-        SettingsManager settingsManager = SettingsManager.instance();
-        final RingtonePreference pref = (RingtonePreference) findPreference(settingsManager
-                .getSettingsKey(context, RING_TONE));
-
-        setRingTonePrefEnabled();
-
-        NotificationManager notiManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notiManager != null) {
-            pref.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference,
-                                                  Object newValue) {
-                    Log.i("SettingsFragment::RingtoneChangeListener", "Changed " + newValue.toString());
-                    Ringtone ringtone = RingtoneManager.getRingtone(
-                            context, Uri.parse((String) newValue));
-                    pref.setSummary(ringtone.getTitle(context));
-                    return true;
-                }
-            });
-            String ringtonePath=pref.getSharedPreferences().getString(pref.getKey(), "defValue");
-            Ringtone ringtone = RingtoneManager.getRingtone(context, Uri.parse(ringtonePath));
-            pref.setSummary(ringtone.getTitle(context));
-        }
     }
 
     private void initSyncPrefs(final Context context) {
@@ -184,21 +177,6 @@ public class SettingsFragment extends PreferenceFragment
             setPrefUnlink(context, dbPref);
             Log.d("SettingsFragment::initSyncPrefs", "enable autosync");
             removeSyncPrefAndSetAutoSync(true);
-        }
-    }
-
-    /**
-     * Wenn weder die Notification für den Timer noch für das Ablaufen aktiviert ist, wird das
-     * Auswählen des Klingeltons deaktiviert.
-     */
-    private void setRingTonePrefEnabled() {
-        SettingsManager settingsManager = SettingsManager.instance();
-        Context context = getContext();
-        if (context != null) {
-            Preference preference = findPreference(settingsManager.getSettingsKey(context, RING_TONE));
-            SwitchPreference timerNotify = (SwitchPreference) findPreference(settingsManager.getSettingsKey(context, SHOW_TIMER_NOTIFY));
-            SwitchPreference cardNotify = (SwitchPreference) findPreference(settingsManager.getSettingsKey(context, SHOW_CARD_NOTIFY));
-            preference.setEnabled(timerNotify.isChecked() || cardNotify.isChecked());
         }
     }
 

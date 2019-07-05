@@ -49,7 +49,6 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL;
 import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID;
-import static com.daniel.mobilepauker2.utils.Constants.TIMER_NOTIFY_CHANNEL_ID;
 
 /**
  * Created by Daniel on 24.02.2018.
@@ -600,18 +599,11 @@ public class MainMenu extends AppCompatActivity {
      * Erstellt alle Channels
      */
     public void createNotificationChannels() {
-        // Für allg. Notification
+        // Für Notification
         createNotificationChannel(getString(R.string.channel_notify_name_other),
                 null,
                 NotificationManager.IMPORTANCE_DEFAULT,
                 NOTIFICATION_CHANNEL_ID,
-                true);
-
-        // Wenn der Timer abgelaufen ist
-        createNotificationChannel(getString(R.string.channel_notify_name_timers),
-                getString(R.string.channel_notify_timers_description),
-                NotificationManager.IMPORTANCE_DEFAULT,
-                TIMER_NOTIFY_CHANNEL_ID,
                 true);
 
         // Timerbar

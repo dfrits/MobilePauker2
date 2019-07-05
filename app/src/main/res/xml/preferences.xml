@@ -101,12 +101,9 @@
                 android:title="@string/show_timer_bar_title" />
 
             //Klingelton für Benachrichtungen
-            <RingtonePreference
+            <Preference
                 android:key="@string/ring_tone_preference"
-                android:ringtoneType="notification"
-                android:showDefault="true"
-                android:showSilent="true"
-                android:title="Ring tone" />
+                android:title="Ring Tone" />
         </PreferenceScreen>
 
         // Autospeichern
