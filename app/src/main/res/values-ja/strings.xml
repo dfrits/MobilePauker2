@@ -201,9 +201,10 @@
     <string name="offen_lassen_checkbox">開いたままにする</string>
     <string name="repeat_cards_mode_title">カードを復習する</string>
     <string name="return_forgotten_cards_title">忘れたカードを戻す</string>
+    <string name="ring_tone_preference_title">音</string>
     <string name="show_card_notification_title">カードの有効期限が切れる</string>
     <string name="show_timer_bar_title">タイマーバー</string>
-    <string name="show_timer_notification_title">通知をする</string>
+    <string name="show_timer_notification_title">タイマーの通知</string>
     <string name="stm_title">短期記憶</string>
     <string name="unlink_dropbox_title">Dropboxの接続を解除する</string>
     <string name="ustm_title">超短期記憶</string>
@@ -221,8 +222,7 @@
     <string name="repeat_cards_summ">カードを復習する方です (%s)</string>
     <string name="return_forgotten_cards_summ">カードを戻す所 (%s)</string>
     <string name="show_card_notification_summ">カードの有効期限が切れたときに通知します。</string>
-    <string name="show_timer_notification_summ">Benachrichtigt dich, wenn die Zeit abgelaufen und die App
-        nicht offen ist.</string>
+    <string name="show_timer_notification_summ">時間が来て、アプリが開いていないときにあなたに通知します。</string>
     <string name="stm_summ">時間: %smin</string>
     <string name="ustm_summ">時間: %ss</string>
     <!-- endregion -->

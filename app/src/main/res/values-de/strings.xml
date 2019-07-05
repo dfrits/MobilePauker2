@@ -210,9 +210,10 @@
     <string name="offen_lassen_checkbox">Offen lassen</string>
     <string name="repeat_cards_mode_title">Karten wiederholen</string>
     <string name="return_forgotten_cards_title">Vergessene Karten zurücklegen</string>
+    <string name="ring_tone_preference_title">Sound</string>
     <string name="show_card_notification_title">Wenn Karten ablaufen</string>
     <string name="show_timer_bar_title">Zeitanzeige</string>
-    <string name="show_timer_notification_title">Zeige Benachrichtigungen</string>
+    <string name="show_timer_notification_title">Timer-Benachrichtigung</string>
     <string name="stm_title">KZG</string>
     <string name="unlink_dropbox_title">Dropbox trennen</string>
     <string name="ustm_title">UKZG</string>
@@ -226,7 +227,7 @@
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
-    <string name="hide_times_summ">UKZG und KZG Timer werden beim lernen ausgeblendet</string>
+    <string name="hide_times_summ">UKZG und KZG Timer werden beim Lernen ausgeblendet</string>
     <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm Lernen</string>
     <string name="repeat_cards_summ">Die Reihenfolge, in der die Karten wiederholt werden (%s)</string>
     <string name="return_forgotten_cards_summ">Wohin die Karten zurückgelegt werden (%s)</string>

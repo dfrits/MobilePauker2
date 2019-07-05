@@ -229,6 +229,7 @@
     <string name="offen_lassen_checkbox">Keep open</string>
     <string name="repeat_cards_mode_title">Repeat cards</string>
     <string name="return_forgotten_cards_title">Return forgotten cards</string>
+    <string name="ring_tone_preference_title">Sound</string>
     <string name="show_card_notification_title">Card expired</string>
     <string name="show_timer_bar_title">Timer bar</string>
     <string name="show_timer_notification_title">Timer Notification</string>

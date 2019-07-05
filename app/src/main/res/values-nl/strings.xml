@@ -170,7 +170,6 @@
     <string name="offen_lassen_checkbox">Openhouden</string>
     <string name="repeat_cards_mode_title">Kaarten herhalen</string>
     <string name="return_forgotten_cards_title">Vergeten kaarten terughalen</string>
-    <string name="show_timer_notification_title">Melding tonen</string>
     <string name="stm_title">STM</string>
     <string name="unlink_dropbox_title">Dropbox ontkoppelen</string>
     <string name="ustm_title">USTM</string>
@@ -229,10 +228,12 @@
     <string name="shortcut_open_error_permission">Permission not granted yet!</string>
     <string name="close">Close</string>
     <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close without saving?</string>
-    <string name="cards_expire_notify_msg">Es sind Karten abgelaufen.</string>
+    <string name="cards_expire_notify_msg">Cards are expired.</string>
+    <string name="show_timer_notification_title">Timer Notification</string>
     <string name="channel_notify_name_other">Others</string>
     <string name="show_card_notification_title">When cards expire</string>
     <string name="show_card_notification_summ">Notifies you when a card expire</string>
     <string name="show_timer_bar_title">Timer bar</string>
+    <string name="ring_tone_preference_title">Sound</string>
     <!-- endregion -->
 </resources>
