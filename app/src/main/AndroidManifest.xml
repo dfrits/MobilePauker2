@@ -138,6 +138,8 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".model.TimerService" />
+
         <receiver android:name=".model.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
