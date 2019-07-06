@@ -612,6 +612,13 @@ public class MainMenu extends AppCompatActivity {
                 NotificationManager.IMPORTANCE_LOW,
                 TIMER_BAR_CHANNEL_ID,
                 false);
+
+        // Falls der TimerChannel noch existiert
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        if (notificationManager != null) {
+            notificationManager.deleteNotificationChannel("Timers");
+            Log.d("MainMenu::createNotificationChannel", "Timer channel deleted");
+        }
     }
 
     /**
