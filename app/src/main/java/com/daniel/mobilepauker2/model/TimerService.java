@@ -118,19 +118,19 @@ public class TimerService extends Service {
     }
 
     public void pauseTimers() {
-        if (ustmTimer != null && !ustmTimerPaused && !ustmTimerFinished) {
+        if (ustmTimer != null && !ustmTimer.isPaused() && !ustmTimerFinished) {
             ustmTimer.pauseTimer();
         }
-        if (stmTimer != null && !stmTimerPaused && !stmTimerFinished) {
+        if (stmTimer != null && !stmTimer.isPaused() && !stmTimerFinished) {
             stmTimer.pauseTimer();
         }
     }
 
     public void restartTimers() {
-        if (ustmTimer != null && ustmTimerPaused && !ustmTimerFinished) {
+        if (ustmTimer != null && ustmTimer.isPaused() && !ustmTimerFinished) {
             ustmTimer.resumeTimer();
         }
-        if (stmTimer != null && stmTimerPaused && !stmTimerFinished) {
+        if (stmTimer != null && stmTimer.isPaused() && !stmTimerFinished) {
             stmTimer.resumeTimer();
         }
     }
@@ -150,11 +150,11 @@ public class TimerService extends Service {
     }
 
     public boolean isUstmTimerPaused() {
-        return ustmTimerPaused;
+        return ustmTimer != null && ustmTimer.isPaused();
     }
 
     public boolean isStmTimerPaused() {
-        return stmTimerPaused;
+        return stmTimer != null && stmTimer.isPaused();
     }
 
     public boolean isUstmTimerFinished() {

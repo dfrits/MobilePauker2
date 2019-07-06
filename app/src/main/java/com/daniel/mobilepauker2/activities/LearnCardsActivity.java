@@ -248,9 +248,12 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (timerService!=null) {
+                        if (timerService != null) {
                             timerService.stopStmTimer();
                             timerService.stopUstmTimer();
+                            Log.d("LearnCardsActivity::onBackPressed", "Finish and Timer stopped");
+                        } else {
+                            Log.d("LearnCardsActivity::onBackPressed", "Finish and Service is null");
                         }
                         finish();
                     }
@@ -1010,8 +1013,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     public void onUstmTimerFinish() {
         Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
 
-        stmTimerBar.setProgress(timerService.getStmTotalTime() * 60);
-        stmTimerBar.setText(" ");
+        ustmTimerBar.setProgress(timerService.getUstmTotalTime() * 60);
+        ustmTimerBar.setText(" ");
 
         if (modelManager.getLearningPhase() == WAITING_FOR_USTM) {
             stopWaiting = true;
@@ -1025,8 +1028,8 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
         notificationManager.cancel(TIME_BAR_ID);
 
-        ustmTimerBar.setText(" ");
-        ustmTimerBar.setProgress(timerService.getUstmTotalTime());
+        stmTimerBar.setText(" ");
+        stmTimerBar.setProgress(timerService.getStmTotalTime());
 
         if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
             stopWaiting = true;
