@@ -32,6 +32,7 @@ import com.daniel.mobilepauker2.dropbox.DropboxAccDialog;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.LessonImportAdapter;
 import com.daniel.mobilepauker2.model.ModelManager;
+import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.model.xmlsupport.FlashCardXMLPullFeedParser;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
@@ -310,6 +311,20 @@ public class LessonImportActivity extends AppCompatActivity {
                 startSync();
             }
         }
+        if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
+            try {
+                if (resultCode == RESULT_OK) {
+                    Log.d("LessonImportActivity::onActivityResult", "File wurde aktualisiert");
+                } else {
+                    Log.d("LessonImportActivity::onActivityResult", "File wurde nicht aktualisiert");
+                }
+                openLesson(fileNames.get(lastSelection));
+                finish();
+            } catch (IOException e) {
+                PaukerManager.showToast((Activity) context, R.string.error_reading_from_xml, Toast.LENGTH_LONG);
+                ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
+            }
+        }
     }
 
     @Override
@@ -342,6 +357,7 @@ public class LessonImportActivity extends AppCompatActivity {
         Intent syncIntent = new Intent(context, SyncDialog.class);
         syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
         syncIntent.putExtra(SyncDialog.FILES, files);
+        syncIntent.setAction(SyncDialog.SYNC_ALL_ACTION);
         startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG);
     }
 
@@ -393,9 +409,20 @@ public class LessonImportActivity extends AppCompatActivity {
     private void openLesson(int position) {
         String filename = (String) listView.getItemAtPosition(position);
         try {
-            PaukerManager.showToast((Activity) context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
-            openLesson(filename);
-            finish();
+            if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
+                        .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
+                Intent syncIntent = new Intent(context, SyncDialog.class);
+                syncIntent.putExtra(SyncDialog.FILES, paukerManager.getFilePath(context, filename));
+                syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
+                syncIntent.setAction(SyncDialog.SYNC_FILE_ACTION);
+                startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
+                Log.d("LessonImportActivity:openLesson", "Check for newer version on DB");
+            } else {
+                PaukerManager.showToast((Activity) context, R.string.open_lesson_hint, Toast.LENGTH_SHORT);
+                openLesson(filename);
+                finish();
+            }
         } catch (IOException e) {
             resetSelection(null);
             PaukerManager.showToast((Activity) context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);

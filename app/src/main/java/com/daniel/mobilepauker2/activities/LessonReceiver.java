@@ -118,6 +118,7 @@ public class LessonReceiver extends Activity {
         Intent intent = new Intent(context, SyncDialog.class);
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
         intent.putExtra(SyncDialog.FILES, localFile);
+        intent.setAction(SyncDialog.UPLOAD_FILE_ACTION);
         startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
     }
 }

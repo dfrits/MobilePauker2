@@ -43,7 +43,7 @@ public class Constants {
     public static final int REQUEST_CODE_SAVE_DIALOG_NORMAL = 1;
     public static final int REQUEST_CODE_SYNC_DIALOG = 2;
     public static final int REQUEST_CODE_EDIT_CARD = 3;
-    //public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
+    public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
     public static final int REQUEST_CODE_SAVE_DIALOG_NEW_LESSON = 5;
     public static final int REQUEST_CODE_SAVE_DIALOG_OPEN = 6;
     public static final int REQUEST_CODE_DB_ACC_DIALOG = 7;
