@@ -10,16 +10,12 @@ import android.support.annotation.Nullable;
 import com.ankushgrover.hourglass.Hourglass;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.security.InvalidParameterException;
-
 public class TimerService extends Service {
     public static final String USTM_TOTAL_TIME = "USTM_TOTAL_TIME";
     public static final String STM_TOTAL_TIME = "STM_TOTAL_TIME";
     private final IBinder binder = new LocalBinder();
     private Callback callback;
-    private boolean ustmTimerPaused = false;
     private boolean ustmTimerFinished = true;
-    private boolean stmTimerPaused = false;
     private boolean stmTimerFinished = true;
     private int ustmTotalTime;
     private int stmTotalTime;

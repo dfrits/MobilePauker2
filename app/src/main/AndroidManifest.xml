@@ -139,6 +139,7 @@
         </activity>
 
         <service android:name=".model.TimerService" />
+        <service android:name=".model.TimerServiceV2" />
 
         <receiver android:name=".model.BootReceiver">
             <intent-filter>
