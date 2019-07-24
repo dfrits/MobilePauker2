@@ -286,4 +286,13 @@ public class CardSide implements Comparable<CardSide> {
     public void setLearned(boolean learned) {
         this.learned = learned;
     }
+
+    /**
+     * Setzt die Kartenseite zurück.
+     */
+    public void reset() {
+        learned = false;
+        learnedTimestamp = 0;
+        longTermBatchNumber = 0;
+    }
 }

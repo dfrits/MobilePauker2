@@ -389,6 +389,7 @@ public class Lesson {
                          i >= 0; i--) {
                         Card card = longTermBatch.removeCard(i);
                         unlearnedBatch.addCard(card);
+                        card.reset();
                     }
                 }
 
@@ -403,6 +404,7 @@ public class Lesson {
                                 longTermBatches.get(longTermBatchNumber);
                         longTermBatch.removeCard(card);
                         unlearnedBatch.addCard(card);
+                        card.reset();
                     }
                 }
             }
@@ -412,6 +414,7 @@ public class Lesson {
             for (int i = indices.length - 1; i >= 0; i--) {
                 Card card = batch.removeCard(indices[i]);
                 unlearnedBatch.addCard(card);
+                card.reset();
             }
         }
 
