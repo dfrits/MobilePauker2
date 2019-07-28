@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
-import com.daniel.mobilepauker2.dropbox.SyncDialog;
 import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.model.notification.NotificationService;
@@ -42,9 +41,6 @@ import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
-
-import java.io.File;
-import java.io.IOException;
 
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.ModelManager.LearningPhase.FILLING_USTM;
@@ -95,18 +91,6 @@ public class MainMenu extends AppCompatActivity {
         initButtons();
         initView();
         initChartList();
-
-        if (modelManager.isLessonNotNew() &&
-                settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
-            Log.d("MainMenu::onResume", "Check for newer version on DB");
-            String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                    .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-            Intent syncIntent = new Intent(context, SyncDialog.class);
-            syncIntent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
-            syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-            syncIntent.setAction(SyncDialog.SYNC_FILE_ACTION);
-            startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
-        }
     }
 
     /**
@@ -365,31 +349,6 @@ public class MainMenu extends AppCompatActivity {
                 modelManager.showExpireToast(context);
             }
             invalidateOptionsMenu();
-        } /*else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
-            if (resultCode == RESULT_OK) {
-                Log.d("SyncLesson", "Synchro erfolgreich");
-            } else {
-                Log.d("SyncLesson", "Synchro nicht erfolgreich");
-                PaukerManager.showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_SHORT);
-            }
-        }*/ else if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
-            if (paukerManager.isSaveRequired()) {
-                // TODO Fragen ob trotzdem neugeladen werden soll.
-                // TODO Hinweis auf den Verlust der Daten.
-                Log.d("MainMenu::onActivityResult", "Lektion synchronisiert, aber nicht neu geöffnet");
-            } else {
-                try {
-                    if (resultCode == RESULT_OK) {
-                        Log.d("MainMenu::onActivityResult", "File wurde aktualisiert");
-                        paukerManager.loadLessonFromFile(new File(paukerManager.getFileAbsolutePath()));
-                        Log.d("MainMenu::onActivityResult", "Lektion synchronisiert und neu geöffnet");
-                    } else {
-                        Log.d("MainMenu::onActivityResult", "File wurde nicht aktualisiert");
-                    }
-                } catch (IOException e) {
-                    // TODO Neuladen fehlgeschlagen
-                }
-            }
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
             createNewLesson();
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == RESULT_OK) {

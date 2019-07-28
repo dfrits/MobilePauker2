@@ -416,6 +416,7 @@ public class LessonImportActivity extends AppCompatActivity {
                 syncIntent.putExtra(SyncDialog.FILES, paukerManager.getFilePath(context, filename));
                 syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
                 syncIntent.setAction(SyncDialog.SYNC_FILE_ACTION);
+                PaukerManager.showToast((Activity) context, "OpenAcitvity::Sync Lesson", Toast.LENGTH_LONG);
                 startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
                 Log.d("LessonImportActivity:openLesson", "Check for newer version on DB");
             } else {
