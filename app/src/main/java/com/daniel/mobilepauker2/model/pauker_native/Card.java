@@ -255,6 +255,14 @@ public class Card implements Comparable<Card> {
     }
 
     /**
+     * Setzt die Karte zurück.
+     */
+    public void reset() {
+        frontSide.reset();
+        reverseSide.reset();
+    }
+
+    /**
      * the elements of a card
      */
     public enum Element {
