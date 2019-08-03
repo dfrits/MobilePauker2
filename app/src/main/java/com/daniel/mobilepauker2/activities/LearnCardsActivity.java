@@ -226,7 +226,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
 
-                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
                     String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                             .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
                     Intent intent = new Intent(context, SyncDialog.class);

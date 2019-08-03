@@ -73,7 +73,7 @@ public class LessonReceiver extends Activity {
                             Log.d("LessonReceiver::importLesson", "start MainMenu");
                             PaukerManager.showToast(context, R.string.lesson_import_success, Toast.LENGTH_LONG);
 
-                            if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                            if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
                                 uploadFile(localFile);
                                 Log.d("LessonReceiver::importLesson", "Lesson uploaded");
                             } else {
@@ -118,6 +118,7 @@ public class LessonReceiver extends Activity {
         Intent intent = new Intent(context, SyncDialog.class);
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
         intent.putExtra(SyncDialog.FILES, localFile);
+        intent.setAction(SyncDialog.UPLOAD_FILE_ACTION);
         startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
     }
 }

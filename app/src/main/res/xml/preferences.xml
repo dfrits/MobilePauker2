@@ -108,23 +108,34 @@
             android:key="@string/auto_save"
             android:summary="@string/auto_save_summ"
             android:title="@string/auto_save_title" />
-        // Autosync
-        <SwitchPreference
-            android:defaultValue="@bool/auto_sync_default"
-            android:enabled="false"
-            android:key="@string/auto_sync"
-            android:summary="@string/auto_sync_disabled_summ"
-            android:title="@string/auto_sync_title" />
         // Toast fürs Ablaufdatum
         <SwitchPreference
             android:defaultValue="@bool/expire_toast_default"
             android:key="@string/expire_toast"
             android:summary="@string/expire_toast_summ"
             android:title="@string/expire_toast_title" />
-        // Button zum verwalten des DB-Acc
-        <Preference
-            android:key="@string/associate_dropbox"
-            android:title="@string/associate_dropbox_title" />
+
+        <PreferenceScreen android:title="@string/synchronizing_title" >
+            // Auto upload
+            <SwitchPreference
+                android:defaultValue="@bool/auto_upload_default"
+                android:enabled="false"
+                android:key="@string/auto_upload"
+                android:summary="@string/auto_sync_disabled_summ"
+                android:title="@string/auto_upload_title" />
+            // Auto download
+            <SwitchPreference
+                android:defaultValue="@bool/auto_download_default"
+                android:enabled="false"
+                android:key="@string/auto_download"
+                android:summary="@string/auto_sync_disabled_summ"
+                android:title="@string/auto_download_title" />
+            // Button zum verwalten des DB-Acc
+            <Preference
+                android:key="@string/associate_dropbox"
+                android:title="@string/associate_dropbox_title" />
+        </PreferenceScreen>
+
         // About
         <Preference android:title="@string/about">
             <intent android:action="com.daniel.mobilepauker2.activities.about" />

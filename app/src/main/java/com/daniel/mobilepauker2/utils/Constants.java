@@ -25,7 +25,6 @@ public class Constants {
     public final static String DROPBOX_ACCESS_TOKEN = "DROPBOX_ACCESS_TOKEN";
     public final static String DROPBOX_USER_ID = "DROPBOX_USER_ID";
     public static final String DROPBOX_PATH = "";
-    public static final String DROPBOX_LAST_SYNC_TIME = "DROPBOX_LAST_SYNC_TIME";
 
     // Datei, in der die Namen der lokal gelöschten Lektionen stehen
     public static final String DELETED_FILES_NAMES_FILE_NAME = "trash";
@@ -43,7 +42,7 @@ public class Constants {
     public static final int REQUEST_CODE_SAVE_DIALOG_NORMAL = 1;
     public static final int REQUEST_CODE_SYNC_DIALOG = 2;
     public static final int REQUEST_CODE_EDIT_CARD = 3;
-    //public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
+    public static final int REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN = 4;
     public static final int REQUEST_CODE_SAVE_DIALOG_NEW_LESSON = 5;
     public static final int REQUEST_CODE_SAVE_DIALOG_OPEN = 6;
     public static final int REQUEST_CODE_DB_ACC_DIALOG = 7;

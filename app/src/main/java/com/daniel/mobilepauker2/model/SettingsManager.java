@@ -33,10 +33,12 @@ public class SettingsManager {
                 return context.getString(R.string.ustm_key);
             case ABOUT:
                 return context.getString(R.string.about);
+            case AUTO_DOWNLOAD:
+                return context.getString(R.string.auto_download);
             case AUTO_SAVE:
                 return context.getString(R.string.auto_save);
-            case AUTO_SYNC:
-                return context.getString(R.string.auto_sync);
+            case AUTO_UPLOAD:
+                return context.getString(R.string.auto_upload);
             case HIDE_TIMES:
                 return context.getString(R.string.hide_times);
             case REPEAT_CARDS:
@@ -86,14 +88,16 @@ public class SettingsManager {
 
     private boolean getDefaultBoolValue(Context context, Keys key) {
         switch (key) {
+            case AUTO_DOWNLOAD:
+                return context.getResources().getBoolean(R.bool.auto_download_default);
             case AUTO_SAVE:
                 return context.getResources().getBoolean(R.bool.auto_save_default);
-            case AUTO_SYNC:
-                return context.getResources().getBoolean(R.bool.auto_sync_default);
+            case AUTO_UPLOAD:
+                return context.getResources().getBoolean(R.bool.auto_upload_default);
             case HIDE_TIMES:
-                return context.getResources().getBoolean(R.bool.auto_sync_default);
+                return context.getResources().getBoolean(R.bool.auto_upload_default);
             case CASE_SENSITIV:
-                return context.getResources().getBoolean(R.bool.auto_sync_default);
+                return context.getResources().getBoolean(R.bool.auto_upload_default);
             case LEARN_NEW_CARDS_RANDOMLY:
                 return context.getResources().getBoolean(R.bool.learn_new_cards_randomly_default);
             case ENABLE_EXPIRE_TOAST:
@@ -123,8 +127,9 @@ public class SettingsManager {
 
     public enum Keys {
         ABOUT,
+        AUTO_DOWNLOAD,
         AUTO_SAVE,
-        AUTO_SYNC,
+        AUTO_UPLOAD,
         CASE_SENSITIV,
         DB_PREFERENCE,
         ENABLE_EXPIRE_TOAST,

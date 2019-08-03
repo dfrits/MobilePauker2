@@ -151,7 +151,7 @@ public class SaveDialog extends Activity {
                 boolean result = msg.getData().getBoolean(Constants.MESSAGE_BOOL_KEY);
                 if (result) {
                     setResult(RESULT_OK);
-                    if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+                    if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
                         uploadCurrentFile();
                     }
                 } else {
@@ -173,6 +173,7 @@ public class SaveDialog extends Activity {
         String path = PaukerManager.instance().getFileAbsolutePath();
         File file = path == null ? ModelManager.instance().getFilePath() : new File(path);
         intent.putExtra(SyncDialog.FILES, file);
+        intent.setAction(SyncDialog.UPLOAD_FILE_ACTION);
         startActivity(intent);
     }
 }

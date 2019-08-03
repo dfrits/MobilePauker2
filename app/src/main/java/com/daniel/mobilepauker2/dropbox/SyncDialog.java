@@ -52,6 +52,9 @@ import static com.daniel.mobilepauker2.PaukerManager.showToast;
 public class SyncDialog extends Activity {
     public static final String ACCESS_TOKEN = "ACCESS_TOKEN";
     public static final String FILES = "FILES";
+    public static final String SYNC_ALL_ACTION = "SYNC_ALL_ACTION";
+    public static final String UPLOAD_FILE_ACTION = "UPLOAD_FILE_ACTION";
+    public static final String SYNC_FILE_ACTION = "SYNC_FILE_ACTION";
     private final Context context = this;
     private final ModelManager modelManager = ModelManager.instance();
     private final PaukerManager paukerManager = PaukerManager.instance();
@@ -98,32 +101,99 @@ public class SyncDialog extends Activity {
 
         DropboxClientFactory.init(accessToken);
         Serializable serializableExtra = intent.getSerializableExtra(FILES);
-        if (serializableExtra instanceof File[]) {
-            RelativeLayout progressBar = findViewById(R.id.pFrame);
-            progressBar.setVisibility(View.VISIBLE);
-            TextView title = findViewById(R.id.pTitle);
-            title.setText(R.string.synchronizing);
-            files = (File[]) serializableExtra;
-            startTimer();
-            loadData();
+        startSync(intent, serializableExtra);
+    }
+
+    private void startSync(Intent intent, Serializable serializableExtra) {
+        String action = intent.getAction();
+        if (SYNC_ALL_ACTION.equals(action) && serializableExtra instanceof File[]) {
+            syncAllFiles((File[]) serializableExtra);
         } else if (serializableExtra instanceof File) {
-            Log.d("SyncDialog:onCreate", "Upload just one file");
-            List<File> list = new ArrayList<>();
-            File file = (File) serializableExtra;
-            if (file.exists()) {
-                Log.d("SyncDialog:onCreate", "file exists");
-                list.add((File) serializableExtra);
-                uploadFiles(list);
-                finishDialog(RESULT_OK);
-            } else {
-                Log.d("SyncDialog:onCreate", "file does not exist");
-                showToast((Activity) context, R.string.error_file_not_found, Toast.LENGTH_LONG);
-                finishDialog(RESULT_CANCELED);
-            }
+            syncFile((File) serializableExtra, action);
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet");
             finishDialog(RESULT_CANCELED);
         }
+    }
+
+    /**
+     * Synchronisiert alle Files mit denen auf Dropbox.
+     * @param serializableExtra Lokale Files die synchronisiert werden sollen
+     */
+    private void syncAllFiles(File[] serializableExtra) {
+        showProgressbar();
+        files = serializableExtra;
+        startTimer();
+        loadData();
+    }
+
+    /**
+     * Bei {@link SyncDialog#UPLOAD_FILE_ACTION UPLOAD_ACTION} wird das File hochgeladen.
+     * Dabei wird nicht überprüft ob das neuer oder älter ist, als das File auf Dropbox. <br>
+     * Bei {@link SyncDialog#SYNC_FILE_ACTION SYNC_FILE_ACTION} wird das File mit dem gleichnamigen
+     * auf Dropbox verglichen. Ist das auf Dropbox neuer, wird dieses heruntergeladen.
+     * @param serializableExtra File, das synchronisiert werden soll
+     * @param action Spezifiziert was mit dem File geschehen soll
+     */
+    private void syncFile(final File serializableExtra, String action) {
+        List<File> list = new ArrayList<>();
+        if (serializableExtra.exists()) {
+            Log.d("SyncDialog:syncFile", "File exists");
+            Log.d("SyncDialog:syncFile", "Syncaction: " + action);
+            if (UPLOAD_FILE_ACTION.equals(action)) {
+                Log.d("SyncDialog:syncFile", "Upload just one file");
+                list.add(serializableExtra);
+                uploadFiles(list);
+                finishDialog(RESULT_OK);
+            } else if (SYNC_FILE_ACTION.equals(action)) {
+                Log.d("SyncDialog:syncFile", "Download just one file");
+                showProgressbar();
+                AsyncTask<File, Void, Metadata> getFileMetadataTask =
+                        new GetFileMetadataTask(DropboxClientFactory.getClient(), new GetFileMetadataTask.Callback() {
+                    @Override
+                    public void onDataLoaded(Metadata metadata) {
+                        Log.d("SyncDialog:syncFile::onDataLoaded", "Data loaded");
+                        if (metadata instanceof FileMetadata) {
+                            FileMetadata fileMetadata = (FileMetadata) metadata;
+                            if (serializableExtra.lastModified() < fileMetadata.getClientModified().getTime()) {
+                                Log.d("SyncDialog:syncFile::onDataLoaded", "File wird runtergeladen");
+                                List<FileMetadata> metadataList = new ArrayList<>();
+                                metadataList.add(fileMetadata);
+                                downloadFiles(metadataList, (int) fileMetadata.getSize());
+                            } else {
+                                Log.d("SyncDialog:syncFile::onDataLoaded", "File wird NICHT runtergeladen");
+                                finishDialog(RESULT_CANCELED);
+                            }
+                        } else if (metadata instanceof DeletedMetadata) {
+                            showToast((Activity) context, "Datei ist nicht länger verfügbar auf Dropbox", Toast.LENGTH_LONG);
+                            finishDialog(RESULT_CANCELED);
+                        }
+                    }
+
+                    @Override
+                    public void onError(DbxException e) {
+                        showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_LONG);
+                        finishDialog(RESULT_CANCELED);
+                    }
+                }).execute(serializableExtra);
+                tasks.add(getFileMetadataTask);
+            } else {
+                Log.d("SyncDialog:syncFile", "File does not exist");
+                showToast((Activity) context, R.string.error_synchronizing, Toast.LENGTH_LONG);
+                finishDialog(RESULT_CANCELED);
+            }
+        } else {
+            Log.d("SyncDialog:syncFile", "File does not exist");
+            showToast((Activity) context, R.string.error_file_not_found, Toast.LENGTH_LONG);
+            finishDialog(RESULT_CANCELED);
+        }
+    }
+
+    private void showProgressbar() {
+        RelativeLayout progressBar = findViewById(R.id.pFrame);
+        progressBar.setVisibility(View.VISIBLE);
+        TextView title = findViewById(R.id.pTitle);
+        title.setText(R.string.synchronizing);
     }
 
     /**
@@ -322,20 +392,22 @@ public class SyncDialog extends Activity {
                 new DownloadFileTask.Callback() {
                     @Override
                     public void onDownloadStartet() {
+                        Log.d("SyncDialog:downloadFiles", "Download startet");
                         progressBar.setMax(downloadSize);
                         progressBar.setIndeterminate(false);
                     }
 
                     @Override
                     public void onProgressUpdate(FileMetadata metadata) {
+                        Log.d("SyncDialog:downloadFiles", "Download update: " + progressBar.getProgress() + metadata.getSize());
                         progressBar.setProgress((int) (progressBar.getProgress() + metadata.getSize()));
                     }
 
                     @Override
                     public void onDownloadComplete(File[] result) {
-                        setResult(RESULT_OK);
+                        Log.d("SyncDialog:downloadFiles", "Download complete");
                         progressBar.setIndeterminate(true);
-                        finish();
+                        finishDialog(RESULT_OK);
                     }
 
                     @Override

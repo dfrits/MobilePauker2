@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="auto_save_default">false</bool>
-    <bool name="auto_sync_default">false</bool>
+    <bool name="auto_upload_default">false</bool>
+    <bool name="auto_download_default">false</bool>
     <bool name="case_sensitive_default">true</bool>
     <bool name="expire_toast_default">true</bool>
     <bool name="hide_times_default">false</bool>
