@@ -25,7 +25,6 @@ public class Constants {
     public final static String DROPBOX_ACCESS_TOKEN = "DROPBOX_ACCESS_TOKEN";
     public final static String DROPBOX_USER_ID = "DROPBOX_USER_ID";
     public static final String DROPBOX_PATH = "";
-    public static final String DROPBOX_LAST_SYNC_TIME = "DROPBOX_LAST_SYNC_TIME";
 
     // Datei, in der die Namen der lokal gelöschten Lektionen stehen
     public static final String DELETED_FILES_NAMES_FILE_NAME = "trash";
