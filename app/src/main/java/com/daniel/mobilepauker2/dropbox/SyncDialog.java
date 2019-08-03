@@ -157,13 +157,11 @@ public class SyncDialog extends Activity {
                             FileMetadata fileMetadata = (FileMetadata) metadata;
                             if (serializableExtra.lastModified() < fileMetadata.getClientModified().getTime()) {
                                 Log.d("SyncDialog:syncFile::onDataLoaded", "File wird runtergeladen");
-                                PaukerManager.showToast((Activity) context, "File wird runtergeladen", Toast.LENGTH_LONG);
                                 List<FileMetadata> metadataList = new ArrayList<>();
                                 metadataList.add(fileMetadata);
                                 downloadFiles(metadataList, (int) fileMetadata.getSize());
                             } else {
                                 Log.d("SyncDialog:syncFile::onDataLoaded", "File wird NICHT runtergeladen");
-                                PaukerManager.showToast((Activity) context, "File wird NICHT runtergeladen", Toast.LENGTH_LONG);
                                 finishDialog(RESULT_CANCELED);
                             }
                         } else if (metadata instanceof DeletedMetadata) {

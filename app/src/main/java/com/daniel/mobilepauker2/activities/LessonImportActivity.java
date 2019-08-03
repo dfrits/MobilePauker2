@@ -409,14 +409,13 @@ public class LessonImportActivity extends AppCompatActivity {
     private void openLesson(int position) {
         String filename = (String) listView.getItemAtPosition(position);
         try {
-            if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+            if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_DOWNLOAD)) {
                 String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                         .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
                 Intent syncIntent = new Intent(context, SyncDialog.class);
                 syncIntent.putExtra(SyncDialog.FILES, paukerManager.getFilePath(context, filename));
                 syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
                 syncIntent.setAction(SyncDialog.SYNC_FILE_ACTION);
-                PaukerManager.showToast((Activity) context, "OpenAcitvity::Sync Lesson", Toast.LENGTH_LONG);
                 startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
                 Log.d("LessonImportActivity:openLesson", "Check for newer version on DB");
             } else {

@@ -79,7 +79,7 @@
     <string name="stm">短期記憶</string>
     <string name="stm_timer_paused">短期記憶 \"途切れてます\"</string>
     <string name="sum">全部</string>
-    <string name="synchronizing">同期</string>
+    <string name="synchronizing">同期。。。</string>
     <string name="timer_finished">\"タイマー終了!\"</string>
     <string name="untrained">未勉強</string>
     <string name="ustm">超短期記憶</string>
@@ -191,7 +191,7 @@
     <string name="about_title">モバイルぽーかーについて</string>
     <string name="associate_dropbox_title">Dropboxに接続する</string>
     <string name="auto_save_title">自動法損</string>
-    <string name="auto_sync_title">自動同期</string>
+    <string name="auto_upload_title">自動アップロード</string>
     <string name="case_sensitive_title">大文字と小文字を区別する</string>
     <string name="expire_toast_title">有効期限情報を見せる</string>
     <string name="flip_card_sides_title">カードの側を交わす</string>
@@ -213,7 +213,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">勉強を終わったら自動で法損する</string>
     <string name="auto_sync_disabled_summ">Dropboxと接続したアカウントはありません</string>
-    <string name="auto_sync_enabled_summ">レッソンを法損したら同期する</string>
+    <string name="auto_sync_enabled_upload_summ">レッソンを法損したら同期する</string>
     <string name="case_sensitive_summ">カードが入力によって繰り返される場合</string>
     <string name="expire_toast_summ">法損をしたら次の有効期限の情報を表示する</string>
     <string name="flip_card_sides_summ">復習でどんな側がまず見せられる (%s)</string>
@@ -239,5 +239,8 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
+    <string name="auto_download_title">自動ダウンロード</string>
+    <string name="synchronizing_title">同期</string>
+    <string name="auto_sync_enabled_download_summ">レッソンを法損したら同期する</string>
     <!-- endregion -->
 </resources>

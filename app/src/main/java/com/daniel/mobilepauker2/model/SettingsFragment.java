@@ -25,7 +25,8 @@ import com.daniel.mobilepauker2.utils.Log;
 import com.daniel.mobilepauker2.utils.MinFilter;
 
 import static android.app.Activity.RESULT_OK;
-import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_SYNC;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_DOWNLOAD;
+import static com.daniel.mobilepauker2.model.SettingsManager.Keys.AUTO_UPLOAD;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.DB_PREFERENCE;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.FLIP_CARD_SIDES;
 import static com.daniel.mobilepauker2.model.SettingsManager.Keys.REPEAT_CARDS;
@@ -156,11 +157,21 @@ public class SettingsFragment extends PreferenceFragment
     }
 
     private void removeSyncPrefAndSetAutoSync(boolean enableAutoSync) {
-        SwitchPreference switchP = (SwitchPreference) findPreference(settingsManager
-                .getSettingsKey(getContext(), AUTO_SYNC));
+        SwitchPreference switchUp = (SwitchPreference) findPreference(settingsManager
+                .getSettingsKey(getContext(), AUTO_UPLOAD));
+        SwitchPreference switchDown = (SwitchPreference) findPreference(settingsManager
+                .getSettingsKey(getContext(), AUTO_DOWNLOAD));
 
-        switchP.setSummary(R.string.auto_sync_enabled_summ);
-        switchP.setEnabled(enableAutoSync);
+        if (enableAutoSync) {
+            switchUp.setSummary(R.string.auto_sync_enabled_upload_summ);
+            switchDown.setSummary(R.string.auto_sync_enabled_download_summ);
+        } else {
+            switchUp.setSummary(R.string.auto_sync_disabled_summ);
+            switchDown.setSummary(R.string.auto_sync_disabled_summ);
+        }
+
+        switchUp.setEnabled(enableAutoSync);
+        switchDown.setEnabled(enableAutoSync);
     }
 
     private void initSyncPrefs(final Context context) {

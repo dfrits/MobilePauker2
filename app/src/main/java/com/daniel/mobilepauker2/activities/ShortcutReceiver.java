@@ -22,14 +22,12 @@ import android.widget.Toast;
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.R;
 import com.daniel.mobilepauker2.dropbox.SyncDialog;
-import com.daniel.mobilepauker2.model.ModelManager;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.model.TextDrawable;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
 import com.daniel.mobilepauker2.utils.Log;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -59,7 +57,6 @@ public class ShortcutReceiver extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        System.out.println();
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             if (resultCode == RESULT_OK) {
                 Log.d("ShortcutReceiver::onActivityResult", "File wurde aktualisiert");
@@ -95,7 +92,7 @@ public class ShortcutReceiver extends Activity {
             return;
         }
 
-        if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_SYNC)) {
+        if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_DOWNLOAD)) {
             Log.d("ShortcutReceiver::openLesson", "Check for newer version on DB");
             String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
                     .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
@@ -107,7 +104,6 @@ public class ShortcutReceiver extends Activity {
             }
             syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
             syncIntent.setAction(SyncDialog.SYNC_FILE_ACTION);
-            PaukerManager.showToast((Activity) context, "ShortcutReceiver::openLesson", Toast.LENGTH_LONG);
             startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN);
         } else {
             openLesson(filename);

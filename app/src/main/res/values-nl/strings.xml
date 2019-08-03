@@ -160,7 +160,7 @@
     <string name="about_title">Over MobilePauker++</string>
     <string name="associate_dropbox_title">Koppelen aan Dropbox</string>
     <string name="auto_save_title">Automatisch opslaan</string>
-    <string name="auto_sync_title">Automatische synchronisatie</string>
+    <string name="auto_upload_title">Automatische synchronisatie</string>
     <string name="case_sensitive_title">Hoofdlettergevoelig</string>
     <string name="expire_toast_title">Meldingsballon tonen bij verlopen</string>
     <string name="flip_card_sides_title">Eerst getoonde kaartzijde</string>
@@ -178,7 +178,6 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Automatisch opslaan na elke les</string>
     <string name="auto_sync_disabled_summ">Nog geen account gekoppeld</string>
-    <string name="auto_sync_enabled_summ">Synchroniseer elke keer voordat je een les opent</string> <!-- Was still wrong and has to be retranslated -->
     <string name="case_sensitive_summ">Of kaarten moeten worden herhaald op basis van invoer</string>
     <string name="expire_toast_summ">Toont een informatieregel bij de volgende vervaldatum na het opslaan van de les</string>
     <string name="flip_card_sides_summ">Welke zijde er tijdens het leren eerst moet worden getoond (%s)</string>
@@ -235,5 +234,9 @@
     <string name="show_card_notification_summ">Notifies you when a card expire</string>
     <string name="show_timer_bar_title">Timer bar</string>
     <string name="ring_tone_preference_title">Sound</string>
+    <string name="auto_download_title">Auto Download</string>
+    <string name="synchronizing_title">Synchronizing</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
+    <string name="auto_sync_enabled_download_summ">Synchronize every time before you open a lesson</string>
     <!-- endregion -->
 </resources>

@@ -198,7 +198,7 @@
     <string name="about" translatable="false">About</string>
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
     <string name="auto_save" translatable="false">Auto Save</string>
-    <string name="auto_sync" translatable="false">Auto Synchronisation</string>
+    <string name="auto_upload" translatable="false">Auto Upload</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="expire_toast" translatable="false">Enable Expire Toast</string>
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
@@ -219,7 +219,7 @@
     <string name="about_title">About MobilePauker++</string>
     <string name="associate_dropbox_title">Associate with Dropbox</string>
     <string name="auto_save_title">Auto Save</string>
-    <string name="auto_sync_title">Auto Synchronisation</string>
+    <string name="auto_upload_title">Auto Upload</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="expire_toast_title">Show Expire Toast</string>
     <string name="flip_card_sides_title">First shown card side</string>
@@ -241,7 +241,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Save automatically after every session</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
-    <string name="auto_sync_enabled_summ">Synchronize every time after you saved a lesson</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
     <string name="case_sensitive_summ">If cards are repeated by input</string>
     <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
         lesson</string>
@@ -280,5 +280,9 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
+    <string name="auto_download" translatable="false">Auto Download</string>
+    <string name="auto_download_title">Auto Download</string>
+    <string name="synchronizing_title">Synchronizing</string>
+    <string name="auto_sync_enabled_download_summ">Synchronize every time before you open a lesson</string>
     <!-- endregion -->
 </resources>

@@ -200,7 +200,7 @@
     <string name="about_title">Über MobilePauker++</string>
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
     <string name="auto_save_title">Automatisches Speichern</string>
-    <string name="auto_sync_title">Automatische Synchronisation</string>
+    <string name="auto_upload_title">Automatischer Upload</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
     <string name="flip_card_sides_title">Kartenseiten vertauschen</string>
@@ -222,7 +222,7 @@
     <!-- region Beschreibungen -->
     <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
-    <string name="auto_sync_enabled_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>
@@ -253,5 +253,8 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="auto_download_title">Automatischer Download</string>
+    <string name="synchronizing_title">Synchronisierung</string>
+    <string name="auto_sync_enabled_download_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
     <!-- endregion -->
 </resources>
