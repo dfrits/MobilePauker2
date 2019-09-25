@@ -28,6 +28,7 @@
     <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
     <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
     <string name="shortcut_open_error_permission">Permission not granted yet!</string>
+    <string name="synchro_canceled_by_user">Update canceled!</string>
     <string name="synchro_timeout">Synchronizing timed out</string>
     <!-- endregion -->
 
@@ -190,6 +191,7 @@
 
     <!-- region Gruppentitel -->
     <string name="learning_cards">Learning cards</string>
+    <string name="notifications">Notifications</string>
     <string name="other">General</string>
     <string name="times">Times</string>
     <!-- endregion -->

@@ -47,6 +47,7 @@ import java.util.TimerTask;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_A;
@@ -1050,6 +1051,10 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
                 stmTimerBar.setText(" ");
                 stmTimerBar.setProgress(timerService.getStmTotalTime() * 60);
+
+                if (pauseButton != null) {
+                    pauseButton.setVisible(false);
+                }
 
                 if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
                     Log.d("Learnactivity::onSTMTimerFinish", "STM Timer finished, stop waiting!");

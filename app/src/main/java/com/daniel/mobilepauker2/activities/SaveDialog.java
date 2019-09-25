@@ -176,4 +176,7 @@ public class SaveDialog extends Activity {
         intent.setAction(SyncDialog.UPLOAD_FILE_ACTION);
         startActivity(intent);
     }
+
+    public void cancelClicked(View view) {
+    }
 }

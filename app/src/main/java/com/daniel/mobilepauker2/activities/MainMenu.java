@@ -77,6 +77,11 @@ public class MainMenu extends AppCompatActivity {
         Log.d("AlamNotificationReceiver::onReceive", "Create Channels");
         createNotificationChannels();
 
+        String action = getIntent().getAction();
+        if (action != null && action.equals("Open Lesson")) {
+            startActivity(new Intent(context, LessonImportActivity.class));
+        }
+
         ErrorReporter.instance().init(context);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 

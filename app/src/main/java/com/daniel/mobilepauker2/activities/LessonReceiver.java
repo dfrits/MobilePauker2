@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -120,5 +121,8 @@ public class LessonReceiver extends Activity {
         intent.putExtra(SyncDialog.FILES, localFile);
         intent.setAction(SyncDialog.UPLOAD_FILE_ACTION);
         startActivityForResult(intent, Constants.REQUEST_CODE_SYNC_DIALOG);
+    }
+
+    public void cancelClicked(View view) {
     }
 }

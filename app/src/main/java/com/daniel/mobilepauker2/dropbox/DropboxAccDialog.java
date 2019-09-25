@@ -81,4 +81,7 @@ public class DropboxAccDialog extends Activity {
         }
         firstStart = false;
     }
+
+    public void cancelClicked(View view) {
+    }
 }

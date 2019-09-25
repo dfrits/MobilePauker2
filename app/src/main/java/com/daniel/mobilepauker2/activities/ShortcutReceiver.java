@@ -201,4 +201,7 @@ public class ShortcutReceiver extends Activity {
         }
         return false;
     }
+
+    public void cancelClicked(View view) {
+    }
 }

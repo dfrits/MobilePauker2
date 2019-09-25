@@ -26,6 +26,7 @@
     <string name="shortcut_create_error">もう5つを作った。 まず一つを取り去ってください。</string>
     <string name="shortcut_open_error_learning_running">学習は現在実行中です!</string>
     <string name="shortcut_open_error_permission">権利はまだありません!</string>
+    <string name="synchro_canceled_by_user">同期を打ち切りました!</string>
     <string name="synchro_timeout">同期は切れました</string>
     <!-- endregion -->
 
@@ -183,6 +184,7 @@
 
     <!-- region Gruppentitel -->
     <string name="learning_cards">カードを勉強する</string>
+    <string name="notifications">通知</string>
     <string name="other">他の</string>
     <string name="times">時間</string>
     <!-- endregion -->
@@ -232,7 +234,7 @@
 
     <!-- endregion -->
 
-    <!-- redion Notifications -->
+    <!-- region Notifications -->
     <string name="channel_notify_name_other">コモン</string>
     <string name="channel_timerbar_description">アップリーは開いていなければ通知バーで時間を表示する。</string>
     <string name="channel_timerbar_name">タイマーバー</string>

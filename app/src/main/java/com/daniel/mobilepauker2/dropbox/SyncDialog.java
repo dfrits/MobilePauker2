@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -62,6 +63,8 @@ public class SyncDialog extends Activity {
     private Timer timeout;
     private TimerTask timerTask;
     private NetworkStateReceiver networkStateReceiver;
+
+    private Button cancelbutton;
 
     // Hintergrundtasks
     private List<AsyncTask> tasks = new ArrayList<>();
@@ -148,6 +151,7 @@ public class SyncDialog extends Activity {
             } else if (SYNC_FILE_ACTION.equals(action)) {
                 Log.d("SyncDialog:syncFile", "Download just one file");
                 showProgressbar();
+                showCancelButton();
                 AsyncTask<File, Void, Metadata> getFileMetadataTask =
                         new GetFileMetadataTask(DropboxClientFactory.getClient(), new GetFileMetadataTask.Callback() {
                     @Override
@@ -194,6 +198,12 @@ public class SyncDialog extends Activity {
         progressBar.setVisibility(View.VISIBLE);
         TextView title = findViewById(R.id.pTitle);
         title.setText(R.string.synchronizing);
+    }
+
+    private void showCancelButton() {
+        cancelbutton = findViewById(R.id.cancel_button);
+        cancelbutton.setVisibility(View.VISIBLE);
+        Log.d("SyncDialog::showCancelButton", "Button is enabled: " + cancelbutton.isEnabled());
     }
 
     /**
@@ -519,6 +529,16 @@ public class SyncDialog extends Activity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        Log.d("SyncDialog::TouchEvent", "Touched");
+        if(cancelbutton != null) {
+            int[] pos = new int[2];
+            cancelbutton.getLocationInWindow(pos);
+            if ((ev.getY() <= (pos[1] + cancelbutton.getHeight()) && ev.getX() > pos[0])
+                    && (ev.getY() > pos[1] && ev.getX() <= (pos[0] + cancelbutton.getWidth()))
+                    && ev.getAction() == MotionEvent.ACTION_UP) {
+                cancelClicked(cancelbutton);
+            }
+        }
         return false;
     }
 
@@ -538,6 +558,13 @@ public class SyncDialog extends Activity {
             }
         };
         timeout.schedule(timerTask, 60000);
+    }
+
+    public void cancelClicked(View view) {
+        Log.d("SyncDialog::cancelClicked", "Cancel Sync");
+        view.setEnabled(false);
+        PaukerManager.showToast((Activity) context, R.string.synchro_canceled_by_user, Toast.LENGTH_LONG);
+        finishDialog(RESULT_CANCELED);
     }
 
     private void cancelTasks() {

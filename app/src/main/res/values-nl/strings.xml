@@ -238,5 +238,7 @@
     <string name="synchronizing_title">Synchronizing</string>
     <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
     <string name="auto_sync_enabled_download_summ">Synchronize every time before you open a lesson</string>
+    <string name="synchro_canceled_by_user">Update canceled!</string>
+    <string name="notifications">Benachrichtigungen</string>
     <!-- endregion -->
 </resources>

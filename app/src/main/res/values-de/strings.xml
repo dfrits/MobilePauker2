@@ -30,6 +30,7 @@
     <string name="shortcut_create_error">Du hast bereits 5 erstellt. Entferne zuerst eins.</string>
     <string name="shortcut_open_error_learning_running">Das Lernen ist aktuell aktiv!</string>
     <string name="shortcut_open_error_permission">Berechtigung noch nicht vorhanden!</string>
+    <string name="synchro_canceled_by_user">Update abgebrochen!</string>
     <string name="synchro_timeout">Synchronisation abgelaufen</string>
     <!-- endregion -->
 
@@ -192,6 +193,7 @@
 
     <!-- region Gruppentitel -->
     <string name="learning_cards">Karten lernen</string>
+    <string name="notifications">Benachrichtigungen</string>
     <string name="other">Sonstiges</string>
     <string name="times">Zeiten</string>
     <!-- endregion -->
