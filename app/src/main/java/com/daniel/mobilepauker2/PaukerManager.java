@@ -239,13 +239,17 @@ public class PaukerManager {
     }
 
     public boolean isFileExisting(Context context, String fileName) {
-        File[] files = listFiles(context);
+        try {
+            File[] files = listFiles(context);
 
-        for (File file : files) {
-            if (file.getName().equals(fileName)) {
-                return true;
+            for (File file : files) {
+                if (file.getName().equals(fileName)) {
+                    return true;
+                }
             }
+        } catch (SecurityException ignored) {
         }
+
         return false;
     }
 

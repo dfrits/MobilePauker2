@@ -43,7 +43,13 @@ public class NotificationService extends JobIntentService {
 
     private long getNewestExpireTime() {
         PaukerManager paukerManager = PaukerManager.instance();
-        File[] files = paukerManager.listFiles(this);
+        File[] files;
+        try {
+            files = paukerManager.listFiles(this);
+        } catch (SecurityException e) {
+            files = new File[0];
+        }
+
         long newestTime = -1;
         URI uri;
         FlashCardXMLPullFeedParser parser;

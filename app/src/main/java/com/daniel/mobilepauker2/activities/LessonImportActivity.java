@@ -126,8 +126,14 @@ public class LessonImportActivity extends AppCompatActivity {
 
     private void itemClicked(int position) {
         TextView infoText = findViewById(R.id.infoText);
+        View item = listView.getChildAt(position);
+
+        if (item == null) {
+            return;
+        }
+
         if (lastSelection != position) {
-            listView.getChildAt(position).setSelected(true);
+            item.setSelected(true);
             lastSelection = position;
             String text = getString(R.string.next_expire_date);
             try {
@@ -161,7 +167,7 @@ public class LessonImportActivity extends AppCompatActivity {
                 infoText.setVisibility(View.VISIBLE);
             }
         } else {
-            listView.getChildAt(position).setSelected(false);
+            item.setSelected(false);
             lastSelection = -1;
             infoText.setVisibility(View.GONE);
         }
@@ -204,7 +210,7 @@ public class LessonImportActivity extends AppCompatActivity {
             // Liste füllen und Endungen abschneiden
             fileNames.clear();
 
-            if (fileNames == null || files.length == 0) {
+            if (files.length == 0) {
                 return false;
             }
 
