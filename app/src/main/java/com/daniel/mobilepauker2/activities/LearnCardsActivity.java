@@ -108,14 +108,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
             // A check on mActivitySetupOk is done here as onCreate is called even if the
             // super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
             if (mActivitySetupOk) {
-                //initTimer();
-                initTimerV2();
-                /*if (ustmTimer != null && stmTimer != null) {
-                    findViewById(R.id.lTimerFrame).setVisibility(VISIBLE);
-                    startUSTMTimer();
-                    startSTMTimer();
-                    timerAnimation = findViewById(R.id.timerAnimationPanel);
-                }*/
+                initTimer();
             }
         } else if (modelManager.getLearningPhase() == REPEATING_LTM) {
             repeatingLTM = true;
@@ -224,15 +217,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
-
-                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
-                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-                    Intent intent = new Intent(context, SyncDialog.class);
-                    intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-                    intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
-                    startActivity(intent);
-                }*/
             } else {
                 showToast((Activity) context, R.string.saving_error, Toast.LENGTH_SHORT);
             }
@@ -314,9 +298,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
             unbindService(timerServiceConnection);
         }
 
-        NotificationManager notiManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        if (notiManager != null) {
-            notiManager.cancelAll();
+        NotificationManager notifyManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        if (notifyManager != null) {
+            notifyManager.cancelAll();
         }
 
         isLearningRunning = false;
@@ -342,7 +326,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
         return true;
     }
 
-    private void initTimerV2() {
+    private void initTimer() {
         int ustmTotalTime = Integer.parseInt(settingsManager.getStringPreference(context, USTM));
         ustmTimerBar = findViewById(R.id.UKZGTimerBar);
         ustmTimerBar.setMaxProgress(ustmTotalTime);
@@ -356,7 +340,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
         timerServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Log.d("LearnActivity::initTimerV2", "onServiceConnectedCalled");
+                Log.d("LearnActivity::initTimer", "onServiceConnectedCalled");
                 TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
                 timerService = binder.getServiceInstance();
                 timerService.registerClient((Activity) context);
@@ -368,7 +352,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.d("LearnActivity::initTimerV2", "onServiceDisconnectedCalled");
+                Log.d("LearnActivity::initTimer", "onServiceDisconnectedCalled");
                 timerService.stopUstmTimer();
                 timerService.stopStmTimer();
             }
@@ -382,7 +366,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     }
 
     private void pauseTimer() {
-        if (timerService!=null) {
+        if (timerService != null) {
             timerService.pauseTimers();
             if (!timerService.isStmTimerFinished()) {
                 disableButtons();
@@ -391,7 +375,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     }
 
     private void restartTimer() {
-        if (timerService!=null) {
+        if (timerService != null) {
             timerService.restartTimers();
             enableButtons();
         }
@@ -915,8 +899,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
         if (!mCardCursor.isLast() && !timerService.isUstmTimerFinished()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
             updateLearningPhase();
@@ -934,8 +916,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             completedLearning = true;
         }
@@ -949,8 +929,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             completedLearning = true;
         }
@@ -1055,7 +1033,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 }
 
                 if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
-                    Log.d("Learnactivity::onSTMTimerFinish", "STM Timer finished, stop waiting!");
+                    Log.d("LearnActivity::onSTMTimerFinish", "STM Timer finished, stop waiting!");
                     stopWaiting = true;
                     updateLearningPhase();
                 }
