@@ -1,13 +1,13 @@
 package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.daniel.mobilepauker2.model.pauker_native.CardSide;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 
-public class MPEditText extends android.support.v7.widget.AppCompatEditText {
+public class MPEditText extends androidx.appcompat.widget.AppCompatEditText {
 
     public MPEditText(Context context) {
         super(context);

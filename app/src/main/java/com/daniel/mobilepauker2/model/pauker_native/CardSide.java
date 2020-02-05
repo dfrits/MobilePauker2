@@ -1,6 +1,6 @@
 package com.daniel.mobilepauker2.model.pauker_native;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.daniel.mobilepauker2.utils.Constants;
 

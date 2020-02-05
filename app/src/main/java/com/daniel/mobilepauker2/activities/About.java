@@ -1,8 +1,8 @@
 package com.daniel.mobilepauker2.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.webkit.WebView;
 import android.widget.TextView;
 

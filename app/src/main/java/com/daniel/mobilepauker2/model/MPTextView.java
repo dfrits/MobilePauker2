@@ -1,13 +1,13 @@
 package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.daniel.mobilepauker2.model.pauker_native.CardSide;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 
-public class MPTextView extends android.support.v7.widget.AppCompatTextView {
+public class MPTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     public MPTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

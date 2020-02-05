@@ -2,7 +2,7 @@ package com.daniel.mobilepauker2.model;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.daniel.mobilepauker2.R;
 

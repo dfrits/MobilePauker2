@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 public class TextDrawable extends ShapeDrawable {
     private String s;

@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/infoText" />
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fBDownloadNewLesson"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
