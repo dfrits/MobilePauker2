@@ -79,11 +79,11 @@ class PaukerManager private constructor() {
         }
 
     fun setCurrentFileName(filename: String): Boolean {
-        var filename = filename
-        if (!filename.endsWith(".pau.gz")) filename += ".pau.gz"
+        var newFilename = filename
+        if (!newFilename.endsWith(".pau.gz")) newFilename += ".pau.gz"
         // Validate the filename
-        if (!isNameValid(filename)) return false
-        currentFileName = filename
+        if (!isNameValid(newFilename)) return false
+        currentFileName = newFilename
         return true
     }
 
@@ -214,17 +214,14 @@ class PaukerManager private constructor() {
         val lesson = xmlFlashCardFeedParser.parse()
         setCurrentFileName(file.name)
         fileAbsolutePath = file.absolutePath
-        ModelManager.Companion.instance().setLesson(lesson)
+        ModelManager.instance().lesson = lesson
     }
 
     companion object {
         private var instance: PaukerManager? = null
-        fun instance(): PaukerManager? {
-            if (instance == null) {
-                instance = PaukerManager()
-            }
-            return instance
-        }
+
+        fun instance(): PaukerManager = instance ?: PaukerManager()
+
 
         fun showToast(context: Activity, text: String?, duration: Int) {
             context.runOnUiThread {

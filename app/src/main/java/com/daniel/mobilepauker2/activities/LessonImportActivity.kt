@@ -51,7 +51,7 @@ class LessonImportActivity : AppCompatActivity() {
     private val fileNames = ArrayList<String>()
     private var listView: ListView? = null
     private var preferences: SharedPreferences? = null
-    private var files: Array<File?>? = arrayOfNulls(0)
+    private var files: Array<File>? = null
     /**
      * Speichert die letzte Selektion in der Liste.
      */
@@ -76,21 +76,21 @@ class LessonImportActivity : AppCompatActivity() {
 
     private fun initListView() {
         listView = findViewById(R.id.lvLessons)
-        listView.setAdapter(LessonImportAdapter(context, fileNames))
-        listView.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
-        listView.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
+        listView?.setAdapter(LessonImportAdapter(context, fileNames))
+        listView?.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE)
+        listView?.setOnItemClickListener(OnItemClickListener { parent, view, position, id ->
             itemClicked(
                 position
             )
         })
         registerForContextMenu(listView)
-        listView.setOnCreateContextMenuListener(OnCreateContextMenuListener { menu, v, menuInfo ->
+        listView?.setOnCreateContextMenuListener(OnCreateContextMenuListener { menu, v, menuInfo ->
             menu.add(0, CONTEXT_DELETE, 0, R.string.delete)
             menu.add(0, CONTEXT_OPEN, 0, R.string.open_lesson)
             val pos = (menuInfo as AdapterContextMenuInfo).position
             if (ShortcutReceiver.Companion.hasShortcut(
                     context,
-                    listView.getItemAtPosition(pos) as String
+                    listView?.getItemAtPosition(pos) as String
                 )
             ) {
                 menu.add(
@@ -194,18 +194,16 @@ class LessonImportActivity : AppCompatActivity() {
      */
     private fun readFlashCardFiles(): Boolean {
         return try { // Dateien auslesen
-            files = paukerManager!!.listFiles(context)
+            files = paukerManager?.listFiles(context)
             // Sortieren
-            Arrays.sort(
-                files,
-                Comparator<File> { o1, o2 -> o1.name.compareTo(o2.name) })
+            Arrays.sort(files) { o1, o2 -> o1.name.compareTo(o2.name) }
             // Liste füllen und Endungen abschneiden
             fileNames.clear()
-            if (files!!.size == 0) {
+            if (files?.size == 0) {
                 return false
             }
             for (aFile in files!!) {
-                fileNames.add(aFile!!.name)
+                fileNames.add(aFile.name)
             }
             true
         } catch (e: Exception) {
@@ -220,7 +218,7 @@ class LessonImportActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.open_lesson, menu)
         // Wurde auf ein Item geklickt Buttons ändern auf Lesson öffnen
-// Wurde Selektion aufgehoben, dann wieder zruckändern
+        // Wurde Selektion aufgehoben, dann wieder zruckändern
         menu.findItem(R.id.mSyncFilesWithDropbox).isVisible = lastSelection == -1
         menu.findItem(R.id.mOpenLesson).isVisible = lastSelection != -1
         return true
@@ -279,11 +277,7 @@ class LessonImportActivity : AppCompatActivity() {
         super.finish()
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             if (resultCode == Activity.RESULT_OK) {
                 Log.d("OpenLesson", "Synchro erfolgreich")
@@ -296,9 +290,9 @@ class LessonImportActivity : AppCompatActivity() {
                 )
             }
             init()
-            if (modelManager!!.isLessonNotNew) if (fileNames.contains(paukerManager.getCurrentFileName())) {
+            if (modelManager!!.isLessonNotNew) if (fileNames.contains(paukerManager?.currentFileName)) {
                 try {
-                    openLesson(paukerManager.getCurrentFileName())
+                    openLesson(paukerManager?.currentFileName)
                 } catch (ignored: IOException) {
                     PaukerManager.Companion.showToast(
                         context as Activity,
@@ -347,6 +341,7 @@ class LessonImportActivity : AppCompatActivity() {
                     .AddCustomData("ImportThread", "IOException?")
             }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onBackPressed() {
@@ -409,14 +404,14 @@ class LessonImportActivity : AppCompatActivity() {
                 val filename = listView!!.getItemAtPosition(position).toString()
                 val filePath =
                     Environment.getExternalStorageDirectory().toString() +
-                            paukerManager.getApplicationDataDirectory() + filename
+                            paukerManager?.applicationDataDirectory + filename
                 val file = File(filePath)
                 if (file.isFile) {
                     if (modelManager!!.deleteLesson(context, file)) {
                         init()
                         resetSelection(null)
-                        ShortcutReceiver.Companion.deleteShortcut(context, filename)
-                        if (!fileNames.contains(paukerManager.getCurrentFileName())) {
+                        ShortcutReceiver.deleteShortcut(context, filename)
+                        if (!fileNames.contains(paukerManager?.currentFileName)) {
                             paukerManager!!.setupNewApplicationLesson()
                             paukerManager.isSaveRequired = false
                         }

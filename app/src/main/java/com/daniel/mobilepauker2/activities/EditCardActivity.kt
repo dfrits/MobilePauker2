@@ -26,7 +26,7 @@ class EditCardActivity : AEditCardActivity() {
                 "Card Position null $cardPosition"
             )
         } else {
-            flashCard = ModelManager.Companion.instance()!!.getCard(cardPosition)
+            flashCard = ModelManager.instance().getCard(cardPosition)
         }
         if (flashCard == null) {
             Log.w(
@@ -45,9 +45,8 @@ class EditCardActivity : AEditCardActivity() {
     }
 
     private fun init() { //SideA
-        var text = flashCard.sideAText
-        var font =
-            flashCard.frontSide.font
+        var text = flashCard?.sideAText
+        var font = flashCard?.frontSide?.font
         font = font ?: Font()
         initSideAText = text!!
         initSideATSize = font.textSize
@@ -55,11 +54,11 @@ class EditCardActivity : AEditCardActivity() {
         initSideABColor = font.backgroundColor
         initSideABold = font.isBold
         initSideAItalic = font.isItalic
-        sideAEditText!!.setCard(flashCard.frontSide)
-        initIsRepeatedByTyping = flashCard!!.isRepeatedByTyping
+        sideAEditText!!.setCard(flashCard?.frontSide)
+        initIsRepeatedByTyping = flashCard?.isRepeatedByTyping ?: false
         //SideB
-        text = flashCard.sideBText
-        font = flashCard.reverseSide.font
+        text = flashCard?.sideBText
+        font = flashCard?.reverseSide?.font
         font = font ?: Font()
         initSideBText = text!!
         initSideBTSize = font.textSize
@@ -67,11 +66,11 @@ class EditCardActivity : AEditCardActivity() {
         initSideBBColor = font.backgroundColor
         initSideBBold = font.isBold
         initSideBItalic = font.isItalic
-        sideBEditText!!.setCard(flashCard.reverseSide)
+        sideBEditText!!.setCard(flashCard?.reverseSide)
     }
 
     override fun okClicked(view: View?) {
-        if (sideAEditText!!.text.toString().trim { it <= ' ' }.isEmpty() || sideBEditText!!.text.toString().trim { it <= ' ' }.isEmpty()) {
+        if (sideAEditText!!.text.toString().trim { it <= ' ' }.isEmpty() || sideBEditText?.text.toString().trim { it <= ' ' }.isEmpty()) {
             PaukerManager.Companion.showToast(
                 context as Activity,
                 R.string.add_card_sides_empty_error,
@@ -80,13 +79,13 @@ class EditCardActivity : AEditCardActivity() {
             return
         }
         if (cardPosition >= 0) {
-            ModelManager.Companion.instance()!!.editCard(
+            ModelManager.instance().editCard(
                 cardPosition,
                 sideAEditText!!.text.toString(),
                 sideBEditText!!.text.toString()
             )
             if (detectChanges()) {
-                PaukerManager.Companion.instance().setSaveRequired(true)
+                PaukerManager.instance().isSaveRequired = true
                 setResult(Activity.RESULT_OK)
             }
             finish()

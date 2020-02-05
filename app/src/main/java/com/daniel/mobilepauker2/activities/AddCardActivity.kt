@@ -45,12 +45,7 @@ class AddCardActivity : AEditCardActivity() {
         menuInflater.inflate(R.menu.edit_card, menu)
         val pref = PreferenceManager.getDefaultSharedPreferences(context)
         checkBox = menu.findItem(R.id.mKeepOpen)
-        checkBox.setChecked(
-            pref.getBoolean(
-                Constants.KEEP_OPEN_KEY,
-                true
-            )
-        )
+        checkBox?.isChecked = pref.getBoolean(Constants.KEEP_OPEN_KEY, true)
         return true
     }
 
@@ -66,7 +61,7 @@ class AddCardActivity : AEditCardActivity() {
             )
             sideAEditText!!.setText("")
             sideBEditText!!.setText("")
-            PaukerManager.Companion.instance().setSaveRequired(true)
+            PaukerManager.instance().isSaveRequired = true
             sideAEditText!!.requestFocus()
             sideAEditText!!.setSelection(0, 0)
             if (checkBox != null && !checkBox!!.isChecked) finish()

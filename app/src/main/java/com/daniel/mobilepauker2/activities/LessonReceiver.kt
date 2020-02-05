@@ -35,12 +35,12 @@ class LessonReceiver : Activity() {
             finish()
         } else {
             val fileUri = intent.data
-            val filePath = fileUri.encodedPath
+            val filePath = fileUri?.encodedPath
             Log.d(
                 "LessonReceiver::importLesson filePath: ",
                 filePath
             )
-            if (filePath == null || PaukerManager.Companion.instance()!!.isNameEmpty(filePath)) {
+            if (filePath == null || PaukerManager.instance().isNameEmpty(filePath)) {
                 PaukerManager.Companion.showToast(
                     context,
                     "Keine Datei gefunden",
@@ -50,7 +50,7 @@ class LessonReceiver : Activity() {
             } else {
                 val localFile = File(
                     Environment.getExternalStorageDirectory()
-                        .toString() + PaukerManager.Companion.instance().getApplicationDataDirectory(),
+                        .toString() + PaukerManager.instance().applicationDataDirectory,
                     File(filePath).name
                 )
                 if (localFile.exists()) {

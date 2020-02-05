@@ -903,13 +903,9 @@ class ModelManager private constructor() {
     }
 
     companion object {
-        private val paukerManager: PaukerManager? = PaukerManager.Companion.instance()
+        private val paukerManager: PaukerManager? = PaukerManager.instance()
         private var instance: ModelManager? = null
-        fun instance(): ModelManager? {
-            if (instance == null) {
-                instance = ModelManager()
-            }
-            return instance
-        }
+
+        fun instance(): ModelManager = instance ?: ModelManager()
     }
 }

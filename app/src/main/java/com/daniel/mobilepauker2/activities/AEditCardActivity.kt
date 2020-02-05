@@ -90,11 +90,10 @@ abstract class AEditCardActivity : AppCompatActivity() {
     open fun okClicked(view: View?) {}
     open fun resetCardSides(view: View?) {
         fontChanged = false
-        flashCard!!.setRepeatByTyping(initIsRepeatedByTyping)
-        sideAEditText!!.setText(initSideAText)
-        sideBEditText!!.setText(initSideBText)
-        var font =
-            flashCard.getFrontSide().font
+        flashCard?.setRepeatByTyping(initIsRepeatedByTyping)
+        sideAEditText?.setText(initSideAText)
+        sideBEditText?.setText(initSideBText)
+        var font = flashCard?.frontSide?.font
         if (font != null) {
             font.setSize(initSideATSize)
             font.setBackground(initSideABColor)
@@ -102,8 +101,8 @@ abstract class AEditCardActivity : AppCompatActivity() {
             font.isBold = initSideABold
             font.isItalic = initSideAItalic
         }
-        sideAEditText!!.setFont(font)
-        font = flashCard.getReverseSide().font
+        sideAEditText?.setFont(font)
+        font = flashCard?.reverseSide?.font
         if (font != null) {
             font.setSize(initSideBTSize)
             font.setBackground(initSideBBColor)
@@ -118,13 +117,13 @@ abstract class AEditCardActivity : AppCompatActivity() {
 
     fun editFontA(view: View) {
         val popupMenu =
-            createPopupMenu(view, flashCard.getFrontSide().font, true)
+            createPopupMenu(view, flashCard?.frontSide?.font, true)
         popupMenu.setOnMenuItemClickListener { item ->
             var font =
-                flashCard.getFrontSide().font
+                flashCard?.frontSide?.font
             if (font == null) {
                 font = Font()
-                flashCard.getFrontSide().font = font
+                flashCard?.frontSide?.font = font
                 fontChanged = true
             }
             setNewFontDetails(item, font, sideAEditText)
@@ -133,13 +132,13 @@ abstract class AEditCardActivity : AppCompatActivity() {
 
     fun editFontB(view: View) {
         val popupMenu =
-            createPopupMenu(view, flashCard.getReverseSide().font, false)
+            createPopupMenu(view, flashCard?.reverseSide?.font, false)
         popupMenu.setOnMenuItemClickListener { item ->
             var font =
-                flashCard.getReverseSide().font
+                flashCard?.reverseSide?.font
             if (font == null) {
                 font = Font()
-                flashCard.getReverseSide().font = font
+                flashCard?.reverseSide?.font = font
                 fontChanged = true
             }
             setNewFontDetails(item, font, sideBEditText)

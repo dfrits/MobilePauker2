@@ -297,12 +297,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
 
     companion object {
         private var instance: ErrorReporter? = null
-        fun instance(): ErrorReporter? {
-            if (instance == null) {
-                instance =
-                    ErrorReporter()
-            }
-            return instance
-        }
+
+        fun instance(): ErrorReporter = instance ?: ErrorReporter()
     }
 }

@@ -31,8 +31,9 @@ import com.daniel.mobilepauker2.utils.Log
 
 abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     LoaderManager.LoaderCallbacks<Cursor> {
-    protected val settingsManager: SettingsManager? = SettingsManager.Companion.instance()
-    protected val modelManager: ModelManager? = ModelManager.Companion.instance()
+
+    protected val settingsManager: SettingsManager = SettingsManager.instance()
+    protected val modelManager: ModelManager = ModelManager.instance()
     protected val INSTANCESTATE_CURSOR_POSITION = "INSTANCESTATE_CURSOR_POSITION"
     private val context: Context = this
     protected var mCardCursor: Cursor? = null
@@ -42,6 +43,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     protected var mActivitySetupOk = false
     protected var mSavedCursorPosition = -1
     private var LOADER_ID = -1
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCardPackAdapter = CardPackRamAdapter(this)
@@ -80,17 +82,10 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
         return gestureDetector!!.onTouchEvent(ev)
     }
 
-    override fun onCreateLoader(
-        id: Int,
-        args: Bundle
-    ): Loader<Cursor> {
-        return CursorLoader(context, mCardPackAdapter)
-    }
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> =
+        CursorLoader(context, mCardPackAdapter)
 
-    override fun onLoadFinished(
-        loader: Loader<Cursor>,
-        cursor: Cursor
-    ) {
+    override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
         mCardCursor = mCardPackAdapter!!.fetchAllFlashCards()
         //mCardCursor = cursor;
         if (mCardCursor == null || mCardCursor!!.count <= 0) // no cards available
@@ -115,7 +110,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
         get() = !(mCardCursor == null || mCardCursor!!.isClosed || mCardCursor!!.count <= 0)
 
     /**
-     * Lädt des Stack neu.
+     * Lädt den Stack neu.
      */
     protected fun reloadStack() {
         mCardPackAdapter = CardPackRamAdapter(context)
@@ -133,7 +128,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     fun setCursorToFirst() {
         if (mCardCursor is FlashCardCursor) {
             val cursor = mCardCursor as FlashCardCursor
-            if (modelManager.getCurrentBatchSize() == 0) {
+            if (modelManager.currentBatchSize == 0) {
                 Log.d(
                     "FlashCArdCursor::requery",
                     "Warning - cursor requery on empty card pack"

@@ -42,9 +42,9 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
  * hs-augsburg
  */
 class MainMenu : AppCompatActivity() {
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
-    private val paukerManager: PaukerManager? = PaukerManager.Companion.instance()
-    private val settingsManager: SettingsManager? = SettingsManager.Companion.instance()
+    private val modelManager: ModelManager = ModelManager.instance()
+    private val paukerManager: PaukerManager = PaukerManager.instance()
+    private val settingsManager: SettingsManager = SettingsManager.instance()
     private val context: Context = this
     private var firstStart = true
     private var search: MenuItem? = null
@@ -61,11 +61,11 @@ class MainMenu : AppCompatActivity() {
         if (action != null && action == "Open Lesson") {
             startActivity(Intent(context, LessonImportActivity::class.java))
         }
-        ErrorReporter.Companion.instance()!!.init(context)
+        ErrorReporter.instance().init(context)
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         setContentView(R.layout.main_menu)
         checkErrors()
-        if (!modelManager!!.isLessonSetup) {
+        if (!modelManager.isLessonSetup) {
             modelManager.createNewLesson()
         }
         initButtons()
@@ -77,8 +77,7 @@ class MainMenu : AppCompatActivity() {
      * Prüft ob Errors vorliegen und fragt gegebenenfalls ob diese gesendet werden sollen.
      */
     private fun checkErrors() {
-        val errorReporter: ErrorReporter =
-            ErrorReporter.Companion.instance()
+        val errorReporter: ErrorReporter = ErrorReporter.instance()
         if (errorReporter.isThereAnyErrorsToReport) {
             val alt_bld = AlertDialog.Builder(this)
             alt_bld.setTitle(getString(R.string.crash_report_title))
@@ -99,9 +98,9 @@ class MainMenu : AppCompatActivity() {
         }
     }
 
-    fun initButtons() {
-        val hasCardsToLearn = modelManager.getUnlearnedBatchSize() != 0
-        val hasExpiredCards = modelManager.getExpiredCardsSize() != 0
+    private fun initButtons() {
+        val hasCardsToLearn = modelManager.unlearnedBatchSize != 0
+        val hasExpiredCards = modelManager.expiredCardsSize != 0
         findViewById<View>(R.id.bLearnNewCard).isEnabled = hasCardsToLearn
         findViewById<View>(R.id.bLearnNewCard).isClickable = hasCardsToLearn
         findViewById<View>(R.id.tLearnNewCardDesc).isEnabled = hasCardsToLearn
@@ -112,7 +111,7 @@ class MainMenu : AppCompatActivity() {
 
     private fun initView() {
         invalidateOptionsMenu()
-        val description = modelManager.getDescription()
+        val description = modelManager.description
         val descriptionView = findViewById<TextView>(R.id.infoText)
         descriptionView.text = description
         if (!description!!.isEmpty()) {
@@ -141,8 +140,8 @@ class MainMenu : AppCompatActivity() {
             drawer.panelState = PanelState.COLLAPSED
         }
         var title = getString(R.string.app_name)
-        if (modelManager!!.isLessonNotNew) {
-            title = paukerManager!!.readableFileName
+        if (modelManager.isLessonNotNew) {
+            title = paukerManager.readableFileName
         }
         setTitle(title)
     }
@@ -154,27 +153,31 @@ class MainMenu : AppCompatActivity() {
                 context,
                 LinearLayoutManager.HORIZONTAL, false
             )
-            chartView.setLayoutManager(layoutManager)
-            chartView.setOverScrollMode(View.OVER_SCROLL_NEVER)
-            chartView.setScrollContainer(true)
-            chartView.setNestedScrollingEnabled(true)
+            chartView?.setLayoutManager(layoutManager)
+            chartView?.setOverScrollMode(View.OVER_SCROLL_NEVER)
+            chartView?.setScrollContainer(true)
+            chartView?.setNestedScrollingEnabled(true)
             runOnUiThread {
                 val onClickListener =
-                    ChartAdapterCallback { position -> showBatchDetails(position) }
+                    object : ChartAdapterCallback {
+                        override fun onClick(position: Int) {
+                            showBatchDetails(position)
+                        }
+                    }
                 val adapter = ChartAdapter(context, onClickListener)
-                chartView.setAdapter(adapter)
+                chartView?.setAdapter(adapter)
             }
         })
         initthread.run()
     }
 
     private fun showBatchDetails(index: Int) {
-        if (modelManager.getLessonSize() == 0) return
+        if (modelManager.lessonSize == 0) return
         val browseIntent = Intent(Intent.ACTION_SEARCH)
         browseIntent.setClass(context, SearchActivity::class.java)
         browseIntent.putExtra(SearchManager.QUERY, "")
-        if (index > 1 && modelManager.getBatchStatistics()[index - 2].batchSize == 0
-            || index == 1 && modelManager.getUnlearnedBatchSize() == 0
+        if (index > 1 && modelManager.batchStatistics[index - 2]?.batchSize == 0
+            || index == 1 && modelManager.unlearnedBatchSize == 0
         ) {
             return
         }
@@ -189,19 +192,19 @@ class MainMenu : AppCompatActivity() {
         val open = menu.findItem(R.id.mOpenLesson)
         menu.setGroupEnabled(
             R.id.mGroup,
-            modelManager!!.isLessonNotNew || !modelManager.isLessonEmpty
+            modelManager.isLessonNotNew || !modelManager.isLessonEmpty
         )
         if (modelManager.lessonSize > 0) {
-            search.setVisible(true)
+            search?.setVisible(true)
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         } else {
-            search.setVisible(false)
+            search?.setVisible(false)
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
-        save.isVisible = paukerManager!!.isSaveRequired
-        if (search.isVisible()) {
+        save.isVisible = paukerManager.isSaveRequired
+        if (search?.isVisible == true) {
             val searchView =
-                search.getActionView() as SearchView
+                search?.getActionView() as SearchView
             searchView.setIconifiedByDefault(false)
             searchView.isIconified = false
             searchView.queryHint = getString(R.string.search_hint)
@@ -233,7 +236,7 @@ class MainMenu : AppCompatActivity() {
     public override fun onResume() {
         Log.d("MainMenuActivity::onResume", "ENTRY")
         super.onResume()
-        modelManager!!.resetLesson()
+        modelManager.resetLesson()
         if (search != null) {
             search!!.collapseActionView()
         }
@@ -250,7 +253,7 @@ class MainMenu : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (paukerManager!!.isSaveRequired) {
+        if (paukerManager.isSaveRequired) {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.close_without_saving_dialog_msg)
                 .setPositiveButton(R.string.cancel, null)
@@ -265,7 +268,7 @@ class MainMenu : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        NotificationService.Companion.enqueueWork(context)
+        NotificationService.enqueueWork(context)
         isPaukerActive = false
         super.onDestroy()
     }
@@ -284,11 +287,7 @@ class MainMenu : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == Activity.RESULT_OK) {
                 PaukerManager.Companion.showToast(
@@ -296,8 +295,8 @@ class MainMenu : AppCompatActivity() {
                     R.string.saving_success,
                     Toast.LENGTH_SHORT
                 )
-                paukerManager.setSaveRequired(false)
-                modelManager!!.showExpireToast(context)
+                paukerManager.isSaveRequired = false
+                modelManager.showExpireToast(context)
             }
             invalidateOptionsMenu()
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == Activity.RESULT_OK) {
@@ -305,6 +304,7 @@ class MainMenu : AppCompatActivity() {
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == Activity.RESULT_OK) {
             startActivity(Intent(context, LessonImportActivity::class.java))
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     fun addNewCard(view: View?) {
@@ -312,16 +312,16 @@ class MainMenu : AppCompatActivity() {
     }
 
     fun learnNewCard(view: View?) {
-        if (settingsManager!!.getBoolPreference(context, Keys.HIDE_TIMES)) {
-            modelManager!!.setLearningPhase(context, LearningPhase.SIMPLE_LEARNING)
+        if (settingsManager.getBoolPreference(context, Keys.HIDE_TIMES)) {
+            modelManager.setLearningPhase(context, LearningPhase.SIMPLE_LEARNING)
         } else {
-            modelManager!!.setLearningPhase(context, LearningPhase.FILLING_USTM)
+            modelManager.setLearningPhase(context, LearningPhase.FILLING_USTM)
         }
         startActivity(Intent(context, LearnCardsActivity::class.java))
     }
 
     fun repeatCards(view: View?) {
-        modelManager!!.setLearningPhase(context, LearningPhase.REPEATING_LTM)
+        modelManager.setLearningPhase(context, LearningPhase.REPEATING_LTM)
         val importActivity = Intent(context, LearnCardsActivity::class.java)
         startActivity(importActivity)
     }
@@ -345,7 +345,7 @@ class MainMenu : AppCompatActivity() {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             checkPermission(RQ_WRITE_EXT_OPEN)
         } else {
-            if (paukerManager!!.isSaveRequired) {
+            if (paukerManager.isSaveRequired) {
                 val builder =
                     AlertDialog.Builder(context)
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
@@ -366,7 +366,7 @@ class MainMenu : AppCompatActivity() {
      * Erstellt eine neue Lektion
      */
     private fun createNewLesson() {
-        paukerManager!!.setupNewApplicationLesson()
+        paukerManager.setupNewApplicationLesson()
         paukerManager.isSaveRequired = false
         initButtons()
         initChartList()
@@ -434,8 +434,8 @@ class MainMenu : AppCompatActivity() {
         builder.setTitle(R.string.reset_lesson_dialog_title)
             .setMessage(R.string.reset_lesson_dialog_info)
             .setPositiveButton(R.string.reset) { dialog, which ->
-                modelManager!!.forgetAllCards()
-                paukerManager.setSaveRequired(true)
+                modelManager.forgetAllCards()
+                paukerManager.isSaveRequired = true
                 initButtons()
                 initChartList()
                 initView()
@@ -482,7 +482,7 @@ class MainMenu : AppCompatActivity() {
             .setMessage(R.string.reverse_sides_dialog_info)
             .setPositiveButton(R.string.flip_cards) { dialog, which ->
                 modelManager!!.flipAllCards()
-                paukerManager.setSaveRequired(true)
+                paukerManager.isSaveRequired = true
                 initButtons()
                 initChartList()
                 initView()

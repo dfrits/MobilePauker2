@@ -88,11 +88,6 @@ class SettingsManager {
 
     companion object {
         private var instance: SettingsManager? = null
-        fun instance(): SettingsManager? {
-            if (instance == null) {
-                instance = SettingsManager()
-            }
-            return instance
-        }
+        fun instance(): SettingsManager = instance ?: SettingsManager()
     }
 }

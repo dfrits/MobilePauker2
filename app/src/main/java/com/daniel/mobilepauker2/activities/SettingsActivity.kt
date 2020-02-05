@@ -1,8 +1,8 @@
 package com.daniel.mobilepauker2.activities
 
-import android.R
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.daniel.mobilepauker2.R
 import com.daniel.mobilepauker2.model.SettingsFragment
 
 /**

@@ -29,7 +29,7 @@ import com.daniel.mobilepauker2.utils.Log
 import java.io.IOException
 
 class ShortcutReceiver : Activity() {
-    private val paukerManager: PaukerManager? = PaukerManager.Companion.instance()
+    private val paukerManager: PaukerManager = PaukerManager.instance()
     private val context: Context = this
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,14 +42,9 @@ class ShortcutReceiver : Activity() {
         if (Constants.SHORTCUT_ACTION == intent.action) {
             openLesson(intent)
         }
-        //finish();
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             if (resultCode == RESULT_OK) {
                 Log.d(
@@ -80,8 +75,8 @@ class ShortcutReceiver : Activity() {
      * @param shortcutIntent Intent vom Shortcut.
      */
     private fun openLesson(shortcutIntent: Intent) {
-        if (LearnCardsActivity.Companion.isLearningRunning()) {
-            PaukerManager.Companion.showToast(
+        if (LearnCardsActivity.isLearningRunning) {
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.shortcut_open_error_learning_running,
                 Toast.LENGTH_SHORT
@@ -89,7 +84,7 @@ class ShortcutReceiver : Activity() {
             return
         }
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.shortcut_open_error_permission,
                 Toast.LENGTH_SHORT
@@ -98,7 +93,7 @@ class ShortcutReceiver : Activity() {
         }
         val filename =
             shortcutIntent.getStringExtra(Constants.SHORTCUT_EXTRA) ?: return
-        if (SettingsManager.Companion.instance()!!.getBoolPreference(context, Keys.AUTO_DOWNLOAD)) {
+        if (SettingsManager.instance().getBoolPreference(context, Keys.AUTO_DOWNLOAD)) {
             Log.d(
                 "ShortcutReceiver::openLesson",
                 "Check for newer version on DB"
@@ -108,14 +103,14 @@ class ShortcutReceiver : Activity() {
             val syncIntent = Intent(context, SyncDialog::class.java)
             try {
                 syncIntent.putExtra(
-                    SyncDialog.Companion.FILES,
+                    SyncDialog.FILES,
                     paukerManager!!.getFilePath(context, filename)
                 )
             } catch (e: IOException) {
                 e.printStackTrace()
             }
-            syncIntent.putExtra(SyncDialog.Companion.ACCESS_TOKEN, accessToken)
-            syncIntent.action = SyncDialog.Companion.SYNC_FILE_ACTION
+            syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
+            syncIntent.action = SyncDialog.SYNC_FILE_ACTION
             startActivityForResult(
                 syncIntent,
                 Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN
@@ -131,7 +126,7 @@ class ShortcutReceiver : Activity() {
      */
     private fun openLesson(filename: String) {
         try {
-            if (paukerManager.getCurrentFileName() != filename) {
+            if (paukerManager.currentFileName != filename) {
                 paukerManager!!.loadLessonFromFile(paukerManager.getFilePath(context, filename))
                 paukerManager.isSaveRequired = false
             }

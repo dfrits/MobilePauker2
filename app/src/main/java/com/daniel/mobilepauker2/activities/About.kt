@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.daniel.mobilepauker2.BuildConfig
 import com.daniel.mobilepauker2.R
 import java.util.*
+import kotlin.collections.HashMap
 
 /**
  * Created by Daniel on 16.03.2018.
@@ -18,11 +19,9 @@ import java.util.*
  */
 class About : AppCompatActivity() {
     companion object {
-        private var fileNameMap: MutableMap<Locale, String>? =
-            null
+        private val fileNameMap: MutableMap<Locale, String> = HashMap()
 
         init {
-            fileNameMap = HashMap()
             fileNameMap[Locale.ENGLISH] = "file:///android_asset/instructions_en.html"
             fileNameMap[Locale.GERMANY] = "file:///android_asset/instructions_de.html"
         }
@@ -33,9 +32,9 @@ class About : AppCompatActivity() {
         setContentView(R.layout.about)
         val webView = findViewById<WebView>(R.id.tAboutText)
         var fileName =
-            fileNameMap!![Locale.getDefault()]
+            fileNameMap[Locale.getDefault()]
         fileName =
-            fileName ?: fileNameMap!![Locale.ENGLISH]
+            fileName ?: fileNameMap[Locale.ENGLISH]
         webView.loadUrl(fileName)
         webView.setBackgroundColor(getColor(R.color.defaultBackground))
         val version = "Version: " + BuildConfig.VERSION_NAME

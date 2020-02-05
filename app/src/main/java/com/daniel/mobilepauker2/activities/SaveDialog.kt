@@ -42,7 +42,7 @@ class SaveDialog : Activity() {
         progressBar.visibility = View.VISIBLE
         val title = findViewById<TextView>(R.id.pTitle)
         title.setText(R.string.saving_title)
-        if (PaukerManager.Companion.instance()!!.getReadableFileName() == Constants.DEFAULT_FILE_NAME) {
+        if (PaukerManager.instance().readableFileName == Constants.DEFAULT_FILE_NAME) {
             openDialog()
         } else {
             saveLesson()
@@ -154,12 +154,12 @@ class SaveDialog : Activity() {
         val accessToken = PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         val intent = Intent(context, SyncDialog::class.java)
-        intent.putExtra(SyncDialog.Companion.ACCESS_TOKEN, accessToken)
-        val path: String = PaukerManager.Companion.instance().getFileAbsolutePath()
+        intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
+        val path: String? = PaukerManager.instance().fileAbsolutePath
         val file =
-            path?.let { File(it) } ?: ModelManager.Companion.instance().getFilePath()
-        intent.putExtra(SyncDialog.Companion.FILES, file)
-        intent.action = SyncDialog.Companion.UPLOAD_FILE_ACTION
+            path?.let { File(it) } ?: ModelManager.instance().filePath
+        intent.putExtra(SyncDialog.FILES, file)
+        intent.action = SyncDialog.UPLOAD_FILE_ACTION
         startActivity(intent)
     }
 

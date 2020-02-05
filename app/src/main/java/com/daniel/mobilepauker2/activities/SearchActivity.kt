@@ -33,13 +33,12 @@ import java.util.*
  */
 class SearchActivity : AppCompatActivity() {
     private val context: Context = this
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
-    private val paukerManager: PaukerManager? = PaukerManager.Companion.instance()
+    private val modelManager: ModelManager = ModelManager.instance()
+    private val paukerManager: PaukerManager = PaukerManager.instance()
     private var modalListener: SearchResultMultiChoiceModeListener? = null
     private var itemPosition: Vector<Int>? = null
     private var listView: ListView? = null
     private var stackIndex = 0
-    private var intent: Intent? = null
     private var pack: MutableList<FlashCard?>? = null
     private var checkedCards: MutableList<FlashCard>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,7 +49,7 @@ class SearchActivity : AppCompatActivity() {
             listView = findViewById(R.id.listView)
             itemPosition = Vector()
             stackIndex = intent.getIntExtra(Constants.STACK_INDEX, 0)
-            modelManager!!.setCurrentPack(context, stackIndex)
+            modelManager.setCurrentPack(context, stackIndex)
             pack = modelManager.currentPack
         } else {
             finish()
@@ -174,24 +173,21 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent?
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_EDIT_CARD && resultCode == Activity.RESULT_OK) {
-            pack = modelManager.getCurrentPack()
+            pack = modelManager.currentPack
             invalidateOptionsMenu()
         }
         listView!!.isEnabled = true
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     private fun showResults(results: List<FlashCard?>?) {
         val adapter = CardAdapter(context, results)
-        listView!!.adapter = adapter
-        listView!!.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        listView!!.onItemClickListener = OnItemClickListener { parent, view, position, id ->
-            if (modalListener != null && modalListener.getActiveState() != null) {
+        listView?.adapter = adapter
+        listView?.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
+        listView?.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+            if (modalListener != null && modalListener?.activeState != null) {
                 listView!!.setItemChecked(position, !listView!!.isItemChecked(position))
                 return@OnItemClickListener
             }
@@ -223,11 +219,11 @@ class SearchActivity : AppCompatActivity() {
                         .setMessage(R.string.reset_cards_message)
                         .setPositiveButton(R.string.yes) { dialog, which ->
                             for (card in checkedCards!!) {
-                                modelManager!!.forgetCard(card)
+                                modelManager.forgetCard(card)
                             }
                             checkedCards = null
-                            paukerManager.setSaveRequired(true)
-                            modelManager!!.setCurrentPack(context, stackIndex)
+                            paukerManager.isSaveRequired = true
+                            modelManager.setCurrentPack(context, stackIndex)
                             pack = modelManager.currentPack
                             invalidateOptionsMenu()
                         }
@@ -244,11 +240,11 @@ class SearchActivity : AppCompatActivity() {
                         .setMessage(R.string.instant_repeat_message)
                         .setPositiveButton(R.string.yes) { dialog, which ->
                             for (card in checkedCards!!) {
-                                modelManager!!.instantRepeatCard(card)
+                                modelManager.instantRepeatCard(card)
                             }
                             checkedCards = null
-                            paukerManager.setSaveRequired(true)
-                            modelManager!!.setCurrentPack(context, stackIndex)
+                            paukerManager.isSaveRequired = true
+                            modelManager.setCurrentPack(context, stackIndex)
                             pack = modelManager.currentPack
                             invalidateOptionsMenu()
                         }
@@ -268,8 +264,8 @@ class SearchActivity : AppCompatActivity() {
                                 card.flip()
                             }
                             checkedCards = null
-                            paukerManager.setSaveRequired(true)
-                            modelManager!!.setCurrentPack(context, stackIndex)
+                            paukerManager.isSaveRequired = true
+                            modelManager.setCurrentPack(context, stackIndex)
                             pack = modelManager.currentPack
                             invalidateOptionsMenu()
                         }
@@ -301,7 +297,7 @@ class SearchActivity : AppCompatActivity() {
                                 )
                             }
                             checkedCards = null
-                            paukerManager.setSaveRequired(true)
+                            paukerManager.isSaveRequired = true
                             modelManager!!.setCurrentPack(context, stackIndex)
                             pack = modelManager.currentPack
                             invalidateOptionsMenu()
@@ -317,7 +313,7 @@ class SearchActivity : AppCompatActivity() {
                         card.setRepeatByTyping(isRepeatByTyping)
                     }
                     checkedCards = null
-                    paukerManager.setSaveRequired(true)
+                    paukerManager.isSaveRequired = true
                     modelManager!!.setCurrentPack(context, stackIndex)
                     pack = modelManager.currentPack
                     invalidateOptionsMenu()
@@ -337,10 +333,10 @@ class SearchActivity : AppCompatActivity() {
                 card = pack!![i]
                 Log.d(
                     "SearchActivity::ShowResults",
-                    "Index - " + card.getId()
+                    "Index - " + card?.id
                 )
-                val frontSide = card.getFrontSide().text.toLowerCase()
-                val backSide = card.getReverseSide().text.toLowerCase()
+                val frontSide = card?.frontSide?.text?.toLowerCase() ?: ""
+                val backSide = card?.reverseSide?.text?.toLowerCase() ?: ""
                 //frontSide = Normalizer.normalize(frontSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
 //backSide = Normalizer.normalize(backSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
 //query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
@@ -365,8 +361,8 @@ class SearchActivity : AppCompatActivity() {
         sortByElement: Card.Element,
         asc_direction: Boolean
     ) {
-        modelManager!!.sortBatch(stackIndex, sortByElement, asc_direction)
-        paukerManager.setSaveRequired(true)
+        modelManager.sortBatch(stackIndex, sortByElement, asc_direction)
+        paukerManager.isSaveRequired = true
         modelManager.setCurrentPack(context, stackIndex)
         pack = modelManager.currentPack
         invalidateOptionsMenu()

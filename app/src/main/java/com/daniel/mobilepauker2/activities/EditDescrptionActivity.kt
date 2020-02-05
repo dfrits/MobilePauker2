@@ -16,17 +16,18 @@ import com.daniel.mobilepauker2.model.ModelManager
  */
 class EditDescrptionActivity : AppCompatActivity() {
     private var editText: EditText? = null
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
+    private val modelManager: ModelManager? = ModelManager.instance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.edit_description)
         editText = findViewById(R.id.editField)
-        editText.setText(modelManager.getDescription())
+        editText?.setText(modelManager?.description)
     }
 
     override fun onResume() {
         super.onResume()
-        if (editText != null) editText.setText(modelManager.getDescription())
+        if (editText != null) editText?.setText(modelManager?.description)
     }
 
     override fun onPause() {
@@ -35,9 +36,9 @@ class EditDescrptionActivity : AppCompatActivity() {
         if (editText != null) {
             text = editText!!.text.toString().trim { it <= ' ' }
         }
-        if (text != null && modelManager.getDescription() != text) {
-            modelManager.setDescription(text)
-            PaukerManager.Companion.instance().setSaveRequired(true)
+        if (text != null && modelManager?.description != text) {
+            modelManager?.description = text
+            PaukerManager.instance().isSaveRequired = true
         }
     }
 
