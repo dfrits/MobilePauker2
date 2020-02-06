@@ -17,8 +17,9 @@ import java.util.*
 class DownloadFileTask internal constructor(
     private val mDbxClient: DbxClientV2?,
     private val mCallback: Callback
-) : AsyncTask<FileMetadata?, FileMetadata?, Array<File?>?>() {
-    override fun onPostExecute(result: Array<File?>?) {
+) : AsyncTask<FileMetadata, FileMetadata, List<File>>() {
+
+    override fun onPostExecute(result: List<File>) {
         super.onPostExecute(result)
         mCallback.onDownloadComplete(result)
     }
@@ -28,12 +29,12 @@ class DownloadFileTask internal constructor(
         mCallback.onDownloadStartet()
     }
 
-    protected override fun onProgressUpdate(vararg values: FileMetadata) {
+    override fun onProgressUpdate(vararg values: FileMetadata) {
         super.onProgressUpdate(*values)
         mCallback.onProgressUpdate(values[0])
     }
 
-    protected override fun doInBackground(vararg params: FileMetadata): Array<File?>? {
+    override fun doInBackground(vararg params: FileMetadata): List<File>? {
         var downloadFile: File? = null
         try {
             val list: MutableList<File> =
@@ -41,7 +42,7 @@ class DownloadFileTask internal constructor(
             for (metadata in params) {
                 val path = File(
                     Environment.getExternalStorageDirectory()
-                        .toString() + PaukerManager.Companion.instance().getApplicationDataDirectory()
+                        .toString() + PaukerManager.instance().applicationDataDirectory
                 )
                 val file = File(path, metadata.name)
                 // Make sure the Downloads directory exists.
@@ -63,8 +64,7 @@ class DownloadFileTask internal constructor(
                 list.add(file)
                 publishProgress(metadata)
             }
-            val result = arrayOfNulls<File>(list.size)
-            return list.toArray<File>(result)
+            return list.toList()
         } catch (e: DbxException) {
             mCallback.onError(e)
         } catch (e: IOException) {
@@ -80,8 +80,7 @@ class DownloadFileTask internal constructor(
     interface Callback {
         fun onDownloadStartet()
         fun onProgressUpdate(metadata: FileMetadata)
-        fun onDownloadComplete(result: Array<File?>?)
+        fun onDownloadComplete(result: List<File>)
         fun onError(e: Exception?)
     }
-
 }

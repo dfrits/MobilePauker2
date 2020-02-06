@@ -153,7 +153,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         return ReturnVal
     }
 
-    override fun uncaughtException(t: Thread, e: Throwable) {
+    override fun uncaughtException(t: Thread?, e: Throwable) {
         Log.d(
             "ErrorReporter::uncaughtException",
             "Building error report"

@@ -7,9 +7,9 @@ import com.dropbox.core.v2.files.Metadata
 import java.io.File
 
 class GetFileMetadataTask internal constructor(
-    private val mDbxClient: DbxClientV2?,
+    private val mDbxClient: DbxClientV2,
     private val mCallback: Callback
-) : AsyncTask<File?, Void?, Metadata?>() {
+) : AsyncTask<File, Void, Metadata?>() {
     private var mException: DbxException? = null
 
     interface Callback {
@@ -26,9 +26,9 @@ class GetFileMetadataTask internal constructor(
         }
     }
 
-    protected override fun doInBackground(vararg files: File): Metadata? {
+    override fun doInBackground(vararg files: File): Metadata? {
         mException = try {
-            return mDbxClient!!.files().getMetadata("/" + files[0].name)
+            return mDbxClient.files().getMetadata("/" + files[0].name)
         } catch (e: DbxException) {
             e
         }

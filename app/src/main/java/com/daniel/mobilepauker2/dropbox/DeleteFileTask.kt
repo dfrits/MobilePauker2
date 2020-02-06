@@ -21,25 +21,24 @@ import java.util.*
 class DeleteFileTask internal constructor(
     private val mDbxClient: DbxClientV2?,
     private val mCallback: Callback
-) : AsyncTask<String?, Void?, List<DeleteResult?>?>() {
+) : AsyncTask<String, Void, List<DeleteResult>>() {
 
     interface Callback {
         fun onDeleteComplete(result: List<DeleteResult?>?)
         fun onError(e: Exception?)
     }
 
-    override fun onPostExecute(result: List<DeleteResult?>?) {
+    override fun onPostExecute(result: List<DeleteResult>) {
         super.onPostExecute(result)
         mCallback.onDeleteComplete(result)
     }
 
-    protected override fun doInBackground(vararg params: String): List<DeleteResult?>? {
+    override fun doInBackground(vararg params: String): List<DeleteResult> {
         val remoteFolderPath =
             File(Constants.DROPBOX_PATH)
-        val data: MutableList<DeleteResult?> =
-            ArrayList()
+        val data: MutableList<DeleteResult> = ArrayList()
         for (localFile in params) {
-            if (localFile != null && !localFile.isEmpty()) {
+            if (!localFile.isEmpty()) {
                 try {
                     data.add(mDbxClient!!.files().deleteV2("$remoteFolderPath/$localFile"))
                 } catch (e: DbxException) {
@@ -49,5 +48,4 @@ class DeleteFileTask internal constructor(
         }
         return data
     }
-
 }

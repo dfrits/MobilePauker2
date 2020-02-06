@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import com.daniel.mobilepauker2.utils.Log
 
 class NetworkStateReceiver(private val callback: ReceiverCallback) : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(
             TAG,
@@ -15,24 +16,22 @@ class NetworkStateReceiver(private val callback: ReceiverCallback) : BroadcastRe
         if (intent.extras != null) {
             val cm =
                 context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            if (cm != null) {
-                val ni = cm.activeNetworkInfo
-                if (ni != null && ni.isConnectedOrConnecting) {
-                    Log.i(
-                        TAG,
-                        "Network " + ni.typeName + " connected"
-                    )
-                } else if (intent.getBooleanExtra(
-                        ConnectivityManager.EXTRA_NO_CONNECTIVITY,
-                        Boolean.FALSE
-                    )
-                ) {
-                    Log.d(
-                        TAG,
-                        "There's no network connectivity"
-                    )
-                    callback.connectionLost()
-                }
+            val ni = cm.activeNetworkInfo
+            if (ni != null && ni.isConnectedOrConnecting) {
+                Log.i(
+                    TAG,
+                    "Network " + ni.typeName + " connected"
+                )
+            } else if (intent.getBooleanExtra(
+                    ConnectivityManager.EXTRA_NO_CONNECTIVITY,
+                    false
+                )
+            ) {
+                Log.d(
+                    TAG,
+                    "There's no network connectivity"
+                )
+                callback.connectionLost()
             }
         }
     }

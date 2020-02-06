@@ -11,7 +11,7 @@ import com.dropbox.core.v2.files.ListFolderResult
 class ListFolderTask internal constructor(
     private val mDbxClient: DbxClientV2?,
     private val mCallback: Callback
-) : AsyncTask<String?, Void?, ListFolderResult?>() {
+) : AsyncTask<String, Void, ListFolderResult?>() {
     private var mException: DbxException? = null
 
     interface Callback {
