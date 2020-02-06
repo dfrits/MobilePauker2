@@ -28,7 +28,7 @@ class NotificationService : JobIntentService() {
             "NotificationService::setAlarm",
             "Newest Time: " + newestTime + ". Now is: " + System.currentTimeMillis()
         )
-        if (newestTime > -1 && alarmManager != null) {
+        if (newestTime > -1) {
             alarmIntent = Intent(this, AlarmNotificationReceiver::class.java)
             pendingIntent = PendingIntent.getBroadcast(this, 0, alarmIntent, 0)
             alarmManager[AlarmManager.RTC_WAKEUP, newestTime] = pendingIntent
@@ -37,37 +37,39 @@ class NotificationService : JobIntentService() {
     }
 
     private val newestExpireTime: Long
-        private get() {
+        get() {
             val paukerManager: PaukerManager = PaukerManager.Companion.instance()
-            val files: Array<File?>?
-            files = try {
+            val files = try {
                 paukerManager.listFiles(this)
             } catch (e: SecurityException) {
-                arrayOfNulls(0)
+                null
             }
+
             var newestTime: Long = -1
-            var uri: URI
-            var parser: FlashCardXMLPullFeedParser
-            for (file in files!!) {
-                if (!(paukerManager.isSaveRequired && paukerManager.currentFileName == file!!.name)) {
-                    try {
-                        uri = paukerManager.getFilePath(this, file!!.name).toURI()
-                        parser = FlashCardXMLPullFeedParser(uri.toURL())
-                        val map = parser.nextExpireDate
-                        if (map!![0] > Long.MIN_VALUE) {
-                            if (map[1, 0] > 0) {
-                                return 0
-                            } else {
-                                if (newestTime == -1L || map[0] < newestTime) {
-                                    newestTime = map[0]
+            if (files != null) {
+                var uri: URI
+                var parser: FlashCardXMLPullFeedParser
+                for (file in files) {
+                    if (!(paukerManager.isSaveRequired && paukerManager.currentFileName == file.name)) {
+                        try {
+                            uri = paukerManager.getFilePath(this, file.name).toURI()
+                            parser = FlashCardXMLPullFeedParser(uri.toURL())
+                            val map = parser.nextExpireDate
+                            if (map[0] > Long.MIN_VALUE) {
+                                if (map[1, 0] > 0) {
+                                    return 0
+                                } else {
+                                    if (newestTime == -1L || map[0] < newestTime) {
+                                        newestTime = map[0]
+                                    }
                                 }
                             }
+                        } catch (ignored: IOException) {
+                            Log.d(
+                                "NotificationService::setAlarm",
+                                "Cannot read File"
+                            )
                         }
-                    } catch (ignored: IOException) {
-                        Log.d(
-                            "NotificationService::setAlarm",
-                            "Cannot read File"
-                        )
                     }
                 }
             }

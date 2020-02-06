@@ -31,7 +31,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
                     XmlPullParser.START_TAG -> {
                         name = parser.name
                         if (name.equals(
-                                FlashCardBaseFeedParser.Companion.LESSON,
+                                LESSON,
                                 ignoreCase = true
                             )
                         ) {
@@ -207,7 +207,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
                         ) {
                             flashCards!!.add(currentFlashCard)
                         } else if (name.equals(
-                                FlashCardBaseFeedParser.Companion.LESSON,
+                                LESSON,
                                 ignoreCase = true
                             )
                         ) {
@@ -302,7 +302,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
                         XmlPullParser.START_TAG -> {
                             name = parser.name
                             if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.LESSON,
+                                    LESSON,
                                     ignoreCase = true
                                 )
                             ) {
@@ -336,7 +336,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
                                     val factor =
                                         Math.pow(Math.E, batchCount - 4.toDouble())
                                     val expirationTime =
-                                        (LongTermBatch.Companion.getExpirationUnit() * factor) as Long
+                                        (LongTermBatch.Companion.expirationUnit * factor) as Long
                                     try {
                                         val expireTimeStamp =
                                             learnedTimestamp.toLong() + expirationTime
@@ -357,11 +357,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
                         }
                         XmlPullParser.END_TAG -> {
                             name = parser.name
-                            if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.LESSON,
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (name.equals(LESSON, ignoreCase = true)) {
                                 done = true
                             }
                         }
@@ -378,11 +374,10 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) :
         }
 
     private fun printLessonToDebug(lesson: Lesson) {
-        var cards =
-            lesson.learnedCards
+        var cards = lesson.learnedCards
         Log.d(
             "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of learned cards is " + cards!!.size
+            "Size of learned cards is " + cards.size
         )
         cards = lesson.expiredCards
         Log.d(

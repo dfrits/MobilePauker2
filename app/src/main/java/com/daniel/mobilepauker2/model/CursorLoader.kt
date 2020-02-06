@@ -14,7 +14,7 @@ import android.database.Cursor
 class CursorLoader(
     context: Context?,
     private val adapter: CardPackRamAdapter?
-) : AsyncTaskLoader<Cursor?>(context) {
+) : AsyncTaskLoader<Cursor>(context) {
     private var cursor: Cursor? = null
     override fun loadInBackground(): Cursor? {
         if (cursor == null) cursor = adapter!!.fetchAllFlashCards()
@@ -22,7 +22,7 @@ class CursorLoader(
     }
 
     override fun deliverResult(result: Cursor) {
-        if (isReset && result != null) {
+        if (isReset) {
             result.close()
             return
         }

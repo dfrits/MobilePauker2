@@ -12,7 +12,7 @@ import java.io.*
 import java.util.zip.GZIPOutputStream
 
 object FlashCardXMLStreamWriter {
-    //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
+    //TODO This sould de in a class of its own or in the Flash card xml stream writer...
     @Throws(SecurityException::class)
     fun saveLesson() {
         val modelManager: ModelManager = ModelManager.Companion.instance()
@@ -84,19 +84,20 @@ object FlashCardXMLStreamWriter {
             serializer.startTag("", "Lesson")
             serializer.attribute("", "LessonFormat", "1.7")
             serializer.startTag("", "Description")
-            if (lesson.getDescription() != null) {
-                serializer.text(lesson.getDescription())
-            }
+
+            lesson?.description?.let { serializer.text(lesson.description) }
+
             serializer.endTag("", "Description")
             serializer.startTag("", "Batch")
-            val unlearnedBatch =
-                lesson.getUnlearnedBatch()
-            for (card in unlearnedBatch!!.cards!!) {
-                if (!serializeCard(card, serializer)) {
-                    Log.w(
-                        "FlashCardXMLStreamWriter::writeXML",
-                        "Failed to serialise card"
-                    )
+            val unlearnedBatch = lesson?.unlearnedBatch
+            unlearnedBatch?.cards?.let {
+                for (card in it) {
+                    if (!serializeCard(card, serializer)) {
+                        Log.w(
+                            "FlashCardXMLStreamWriter::writeXML",
+                            "Failed to serialise card"
+                        )
+                    }
                 }
             }
             serializer.endTag("", "Batch")
@@ -107,18 +108,22 @@ object FlashCardXMLStreamWriter {
             serializer.startTag("", "Batch")
             serializer.endTag("", "Batch")
             // Add all long term batches
-            for (longTermBatch in lesson!!.longTermBatches) {
-                serializer.startTag("", "Batch")
-                for (card in longTermBatch!!.cards!!) {
-                    if (!serializeCard(card, serializer)) {
-                        Log.w(
-                            "FlashCardXMLStreamWriter::writeXML",
-                            "Failed to serialise card"
-                        )
+
+            lesson?.longTermBatches?.let {
+                for (longTermBatch in it) {
+                    serializer.startTag("", "Batch")
+                    for (card in longTermBatch.cards!!) {
+                        if (!serializeCard(card, serializer)) {
+                            Log.w(
+                                "FlashCardXMLStreamWriter::writeXML",
+                                "Failed to serialise card"
+                            )
+                        }
                     }
+                    serializer.endTag("", "Batch")
                 }
-                serializer.endTag("", "Batch")
             }
+
             serializer.endTag("", "Lesson")
             serializer.endDocument()
             serializer.flush()
@@ -133,15 +138,13 @@ object FlashCardXMLStreamWriter {
         }
     }
 
-    private fun serializeCard(
-        card: Card?,
-        serializer: XmlSerializer?
-    ): Boolean {
+    private fun serializeCard(card: Card?, serializer: XmlSerializer?): Boolean {
         if (serializer == null) {
             return false
         }
-        if (!isCardValid(card)) { // Be ultra safe as if anything goes wrong here we can lose the file on the sdcard
-// as the xml may not be well formed
+        if (!isCardValid(card)) {
+            // Be ultra safe as if anything goes wrong here we can lose the file on the sdcard
+            // as the xml may not be well formed
             Log.e(
                 "FlashCardXMLStreamWriter::serializeCard",
                 "Card not valid"
@@ -160,7 +163,7 @@ object FlashCardXMLStreamWriter {
                 serializer.attribute(
                     "",
                     "Orientation",
-                    card.frontSide.orientation.orientation.toString()
+                    card.frontSide.orientation?.orientation.toString()
                 )
                 serializer.attribute("", "RepeatByTyping", card.isRepeatedByTyping.toString())
             } catch (e: IOException) {
@@ -230,7 +233,7 @@ object FlashCardXMLStreamWriter {
                 serializer.attribute(
                     "",
                     "Orientation",
-                    card.reverseSide.orientation.orientation.toString()
+                    card.reverseSide.orientation?.orientation.toString()
                 )
                 serializer.attribute("", "RepeatByTyping", card.isRepeatedByTyping.toString())
             } catch (e: IOException) {

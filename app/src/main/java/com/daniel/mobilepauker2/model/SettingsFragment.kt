@@ -26,7 +26,7 @@ import com.daniel.mobilepauker2.utils.MinFilter
  * hs-augsburg
  */
 class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener {
-    private val settingsManager: SettingsManager? = SettingsManager.Companion.instance()
+    private val settingsManager: SettingsManager = SettingsManager.instance()
     override fun onCreate(savedInstanceState: Bundle) {
         super.onCreate(savedInstanceState)
         addPreferencesFromResource(R.xml.preferences)
@@ -161,12 +161,10 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
 
     private fun removeSyncPrefAndSetAutoSync(enableAutoSync: Boolean) {
         val switchUp = findPreference(
-            settingsManager
-                .getSettingsKey(context, Keys.AUTO_UPLOAD)
+            settingsManager.getSettingsKey(context, Keys.AUTO_UPLOAD)
         ) as SwitchPreference
         val switchDown = findPreference(
-            settingsManager
-                .getSettingsKey(context, Keys.AUTO_DOWNLOAD)
+            settingsManager.getSettingsKey(context, Keys.AUTO_DOWNLOAD)
         ) as SwitchPreference
         if (enableAutoSync) {
             switchUp.setSummary(R.string.auto_sync_enabled_upload_summ)

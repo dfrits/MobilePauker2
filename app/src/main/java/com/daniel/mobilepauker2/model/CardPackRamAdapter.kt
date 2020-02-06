@@ -23,7 +23,7 @@ import android.database.CursorIndexOutOfBoundsException
 import com.daniel.mobilepauker2.utils.Log
 
 class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
+    private val modelManager: ModelManager = ModelManager.instance()
     private val cardCursor: FlashCardCursor
     override fun open(): CardPackAdapter {
         return this
@@ -59,7 +59,7 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
         if (position < 0) {
             throw CursorIndexOutOfBoundsException("Before first row.")
         }
-        if (position >= modelManager.getCurrentBatchSize()) {
+        if (position >= modelManager.currentBatchSize) {
             throw CursorIndexOutOfBoundsException("After last row.")
         }
         //******************************************************************
@@ -75,7 +75,7 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
         } else {
             cardCursor.moveToPrevious()
         }
-        returnVal = modelManager!!.deleteCard(position)
+        returnVal = modelManager.deleteCard(position)
         // Point to the first card if
 // * We deleted second last card (size now is 1)
 // * We have just deleted the first card

@@ -58,7 +58,7 @@ import java.util.*
 class ModelManager private constructor() {
     val currentPack: MutableList<FlashCard?> =
         ArrayList()
-    private val settingsManager: SettingsManager? = SettingsManager.Companion.instance()
+    private val settingsManager: SettingsManager = SettingsManager.instance()
     var lesson: Lesson? = null
     private var mCurrentCard: FlashCard? = FlashCard()
     var learningPhase: LearningPhase? = LearningPhase.NOTHING
@@ -67,19 +67,19 @@ class ModelManager private constructor() {
     private fun setupCurrentPack(context: Context) {
         var cardIterator: Iterator<Card?>? =
             null
-        if (lesson != null) {
+        lesson?.let {
             when (learningPhase) {
                 LearningPhase.NOTHING -> {
                     currentPack.clear()
-                    cardIterator = lesson.getCards().iterator()
+                    cardIterator = it.cards.iterator()
                 }
                 LearningPhase.BROWSE_NEW -> {
                     currentPack.clear()
-                    cardIterator = lesson.getUnlearnedBatch().cards.iterator()
+                    cardIterator = it.unlearnedBatch.cards?.iterator()
                 }
                 LearningPhase.SIMPLE_LEARNING -> {
                     currentPack.clear()
-                    cardIterator = lesson.getUnlearnedBatch().cards.iterator()
+                    cardIterator = it.unlearnedBatch.cards?.iterator()
                 }
                 LearningPhase.FILLING_USTM -> {
                     Log.d(
@@ -87,7 +87,7 @@ class ModelManager private constructor() {
                         "Setting batch to UnlearnedBatch"
                     )
                     currentPack.clear()
-                    cardIterator = lesson.getUnlearnedBatch().cards.iterator()
+                    cardIterator = it.unlearnedBatch.cards?.iterator()
                 }
                 LearningPhase.WAITING_FOR_USTM -> {
                     Log.d(
@@ -102,10 +102,10 @@ class ModelManager private constructor() {
                         "Setting pack as ultra short term memory"
                     )
                     currentPack.clear()
-                    cardIterator = lesson.getUltraShortTermList().listIterator()
+                    cardIterator = it.ultraShortTermList.listIterator()
                 }
                 LearningPhase.WAITING_FOR_STM -> {
-                    cardIterator = lesson.getShortTermList()
+                    cardIterator = it.shortTermList
                         .listIterator() // Need to put something in the iterator for requery
                 }
                 LearningPhase.REPEATING_STM -> {
@@ -114,16 +114,16 @@ class ModelManager private constructor() {
                         "Setting pack as short term memory"
                     )
                     currentPack.clear()
-                    cardIterator = lesson.getShortTermList().listIterator()
+                    cardIterator = it.shortTermList.listIterator()
                 }
                 LearningPhase.REPEATING_LTM -> {
                     Log.d(
                         "AndyPaukerApplication::setupCurrentPack",
                         "Setting pack as expired cards"
                     )
-                    lesson!!.refreshExpiration()
+                    it.refreshExpiration()
                     currentPack.clear()
-                    cardIterator = lesson.getExpiredCards().iterator()
+                    cardIterator = it.expiredCards.iterator()
                 }
             }
             // Fill the current pack
@@ -132,16 +132,17 @@ class ModelManager private constructor() {
     }
 
     fun setCurrentPack(context: Context, stackIndex: Int) {
-        val cardIterator: Iterator<Card?>
         if (lessonSize > 0) {
             currentPack.clear()
-            cardIterator = when (stackIndex) {
-                0 -> lesson.getSummaryBatch().cards.iterator()
-                1 -> lesson.getUnlearnedBatch().cards.iterator()
-                else -> lesson!!.getLongTermBatch(stackIndex - 2).cards!!.iterator()
+            val cardIterator: Iterator<Card?>? = when (stackIndex) {
+                0 -> lesson?.summaryBatch?.cards?.iterator()
+                1 -> lesson?.unlearnedBatch?.cards?.iterator()
+                else -> lesson?.getLongTermBatch(stackIndex - 2)?.cards?.iterator()
             }
             // Fill the current pack
-            fillCurrentPack(context, cardIterator)
+            cardIterator?.let {
+                fillCurrentPack(context, it)
+            }
         }
     }
 
@@ -164,7 +165,7 @@ class ModelManager private constructor() {
         learnStatus: String?
     ) {
         val newCard = FlashCard(sideA, sideB, index, learnStatus)
-        lesson.getUnlearnedBatch().addCard(newCard)
+        lesson?.unlearnedBatch?.addCard(newCard)
     }
 
     fun addCard(flashCard: FlashCard, sideA: String?, sideB: String?) {
@@ -179,7 +180,7 @@ class ModelManager private constructor() {
                 ArrayList<BatchStatistics?>()
             val longTermBatches = lesson!!.longTermBatches
             var i = 0
-            val size = longTermBatches!!.size
+            val size = longTermBatches.size
             while (i < size) {
                 val longTermBatch = longTermBatches[i]
                 val numberOfCards = longTermBatch.numberOfCards
@@ -202,8 +203,8 @@ class ModelManager private constructor() {
             )
             return
         }
-        currentPack[position].setSideAText(sideAText)
-        currentPack[position].setSideBText(sideBText)
+        currentPack[position]?.sideAText = sideAText
+        currentPack[position]?.sideBText = sideBText
     }
 
     /**
@@ -238,80 +239,91 @@ class ModelManager private constructor() {
             return
         }
         mCurrentCard = currentPack[position]
-        when (learningPhase) {
-            LearningPhase.SIMPLE_LEARNING -> {
-            }
-            LearningPhase.REPEATING_USTM -> {
-                mCurrentCard.setLearned(false)
-                if (lesson.getUltraShortTermList().remove(mCurrentCard)) {
-                    Log.d(
-                        "AndyPaukerApplication::setCurretnCardUnlearned",
-                        "Moved card from USTM to unlearned batch"
-                    )
-                } else {
-                    Log.e(
-                        "AndyPaukerApplication::setCurretnCardUnlearned",
-                        "Unable to delete card from USTM"
-                    )
+        mCurrentCard?.let { card ->
+            when (learningPhase) {
+                LearningPhase.SIMPLE_LEARNING -> {
                 }
-                when (settingsManager!!.getStringPreference(context, Keys.RETURN_FORGOTTEN_CARDS)) {
-                    "1" -> lesson.getUnlearnedBatch().addCard(mCurrentCard)
-                    "2" -> {
-                        val numberOfCards = lesson.getUnlearnedBatch().numberOfCards
-                        if (numberOfCards > 0) {
-                            val random = Random()
-                            val index = random.nextInt(numberOfCards)
-                            lesson.getUnlearnedBatch().addCard(index, mCurrentCard)
-                        } else {
-                            lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
-                        }
+                LearningPhase.REPEATING_USTM -> {
+                    mCurrentCard?.isLearned = false
+                    if (lesson?.ultraShortTermList?.remove(card) == true) {
+                        Log.d(
+                            "AndyPaukerApplication::setCurretnCardUnlearned",
+                            "Moved card from USTM to unlearned batch"
+                        )
+                    } else {
+                        Log.e(
+                            "AndyPaukerApplication::setCurretnCardUnlearned",
+                            "Unable to delete card from USTM"
+                        )
                     }
-                    else -> lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
-                }
-            }
-            LearningPhase.REPEATING_STM -> {
-                mCurrentCard.setLearned(false)
-                lesson.getShortTermList().remove(mCurrentCard)
-                when (settingsManager!!.getStringPreference(context, Keys.RETURN_FORGOTTEN_CARDS)) {
-                    "1" -> lesson.getUnlearnedBatch().addCard(mCurrentCard)
-                    "2" -> {
-                        val numberOfCards = lesson.getUnlearnedBatch().numberOfCards
-                        if (numberOfCards > 0) {
-                            val random = Random()
-                            val index = random.nextInt(numberOfCards)
-                            lesson.getUnlearnedBatch().addCard(index, mCurrentCard)
-                        } else {
-                            lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
+                    when (settingsManager.getStringPreference(
+                        context,
+                        Keys.RETURN_FORGOTTEN_CARDS
+                    )) {
+                        "1" -> lesson?.unlearnedBatch?.addCard(card)
+                        "2" -> {
+                            val numberOfCards = lesson?.unlearnedBatch?.numberOfCards ?: 0
+                            if (numberOfCards > 0) {
+                                val random = Random()
+                                val index = random.nextInt(numberOfCards)
+                                lesson?.unlearnedBatch?.addCard(index, card)
+                            } else {
+                                lesson?.unlearnedBatch?.addCard(0, card)
+                            }
                         }
+                        else -> lesson?.unlearnedBatch?.addCard(0, card)
                     }
-                    else -> lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
                 }
-            }
-            LearningPhase.REPEATING_LTM -> {
-                mCurrentCard.setLearned(false)
-                // remove card from current long term memory batch
-                val longTermBatchNumber = mCurrentCard.getLongTermBatchNumber()
-                val longTermBatch = lesson!!.getLongTermBatch(longTermBatchNumber)
-                longTermBatch!!.removeCard(mCurrentCard)
-                when (settingsManager!!.getStringPreference(context, Keys.RETURN_FORGOTTEN_CARDS)) {
-                    "1" -> lesson.getUnlearnedBatch().addCard(mCurrentCard)
-                    "2" -> {
-                        val numberOfCards = lesson.getUnlearnedBatch().numberOfCards
-                        if (numberOfCards > 0) {
-                            val random = Random()
-                            val index = random.nextInt(numberOfCards)
-                            lesson.getUnlearnedBatch().addCard(index, mCurrentCard)
-                        } else {
-                            lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
+                LearningPhase.REPEATING_STM -> {
+                    card.isLearned = false
+                    lesson?.shortTermList?.remove(card)
+                    when (settingsManager.getStringPreference(
+                        context,
+                        Keys.RETURN_FORGOTTEN_CARDS
+                    )) {
+                        "1" -> lesson?.unlearnedBatch?.addCard(card)
+                        "2" -> {
+                            val numberOfCards = lesson?.unlearnedBatch?.numberOfCards ?: 0
+                            if (numberOfCards > 0) {
+                                val random = Random()
+                                val index = random.nextInt(numberOfCards)
+                                lesson?.unlearnedBatch?.addCard(index, card)
+                            } else {
+                                lesson?.unlearnedBatch?.addCard(0, card)
+                            }
                         }
+                        else -> lesson?.unlearnedBatch?.addCard(0, card)
                     }
-                    else -> lesson.getUnlearnedBatch().addCard(0, mCurrentCard)
                 }
+                LearningPhase.REPEATING_LTM -> {
+                    card.isLearned = false
+                    // remove card from current long term memory batch
+                    val longTermBatchNumber = card.longTermBatchNumber
+                    val longTermBatch = lesson!!.getLongTermBatch(longTermBatchNumber)
+                    longTermBatch.removeCard(card)
+                    when (settingsManager.getStringPreference(
+                        context,
+                        Keys.RETURN_FORGOTTEN_CARDS
+                    )) {
+                        "1" -> lesson?.unlearnedBatch?.addCard(card)
+                        "2" -> {
+                            val numberOfCards = lesson?.unlearnedBatch?.numberOfCards ?: 0
+                            if (numberOfCards > 0) {
+                                val random = Random()
+                                val index = random.nextInt(numberOfCards)
+                                lesson?.unlearnedBatch?.addCard(index, card)
+                            } else {
+                                lesson?.unlearnedBatch?.addCard(0, card)
+                            }
+                        }
+                        else -> lesson?.unlearnedBatch?.addCard(0, card)
+                    }
+                }
+                else -> Log.e(
+                    "AndyPaukerApplication::setCurretnCardUnlearned",
+                    "Learning phase not supported"
+                )
             }
-            else -> Log.e(
-                "AndyPaukerApplication::setCurretnCardUnlearned",
-                "Learning phase not supported"
-            )
         }
     }
 
@@ -319,65 +331,66 @@ class ModelManager private constructor() {
      * While repeating cards the user acknowledged that the card was remembered
      * correctly, we have to move the current card one batch further
      */
-    private fun pushCurrentCard() { //Log.d("AndyPaukerApplication::pushCurrentCard","Entry : Learning phase = ");
+    private fun pushCurrentCard() {
         val longTermBatch: LongTermBatch?
-        when (learningPhase) {
-            LearningPhase.SIMPLE_LEARNING -> {
-                lesson.getUnlearnedBatch().removeCard(mCurrentCard)
-                if (lesson.getNumberOfLongTermBatches() == 0) {
-                    lesson!!.addLongTermBatch()
+        mCurrentCard?.let { currentCard ->
+            when (learningPhase) {
+                LearningPhase.SIMPLE_LEARNING -> {
+                    lesson?.unlearnedBatch?.removeCard(currentCard)
+                    if (lesson?.numberOfLongTermBatches == 0) {
+                        lesson?.addLongTermBatch()
+                    }
+                    longTermBatch = lesson?.getLongTermBatch(0)
+                    longTermBatch?.addCard(currentCard)
+                    currentCard.isLearned = true
                 }
-                longTermBatch = lesson!!.getLongTermBatch(0)
-                longTermBatch.addCard(mCurrentCard)
-                mCurrentCard.setLearned(true)
-            }
-            LearningPhase.FILLING_USTM -> {
-                lesson.getUltraShortTermList().add(mCurrentCard)
-                lesson.getUnlearnedBatch().removeCard(mCurrentCard)
-            }
-            LearningPhase.REPEATING_USTM -> {
-                lesson.getUltraShortTermList().remove(mCurrentCard)
-                lesson.getShortTermList().add(mCurrentCard)
-            }
-            LearningPhase.REPEATING_STM -> {
-                lesson.getShortTermList().remove(mCurrentCard)
-                if (lesson.getNumberOfLongTermBatches() == 0) {
-                    lesson!!.addLongTermBatch()
+                LearningPhase.FILLING_USTM -> {
+                    lesson?.ultraShortTermList?.add(currentCard)
+                    lesson?.unlearnedBatch?.removeCard(currentCard)
                 }
-                longTermBatch = lesson!!.getLongTermBatch(0)
-                longTermBatch.addCard(mCurrentCard)
-                mCurrentCard.setLearned(true)
-            }
-            LearningPhase.REPEATING_LTM -> {
-                // remove card from current long term memory batch
-                val longTermBatchNumber = mCurrentCard.getLongTermBatchNumber()
-                val nextLongTermBatchNumber = longTermBatchNumber + 1
-                longTermBatch = lesson!!.getLongTermBatch(longTermBatchNumber)
-                longTermBatch.removeCard(mCurrentCard)
-                // add card to next long term batch
-                if (lesson.getNumberOfLongTermBatches()
-                    == nextLongTermBatchNumber
-                ) {
-                    lesson!!.addLongTermBatch()
+                LearningPhase.REPEATING_USTM -> {
+                    lesson?.ultraShortTermList?.remove(currentCard)
+                    lesson?.shortTermList?.add(currentCard)
                 }
-                val nextLongTermBatch =
-                    lesson!!.getLongTermBatch(nextLongTermBatchNumber)
-                nextLongTermBatch!!.addCard(mCurrentCard)
-                mCurrentCard!!.updateLearnedTimeStamp()
+                LearningPhase.REPEATING_STM -> {
+                    lesson?.shortTermList?.remove(currentCard)
+                    if (lesson?.numberOfLongTermBatches == 0) {
+                        lesson?.addLongTermBatch()
+                    }
+                    longTermBatch = lesson!!.getLongTermBatch(0)
+                    longTermBatch.addCard(currentCard)
+                    currentCard.isLearned = true
+                }
+                LearningPhase.REPEATING_LTM -> {
+                    // remove card from current long term memory batch
+                    val longTermBatchNumber = currentCard.longTermBatchNumber
+                    val nextLongTermBatchNumber = longTermBatchNumber + 1
+                    longTermBatch = lesson!!.getLongTermBatch(longTermBatchNumber)
+                    longTermBatch.removeCard(currentCard)
+                    // add card to next long term batch
+                    if (lesson?.numberOfLongTermBatches
+                        == nextLongTermBatchNumber
+                    ) {
+                        lesson!!.addLongTermBatch()
+                    }
+                    val nextLongTermBatch = lesson!!.getLongTermBatch(nextLongTermBatchNumber)
+                    nextLongTermBatch.addCard(currentCard)
+                    currentCard.updateLearnedTimeStamp()
+                }
+                else -> throw RuntimeException(
+                    "unsupported learning phase \""
+                            + learningPhase
+                            + "\" -> can't find batch of card!"
+                )
             }
-            else -> throw RuntimeException(
-                "unsupported learning phase \""
-                        + learningPhase
-                        + "\" -> can't find batch of card!"
-            )
         }
     }
 
     val filePath: File
         get() {
             val filePath = (Environment.getExternalStorageDirectory()
-                .toString() + paukerManager.getApplicationDataDirectory()
-                    + paukerManager.getCurrentFileName())
+                .toString() + paukerManager.applicationDataDirectory
+                    + paukerManager.currentFileName)
             return File(filePath)
         }
 
@@ -386,14 +399,14 @@ class ModelManager private constructor() {
      * @param context Kontext der aufrufenden Activity
      */
     fun showExpireToast(context: Context) {
-        if (!settingsManager!!.getBoolPreference(context, Keys.ENABLE_EXPIRE_TOAST)) return
+        if (!settingsManager.getBoolPreference(context, Keys.ENABLE_EXPIRE_TOAST)) return
         val filePath = filePath
         val uri = filePath.toURI()
         val parser: FlashCardXMLPullFeedParser
         try {
             parser = FlashCardXMLPullFeedParser(uri.toURL())
             val map = parser.nextExpireDate
-            if (map!![0] > Long.MIN_VALUE) {
+            if (map[0] > Long.MIN_VALUE) {
                 val dateL = map[0]
                 val cal =
                     Calendar.getInstance(Locale.getDefault())
@@ -457,7 +470,7 @@ class ModelManager private constructor() {
     }
 
     fun addLesson(context: Context) {
-        val filename = paukerManager.getCurrentFileName()
+        val filename = paukerManager.currentFileName
         addLesson(context, filename)
     }
 
@@ -580,18 +593,18 @@ class ModelManager private constructor() {
      * Move all cards in USTM and STM back to unlearned batch
      */
     fun resetLesson() {
-        val ustmList =
-            lesson.getUltraShortTermList()
-        val stmList =
-            lesson.getShortTermList()
-        for (i in ustmList!!.indices) {
-            lesson.getUnlearnedBatch().addCard(ustmList!![i])
+        val ustmList = lesson?.ultraShortTermList
+        val stmList = lesson?.shortTermList
+        if (ustmList != null && stmList != null) {
+            for (i in ustmList.indices) {
+                lesson?.unlearnedBatch?.addCard(ustmList[i])
+            }
+            for (i in stmList.indices) {
+                lesson?.unlearnedBatch?.addCard(stmList[i])
+            }
+            lesson?.ultraShortTermList?.clear()
+            lesson?.shortTermList?.clear()
         }
-        for (i in stmList!!.indices) {
-            lesson.getUnlearnedBatch().addCard(stmList!![i])
-        }
-        lesson.getUltraShortTermList().clear()
-        lesson.getShortTermList().clear()
     }
 
     /**
@@ -609,7 +622,7 @@ class ModelManager private constructor() {
     }
 
     val isLessonNotNew: Boolean
-        get() = paukerManager.getCurrentFileName() != Constants.DEFAULT_FILE_NAME
+        get() = paukerManager.currentFileName != Constants.DEFAULT_FILE_NAME
 
     val isLessonSetup: Boolean
         get() = lesson != null
@@ -619,7 +632,7 @@ class ModelManager private constructor() {
      * @return True, wenn keine Karten vorhanden sind und die Beschreibung leer ist
      */
     val isLessonEmpty: Boolean
-        get() = isLessonSetup && lesson.getCards().isEmpty() && lesson.getDescription().isEmpty()
+        get() = isLessonSetup && lesson?.cards?.isNullOrEmpty() ?: false && lesson?.description?.isEmpty() ?: false
 
     fun createNewLesson() {
         Log.d("AndyPaukerApplication::setupNewLesson", "Entry")
@@ -640,8 +653,8 @@ class ModelManager private constructor() {
     ) {
         val batch: Batch?
         batch = when (stackIndex) {
-            0 -> lesson.getSummaryBatch()
-            1 -> lesson.getUnlearnedBatch()
+            0 -> lesson?.summaryBatch
+            1 -> lesson?.unlearnedBatch
             else -> lesson!!.getLongTermBatch(stackIndex - 2)
         }
         batch?.sortCards(sortByElement, asc_direction)
@@ -654,7 +667,7 @@ class ModelManager private constructor() {
      */
     fun deleteCard(position: Int): Boolean {
         val card: Card? = currentPack[position]
-        if (deleteCard(card)) return false
+        if (card == null || !deleteCard(card)) return false
         currentPack.removeAt(position)
         return true
     }
@@ -664,12 +677,12 @@ class ModelManager private constructor() {
      * @param card Zu löschende Karte
      * @return True, wenn Karte erfolgreich gelöscht wurde
      */
-    fun deleteCard(card: Card?): Boolean {
+    fun deleteCard(card: Card): Boolean {
         Log.d("AndyPaukerApplication::deleteCard", "entry")
-        if (card!!.isLearned) {
+        if (card.isLearned) {
             val batchNumber = card.longTermBatchNumber
             val longTermBatch = lesson!!.getLongTermBatch(batchNumber)
-            if (longTermBatch!!.removeCard(card)) {
+            if (longTermBatch.removeCard(card)) {
                 Log.d(
                     "AndyPaukerApplication::deleteCard",
                     "Deleted from long term batch$batchNumber"
@@ -681,17 +694,17 @@ class ModelManager private constructor() {
                 )
             }
         } else {
-            if (lesson.getUnlearnedBatch().removeCard(card)) {
+            if (lesson?.unlearnedBatch?.removeCard(card) == true) {
                 Log.d(
                     "AndyPaukerApplication::deleteCard",
                     "Deleted from unlearned batch"
                 )
-            } else if (lesson.getUltraShortTermList().remove(card)) {
+            } else if (lesson?.ultraShortTermList?.remove(card) == true) {
                 Log.d(
                     "AndyPaukerApplication::deleteCard",
                     "Deleted from ultra short term batch"
                 )
-            } else if (lesson.getShortTermList().remove(card)) {
+            } else if (lesson?.shortTermList?.remove(card) == true) {
                 Log.d(
                     "AndyPaukerApplication::deleteCard",
                     "Deleted from short term batch"
@@ -704,7 +717,7 @@ class ModelManager private constructor() {
                 return false
             }
         }
-        if (lesson.getSummaryBatch().removeCard(card)) {
+        if (lesson?.summaryBatch?.removeCard(card) == true) {
             Log.d(
                 "AndyPaukerApplication::deleteCard",
                 "Deleted from summary batch"
@@ -727,10 +740,10 @@ class ModelManager private constructor() {
         setupCurrentPack(context)
     }
 
-    var description: String?
-        get() = lesson.getDescription()
+    var description: String
+        get() = lesson?.description ?: ""
         set(s) {
-            lesson.setDescription(s)
+            lesson?.description = s
         }
 
     fun getCard(position: Int): FlashCard? {
@@ -741,10 +754,7 @@ class ModelManager private constructor() {
         }
     }
 
-    fun getCardFont(
-        side_ID: Int,
-        position: Int
-    ): Font {
+    fun getCardFont(side_ID: Int, position: Int): Font {
         val flashCard = getCard(position) ?: return Font()
         val font: Font?
         font =
@@ -800,20 +810,20 @@ class ModelManager private constructor() {
         get() = currentPack.size
 
     val lessonSize: Int
-        get() = lesson.getCards().size
+        get() = lesson?.cards?.size ?: 0
 
     val expiredCardsSize: Int
-        get() = lesson.getNumberOfExpiredCards()
+        get() = lesson?.numberOfExpiredCards ?: 0
 
     val unlearnedBatchSize: Int
-        get() = lesson.getUnlearnedBatch().cards.size
+        get() = lesson?.unlearnedBatch?.cards?.size ?: 0
 
     //TODO Have an enum BATCH_TYPE and pass that into a single getBatchSize(BatchType)
     val ultraShortTermMemorySize: Int
-        get() = lesson.getUltraShortTermList().size
+        get() = lesson?.ultraShortTermList?.size ?: 0
 
     val shortTermMemorySize: Int
-        get() = lesson.getShortTermList().size
+        get() = lesson?.shortTermList?.size ?: 0
 
     /*
      * Shuffle the card pack
@@ -828,20 +838,22 @@ class ModelManager private constructor() {
     private fun isShuffle(context: Context): Boolean { // Check if we need to add random learn
         if (learningPhase == LearningPhase.SIMPLE_LEARNING || learningPhase == LearningPhase.REPEATING_STM || learningPhase == LearningPhase.REPEATING_USTM || learningPhase == LearningPhase.FILLING_USTM
         ) {
-            if (settingsManager!!.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY)) {
+            if (settingsManager.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY)) {
                 return true
             }
         }
         return (learningPhase == LearningPhase.REPEATING_LTM
-                && settingsManager!!.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY))
+                && settingsManager.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY))
     }
 
     fun forgetCard(card: Card) {
         if (!card.isLearned) return
         val batch = getBatchOfCard(card)
-        val index = batch!!.indexOf(card)
-        if (index != -1) {
-            lesson!!.forgetCards(batch, intArrayOf(index))
+        batch?.let {
+            val index = batch.indexOf(card)
+            if (index != -1) {
+                lesson?.forgetCards(batch, intArrayOf(index))
+            }
         }
     }
 
@@ -854,10 +866,11 @@ class ModelManager private constructor() {
     }
 
     private fun getBatchOfCard(card: Card): Batch? {
-        val batchNumber = card.longTermBatchNumber
-        return if (batchNumber == 0) lesson.getSummaryBatch() else if (batchNumber == 1) lesson.getUnlearnedBatch() else lesson!!.getLongTermBatch(
-            batchNumber
-        )
+        return when (val batchNumber = card.longTermBatchNumber) {
+            0 -> lesson?.summaryBatch
+            1 -> lesson?.unlearnedBatch
+            else -> lesson?.getLongTermBatch(batchNumber)
+        }
     }
 
     /**
@@ -903,7 +916,7 @@ class ModelManager private constructor() {
     }
 
     companion object {
-        private val paukerManager: PaukerManager? = PaukerManager.instance()
+        private val paukerManager: PaukerManager = PaukerManager.instance()
         private var instance: ModelManager? = null
 
         fun instance(): ModelManager = instance ?: ModelManager()

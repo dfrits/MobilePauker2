@@ -17,8 +17,8 @@ class SummaryBatch
      * adds a card to this batch
      * @param card the new card
      */
-    override fun addCard(card: Card?) {
-        cards!!.add(card)
+    override fun addCard(card: Card) {
+        cards?.add(card)
     }
 
     /**
@@ -32,11 +32,11 @@ class SummaryBatch
         if (card!!.isLearned) {
             val batchNumber = card.longTermBatchNumber
             val longTermBatch = lesson.getLongTermBatch(batchNumber)
-            longTermBatch!!.removeCard(card)
+            longTermBatch.removeCard(card)
         } else {
             val unlearnedBatch =
                 lesson.unlearnedBatch
-            unlearnedBatch!!.removeCard(card)
+            unlearnedBatch.removeCard(card)
         }
         return card
     }

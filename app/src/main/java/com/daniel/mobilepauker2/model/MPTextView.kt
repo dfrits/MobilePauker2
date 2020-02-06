@@ -23,11 +23,11 @@ class MPTextView : AppCompatTextView {
     constructor(context: Context?) : super(context) {}
 
     fun setCard(cardside: CardSide?) {
-        text = cardside.getText()
-        setFont(cardside.getFont())
+        text = cardside?.text
+        setFont(cardside?.font)
     }
 
     fun setFont(font: Font?) {
-        ModelManager.Companion.instance()!!.setFont(font, this)
+        ModelManager.instance().setFont(font, this)
     }
 }

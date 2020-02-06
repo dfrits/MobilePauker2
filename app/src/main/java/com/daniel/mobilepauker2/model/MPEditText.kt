@@ -22,11 +22,11 @@ class MPEditText : AppCompatEditText {
     }
 
     fun setCard(cardside: CardSide?) {
-        setText(cardside.getText())
-        setFont(cardside.getFont())
+        setText(cardside?.text)
+        setFont(cardside?.font)
     }
 
     fun setFont(font: Font?) {
-        ModelManager.Companion.instance()!!.setFont(font, this)
+        ModelManager.instance().setFont(font, this)
     }
 }

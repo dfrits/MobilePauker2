@@ -36,11 +36,7 @@ class FlashCard : Card {
         this.index = index
         frontSide.font = Font()
         reverseSide.font = Font()
-        if (learnStatus!!.contentEquals("true")) {
-            this.isLearned = true
-        } else {
-            this.isLearned = false
-        }
+        this.isLearned = learnStatus!!.contentEquals("true")
     }
 
     constructor() : super(CardSide(), CardSide()) {}

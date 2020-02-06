@@ -40,7 +40,7 @@ open class Card
             return field
         }
         private set
-    private var expirationTime: Long = 0
+    var expirationTime: Long = 0
     override fun equals(obj: Any?): Boolean {
         if (obj == null) {
             return false
@@ -73,7 +73,7 @@ open class Card
             return reverseSideResult
         }
         // both sides are equal, base decision on expiration time
-        val otherExpirationTime = otherCard.getExpirationTime()
+        val otherExpirationTime = otherCard.getCalucalatedExpirationTime()
         if (expirationTime < otherExpirationTime) {
             return -1
         } else if (expirationTime > otherExpirationTime) {
@@ -140,18 +140,10 @@ open class Card
      * returns the expiration time of this card
      * @return the expiration time of this card
      */
-    fun getExpirationTime(): Long {
+    fun getCalucalatedExpirationTime(): Long {
         return if (frontSide.isLearned) {
             frontSide.learnedTimestamp + expirationTime
         } else -1
-    }
-
-    /**
-     * sets the expiration time of this card
-     * @param expirationTime the expiration time of this card
-     */
-    fun setExpirationTime(expirationTime: Long) {
-        this.expirationTime = expirationTime
     }
 
     /**

@@ -19,7 +19,7 @@ class LongTermBatch(
     val batchNumber: Int
 ) :
     Batch(null) {
-    private val expiredCards: MutableCollection<Card>
+    val expiredCards: MutableCollection<Card>
     /**
      * returns the expiration time of this batch
      * @return the expiration time of this batch
@@ -30,17 +30,17 @@ class LongTermBatch(
      * adds a card to this batch
      * @param card the new card
      */
-    override fun addCard(card: Card?) {
-        card.setLongTermBatchNumber(batchNumber)
-        card!!.expirationTime = expirationTime
-        cards!!.add(card)
+    override fun addCard(card: Card) {
+        card.longTermBatchNumber = batchNumber
+        card.expirationTime = expirationTime
+        cards?.add(card)
     }
 
     /**
      * returns a collection of all expired cards of this batch
      * @return a collection of all expired cards of this batch
      */
-    fun getExpiredCards(): Collection<Card> {
+    fun refreshAndGetExpiredCards(): Collection<Card> {
         refreshExpiration()
         return expiredCards
     }
@@ -104,9 +104,6 @@ class LongTermBatch(
         for (card in cards!!) {
             val learnedTime = card.learnedTimestamp
             val diff = currentTime - learnedTime
-            val frontSide = card.getFrontSide().text
-            //Log.d("LongTermBatch::refreshExpiration","currentTime = "+currentTime + ",cardTime="
-//		+ learnedTime + ",diff=" + diff + ",expirationTime" + expirationTime + "," + frontSide);
             if (diff > expirationTime) {
                 expiredCards.add(card)
             }

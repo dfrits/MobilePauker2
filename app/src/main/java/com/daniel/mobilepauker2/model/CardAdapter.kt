@@ -1,6 +1,5 @@
 package com.daniel.mobilepauker2.model
 
-import android.app.Activity
 import android.content.Context
 import android.text.format.DateFormat
 import android.view.View
@@ -19,30 +18,22 @@ import java.util.*
  * hs-augsburg
  */
 class CardAdapter(
-    private val context: Context,
-    private val items: List<FlashCard?>?
-) : ArrayAdapter<FlashCard?>(context, R.layout.search_result, items) {
-    override fun getView(
-        position: Int,
-        convertView: View,
-        parent: ViewGroup
-    ): View {
-        var v = convertView
-        if (v == null) {
-            val inflater = (context as Activity).layoutInflater
-            v = inflater.inflate(R.layout.search_result, parent, false)
-        }
-        val card = items!![position]
+    myContext: Context,
+    private val items: MutableList<FlashCard?>
+) : ArrayAdapter<FlashCard?>(myContext, R.layout.search_result, items) {
+
+    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+        val card = items[position]
         if (card != null) {
-            val sideA: MPTextView = v.findViewById(R.id.tCardSideA)
-            val sideB: MPTextView = v.findViewById(R.id.tCardSideB)
-            val learnedAt = v.findViewById<TextView>(R.id.tLearnedTime)
-            val expireAt = v.findViewById<TextView>(R.id.tExpireTime)
-            val stackNumber = v.findViewById<TextView>(R.id.tStackNumber)
+            val sideA: MPTextView = convertView.findViewById(R.id.tCardSideA)
+            val sideB: MPTextView = convertView.findViewById(R.id.tCardSideB)
+            val learnedAt = convertView.findViewById<TextView>(R.id.tLearnedTime)
+            val expireAt = convertView.findViewById<TextView>(R.id.tExpireTime)
+            val stackNumber = convertView.findViewById<TextView>(R.id.tStackNumber)
             val repeatType =
-                v.findViewById<ImageView>(R.id.iRepeatType)
-            sideA?.setCard(card.frontSide)
-            sideB?.setCard(card.reverseSide)
+                convertView.findViewById<ImageView>(R.id.iRepeatType)
+            sideA.setCard(card.frontSide)
+            sideB.setCard(card.reverseSide)
             // learnedAt und stackNumber
             val learnedTime = card.learnedTimestamp
             if (learnedTime != 0L) {
@@ -67,8 +58,7 @@ class CardAdapter(
                 cal.timeInMillis = expirationTime
                 val date =
                     DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
-                var text: String
-                text = if (expirationTime < System.currentTimeMillis()) {
+                var text: String = if (expirationTime < System.currentTimeMillis()) {
                     context.getString(R.string.expired_at)
                 } else {
                     context.getString(R.string.expire_at)
@@ -81,7 +71,7 @@ class CardAdapter(
                 if (card.isRepeatedByTyping) R.drawable.rt_typing else R.drawable.rt_thinking
             repeatType.setImageResource(drawable)
         }
-        return v
+        return convertView
     }
 
 }

@@ -9,12 +9,11 @@ import java.util.logging.Logger
  * a batch is part of a lesson
  * @author Ronny.Standtke@gmx.net
  */
-open class Batch internal constructor(cards: MutableList<Card?>?) {
+open class Batch internal constructor(cards: MutableList<Card>?) {
     /**
      * the list of all cards in this batch
      */
-    protected val cards: MutableList<Card?>? =
-        null
+    var cards: MutableList<Card>? = null
 
     private abstract class AbstractCardComparator<Card> : Comparator<Card> {
         private var ascending = true
@@ -41,8 +40,7 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
      * returns the number of cards in this batch
      * @return the number of cards in this batch
      */
-    val numberOfCards: Int
-        get() = cards!!.size
+    val numberOfCards: Int = cards?.size ?: 0
 
     /**
      * returns the card at the index <CODE>i</CODE>
@@ -50,24 +48,16 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
      * @return the card at index <CODE>i</CODE>
      */
     fun getCard(index: Int): Card? {
-        return cards!![index]
-    }
-
-    /**
-     * returns all cards in the batch
-     * @return all cards in the batch
-     */
-    fun getCards(): List<Card?>? {
-        return cards
+        return cards?.let { it[index] }
     }
 
     /**
      * adds a card to this batch
      * @param card the new card
      */
-    open fun addCard(card: Card?) {
-        cards!!.add(card)
-        card.setLearned(false)
+    open fun addCard(card: Card) {
+        cards?.add(card)
+        card.isLearned = false
     }
 
     /**
@@ -75,17 +65,17 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
      * @param index the index of the new card
      * @param card  the new card
      */
-    fun addCard(index: Int, card: Card?) {
-        cards!!.add(index, card)
-        card.setLearned(false)
+    fun addCard(index: Int, card: Card) {
+        cards?.add(index, card)
+        card.isLearned = false
     }
 
     /**
      * adds cards to the batch
      * @param cards the new cards
      */
-    fun addCards(cards: List<Card?>?) {
-        for (card in cards!!) {
+    fun addCards(cards: List<Card>) {
+        for (card in cards) {
             addCard(card)
         }
     }
@@ -96,11 +86,11 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
      * @return <tt>true</tt>, if the card could be removed
      */
     fun removeCard(card: Card?): Boolean { // !!! IMPORTANT !!!
-// Do not refresh search stuff here or removing from summary batch
-// will break!
-// ("real" batches dont have the current search info)
-// remove card
-        return cards!!.remove(card)
+        // Do not refresh search stuff here or removing from summary batch
+        // will break!
+        // ("real" batches dont have the current search info)
+        // remove card
+        return cards?.remove(card) ?: false
     }
 
     /**
@@ -111,7 +101,7 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
     open fun removeCard(index: Int): Card? { // save current search hit
         savedSearchHit = getCurrentSearchHit()
         // remove card
-        val card = cards!!.removeAt(index)
+        val card = cards?.removeAt(index)
         // re-fill searchHits list (all indices are potentially wrong now)
         search(searchPattern, matchCase, searchSide)
         // restore current search hit
@@ -125,7 +115,7 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
      * @return the index of the card
      */
     fun indexOf(card: Card?): Int {
-        return cards!!.indexOf(card)
+        return cards?.indexOf(card) ?: -1
     }
 
     /**
@@ -137,8 +127,7 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
         cardElement: Card.Element?,
         ascending: Boolean
     ) {
-        var comparator: AbstractCardComparator<Card?>? =
-            null
+        var comparator: AbstractCardComparator<Card>? = null
         when (cardElement) {
             Card.Element.FRONT_SIDE -> comparator =
                 frontSideComparator
@@ -157,7 +146,7 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
                 "unknown cardElement {0}", cardElement
             )
         }
-        comparator!!.setAscending(ascending)
+        comparator?.setAscending(ascending)
         Collections.sort(cards, comparator)
     }
 
@@ -198,10 +187,12 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
         if (searchPattern == null || searchPattern!!.length == 0) {
             return false
         }
-        for (card in cards!!) {
-            searchHits.addAll(card!!.search(searchSide, searchPattern, matchCase))
+        cards?.let {
+            for (card in it) {
+                searchHits.addAll(card.search(searchSide, searchPattern, matchCase))
+            }
         }
-        return !searchHits.isEmpty()
+        return searchHits.isNotEmpty()
     }
 
     private fun restoreSearchHit() { // restore current search hit
@@ -214,35 +205,38 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
         private val LOGGER =
             Logger.getLogger(Batch::class.java.name)
         private val collator = Collator.getInstance()
-        private val frontSideComparator: AbstractCardComparator<Card?> =
+
+        private val frontSideComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,
                     card2: Card
                 ): Int {
-                    val frontSideText1 = card1.getFrontSide().text
-                    val frontSideText2 = card2.getFrontSide().text
+                    val frontSideText1 = card1.frontSide.text
+                    val frontSideText2 = card2.frontSide.text
                     return collator.compare(
                         frontSideText1,
                         frontSideText2
                     )
                 }
             }
-        private val reverseSideComparator: AbstractCardComparator<Card?> =
+
+        private val reverseSideComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,
                     card2: Card
                 ): Int {
-                    val reverseSideText1 = card1.getReverseSide().text
-                    val reverseSideText2 = card2.getReverseSide().text
+                    val reverseSideText1 = card1.reverseSide.text
+                    val reverseSideText2 = card2.reverseSide.text
                     return collator.compare(
                         reverseSideText1,
                         reverseSideText2
                     )
                 }
             }
-        private val batchNumberComparator: AbstractCardComparator<Card?> =
+
+        private val batchNumberComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,
@@ -258,7 +252,8 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
                     return 0
                 }
             }
-        private val learnedDateComparator: AbstractCardComparator<Card?> =
+
+        private val learnedDateComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,
@@ -274,7 +269,8 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
                     return 0
                 }
             }
-        private val expiredDateComparator: AbstractCardComparator<Card?> =
+
+        private val expiredDateComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,
@@ -290,7 +286,8 @@ open class Batch internal constructor(cards: MutableList<Card?>?) {
                     return 0
                 }
             }
-        private val repeatingModeComparator: AbstractCardComparator<Card?> =
+
+        private val repeatingModeComparator: AbstractCardComparator<Card> =
             object : AbstractCardComparator<Card>() {
                 public override fun compareCards(
                     card1: Card,

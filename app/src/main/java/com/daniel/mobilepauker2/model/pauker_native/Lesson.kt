@@ -40,20 +40,20 @@ class Lesson {
      * returns the list of cards that are in the ultra-short-term memory
      * @return the list of cards that are in the ultra-short-term memory
      */
-    val ultraShortTermList: MutableList<Card?>
+    val ultraShortTermList: MutableList<Card>
     /**
      * returns the list of cards that are in the short-term memory
      * @return the list of cards that are in the short-term memory
      */
-    val shortTermList: MutableList<Card?>
-    private val longTermBatches: MutableList<LongTermBatch>
+    val shortTermList: MutableList<Card>
+    internal val longTermBatches: MutableList<LongTermBatch>
     private val random: Random? = null
 
     /**
      * adds a new card to this lesson
      * @param card the new card
      */
-    fun addCard(card: Card?) {
+    fun addCard(card: Card) {
         summaryBatch.addCard(card)
         unlearnedBatch.addCard(card)
     }
@@ -113,15 +113,14 @@ class Lesson {
      */
     val cards: MutableList<Card>
         get() {
-            val cards: MutableList<Card> =
-                ArrayList()
-            val unlearnedCards =
-                unlearnedBatch.getCards()
+            val cards: MutableList<Card> = ArrayList()
+            val unlearnedCards = unlearnedBatch.cards
             if (unlearnedCards != null) {
                 cards.addAll(unlearnedCards)
             }
             for (longTermBatch in longTermBatches) {
-                cards.addAll(longTermBatch.getCards())
+                val longTermBatchCards = longTermBatch.cards?.toList()
+                longTermBatchCards?.let { cards.addAll(longTermBatchCards) }
             }
             return cards
         }
@@ -138,40 +137,14 @@ class Lesson {
             }
             return numberOfExpiredCards
         }
-    //    /**
-//     * returns a random expired card
-//     * @return a random expired card
-//     */
-//    public Card getRandomExpiredCard() {
-//        // collect all expired cards
-//        List<Card> expiredCards = new ArrayList<Card>();
-//        for (LongTermBatch longTermBatch : longTermBatches) {
-//            for (Card expiredCard : longTermBatch.getExpiredCards()) {
-//                expiredCards.add(expiredCard);
-//            }
-//        }
-//
-//        // choose one of them randomly
-//        int expiredCardCount = expiredCards.size();
-//        if (expiredCardCount > 0) {
-//            // lazy creation of random source
-//            if (random == null) {
-//                random = new Random();
-//            }
-//            int randomIndex = random.nextInt(expiredCardCount);
-//            return expiredCards.get(randomIndex);
-//        }
-//
-//        return null;
-//    }
+
     /**
      * returns a collection of all expired cards
      * @return a collection of all expired cards
      */
-    val expiredCards: Collection<Card?>
+    val expiredCards: Collection<Card>
         get() {
-            val expiredCards: MutableCollection<Card?> =
-                ArrayList()
+            val expiredCards: MutableCollection<Card> = ArrayList()
             for (longTermBatch in longTermBatches) {
                 expiredCards.addAll(longTermBatch.expiredCards)
             }
@@ -223,9 +196,11 @@ class Lesson {
      */
     fun reset() {
         for (longTermBatch in longTermBatches) {
-            for (card in longTermBatch.getCards()!!) {
-                card.isLearned = false
-                unlearnedBatch.addCard(card)
+            longTermBatch.cards?.let {
+                for (card in it) {
+                    card.isLearned = false
+                    unlearnedBatch.addCard(card)
+                }
             }
         }
         longTermBatches.clear()
@@ -236,35 +211,35 @@ class Lesson {
      * @param otherLesson the lesson to be merged with this lesson
      */
     fun merge(otherLesson: Lesson) { // merge unlearned cards
-        val otherUnlearnedCards =
-            otherLesson.unlearnedBatch.getCards()
-        unlearnedBatch.addCards(otherUnlearnedCards)
-        summaryBatch.addCards(otherUnlearnedCards)
-        // merge learned cards in the long term batches
-        val otherNumberOfLongTermBatches = otherLesson.numberOfLongTermBatches
-        LOGGER.log(
-            Level.FINE,
-            "the lesson to be merged contains {0} longterm batches",
-            otherNumberOfLongTermBatches
-        )
-        for (i in 0 until otherNumberOfLongTermBatches) {
-            if (longTermBatches.size < i + 1) {
-                addLongTermBatch()
-            }
-            val batch: Batch = getLongTermBatch(i)
-            val otherBatch: Batch =
-                otherLesson.getLongTermBatch(i)
-            val cards =
-                otherBatch.getCards()
-            if (LOGGER.isLoggable(Level.FINE)) {
-                LOGGER.log(
-                    Level.FINE,
-                    "batch {0} contains {1} cards",
-                    arrayOf<Any>(i, cards!!.size)
-                )
-            }
-            batch.addCards(cards)
+        otherLesson.unlearnedBatch.cards?.let { otherUnlearnedCards ->
+            unlearnedBatch.addCards(otherUnlearnedCards)
             summaryBatch.addCards(otherUnlearnedCards)
+            // merge learned cards in the long term batches
+            val otherNumberOfLongTermBatches = otherLesson.numberOfLongTermBatches
+            LOGGER.log(
+                Level.FINE,
+                "the lesson to be merged contains {0} longterm batches",
+                otherNumberOfLongTermBatches
+            )
+            for (i in 0 until otherNumberOfLongTermBatches) {
+                if (longTermBatches.size < i + 1) {
+                    addLongTermBatch()
+                }
+                val batch: Batch = getLongTermBatch(i)
+                val otherBatch: Batch =
+                    otherLesson.getLongTermBatch(i)
+                otherBatch.cards?.let { cards ->
+                    if (LOGGER.isLoggable(Level.FINE)) {
+                        LOGGER.log(
+                            Level.FINE,
+                            "batch {0} contains {1} cards",
+                            arrayOf<Any>(i, cards.size)
+                        )
+                    }
+                    batch.addCards(cards.toList())
+                }
+                summaryBatch.addCards(otherUnlearnedCards)
+            }
         }
     }
 
@@ -335,18 +310,15 @@ class Lesson {
      * @param batch   the active/choosen batch
      * @param indices the indices of the choosen cards
      */
-    fun forgetCards(
-        batch: Batch?,
-        indices: IntArray
-    ) {
+    fun forgetCards(batch: Batch, indices: IntArray) {
         if (batch === summaryBatch) {
-            if (indices.size == batch.getNumberOfCards()) { // special handling when all cards are selected
+            if (indices.size == batch.numberOfCards) { // special handling when all cards are selected
                 for (longTermBatch in longTermBatches) {
                     for (i in longTermBatch.numberOfCards - 1 downTo 0) {
-                        val card =
-                            longTermBatch.removeCard(i)
-                        unlearnedBatch.addCard(card)
-                        card!!.reset()
+                        longTermBatch.removeCard(i)?.let { card ->
+                            unlearnedBatch.addCard(card)
+                            card.reset()
+                        }
                     }
                 }
             } else { // remove cards from the "real" batches
@@ -365,10 +337,10 @@ class Lesson {
             }
         } else { // long term batches
             for (i in indices.indices.reversed()) {
-                val card =
-                    batch!!.removeCard(indices[i])
-                unlearnedBatch.addCard(card)
-                card!!.reset()
+                batch.removeCard(indices[i])?.let { card ->
+                    unlearnedBatch.addCard(card)
+                    card.reset()
+                }
             }
         }
         // cleanup
@@ -389,21 +361,22 @@ class Lesson {
         }
         val firstLongTermBatch = longTermBatches[0]
         if (batch === summaryBatch) {
-            if (indices.size == batch.getNumberOfCards()) { // special handling when all cards are selected
-// handle all unlearned cards
+            if (indices.size == batch.numberOfCards) {
+                // special handling when all cards are selected
+                // handle all unlearned cards
                 for (i in unlearnedBatch.numberOfCards - 1 downTo 0) {
-                    val card =
-                        unlearnedBatch.removeCard(i)
-                    firstLongTermBatch.addCard(card)
-                    card!!.expire()
+                    unlearnedBatch.removeCard(i)?.let { card ->
+                        firstLongTermBatch.addCard(card)
+                        card.expire()
+                    }
                 }
                 // handle all long term batches
                 for (longTermBatch in longTermBatches) {
                     for (i in longTermBatch.numberOfCards - 1 downTo 0) {
-                        val card =
-                            longTermBatch.removeCard(i)
-                        firstLongTermBatch.addCard(card)
-                        card!!.expire()
+                        longTermBatch.removeCard(i)?.let { card ->
+                            firstLongTermBatch.addCard(card)
+                            card.expire()
+                        }
                     }
                 }
             } else { // search every card in the "real" batches
@@ -427,25 +400,24 @@ class Lesson {
             }
         } else if (batch === unlearnedBatch) { // just move all selected cards
             for (i in indices.indices.reversed()) {
-                val card =
-                    batch.removeCard(indices[i])
-                firstLongTermBatch.addCard(card)
-                card!!.expire()
+                batch.removeCard(indices[i])?.let { card ->
+                    firstLongTermBatch.addCard(card)
+                    card.expire()
+                }
             }
         } else { // the batch is a long term batch
 // move cards only if we are not already in the first longterm batch
             if (batch === firstLongTermBatch) {
                 for (i in indices.indices.reversed()) {
-                    val card =
-                        batch.getCard(indices[i])
+                    val card = batch.getCard(indices[i])
                     card!!.expire()
                 }
             } else {
                 for (i in indices.indices.reversed()) {
-                    val card =
-                        batch!!.removeCard(indices[i])
-                    firstLongTermBatch.addCard(card)
-                    card!!.expire()
+                    batch?.removeCard(indices[i])?.let { card ->
+                        firstLongTermBatch.addCard(card)
+                        card.expire()
+                    }
                 }
             }
         }

@@ -22,8 +22,8 @@ import android.database.CursorIndexOutOfBoundsException
 import com.daniel.mobilepauker2.utils.Log
 
 class FlashCardCursor : AbstractCursor() {
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
-    private val columnCount: Int
+    private val modelManager: ModelManager = ModelManager.instance()
+    private var flashColumnCount: Int = columnNames.size
     /**
      * Adds a new row to the end of the FlashCard array.
      * @param columnValues in the same order as the the column names specified at cursor
@@ -31,56 +31,57 @@ class FlashCardCursor : AbstractCursor() {
      * @throws IllegalArgumentException if `columnValues.length != columnNames.length`
      */
     fun addRow(columnValues: Array<String?>) {
-        require(columnValues.size == columnCount) {
+        require(columnValues.size == flashColumnCount) {
             ("columnNames.length = "
-                    + columnCount + ", columnValues.length = "
+                    + flashColumnCount + ", columnValues.length = "
                     + columnValues.size)
         }
-        modelManager!!.addCard(
-            columnValues[CardPackAdapter.Companion.KEY_SIDEA_ID],
-            columnValues[CardPackAdapter.Companion.KEY_SIDEB_ID],
-            columnValues[CardPackAdapter.Companion.KEY_INDEX_ID],
-            columnValues[CardPackAdapter.Companion.KEY_LEARN_STATUS_ID]
+        modelManager.addCard(
+            columnValues[CardPackAdapter.KEY_SIDEA_ID],
+            columnValues[CardPackAdapter.KEY_SIDEB_ID],
+            columnValues[CardPackAdapter.KEY_INDEX_ID],
+            columnValues[CardPackAdapter.KEY_LEARN_STATUS_ID]
         )
+        getColumnCount()
     }
 
     /**
      * Gets value at the given column for the current row.
      */
     private operator fun get(column: Int): String? {
-        if (column < 0 || column >= columnCount) {
+        if (column < 0 || column >= flashColumnCount) {
             throw CursorIndexOutOfBoundsException(
                 "Requested column: "
-                        + column + ", # of columns: " + columnCount
+                        + column + ", # of columns: " + flashColumnCount
             )
         }
         if (position < 0) {
             throw CursorIndexOutOfBoundsException("Before first row.")
         }
-        if (position >= modelManager.getCurrentBatchSize()) {
+        if (position >= modelManager.currentBatchSize) {
             throw CursorIndexOutOfBoundsException("After last row.")
         }
-        val flashCard = modelManager!!.getCard(position)
+        val flashCard = modelManager.getCard(position)
         when (column) {
-            CardPackAdapter.Companion.KEY_SIDEA_ID -> {
+            CardPackAdapter.KEY_SIDEA_ID -> {
                 return if (flashCard == null) "" else flashCard.sideAText
             }
-            CardPackAdapter.Companion.KEY_SIDEB_ID -> {
+            CardPackAdapter.KEY_SIDEB_ID -> {
                 return if (flashCard == null) "" else flashCard.sideBText
             }
-            CardPackAdapter.Companion.KEY_ROWID_ID -> {
+            CardPackAdapter.KEY_ROWID_ID -> {
                 //return flashCard.getId();
 //********************* -- Is this ok - using the position of the cursor to id the flash card!
                 return Integer.toString(position)
             }
-            CardPackAdapter.Companion.KEY_LEARN_STATUS_ID -> {
+            CardPackAdapter.KEY_LEARN_STATUS_ID -> {
                 return if (flashCard != null && flashCard.isLearned) {
                     "true"
                 } else {
                     "false"
                 }
             }
-            CardPackAdapter.Companion.KEY_INDEX_ID -> {
+            CardPackAdapter.KEY_INDEX_ID -> {
                 return flashCard?.index
             }
         }
@@ -88,15 +89,15 @@ class FlashCardCursor : AbstractCursor() {
     }
 
     override fun getCount(): Int {
-        return modelManager.getCurrentBatchSize()
+        return modelManager.currentBatchSize
     }
 
     override fun getColumnNames(): Array<String> {
-        return Companion.columnNames
+        return flashColumnNames
     }
 
     override fun getString(column: Int): String {
-        return get(column) ?: return null
+        return get(column) ?: return ""
     }
 
     override fun getShort(column: Int): Short {
@@ -129,7 +130,7 @@ class FlashCardCursor : AbstractCursor() {
     }
 
     override fun requery(): Boolean {
-        if (modelManager.getCurrentBatchSize() == 0) {
+        if (modelManager.currentBatchSize == 0) {
             Log.d(
                 "FlashCArdCursor::requery",
                 "Warning - cursor requery on empty card pack"
@@ -141,16 +142,16 @@ class FlashCardCursor : AbstractCursor() {
     }
 
     companion object {
-        val columnNames = arrayOf<String>(
-            CardPackAdapter.Companion.KEY_ROWID,
-            CardPackAdapter.Companion.KEY_SIDEA,
-            CardPackAdapter.Companion.KEY_SIDEB,
-            CardPackAdapter.Companion.KEY_INDEX,
-            CardPackAdapter.Companion.KEY_LEARN_STATUS
+        val flashColumnNames = arrayOf(
+            CardPackAdapter.KEY_ROWID,
+            CardPackAdapter.KEY_SIDEA,
+            CardPackAdapter.KEY_SIDEB,
+            CardPackAdapter.KEY_INDEX,
+            CardPackAdapter.KEY_LEARN_STATUS
         )
     }
 
     init {
-        columnCount = Companion.columnNames.size
+        flashColumnCount = columnNames.size
     }
 }

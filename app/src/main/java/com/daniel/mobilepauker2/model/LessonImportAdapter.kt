@@ -20,7 +20,7 @@ import java.util.*
 class LessonImportAdapter(
     context: Context,
     private val data: ArrayList<String>
-) : ArrayAdapter<String?>(context, R.layout.simple_list_item_1, data) {
+) : ArrayAdapter<String>(context, R.layout.simple_list_item_1, data) {
     override fun getView(
         position: Int,
         convertView: View?,
@@ -33,8 +33,7 @@ class LessonImportAdapter(
             view.setBackgroundColor(Color.TRANSPARENT)
         }
         val tv = view.findViewById<TextView>(R.id.text1)
-        val name: String =
-            PaukerManager.Companion.instance()!!.getReadableFileName(data[position])
+        val name: String? = PaukerManager.instance().getReadableFileName(data[position])
         tv.text = name
         return view
     }
