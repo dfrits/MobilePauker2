@@ -14,6 +14,7 @@ object Log {
     const val WARN = 0xA4
     const val ERROR = 0xA5
     const val logLevel = VERBOSE
+
     fun i(tag: String?, msg: String?) {
         if (!enableLog || logLevel > INFO) {
             return

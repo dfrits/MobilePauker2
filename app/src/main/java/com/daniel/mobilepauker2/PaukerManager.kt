@@ -65,8 +65,8 @@ class PaukerManager private constructor() {
             return false;
         }*/
         currentFileName = Constants.DEFAULT_FILE_NAME
-        ModelManager.Companion.instance()!!.createNewLesson()
-    }// Validate the filename
+        ModelManager.instance().createNewLesson()
+    }
 
     // Todo replace this with the File Class
     var fileAbsolutePath: String?

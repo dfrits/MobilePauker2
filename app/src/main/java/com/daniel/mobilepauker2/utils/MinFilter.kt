@@ -14,6 +14,7 @@ import android.text.TextWatcher
  * hs-augsburg
  */
 class MinFilter(private val preference: EditTextPreference) : TextWatcher {
+
     override fun beforeTextChanged(
         s: CharSequence,
         start: Int,
