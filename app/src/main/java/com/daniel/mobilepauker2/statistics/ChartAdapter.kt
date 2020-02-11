@@ -9,6 +9,7 @@ import com.daniel.mobilepauker2.R
 import com.daniel.mobilepauker2.model.ModelManager
 import com.daniel.mobilepauker2.statistics.ChartBar.ChartBarCallback
 import java.util.*
+import kotlin.math.max
 
 /**
  * Created by Daniel on 27.02.2018.
@@ -19,11 +20,12 @@ import java.util.*
  */
 class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?) :
     RecyclerView.Adapter<ChartAdapter.ViewHolder>() {
-    private val modelManager: ModelManager? = ModelManager.Companion.instance()
+    private val modelManager: ModelManager = ModelManager.instance()
     private val batchStatistics: List<BatchStatistics?>?
     private val callback: ChartAdapterCallback?
     private val lessonSize: Int
     private val chartBars: List<ChartBar>
+
     override fun onCreateViewHolder(
         parent: ViewGroup,
         position: Int
@@ -34,26 +36,32 @@ class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?
         val abgl: Int
         val ungel: Int
         val gel: Int
-        val cbc = ChartBarCallback { callback?.onClick(position) }
+
+        val cbc = object : ChartBarCallback {
+            override fun onClick() {
+                callback?.onClick(position)
+            }
+        }
         val chartBar = ChartBar(v, cbc)
+
         when (position) {
             0 -> {
                 titel = context.resources.getString(R.string.sum)
-                abgl = modelManager.getExpiredCardsSize()
-                ungel = modelManager.getUnlearnedBatchSize()
+                abgl = modelManager.expiredCardsSize
+                ungel = modelManager.unlearnedBatchSize
                 gel = lessonSize - abgl - ungel
                 chartBar.show(context, titel, lessonSize, gel, ungel, abgl, lessonSize)
             }
             1 -> {
                 titel = context.resources.getString(R.string.untrained)
-                ungel = modelManager.getUnlearnedBatchSize()
+                ungel = modelManager.unlearnedBatchSize
                 chartBar.show(context, titel, ungel, -1, ungel, -1, lessonSize)
             }
             else -> {
                 titel = context.getString(R.string.stack) + (position - 1)
-                val sum = batchStatistics!![position - 2].getBatchSize()
-                abgl = batchStatistics[position - 2].getExpiredCardsSize()
-                gel = sum - abgl
+                val sum = batchStatistics!![position - 2]?.batchSize ?: 0
+                abgl = batchStatistics[position - 2]?.expiredCardsSize ?: 0
+                gel = max(0, sum - abgl)
                 chartBar.show(context, titel, sum, gel, -1, abgl, lessonSize)
             }
         }
@@ -82,8 +90,8 @@ class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?
     }
 
     init {
-        batchStatistics = modelManager.getBatchStatistics()
-        lessonSize = modelManager.getLessonSize()
+        batchStatistics = modelManager.batchStatistics
+        lessonSize = modelManager.lessonSize
         this.callback = callback
         chartBars = ArrayList(itemCount)
     }

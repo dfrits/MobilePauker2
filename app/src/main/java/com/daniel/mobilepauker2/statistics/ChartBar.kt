@@ -16,12 +16,12 @@ import com.db.chart.view.StackBarChartView
  * Daniel Fritsch
  * hs-augsburg
  */
-internal class ChartBar(view: View, callback: ChartBarCallback?) {
-    private val chart: StackBarChartView
-    private val abglValue: TextView
-    private val gelValue: TextView
-    private val sumValue: TextView
-    private val callback: ChartBarCallback?
+internal class ChartBar(view: View, private val callback: ChartBarCallback?) {
+    private val chart: StackBarChartView = view.findViewById(R.id.chartBar)
+    private val abglValue: TextView = view.findViewById(R.id.abgelaufenValue)
+    private val gelValue: TextView = view.findViewById(R.id.gelerntValue)
+    private val sumValue: TextView = view.findViewById(R.id.sumValue)
+
     /**
      * Erstellt einen Balken mit den jeweiligen Farben und setzt die Textfelder darunter.
      * -1 bedeutet kein Balken und kein Label.
@@ -45,7 +45,8 @@ internal class ChartBar(view: View, callback: ChartBarCallback?) {
         ungel: Int,
         abgl: Int,
         numAllCards: Int
-    ) { // String zu einem Array ändern
+    ) {
+        // String zu einem Array ändern
         val titelLabel = arrayOf(titel)
         // Labels setzen
         var text = if (abgl == -1) "" else abgl.toString()
@@ -56,6 +57,7 @@ internal class ChartBar(view: View, callback: ChartBarCallback?) {
         sumValue.text = text
         // Bar initialisieren und zum DataSet hinzufügen
         var stackBarSet: BarSet
+
         if (ungel != -1) {
             stackBarSet = BarSet(titelLabel, floatArrayOf(ungel.toFloat()))
             stackBarSet.color = context.getColor(R.color.unlearned)
@@ -94,13 +96,5 @@ internal class ChartBar(view: View, callback: ChartBarCallback?) {
 
     interface ChartBarCallback {
         fun onClick()
-    }
-
-    init {
-        chart = view.findViewById(R.id.chartBar)
-        abglValue = view.findViewById(R.id.abgelaufenValue)
-        gelValue = view.findViewById(R.id.gelerntValue)
-        sumValue = view.findViewById(R.id.sumValue)
-        this.callback = callback
     }
 }
