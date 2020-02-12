@@ -19,7 +19,7 @@ import java.util.*
  */
 class CardAdapter(
     myContext: Context,
-    private val items: MutableList<FlashCard?>
+    private val items: List<FlashCard?>
 ) : ArrayAdapter<FlashCard?>(myContext, R.layout.search_result, items) {
 
     override fun getView(position: Int, convertView: View, parent: ViewGroup): View {

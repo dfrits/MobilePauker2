@@ -475,11 +475,11 @@ class SyncDialog : Activity() {
             val file = list[i]
             if (file.exists()) data[i] = file
         }
-        val uploadTask: AsyncTask<File?, Void?, List<Metadata?>?>
+        val uploadTask: AsyncTask<File, Void, List<Metadata>?>
         uploadTask = UploadFileTask(
             DropboxClientFactory.client,
             object : UploadFileTask.Callback {
-                override fun onUploadComplete(result: List<Metadata?>?) {
+                override fun onUploadComplete(result: List<Metadata>) {
                     modelManager.resetAddedFilesData(context)
                     Log.d("SyncDialog:uploadFiles", "upload success")
                 }

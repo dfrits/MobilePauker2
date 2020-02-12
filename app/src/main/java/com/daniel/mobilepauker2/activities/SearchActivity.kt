@@ -182,7 +182,7 @@ class SearchActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun showResults(results: List<FlashCard?>?) {
+    private fun showResults(results: List<FlashCard?>) {
         val adapter = CardAdapter(context, results)
         listView?.adapter = adapter
         listView?.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
@@ -314,7 +314,7 @@ class SearchActivity : AppCompatActivity() {
                     }
                     checkedCards = null
                     paukerManager.isSaveRequired = true
-                    modelManager!!.setCurrentPack(context, stackIndex)
+                    modelManager.setCurrentPack(context, stackIndex)
                     pack = modelManager.currentPack
                     invalidateOptionsMenu()
                 }
@@ -323,10 +323,10 @@ class SearchActivity : AppCompatActivity() {
         listView!!.setMultiChoiceModeListener(modalListener)
     }
 
-    private fun queryString(query: String): List<FlashCard?>? {
-        var results: MutableList<FlashCard?>? = ArrayList()
+    private fun queryString(query: String): List<FlashCard?> {
+        var results: MutableList<FlashCard?> = ArrayList()
         if (query == "") {
-            results = pack
+            pack?.let { results = it }
         } else {
             var card: FlashCard?
             for (i in pack!!.indices) {
@@ -335,15 +335,15 @@ class SearchActivity : AppCompatActivity() {
                     "SearchActivity::ShowResults",
                     "Index - " + card?.id
                 )
-                val frontSide = card?.frontSide?.text?.toLowerCase() ?: ""
-                val backSide = card?.reverseSide?.text?.toLowerCase() ?: ""
+                val frontSide = card?.frontSide?.text?.toLowerCase(Locale.getDefault()) ?: ""
+                val backSide = card?.reverseSide?.text?.toLowerCase(Locale.getDefault()) ?: ""
                 //frontSide = Normalizer.normalize(frontSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
 //backSide = Normalizer.normalize(backSide, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
 //query = Normalizer.normalize(query, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");;
-                if (frontSide.contains(query.toLowerCase())
-                    || backSide.contains(query.toLowerCase())
+                if (frontSide.contains(query.toLowerCase(Locale.getDefault()))
+                    || backSide.contains(query.toLowerCase(Locale.getDefault()))
                 ) {
-                    results!!.add(card)
+                    results.add(card)
                     itemPosition!!.add(i)
                 }
             }

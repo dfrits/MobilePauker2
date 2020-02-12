@@ -1,8 +1,8 @@
 package com.daniel.mobilepauker2.model
 
-import android.content.AsyncTaskLoader
 import android.content.Context
 import android.database.Cursor
+import androidx.loader.content.AsyncTaskLoader
 
 /**
  * Created by Daniel on 18.03.2018.
@@ -11,28 +11,29 @@ import android.database.Cursor
  * Daniel Fritsch
  * hs-augsburg
  */
-class CursorLoader(
-    context: Context?,
-    private val adapter: CardPackRamAdapter?
-) : AsyncTaskLoader<Cursor>(context) {
+class CursorLoader(context: Context, private val adapter: CardPackRamAdapter?) :
+    AsyncTaskLoader<Cursor>(context) {
     private var cursor: Cursor? = null
+
     override fun loadInBackground(): Cursor? {
         if (cursor == null) cursor = adapter!!.fetchAllFlashCards()
         return cursor
     }
 
-    override fun deliverResult(result: Cursor) {
-        if (isReset) {
-            result.close()
-            return
-        }
-        val oldCursor = cursor
-        cursor = result
-        if (isStarted) {
-            super.deliverResult(result)
-        }
-        if (oldCursor != null && oldCursor !== result) {
-            oldCursor.close()
+    override fun deliverResult(result: Cursor?) {
+        if (result != null) {
+            if (isReset) {
+                result.close()
+                return
+            }
+            val oldCursor = cursor
+            cursor = result
+            if (isStarted) {
+                super.deliverResult(result)
+            }
+            if (oldCursor != null && oldCursor !== result) {
+                oldCursor.close()
+            }
         }
     }
 
@@ -58,5 +59,4 @@ class CursorLoader(
             cursor!!.close()
         }
     }
-
 }
