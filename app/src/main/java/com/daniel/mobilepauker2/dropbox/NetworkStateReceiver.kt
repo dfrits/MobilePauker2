@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
-import com.daniel.mobilepauker2.utils.Log
+import com.daniel.mobilepauker2.pauker_native.Log
 
 class NetworkStateReceiver(private val callback: ReceiverCallback) : BroadcastReceiver() {
 

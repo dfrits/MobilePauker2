@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".activities.MainMenu"
+            android:name=".main.MainMenu"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
@@ -27,18 +27,18 @@
         </activity>
 
         <activity
-            android:name=".activities.LessonImportActivity"
+            android:name=".lessonimport.LessonImportActivity"
             android:label="@string/lessons"
             android:screenOrientation="portrait"
-            android:parentActivityName=".activities.MainMenu"
+            android:parentActivityName=".main.MainMenu"
             android:theme="@style/OpenLessonTheme" />
 
         <activity
-            android:name=".activities.EditDescrptionActivity"
+            android:name=".editor.EditDescrptionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".activities.SearchActivity"
+            android:name=".browse.SearchActivity"
             android:label="@string/search" />
 
         <activity
@@ -57,7 +57,7 @@
         </activity>
 
         <activity
-            android:name=".activities.About"
+            android:name=".core.About"
             android:label="@string/about"
             android:screenOrientation="portrait">
 
@@ -68,17 +68,17 @@
         </activity>
 
         <activity
-            android:name=".activities.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activities.LearnCardsActivity"
+            android:name=".learning.LearnCardsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".activities.SaveDialog"
+            android:name=".lessonexport.SaveDialog"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
@@ -90,20 +90,20 @@
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:name=".activities.EditCardActivity"
+            android:name=".editor.EditCardActivity"
             android:label="@string/edit_card"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".activities.AddCardActivity"
+            android:name=".editor.AddCardActivity"
             android:label="@string/add_new_card"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".activities.LessonReceiver"
+            android:name=".lessonimport.LessonReceiver"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
@@ -139,24 +139,24 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".model.TimerService" />
+        <service android:name=".learning.TimerService" />
 
-        <receiver android:name=".model.BootReceiver">
+        <receiver android:name=".core.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
         <activity
-            android:name=".activities.ShortcutReceiver"
+            android:name=".main.ShortcutReceiver"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <!-- Notification -->
 
-        <receiver android:name=".model.notification.AlarmNotificationReceiver" />
+        <receiver android:name="com.daniel.mobilepauker2.core.notification.AlarmNotificationReceiver" />
 
         <service
-            android:name=".model.notification.NotificationService"
+            android:name="com.daniel.mobilepauker2.core.notification.NotificationService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 </manifest>

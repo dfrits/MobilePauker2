@@ -8,10 +8,10 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.daniel.mobilepauker2.PaukerManager
+import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
-import com.daniel.mobilepauker2.utils.Constants
-import com.daniel.mobilepauker2.utils.Log
+import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.pauker_native.Log
 import com.dropbox.core.android.Auth
 
 class DropboxAccDialog : Activity() {
