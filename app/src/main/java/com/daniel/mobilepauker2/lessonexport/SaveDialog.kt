@@ -32,6 +32,7 @@ import java.io.File
  * veesy.de
  * hs-augsburg
  */
+@Suppress("UNUSED_PARAMETER")
 class SaveDialog : Activity() {
     private val context: Context = this
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,19 +62,19 @@ class SaveDialog : Activity() {
         val textField = view.findViewById<EditText>(R.id.eTGiveLessonName)
         val builder =
             AlertDialog.Builder(context, R.style.NamingDialogTheme)
-        val paukerManager: PaukerManager = PaukerManager.Companion.instance()
+        val paukerManager: PaukerManager = PaukerManager.instance()
         builder.setView(view)
-            .setPositiveButton(R.string.ok) { dialog, which ->
+            .setPositiveButton(R.string.ok) { dialog, _ ->
                 dialog.dismiss()
                 if (paukerManager.setCurrentFileName(textField.text.toString())) {
-                    ModelManager.Companion.instance()!!.addLesson(context)
+                    ModelManager.instance().addLesson(context)
                     saveLesson()
                 } else {
                     setResult(RESULT_CANCELED)
                     finish()
                 }
             }
-            .setNeutralButton(R.string.not_now) { dialog, which ->
+            .setNeutralButton(R.string.not_now) { dialog, _ ->
                 dialog.dismiss()
                 setResult(RESULT_CANCELED)
                 finish()
@@ -81,32 +82,22 @@ class SaveDialog : Activity() {
             .setOnDismissListener {
                 val imm =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (imm != null && currentFocus != null && imm.isAcceptingText) {
-                    imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+                if (currentFocus != null && imm.isAcceptingText) {
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
                 }
             }
             .setOnCancelListener { finish() }
         val dialog = builder.create()
         textField.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(
-                s: CharSequence,
-                start: Int,
-                count: Int,
-                after: Int
-            ) {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
             }
 
-            override fun onTextChanged(
-                s: CharSequence,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             }
 
             override fun afterTextChanged(s: Editable) {
                 var newName = s.toString()
-                val isEmptyString = newName.length > 0
+                val isEmptyString = newName.isNotEmpty()
                 if (!newName.endsWith(".pau.gz")) newName = "$newName.pau.gz"
                 val isValidName = paukerManager.isNameValid(newName)
                 val isExisting = paukerManager.isFileExisting(context, newName)
@@ -130,7 +121,7 @@ class SaveDialog : Activity() {
                             .getBoolean(Constants.MESSAGE_BOOL_KEY)
                         if (result) {
                             setResult(RESULT_OK)
-                            if (SettingsManager.instance()!!.getBoolPreference(
+                            if (SettingsManager.instance().getBoolPreference(
                                     context,
                                     Keys.AUTO_UPLOAD
                                 )

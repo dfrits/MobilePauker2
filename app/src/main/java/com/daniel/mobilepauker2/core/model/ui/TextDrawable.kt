@@ -8,13 +8,14 @@ class TextDrawable private constructor(private val s: String, backColor: Int) :
     ShapeDrawable(OvalShape()) {
     private val size = 120
 
-    constructor(text: String) : this(text, Color.BLACK) {}
-    constructor(backColor: Int) : this("", backColor) {}
+    constructor(text: String) : this(text, Color.BLACK)
+
+    constructor(backColor: Int) : this("", backColor)
 
     override fun draw(canvas: Canvas) {
         super.draw(canvas)
         val paint = paint
-        if (!s.isEmpty()) {
+        if (s.isNotEmpty()) {
             paint.color = Color.WHITE
             paint.textSize = size / 2.toFloat()
             val bounds = Rect()

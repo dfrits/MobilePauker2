@@ -12,41 +12,14 @@ import java.util.logging.Logger
  * A Lesson consists of cards and the status information for each card.
  * @author Ronny.Standtke@gmx.net
  */
+@Suppress("unused")
 class Lesson {
-    /**
-     * returns the lesson description
-     * @return the lesson description
-     */
-    /**
-     * sets the description of this lesson
-     * @param description Describes the lesson. The author should include what
-     * the lesson is all about, when it was created and information abou how to
-     * reach him/her.
-     */
-    var description: String? = ""
-    /**
-     * returns the summary batch of this lesson
-     * @return the summary batch of this lesson
-     */
-    // all card batches
+    var description: String = ""
     val summaryBatch: SummaryBatch
-    /**
-     * returns the batch with the unlearned cards
-     * @return the batch with the unlearned cards
-     */
-    val unlearnedBatch: Batch
-    /**
-     * returns the list of cards that are in the ultra-short-term memory
-     * @return the list of cards that are in the ultra-short-term memory
-     */
+    val unlearnedBatch: Batch = Batch(null)
     val ultraShortTermList: MutableList<Card>
-    /**
-     * returns the list of cards that are in the short-term memory
-     * @return the list of cards that are in the short-term memory
-     */
     val shortTermList: MutableList<Card>
     internal val longTermBatches: MutableList<LongTermBatch>
-    private val random: Random? = null
 
     /**
      * adds a new card to this lesson
@@ -434,7 +407,6 @@ class Lesson {
      * Creates new Lesson
      */
     init {
-        unlearnedBatch = Batch(null)
         ultraShortTermList =
             ArrayList()
         shortTermList = ArrayList()

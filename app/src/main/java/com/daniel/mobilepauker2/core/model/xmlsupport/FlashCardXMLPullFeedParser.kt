@@ -9,9 +9,11 @@ import com.daniel.mobilepauker2.pauker_native.Log
 import org.xmlpull.v1.XmlPullParser
 import java.net.URL
 import java.util.*
+import kotlin.math.pow
 
 class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl) {
 
+    @Suppress("LocalVariableName")
     override fun parse(): Lesson {
         var flashCards: MutableList<FlashCard>? = null
         val parser = Xml.newPullParser()
@@ -30,11 +32,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                     XmlPullParser.START_DOCUMENT -> flashCards = ArrayList()
                     XmlPullParser.START_TAG -> {
                         name = parser.name
-                        if (name.equals(
-                                LESSON,
-                                ignoreCase = true
-                            )
-                        ) {
+                        if (name.equals(LESSON, ignoreCase = true)) {
                             val lessonFormatString =
                                 parser.getAttributeValue(null, "LessonFormat")
                             if (lessonFormatString != null) {
@@ -44,81 +42,51 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                                     "Lesson format is $lessonFormat"
                                 )
                             }
-                        } else if (name.equals(
-                                FlashCardBaseFeedParser.Companion.DESCRIPTION,
-                                ignoreCase = true
-                            )
-                        ) {
+                        } else if (name.equals(DESCRIPTION, ignoreCase = true)) {
                             description = parser.nextText()
                             if (description == null) {
                                 description = "No description"
                             }
-                        } else if (name.equals(
-                                FlashCardBaseFeedParser.Companion.CARD,
-                                ignoreCase = true
-                            )
-                        ) {
+                        } else if (name.equals(CARD, ignoreCase = true)) {
                             currentFlashCard =
                                 FlashCard()
-                        } else if (name.equals(
-                                FlashCardBaseFeedParser.Companion.BATCH,
-                                ignoreCase = true
-                            )
-                        ) {
+                        } else if (name.equals(BATCH, ignoreCase = true)) {
                             batchCount++
                         } else if (currentFlashCard != null) {
                             currentFlashCard.initialBatch =
                                 batchCount - 1 // This line is repeated many times!
-                            if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.FRONTSIDE,
-                                    ignoreCase = true
-                                ) || name.equals(
-                                    FlashCardBaseFeedParser.Companion.REVERSESIDE,
-                                    ignoreCase = true
-                                )
+                            if (name.equals(FRONTSIDE, ignoreCase = true)
+                                || name.equals(REVERSESIDE, ignoreCase = true)
                             ) {
                                 var orientation =
                                     parser.getAttributeValue(null, "Orientation")
-                                orientation =
-                                    orientation ?: Constants.STANDARD_ORIENTATION
+                                orientation = orientation ?: Constants.STANDARD_ORIENTATION
                                 val repeatByTyping =
                                     parser.getAttributeValue(null, "RepeatByTyping")
                                 val bRepeatByTyping =
                                     if (repeatByTyping == null) Constants.STANDARD_REPEAT else repeatByTyping == "true"
                                 val learnedTimestamp =
                                     parser.getAttributeValue(null, "LearnedTimestamp")
-                                if (name.equals(
-                                        FlashCardBaseFeedParser.Companion.FRONTSIDE,
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                if (name.equals(FRONTSIDE, ignoreCase = true)) {
                                     SIDEA = true
                                     SIDEB = false
-                                    if (orientation != null) {
-                                        currentFlashCard.frontSide.orientation =
-                                            ComponentOrientation(
-                                                orientation
-                                            )
-                                    }
+                                    currentFlashCard.frontSide.orientation =
+                                        ComponentOrientation(
+                                            orientation
+                                        )
                                     currentFlashCard.setRepeatByTyping(bRepeatByTyping)
                                     if (learnedTimestamp != null) {
                                         val l =
                                             learnedTimestamp.trim { it <= ' ' }.toLong()
                                         currentFlashCard.setLearnedTimeStamp(l)
                                     }
-                                } else if (name.equals(
-                                        FlashCardBaseFeedParser.Companion.REVERSESIDE,
-                                        ignoreCase = true
-                                    )
-                                ) {
+                                } else if (name.equals(REVERSESIDE, ignoreCase = true)) {
                                     SIDEA = false
                                     SIDEB = true
-                                    if (orientation != null) {
-                                        currentFlashCard.reverseSide.orientation =
-                                            ComponentOrientation(
-                                                orientation
-                                            )
-                                    }
+                                    currentFlashCard.reverseSide.orientation =
+                                        ComponentOrientation(
+                                            orientation
+                                        )
                                     currentFlashCard.reverseSide
                                         .setRepeatByTyping(bRepeatByTyping)
                                     if (learnedTimestamp != null) {
@@ -128,26 +96,22 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                                     }
                                 }
                                 //Log.d("FlashCardXMLPullFeedParser::parse", "orientation=" + orientation);
-                            } else if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.TEXT,
-                                    ignoreCase = true
-                                )
-                            ) {
-                                if (SIDEA) {
-                                    currentFlashCard.sideAText = parser.nextText()
-                                    //Log.d("FlashCardXMLPullFeedParser::parse","sideA=" + currentFlashCard.getSideAText());
-                                } else if (SIDEB) {
-                                    currentFlashCard.sideBText = parser.nextText()
-                                } else {
-                                    currentFlashCard.sideAText = "Empty"
-                                    currentFlashCard.sideBText = "Empty"
+                            } else if (name.equals(TEXT, ignoreCase = true)) {
+                                when {
+                                    SIDEA -> {
+                                        currentFlashCard.sideAText = parser.nextText()
+                                        //Log.d("FlashCardXMLPullFeedParser::parse","sideA=" + currentFlashCard.getSideAText());
+                                    }
+                                    SIDEB -> {
+                                        currentFlashCard.sideBText = parser.nextText()
+                                    }
+                                    else -> {
+                                        currentFlashCard.sideAText = "Empty"
+                                        currentFlashCard.sideBText = "Empty"
+                                    }
                                 }
                                 //Log.d("FlashCardXMLPullFeedParser::parse","sideB=" + currentFlashCard.getSideBText());
-                            } else if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.FONT,
-                                    ignoreCase = true
-                                )
-                            ) {
+                            } else if (name.equals(FONT, ignoreCase = true)) {
                                 var background =
                                     parser.getAttributeValue(null, "Background")
                                 var bold = parser.getAttributeValue(null, "Bold")
@@ -202,7 +166,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                     XmlPullParser.END_TAG -> {
                         name = parser.name
                         if (name.equals(
-                                FlashCardBaseFeedParser.Companion.CARD,
+                                CARD,
                                 ignoreCase = true
                             ) && currentFlashCard != null
                         ) {
@@ -225,14 +189,11 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
         }
     }
 
-    private fun setupLesson(
-        flashCardList: List<FlashCard>?,
-        description: String?
-    ): Lesson {
+    private fun setupLesson(flashCardList: List<FlashCard>?, description: String?): Lesson {
         val newLesson = Lesson()
-        val summaryBatch: Batch? =
-            newLesson.summaryBatch
+        val summaryBatch: Batch? = newLesson.summaryBatch
         newLesson.description = description
+
         for (i in flashCardList!!.indices) {
             val flashCard = flashCardList[i]
             if (flashCard.initialBatch < 3) {
@@ -241,6 +202,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                 flashCard.frontSide.isLearned =
                     true // Warning using flash card set learned here sets the learned timestamp!
             }
+
             if (newLesson.numberOfLongTermBatches < flashCard.initialBatch - 2) {
                 Log.d(
                     "FC~XMLPullFeedParser::setupLesson",
@@ -260,20 +222,18 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                     newLesson.addLongTermBatch()
                 }
             }
-            var batch: Batch?
-            batch = if (flashCard.isLearned) { // must put the card into the corresponding long
-// term batch
-                newLesson.getLongTermBatch(
-                    flashCard.initialBatch - 3
-                )
-            } else { // must put the card into the unlearned batch
-                newLesson.unlearnedBatch
-            }
-            batch!!.addCard(flashCard)
+
+            val batch =
+                if (flashCard.isLearned) {
+                    // must put the card into the corresponding long term batch
+                    newLesson.getLongTermBatch(flashCard.initialBatch - 3)
+                } else { // must put the card into the unlearned batch
+                    newLesson.unlearnedBatch
+                }
+
+            batch.addCard(flashCard)
             summaryBatch!!.addCard(flashCard)
-            //Log.d("FlashCardXMLPullFeedParser::setupLesson" , "Added card to batch " + flashCard.getInitialBatch());
         }
-        //newLesson.trim();
         newLesson.refreshExpiration()
         printLessonToDebug(newLesson)
         return newLesson
@@ -302,11 +262,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                     when (eventType) {
                         XmlPullParser.START_TAG -> {
                             name = parser.name
-                            if (name.equals(
-                                    LESSON,
-                                    ignoreCase = true
-                                )
-                            ) {
+                            if (name.equals(LESSON, ignoreCase = true)) {
                                 val lessonFormatString =
                                     parser.getAttributeValue(null, "LessonFormat")
                                 if (lessonFormatString != null) {
@@ -316,28 +272,17 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                                         "Lesson format is $lessonFormat"
                                     )
                                 }
-                            } else if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.BATCH,
-                                    ignoreCase = true
-                                )
-                            ) {
+                            } else if (name.equals(BATCH, ignoreCase = true)) {
                                 batchCount++
-                            } else if (name.equals(
-                                    FlashCardBaseFeedParser.Companion.FRONTSIDE,
-                                    ignoreCase = true
-                                )
-                                || name.equals(
-                                    FlashCardBaseFeedParser.Companion.REVERSESIDE,
-                                    ignoreCase = true
-                                )
+                            } else if (name.equals(FRONTSIDE, ignoreCase = true)
+                                || name.equals(REVERSESIDE, ignoreCase = true)
                             ) {
                                 val learnedTimestamp =
                                     parser.getAttributeValue(null, "LearnedTimestamp")
                                 if (learnedTimestamp != null) {
-                                    val factor =
-                                        Math.pow(Math.E, batchCount - 4.toDouble())
+                                    val factor = Math.E.pow(batchCount - 4.toDouble())
                                     val expirationTime =
-                                        (LongTermBatch.Companion.expirationUnit * factor) as Long
+                                        (LongTermBatch.expirationUnit * factor).toLong()
                                     try {
                                         val expireTimeStamp =
                                             learnedTimestamp.toLong() + expirationTime

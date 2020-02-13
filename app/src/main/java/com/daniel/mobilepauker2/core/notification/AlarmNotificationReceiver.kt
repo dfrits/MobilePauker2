@@ -49,11 +49,11 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         Log.d(
             "AlamNotificationReceiver::onReceive",
-            "PaukerActive: " + MainMenu.Companion.isPaukerActive
+            "PaukerActive: " + MainMenu.isPaukerActive
         )
         val showNotify: Boolean =
-            SettingsManager.Companion.instance()!!.getBoolPreference(context, Keys.SHOW_CARD_NOTIFY)
-        if (notificationManager != null && !MainMenu.Companion.isPaukerActive && showNotify) {
+            SettingsManager.instance().getBoolPreference(context, Keys.SHOW_CARD_NOTIFY)
+        if (!MainMenu.isPaukerActive && showNotify) {
             notificationManager.notify(
                 Constants.NOTIFICATION_ID,
                 builder.build()

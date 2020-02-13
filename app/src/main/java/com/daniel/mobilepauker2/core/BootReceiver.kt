@@ -7,6 +7,7 @@ import com.daniel.mobilepauker2.core.notification.NotificationService
 import com.daniel.mobilepauker2.pauker_native.Log
 
 class BootReceiver : BroadcastReceiver() {
+
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("BootReceiver::onReceive", "Entered")
         val action = intent.action
@@ -24,7 +25,8 @@ class BootReceiver : BroadcastReceiver() {
             "BootReceiver::onReceive",
             "NotificationService started"
         )
+
         // Autosync
-// TODO implementieren
+        // TODO implementieren
     }
 }

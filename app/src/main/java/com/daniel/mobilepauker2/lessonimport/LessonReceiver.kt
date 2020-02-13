@@ -19,6 +19,7 @@ import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.Log
 import java.io.*
 
+@Suppress("UNUSED_PARAMETER")
 class LessonReceiver : Activity() {
     private val context: Activity = this
 
@@ -33,7 +34,7 @@ class LessonReceiver : Activity() {
                 "LessonReceiver::importLesson filename: ",
                 "intent is null"
             )
-            PaukerManager.Companion.showToast(context, "Keine Paukerdatei", Toast.LENGTH_LONG)
+            PaukerManager.showToast(context, "Keine Paukerdatei", Toast.LENGTH_LONG)
             finish()
         } else {
             val fileUri = intent.data
@@ -43,7 +44,7 @@ class LessonReceiver : Activity() {
                 filePath
             )
             if (filePath == null || PaukerManager.instance().isNameEmpty(filePath)) {
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context,
                     "Keine Datei gefunden",
                     Toast.LENGTH_SHORT
@@ -60,7 +61,7 @@ class LessonReceiver : Activity() {
                         "LessonReceiver::importLesson localFile: ",
                         "File existiert bereits"
                     )
-                    PaukerManager.Companion.showToast(
+                    PaukerManager.showToast(
                         context,
                         "Datei existiert bereits",
                         Toast.LENGTH_LONG
@@ -78,12 +79,12 @@ class LessonReceiver : Activity() {
                                 "LessonReceiver::importLesson",
                                 "import success"
                             )
-                            ModelManager.Companion.instance()!!.addLesson(context, localFile)
+                            ModelManager.instance().addLesson(context, localFile)
                             Log.d(
                                 "LessonReceiver::importLesson",
                                 "lesson added"
                             )
-                            PaukerManager.Companion.instance()!!.loadLessonFromFile(localFile)
+                            PaukerManager.instance().loadLessonFromFile(localFile)
                             Log.d(
                                 "LessonReceiver::importLesson",
                                 "lesson opend"
@@ -92,12 +93,12 @@ class LessonReceiver : Activity() {
                                 "LessonReceiver::importLesson",
                                 "start MainMenu"
                             )
-                            PaukerManager.Companion.showToast(
+                            PaukerManager.showToast(
                                 context,
                                 R.string.lesson_import_success,
                                 Toast.LENGTH_LONG
                             )
-                            if (SettingsManager.Companion.instance()!!.getBoolPreference(
+                            if (SettingsManager.instance().getBoolPreference(
                                     context,
                                     Keys.AUTO_UPLOAD
                                 )
@@ -112,7 +113,7 @@ class LessonReceiver : Activity() {
                             }
                         }
                     } catch (e: IOException) {
-                        PaukerManager.Companion.showToast(
+                        PaukerManager.showToast(
                             context,
                             "Fehler beim Einlesen",
                             Toast.LENGTH_SHORT
@@ -155,9 +156,9 @@ class LessonReceiver : Activity() {
         val accessToken = PreferenceManager.getDefaultSharedPreferences(context)
             .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         val intent = Intent(context, SyncDialog::class.java)
-        intent.putExtra(SyncDialog.Companion.ACCESS_TOKEN, accessToken)
-        intent.putExtra(SyncDialog.Companion.FILES, localFile)
-        intent.action = SyncDialog.Companion.UPLOAD_FILE_ACTION
+        intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
+        intent.putExtra(SyncDialog.FILES, localFile)
+        intent.action = SyncDialog.UPLOAD_FILE_ACTION
         startActivityForResult(
             intent,
             Constants.REQUEST_CODE_SYNC_DIALOG

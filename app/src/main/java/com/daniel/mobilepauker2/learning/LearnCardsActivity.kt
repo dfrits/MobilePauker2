@@ -37,6 +37,7 @@ import com.daniel.mobilepauker2.pauker_native.Log
 import com.danilomendes.progressbar.InvertedTextProgressbar
 import java.util.*
 
+@Suppress("UNUSED_PARAMETER")
 class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     TimerService.Callback {
     private val paukerManager: PaukerManager? = PaukerManager.instance()
@@ -68,11 +69,10 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
         setContentView(R.layout.learn_cards)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-        if (modelManager?.learningPhase != LearningPhase.REPEATING_LTM
-            && (modelManager?.learningPhase != LearningPhase.SIMPLE_LEARNING
+        if (modelManager.learningPhase != LearningPhase.REPEATING_LTM
+            && (modelManager.learningPhase != LearningPhase.SIMPLE_LEARNING
                     || modelManager.learningPhase != LearningPhase.NOTHING)
-        ) { // A check on mActivitySetupOk is done here as onCreate is called even if the
-// super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
+        ) {
             if (mActivitySetupOk) {
                 initTimer()
             }
@@ -82,20 +82,16 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         initButtons()
     }
 
-    public override fun updateCurrentCard() {
+    override fun updateCurrentCard() {
         try {
             if (isCardCursorAvailable) {
                 currentCard.sideAText =
-                    mCardCursor!!.getString(CardPackAdapter.Companion.KEY_SIDEA_ID)
+                    mCardCursor!!.getString(CardPackAdapter.KEY_SIDEA_ID)
                 currentCard.sideBText =
-                    mCardCursor!!.getString(CardPackAdapter.Companion.KEY_SIDEB_ID)
+                    mCardCursor!!.getString(CardPackAdapter.KEY_SIDEB_ID)
                 val learnStatus =
-                    mCardCursor!!.getString(CardPackAdapter.Companion.KEY_LEARN_STATUS_ID)
-                if (learnStatus.contentEquals("1")) {
-                    currentCard.isLearned = true
-                } else {
-                    currentCard.isLearned = false
-                }
+                    mCardCursor!!.getString(CardPackAdapter.KEY_LEARN_STATUS_ID)
+                currentCard.isLearned = learnStatus!!.contentEquals("1")
             } else {
                 currentCard.sideAText = ""
                 currentCard.sideBText = ""
@@ -109,13 +105,13 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                 "FlashCardSwipeScreenActivity::updateCurrentCard",
                 "Caught Exception"
             )
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.load_card_data_error,
                 Toast.LENGTH_SHORT
             )
             ErrorReporter.instance()
-                .AddCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?")
+                .addCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?")
             finish()
         }
     }
@@ -134,8 +130,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                     currentCard.side = SideShowing.SIDE_B
                 }
                 fillInData(flipCardSides)
-                bShowMe!!.visibility = View.GONE
-                lRepeatButtons!!.visibility = View.VISIBLE
+                bShowMe?.visibility = View.GONE
+                lRepeatButtons?.visibility = View.VISIBLE
             }
         }
     }
@@ -159,12 +155,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             mCardCursor!!.moveToPosition(mSavedCursorPosition)
             updateCurrentCard()
             fillInData(flipCardSides)
-            if (bShowMe!!.visibility == View.VISIBLE
+            if (bShowMe?.visibility == View.VISIBLE
                 && (flipCardSides && currentCard.side == SideShowing.SIDE_A
                         || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
             ) {
-                bShowMe!!.visibility = View.GONE
-                lRepeatButtons!!.visibility = View.VISIBLE
+                bShowMe?.visibility = View.GONE
+                lRepeatButtons?.visibility = View.VISIBLE
             }
         }
         mSavedCursorPosition = -1
@@ -175,16 +171,16 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             updateCurrentCard()
             fillInData(flipCardSides)
             setButtonsVisibility()
-            if (bShowMe!!.visibility == View.VISIBLE
+            if (bShowMe?.visibility == View.VISIBLE
                 && (flipCardSides && currentCard.side == SideShowing.SIDE_A
                         || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
             ) {
-                bShowMe!!.visibility = View.GONE
-                lRepeatButtons!!.visibility = View.VISIBLE
+                bShowMe?.visibility = View.GONE
+                lRepeatButtons?.visibility = View.VISIBLE
             }
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == Activity.RESULT_OK) {
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.saving_success,
                     Toast.LENGTH_SHORT
@@ -192,7 +188,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                 paukerManager?.isSaveRequired = false
                 modelManager.showExpireToast(context)
             } else {
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.saving_error,
                     Toast.LENGTH_SHORT
@@ -207,7 +203,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.exit_learning_dialog)
-            .setPositiveButton(R.string.yes) { dialog, which ->
+            .setPositiveButton(R.string.yes) { _, _ ->
                 if (timerService != null) {
                     timerService!!.stopStmTimer()
                     timerService!!.stopUstmTimer()
@@ -223,7 +219,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                 }
                 finish()
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.cancel() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
             .create().show()
     }
 
@@ -261,13 +257,11 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
      * Falls die Acitvity vom System beendet wird, die Timer aber noch laufen.
      */
     override fun onDestroy() {
-        if (timerServiceConnection != null && timerServiceIntent != null) {
-            stopService(timerServiceIntent)
-            unbindService(timerServiceConnection)
-        }
+        timerServiceIntent?.let { stopService(it) }
+        timerServiceConnection?.let { unbindService(it) }
         val notifyManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notifyManager?.cancelAll()
+        notifyManager.cancelAll()
         isLearningRunning = false
         super.onDestroy()
     }
@@ -279,8 +273,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         val learningPhase = modelManager.learningPhase
         if (learningPhase == LearningPhase.REPEATING_LTM || learningPhase == LearningPhase.SIMPLE_LEARNING || learningPhase == LearningPhase.NOTHING || learningPhase == LearningPhase.REPEATING_STM
         ) {
-            pauseButton?.setVisible(false)
-            restartButton?.setVisible(false)
+            pauseButton?.isVisible = false
+            restartButton?.isVisible = false
         }
         return true
     }
@@ -288,12 +282,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     private fun initTimer() {
         val ustmTotalTime = settingsManager.getStringPreference(context, Keys.USTM).toInt()
         ustmTimerBar = findViewById(R.id.UKZGTimerBar)
-        ustmTimerBar?.setMaxProgress(ustmTotalTime)
-        ustmTimerBar?.setMinProgress(0)
+        ustmTimerBar?.maxProgress = ustmTotalTime
+        ustmTimerBar?.minProgress = 0
         val stmTotalTime = settingsManager.getStringPreference(context, Keys.STM).toInt()
         stmTimerBar = findViewById(R.id.KZGTimerBar)
-        stmTimerBar?.setMaxProgress(stmTotalTime * 60)
-        stmTimerBar?.setMinProgress(0)
+        stmTimerBar?.maxProgress = stmTotalTime * 60
+        stmTimerBar?.minProgress = 0
         timerServiceConnection = object : ServiceConnection {
             override fun onServiceConnected(
                 name: ComponentName,
@@ -322,14 +316,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             }
         }
         timerServiceIntent = Intent(context, TimerService::class.java)
-        timerServiceIntent!!.putExtra(TimerService.Companion.USTM_TOTAL_TIME, ustmTotalTime)
-        timerServiceIntent!!.putExtra(TimerService.Companion.STM_TOTAL_TIME, stmTotalTime)
-        startService(timerServiceIntent)
-        bindService(
-            timerServiceIntent,
-            timerServiceConnection,
-            Context.BIND_AUTO_CREATE
-        )
+        timerServiceIntent?.putExtra(TimerService.USTM_TOTAL_TIME, ustmTotalTime)
+        timerServiceIntent?.putExtra(TimerService.STM_TOTAL_TIME, stmTotalTime)
+        timerServiceConnection?.let {
+            startService(timerServiceIntent)
+            bindService(timerServiceIntent, it, Context.BIND_AUTO_CREATE)
+        }
     }
 
     private fun pauseTimer() {
@@ -449,18 +441,19 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                     setButtonsVisibility()
                 }
             }
+            else -> return
         }
     }
 
     private fun setLearningPhase(newLearningsPhase: LearningPhase) { //Neue Phase dem Modelmanager mitteilen und Deck aktualisieren
-        modelManager!!.setLearningPhase(context, newLearningsPhase)
+        modelManager.setLearningPhase(context, newLearningsPhase)
         //Cursor an erste Stelle setzen
         mSavedCursorPosition = -1
         refreshCursor()
     }
 
     private fun finishLearning() {
-        if (settingsManager!!.getBoolPreference(context, Keys.AUTO_SAVE)) {
+        if (settingsManager.getBoolPreference(context, Keys.AUTO_SAVE)) {
             startActivityForResult(
                 Intent(context, SaveDialog::class.java),
                 Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL
@@ -471,7 +464,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         }
     }
 
-    fun initButtons() {
+    private fun initButtons() {
         bNext = findViewById(R.id.bNext)
         bShowMe = findViewById(R.id.bShowMe)
         lRepeatButtons = findViewById(R.id.lBRepeat)
@@ -492,47 +485,47 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     }
 
     private fun setButtonVisibilityWaiting() {
-        bNext!!.visibility = View.GONE
-        bShowMe!!.visibility = View.GONE
-        lRepeatButtons!!.visibility = View.GONE
-        lSkipWaiting!!.visibility = View.VISIBLE
+        bNext?.visibility = View.GONE
+        bShowMe?.visibility = View.GONE
+        lRepeatButtons?.visibility = View.GONE
+        lSkipWaiting?.visibility = View.VISIBLE
     }
 
     private fun setButtonVisibilityRepeating() {
-        bNext!!.visibility = View.GONE
-        bShowMe!!.visibility = View.VISIBLE
+        bNext?.visibility = View.GONE
+        bShowMe?.visibility = View.VISIBLE
         val text: String
         text = if (mCardCursor != null) {
-            val currentCard = modelManager!!.getCard(mCardCursor!!.position)
+            val currentCard = modelManager.getCard(mCardCursor!!.position)
             if (currentCard != null && currentCard.isRepeatedByTyping) getString(R.string.enter_answer) else getString(
                 R.string.show_me
             )
         } else {
             getString(R.string.show_me)
         }
-        bShowMe!!.text = text
-        lRepeatButtons!!.visibility = View.GONE
-        lSkipWaiting!!.visibility = View.GONE
+        bShowMe?.text = text
+        lRepeatButtons?.visibility = View.GONE
+        lSkipWaiting?.visibility = View.GONE
     }
 
     private fun setButtonVisibilityFilling() {
-        bNext!!.visibility = View.VISIBLE
-        bShowMe!!.visibility = View.GONE
-        lRepeatButtons!!.visibility = View.GONE
-        lSkipWaiting!!.visibility = View.GONE
+        bNext?.visibility = View.VISIBLE
+        bShowMe?.visibility = View.GONE
+        lRepeatButtons?.visibility = View.GONE
+        lSkipWaiting?.visibility = View.GONE
     }
 
     private fun disableButtons() {
-        bNext!!.isEnabled = false
-        bShowMe!!.isEnabled = false
+        bNext?.isEnabled = false
+        bShowMe?.isEnabled = false
         findViewById<View>(R.id.bYes).isEnabled = false
         findViewById<View>(R.id.bNo).isEnabled = false
         findViewById<View>(R.id.bSkipWaiting).isEnabled = false
     }
 
     private fun enableButtons() {
-        bNext!!.isEnabled = true
-        bShowMe!!.isEnabled = true
+        bNext?.isEnabled = true
+        bShowMe?.isEnabled = true
         findViewById<View>(R.id.bYes).isEnabled = true
         findViewById<View>(R.id.bNo).isEnabled = true
         findViewById<View>(R.id.bSkipWaiting).isEnabled = true
@@ -550,15 +543,14 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         val view = layoutInflater.inflate(R.layout.dialog_input, null)
         val inputField: MPEditText = view.findViewById(R.id.eTInput)
         builder.setView(view)
-            .setPositiveButton(R.string.proof) { dialog, which ->
-                val cardText: String?
-                cardText = if (flipCardSides) {
+            .setPositiveButton(R.string.proof) { dialog, _ ->
+                val cardText: String? = if (flipCardSides) {
                     currentCard.sideAText
                 } else {
                     currentCard.sideBText
                 }
                 val caseSensitive =
-                    settingsManager!!.getBoolPreference(context, Keys.CASE_SENSITIV)
+                    settingsManager.getBoolPreference(context, Keys.CASE_SENSITIV)
                 val input = inputField.text.toString()
                 if (caseSensitive && cardText == input) {
                     yesClicked(null)
@@ -567,25 +559,25 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                 } else showResultDialog(cardText, input)
                 dialog.dismiss()
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.dismiss() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
             .setOnDismissListener {
                 val imm =
                     getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (imm != null && currentFocus != null && imm.isAcceptingText) {
-                    imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+                if (currentFocus != null && imm.isAcceptingText) {
+                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
                 }
             }
         if (flipCardSides) {
             inputField.setFont(
-                modelManager!!.getCardFont(
-                    CardPackAdapter.Companion.KEY_SIDEA_ID,
+                modelManager.getCardFont(
+                    CardPackAdapter.KEY_SIDEA_ID,
                     mCardCursor!!.position
                 )
             )
         } else {
             inputField.setFont(
-                modelManager!!.getCardFont(
-                    CardPackAdapter.Companion.KEY_SIDEB_ID,
+                modelManager.getCardFont(
+                    CardPackAdapter.KEY_SIDEB_ID,
                     mCardCursor!!.position
                 )
             )
@@ -599,8 +591,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             AlertDialog.Builder(context, R.style.ResultDialogTheme)
         val view = layoutInflater.inflate(R.layout.dialog_result, null)
         builder.setView(view)
-            .setPositiveButton("Weiterlegen") { dialog, which -> yesClicked(null) }
-            .setNeutralButton("Zurücklegen") { dialog, which -> noClicked(null) }
+            .setPositiveButton("Weiterlegen") { _, _ -> yesClicked(null) }
+            .setNeutralButton("Zurücklegen") { _, _ -> noClicked(null) }
             .setCancelable(false)
         (view.findViewById<View>(R.id.tVRightAnswerText) as TextView).text = cardText
         (view.findViewById<View>(R.id.tVInputText) as TextView).text = input
@@ -608,12 +600,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     }
 
     private fun fillInData(flipCardSides: Boolean) { // Daten setzen
-        val fontA = modelManager!!.getCardFont(
-            CardPackAdapter.Companion.KEY_SIDEA_ID,
+        val fontA = modelManager.getCardFont(
+            CardPackAdapter.KEY_SIDEA_ID,
             mCardCursor!!.position
         )
         val fontB = modelManager.getCardFont(
-            CardPackAdapter.Companion.KEY_SIDEB_ID,
+            CardPackAdapter.KEY_SIDEB_ID,
             mCardCursor!!.position
         )
         val learningPhase = modelManager.learningPhase
@@ -644,7 +636,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     private fun hasCardsToBeFlipped(): Boolean {
         val flipMode =
-            settingsManager!!.getStringPreference(context, Keys.FLIP_CARD_SIDES)
+            settingsManager.getStringPreference(context, Keys.FLIP_CARD_SIDES)
         val learningPhase = modelManager.learningPhase
         flipCardSides =
             if (learningPhase == LearningPhase.REPEATING_LTM || learningPhase == LearningPhase.REPEATING_STM || learningPhase == LearningPhase.REPEATING_USTM) {
@@ -695,7 +687,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             titleResource
         )
         val sideB = findViewById<MPTextView>(R.id.tCardSideB_TV)
-        if (text!!.isEmpty() || modelManager!!.getCard(mCardCursor!!.position)!!.isRepeatedByTyping) {
+        if (text!!.isEmpty() || modelManager.getCard(mCardCursor!!.position)!!.isRepeatedByTyping) {
             sideB.hint = getString(R.string.learncards_show_hint)
             sideB.setFont(Font())
         } else {
@@ -740,7 +732,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             mCardCursor.moveToNext();
         }*/
         if (modelManager.learningPhase == LearningPhase.REPEATING_LTM) {
-            modelManager!!.setLearningPhase(context, modelManager.learningPhase)
+            modelManager.setLearningPhase(context, modelManager.learningPhase)
             reloadStack()
         } else {
             mCardCursor!!.moveToNext()
@@ -765,11 +757,11 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     fun mDeleteClicked(item: MenuItem?) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage(R.string.delete_card_message)
-            .setPositiveButton(R.string.delete) { dialog, which ->
+            .setPositiveButton(R.string.delete) { dialog, _ ->
                 // Muss vorher gespeichert werden, da sonst im Nachhinein der Wert
 // verfälscht werden kann!
                 val isLast = mCardCursor!!.isLast
-                if (modelManager!!.deleteCard(mCardCursor!!.position)) {
+                if (modelManager.deleteCard(mCardCursor!!.position)) {
                     if (isLast) { // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
                         updateLearningPhase()
                     } else {
@@ -778,7 +770,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                         setButtonsVisibility()
                     }
                 } else {
-                    PaukerManager.Companion.showToast(
+                    PaukerManager.showToast(
                         context as Activity,
                         "Löschen nicht möglich!",
                         Toast.LENGTH_SHORT
@@ -786,7 +778,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                 }
                 dialog.cancel()
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.cancel() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
@@ -796,7 +788,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             item.isVisible = false
             restartButton!!.isVisible = true
         } else {
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.pause_timer_error,
                 Toast.LENGTH_LONG
@@ -810,7 +802,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             item.isVisible = false
             pauseButton!!.isVisible = true
         } else {
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.restart_timer_error,
                 Toast.LENGTH_LONG
@@ -819,7 +811,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     }
 
     fun mFlipSidesClicked(item: MenuItem?) {
-        modelManager!!.getCard(mCardCursor!!.position)!!.flip()
+        modelManager.getCard(mCardCursor!!.position)!!.flip()
         paukerManager?.isSaveRequired = true
         updateCurrentCard()
         val learningPhase = modelManager.learningPhase
@@ -837,7 +829,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     // Aktionen der Buttons
     fun nextCard(view: View?) { // Karte ein Deck weiterschieben
-        mCardPackAdapter!!.setCardLearned(mCardCursor!!.getLong(CardPackAdapter.Companion.KEY_ROWID_ID))
+        mCardPackAdapter!!.setCardLearned()
         if (!mCardCursor!!.isLast && !timerService!!.isUstmTimerFinished) {
             pushCursorToNext()
         } else { // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
@@ -852,8 +844,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     fun noClicked(view: View?) {
         mCardPackAdapter!!.setCardUnLearned(
-            context,
-            mCardCursor!!.getLong(CardPackAdapter.Companion.KEY_ROWID_ID)
+            context
         )
         paukerManager?.isSaveRequired = true
         if (!mCardCursor!!.isLast) {
@@ -865,7 +856,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     }
 
     fun yesClicked(view: View?) {
-        mCardPackAdapter!!.setCardLearned(mCardCursor!!.getLong(CardPackAdapter.Companion.KEY_ROWID_ID))
+        mCardPackAdapter!!.setCardLearned()
         paukerManager?.isSaveRequired = true
         if (!mCardCursor!!.isLast) {
             pushCursorToNext()
@@ -879,25 +870,25 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         screenTouched()
     }
 
-    override fun onUstmTimerUpdate(timeElapsed: Int) {
+    override fun onUstmTimerUpdate(elapsedTime: Int) {
         runOnUiThread {
             if (ustmTimerBar!!.visibility == View.VISIBLE && !timerService!!.isUstmTimerFinished) {
-                val sec = timeElapsed % 60
+                val sec = elapsedTime % 60
                 ustmTimerText = String.format(
                     Locale.getDefault()
                     , "%d / %ds", sec, timerService?.ustmTotalTime
                 )
-                ustmTimerBar!!.setProgress(timeElapsed)
+                ustmTimerBar!!.setProgress(elapsedTime)
                 ustmTimerBar!!.text = ustmTimerText
             }
         }
     }
 
-    override fun onStmTimerUpdate(timeElapsed: Int) {
+    override fun onStmTimerUpdate(elapsedTime: Int) {
         runOnUiThread {
             val timerText: String
-            val sec = timeElapsed % 60
-            val min = timeElapsed / 60
+            val sec = elapsedTime % 60
+            val min = elapsedTime / 60
             timerText = if (sec < 10) {
                 String.format(
                     Locale.getDefault(),
@@ -909,7 +900,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                     "%d:%d / %d:00min", min, sec, timerService?.stmTotalTime
                 )
             }
-            stmTimerBar!!.setProgress(timeElapsed)
+            stmTimerBar!!.setProgress(elapsedTime)
             stmTimerBar!!.text = timerText
             // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
             if (!isActivityVisible && !timerService!!.isStmTimerFinished) {

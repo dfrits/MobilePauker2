@@ -31,6 +31,7 @@ import com.daniel.mobilepauker2.settings.SettingsManager
 
 abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     LoaderManager.LoaderCallbacks<Cursor> {
+    //TODO Weg und dafür Viewmodel
 
     protected val settingsManager: SettingsManager = SettingsManager.instance()
     protected val modelManager: ModelManager = ModelManager.instance()
@@ -48,7 +49,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCardPackAdapter =
-            CardPackRamAdapter(this)
+            CardPackRamAdapter()
         // Setup the cursor
         Log.d(
             "FlashCardSwipeScreenActivity::onCreate",
@@ -116,7 +117,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
      */
     protected fun reloadStack() {
         mCardPackAdapter =
-            CardPackRamAdapter(context)
+            CardPackRamAdapter()
         mSavedCursorPosition = -1
         loaderManager.destroyLoader(LOADER_ID)
         refreshCursor()

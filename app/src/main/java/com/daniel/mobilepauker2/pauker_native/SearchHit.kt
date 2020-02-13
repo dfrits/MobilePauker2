@@ -4,44 +4,20 @@ package com.daniel.mobilepauker2.pauker_native
  * A search hit, when using the search function in Pauker.
  * @author Ronny.Standtke@gmx.net
  */
-class SearchHit
-/**
- * Creates a new instance of SearchHit
- * @param card          the card
- * @param cardSide      the card side
- * @param cardSideIndex the index of the card side
- */(
-    val card: Card,
-    val cardSide: Card.Element,
-    val cardSideIndex: Int
-) {
-    /**
-     * returns the card
-     * @return the card
-     */
-    /**
-     * returns the card side
-     * @return the card side
-     */
-    /**
-     * returns the index of the card side
-     * @return the index of the card side
-     */
+class SearchHit(val card: Card, val cardSide: Card.Element, val cardSideIndex: Int) {
 
-    override fun equals(`object`: Any?): Boolean {
-        if (`object` is SearchHit) { // class cast
-            val otherSearchHit = `object`
-            // compare cards
-            if (card != otherSearchHit.card) {
+    override fun equals(other: Any?): Boolean {
+        if (other is SearchHit) {
+            if (card != other.card) {
                 return false
             }
             when (cardSide) {
-                Card.Element.FRONT_SIDE -> if (otherSearchHit.cardSide ==
+                Card.Element.FRONT_SIDE -> if (other.cardSide ==
                     Card.Element.REVERSE_SIDE
                 ) {
                     return false
                 }
-                Card.Element.REVERSE_SIDE -> if (otherSearchHit.cardSide ==
+                Card.Element.REVERSE_SIDE -> if (other.cardSide ==
                     Card.Element.FRONT_SIDE
                 ) {
                     return false
@@ -50,7 +26,7 @@ class SearchHit
                 }
             }
             // compare "yellow" mark index
-            return cardSideIndex == otherSearchHit.cardSideIndex
+            return cardSideIndex == other.cardSideIndex
         }
         return false
     }

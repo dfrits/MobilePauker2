@@ -21,9 +21,9 @@ import android.database.AbstractCursor
 import android.database.CursorIndexOutOfBoundsException
 
 class FlashCardCursor : AbstractCursor() {
-    private val modelManager: ModelManager =
-        ModelManager.instance()
-    private var flashColumnCount: Int = columnNames.size
+    private val modelManager: ModelManager = ModelManager.instance()
+    private val flashColumnCount: Int = columnNames.size
+
     /**
      * Adds a new row to the end of the FlashCard array.
      * @param columnValues in the same order as the the column names specified at cursor
@@ -42,7 +42,6 @@ class FlashCardCursor : AbstractCursor() {
             columnValues[CardPackAdapter.KEY_INDEX_ID],
             columnValues[CardPackAdapter.KEY_LEARN_STATUS_ID]
         )
-        getColumnCount()
     }
 
     /**
@@ -64,15 +63,13 @@ class FlashCardCursor : AbstractCursor() {
         val flashCard = modelManager.getCard(position)
         when (column) {
             CardPackAdapter.KEY_SIDEA_ID -> {
-                return if (flashCard == null) "" else flashCard.sideAText
+                return flashCard?.sideAText ?: ""
             }
             CardPackAdapter.KEY_SIDEB_ID -> {
-                return if (flashCard == null) "" else flashCard.sideBText
+                return flashCard?.sideBText ?: ""
             }
             CardPackAdapter.KEY_ROWID_ID -> {
-                //return flashCard.getId();
-//********************* -- Is this ok - using the position of the cursor to id the flash card!
-                return Integer.toString(position)
+                return position.toString()
             }
             CardPackAdapter.KEY_LEARN_STATUS_ID -> {
                 return if (flashCard != null && flashCard.isLearned) {
@@ -129,18 +126,6 @@ class FlashCardCursor : AbstractCursor() {
         return get(column) == null
     }
 
-    override fun requery(): Boolean {
-        if (modelManager.currentBatchSize == 0) {
-            Log.d(
-                "FlashCArdCursor::requery",
-                "Warning - cursor requery on empty card pack"
-            )
-        } else {
-            super.moveToFirst()
-        }
-        return super.requery()
-    }
-
     companion object {
         val flashColumnNames = arrayOf(
             CardPackAdapter.KEY_ROWID,
@@ -149,9 +134,5 @@ class FlashCardCursor : AbstractCursor() {
             CardPackAdapter.KEY_INDEX,
             CardPackAdapter.KEY_LEARN_STATUS
         )
-    }
-
-    init {
-        flashColumnCount = columnNames.size
     }
 }

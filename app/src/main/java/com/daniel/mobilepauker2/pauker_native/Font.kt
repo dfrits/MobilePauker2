@@ -4,12 +4,9 @@ class Font {
     var isBold: Boolean
     var isItalic: Boolean
     var backgroundColor: Int
-        private set
     var textColor: Int
     var textSize: Int
-        private set
     var family: String
-        private set
 
     constructor() {
         isBold = false

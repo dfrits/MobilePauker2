@@ -12,6 +12,7 @@ import java.io.IOException
 import java.net.URI
 
 class NotificationService : JobIntentService() {
+
     override fun onHandleWork(intent: Intent) {
         setAlarm()
     }
@@ -37,7 +38,7 @@ class NotificationService : JobIntentService() {
 
     private val newestExpireTime: Long
         get() {
-            val paukerManager: PaukerManager = PaukerManager.Companion.instance()
+            val paukerManager: PaukerManager = PaukerManager.instance()
             val files = try {
                 paukerManager.listFiles(this)
             } catch (e: SecurityException) {

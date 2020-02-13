@@ -24,6 +24,7 @@ import com.daniel.mobilepauker2.pauker_native.Log
  * Daniel Fritsch
  * hs-augsburg
  */
+// TODO Deprecated
 class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener {
     private val settingsManager: SettingsManager =
         SettingsManager.instance()
@@ -57,7 +58,7 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
         super.onResume()
         updatePrefSummary(
             findPreference(
-                settingsManager!!.getSettingsKey(
+                settingsManager.getSettingsKey(
                     context,
                     Keys.RING_TONE
                 )
@@ -73,27 +74,17 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
 
     private fun init(preference: Preference) {
         if (preference is PreferenceGroup) {
-            val pGrp = preference
-            for (i in 0 until pGrp.preferenceCount) {
-                init(pGrp.getPreference(i))
+            for (i in 0 until preference.preferenceCount) {
+                init(preference.getPreference(i))
             }
         } else {
             if (preference is EditTextPreference) {
-                val editTextP = preference
-                editTextP.editText.addTextChangedListener(
-                    MinFilter(
-                        editTextP
-                    )
-                )
+                preference.editText.addTextChangedListener(MinFilter(preference))
             }
             updatePrefSummary(preference)
         }
-        findPreference(
-            settingsManager!!.getSettingsKey(
-                context,
-                Keys.RING_TONE
-            )
-        ).onPreferenceClickListener = OnPreferenceClickListener {
+        findPreference(settingsManager.getSettingsKey(context, Keys.RING_TONE))
+            .onPreferenceClickListener = OnPreferenceClickListener {
             val intent =
                 Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
             intent.putExtra(
@@ -115,51 +106,44 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
         val context = context
         if (summ != null) {
             if (preference is EditTextPreference) {
-                val editTextP = preference
-                if (editTextP.key == settingsManager!!.getSettingsKey(
+                if (preference.key == settingsManager.getSettingsKey(
                         context,
                         Keys.USTM
                     )
                 ) summ =
-                    getString(R.string.ustm_summ) else if (editTextP.key == settingsManager.getSettingsKey(
+                    getString(R.string.ustm_summ) else if (preference.key == settingsManager.getSettingsKey(
                         context,
                         Keys.STM
                     )
                 ) summ = getString(R.string.stm_summ)
-                editTextP.summary = String.format(summ.toString(), editTextP.text)
+                preference.summary = String.format(summ.toString(), preference.text)
             } else if (preference is ListPreference) {
-                val listP = preference
-                val s = listP.key
-                if (s == settingsManager!!.getSettingsKey(context, Keys.REPEAT_CARDS)) {
-                    summ = getString(R.string.repeat_cards_summ)
-                } else if (s == settingsManager.getSettingsKey(
-                        context,
-                        Keys.RETURN_FORGOTTEN_CARDS
-                    )
-                ) {
-                    summ = getString(R.string.return_forgotten_cards_summ)
-                } else if (s == settingsManager.getSettingsKey(context, Keys.FLIP_CARD_SIDES)) {
-                    summ = getString(R.string.flip_card_sides_summ)
+                when (preference.key) {
+                    settingsManager.getSettingsKey(context, Keys.REPEAT_CARDS) -> {
+                        summ = getString(R.string.repeat_cards_summ)
+                    }
+                    settingsManager.getSettingsKey(context, Keys.RETURN_FORGOTTEN_CARDS) -> {
+                        summ = getString(R.string.return_forgotten_cards_summ)
+                    }
+                    settingsManager.getSettingsKey(context, Keys.FLIP_CARD_SIDES) -> {
+                        summ = getString(R.string.flip_card_sides_summ)
+                    }
                 }
-                listP.summary = String.format(summ.toString(), listP.entry)
+                preference.summary = String.format(summ.toString(), preference.entry)
             }
         }
         val preferenceKey = preference.key
         if (preferenceKey != null) {
-            if (preferenceKey == settingsManager!!.getSettingsKey(context, Keys.DB_PREFERENCE)) {
+            if (preferenceKey == settingsManager.getSettingsKey(context, Keys.DB_PREFERENCE)) {
                 initSyncPrefs(context)
             } else if (preferenceKey == settingsManager.getSettingsKey(context, Keys.RING_TONE)) {
                 val notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                if (notificationManager != null) {
-                    val ringtonePath =
-                        notificationManager.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID)
-                            .sound
-                    val ringtone = RingtoneManager.getRingtone(context, ringtonePath)
-                    preference.summary = ringtone.getTitle(context)
-                } else {
-                    preference.summary = "No Sound"
-                }
+                val ringtonePath =
+                    notificationManager.getNotificationChannel(Constants.NOTIFICATION_CHANNEL_ID)
+                        .sound
+                val ringtone = RingtoneManager.getRingtone(context, ringtonePath)
+                preference.summary = ringtone.getTitle(context)
             }
         }
     }
@@ -210,7 +194,7 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
     private fun setPrefAss(context: Context, dbPref: Preference) {
         dbPref.setTitle(R.string.associate_dropbox_title)
         val assIntent = Intent(context, DropboxAccDialog::class.java)
-        assIntent.putExtra(DropboxAccDialog.Companion.AUTH_MODE, true)
+        assIntent.putExtra(DropboxAccDialog.AUTH_MODE, true)
         dbPref.onPreferenceClickListener = OnPreferenceClickListener {
             startActivityForResult(
                 assIntent,
@@ -225,7 +209,7 @@ class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener 
     private fun setPrefUnlink(context: Context, dbPref: Preference) {
         dbPref.setTitle(R.string.unlink_dropbox_title)
         val unlIntent = Intent(context, DropboxAccDialog::class.java)
-        unlIntent.putExtra(DropboxAccDialog.Companion.UNL_MODE, true)
+        unlIntent.putExtra(DropboxAccDialog.UNL_MODE, true)
         dbPref.onPreferenceClickListener = OnPreferenceClickListener {
             Log.d(
                 "SettingsFragment::initSyncPrefs",

@@ -29,6 +29,7 @@ import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import java.io.IOException
 
+@Suppress("UNUSED_PARAMETER")
 class ShortcutReceiver : Activity() {
     private val paukerManager: PaukerManager = PaukerManager.instance()
     private val context: Context = this
@@ -105,7 +106,7 @@ class ShortcutReceiver : Activity() {
             try {
                 syncIntent.putExtra(
                     SyncDialog.FILES,
-                    paukerManager!!.getFilePath(context, filename)
+                    paukerManager.getFilePath(context, filename)
                 )
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -128,7 +129,7 @@ class ShortcutReceiver : Activity() {
     private fun openLesson(filename: String) {
         try {
             if (paukerManager.currentFileName != filename) {
-                paukerManager!!.loadLessonFromFile(paukerManager.getFilePath(context, filename))
+                paukerManager.loadLessonFromFile(paukerManager.getFilePath(context, filename))
                 paukerManager.isSaveRequired = false
             }
             val intent = Intent(context, MainMenu::class.java)
@@ -136,13 +137,13 @@ class ShortcutReceiver : Activity() {
             startActivity(intent)
             finish()
         } catch (e: IOException) {
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 getString(R.string.error_reading_from_xml),
                 Toast.LENGTH_SHORT
             )
-            ErrorReporter.Companion.instance()
-                .AddCustomData("ImportThread", "IOException?")
+            ErrorReporter.instance()
+                .addCustomData("ImportThread", "IOException?")
         }
     }
 
@@ -163,7 +164,7 @@ class ShortcutReceiver : Activity() {
                         "LessonImportActivity::createShortcut",
                         "already 5 shortcuts created"
                     )
-                    PaukerManager.Companion.showToast(
+                    PaukerManager.showToast(
                         context as Activity,
                         R.string.shortcut_create_error,
                         Toast.LENGTH_LONG
@@ -178,31 +179,34 @@ class ShortcutReceiver : Activity() {
                     val icon =
                         TextDrawable(filename[0].toString())
                     icon.setBold(true)
-                    val shortcut = ShortcutInfo.Builder(context, filename)
-                        .setShortLabel(
-                            PaukerManager.Companion.instance()!!.getReadableFileName(
-                                filename
-                            )
+                    val readableName = PaukerManager.instance().getReadableFileName(filename)
+                    if (readableName != null) {
+                        val shortcut = ShortcutInfo.Builder(context, filename)
+                            .setShortLabel(readableName)
+                            .setIcon(Icon.createWithBitmap(drawableToBitmap(icon)))
+                            .setIntent(intent)
+                            .build()
+                        shortcutManager.addDynamicShortcuts(listOf(shortcut))
+                        PaukerManager.showToast(
+                            context as Activity,
+                            R.string.shortcut_added,
+                            Toast.LENGTH_SHORT
                         )
-                        .setIcon(
-                            Icon.createWithBitmap(
-                                drawableToBitmap(
-                                    icon
-                                )
-                            )
+                        Log.d(
+                            "LessonImportActivity::createShortcut",
+                            "Shortcut created"
                         )
-                        .setIntent(intent)
-                        .build()
-                    shortcutManager.addDynamicShortcuts(listOf(shortcut))
-                    PaukerManager.Companion.showToast(
-                        context as Activity,
-                        R.string.shortcut_added,
-                        Toast.LENGTH_SHORT
-                    )
-                    Log.d(
-                        "LessonImportActivity::createShortcut",
-                        "Shortcut created"
-                    )
+                    } else {
+                        PaukerManager.showToast(
+                            context as Activity,
+                            R.string.shortcut_create_error,
+                            Toast.LENGTH_SHORT
+                        )
+                        Log.d(
+                            "LessonImportActivity::createShortcut",
+                            "Shortcut not created"
+                        )
+                    }
                 }
             }
         }
@@ -213,7 +217,7 @@ class ShortcutReceiver : Activity() {
             )
             if (shortcutManager != null) {
                 shortcutManager.removeDynamicShortcuts(listOf(ID))
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.shortcut_removed,
                     Toast.LENGTH_SHORT
@@ -231,8 +235,7 @@ class ShortcutReceiver : Activity() {
          * @return Bitmap
          */
         private fun drawableToBitmap(drawable: Drawable): Bitmap {
-            val bitmap: Bitmap
-            bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
+            val bitmap: Bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
                 Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
             } else {
                 Bitmap.createBitmap(

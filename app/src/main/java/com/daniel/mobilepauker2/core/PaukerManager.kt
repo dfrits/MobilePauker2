@@ -165,7 +165,7 @@ class PaukerManager private constructor() {
 
     private fun validateFileEnding(fileName: String?): Boolean {
         for (ending in Constants.PAUKER_FILE_ENDING) {
-            if (fileName!!.endsWith(ending!!)) {
+            if (fileName!!.endsWith(ending)) {
                 return true
             }
         }
@@ -209,8 +209,7 @@ class PaukerManager private constructor() {
     @Throws(IOException::class)
     fun loadLessonFromFile(file: File?) {
         val uri = file!!.toURI()
-        val xmlFlashCardFeedParser =
-            FlashCardXMLPullFeedParser(uri.toURL())
+        val xmlFlashCardFeedParser = FlashCardXMLPullFeedParser(uri.toURL())
         val lesson = xmlFlashCardFeedParser.parse()
         setCurrentFileName(file.name)
         fileAbsolutePath = file.absolutePath
@@ -226,18 +225,14 @@ class PaukerManager private constructor() {
 
         fun showToast(context: Activity, text: String?, duration: Int) {
             context.runOnUiThread {
-                if (text != null && !text.isEmpty()) {
+                if (text != null && text.isNotEmpty()) {
                     Toast.makeText(context, text, duration).show()
                 }
             }
         }
 
         fun showToast(context: Activity, textResource: Int, duration: Int) {
-            showToast(
-                context,
-                context.getString(textResource),
-                duration
-            )
+            showToast(context, context.getString(textResource), duration)
         }
     }
 }

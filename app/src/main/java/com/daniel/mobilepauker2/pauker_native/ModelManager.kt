@@ -156,25 +156,15 @@ class ModelManager private constructor() {
         }
     }
 
-    fun addCard(
-        sideA: String?,
-        sideB: String?,
-        index: String?,
-        learnStatus: String?
-    ) {
-        val newCard = FlashCard(
-            sideA,
-            sideB,
-            index,
-            learnStatus
-        )
+    fun addCard(sideA: String?, sideB: String?, index: String?, learnStatus: String?) {
+        val newCard = FlashCard(sideA ?: "", sideB ?: "", index, learnStatus)
         lesson?.unlearnedBatch?.addCard(newCard)
     }
 
     fun addCard(flashCard: FlashCard, sideA: String?, sideB: String?) {
-        flashCard.sideAText = sideA
-        flashCard.sideBText = sideB
-        lesson!!.addCard(flashCard)
+        flashCard.sideAText = sideA ?: ""
+        flashCard.sideBText = sideB ?: ""
+        lesson?.addCard(flashCard)
     }
 
     val batchStatistics: List<BatchStatistics?>
@@ -206,8 +196,8 @@ class ModelManager private constructor() {
             )
             return
         }
-        currentPack[position]?.sideAText = sideAText
-        currentPack[position]?.sideBText = sideBText
+        currentPack[position]?.sideAText = sideAText ?: ""
+        currentPack[position]?.sideBText = sideBText ?: ""
     }
 
     /**
@@ -418,7 +408,7 @@ class ModelManager private constructor() {
                     DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
                 var text = context.getString(R.string.next_expire_date)
                 text = "$text $date"
-                PaukerManager.Companion.showToast(context as Activity, text, Toast.LENGTH_LONG * 2)
+                PaukerManager.showToast(context as Activity, text, Toast.LENGTH_LONG * 2)
             }
         } catch (ignored: MalformedURLException) {
         }
@@ -520,7 +510,7 @@ class ModelManager private constructor() {
                 BufferedReader(InputStreamReader(fis))
             var fileName = reader.readLine()
             while (fileName != null) {
-                if (!fileName.trim { it <= ' ' }.isEmpty()) {
+                if (fileName.trim { it <= ' ' }.isNotEmpty()) {
                     try {
                         val split: Array<String?> =
                             fileName.split(";*;").toTypedArray()
@@ -548,7 +538,7 @@ class ModelManager private constructor() {
                 BufferedReader(InputStreamReader(fis))
             var fileName = reader.readLine()
             while (fileName != null) {
-                if (!fileName.trim { it <= ' ' }.isEmpty()) {
+                if (fileName.trim { it <= ' ' }.isNotEmpty()) {
                     filesToAdd.add(fileName)
                 }
                 fileName = reader.readLine()
@@ -654,8 +644,7 @@ class ModelManager private constructor() {
         sortByElement: Card.Element?,
         asc_direction: Boolean
     ) {
-        val batch: Batch?
-        batch = when (stackIndex) {
+        val batch: Batch? = when (stackIndex) {
             0 -> lesson?.summaryBatch
             1 -> lesson?.unlearnedBatch
             else -> lesson!!.getLongTermBatch(stackIndex - 2)
@@ -697,27 +686,32 @@ class ModelManager private constructor() {
                 )
             }
         } else {
-            if (lesson?.unlearnedBatch?.removeCard(card) == true) {
-                Log.d(
-                    "AndyPaukerApplication::deleteCard",
-                    "Deleted from unlearned batch"
-                )
-            } else if (lesson?.ultraShortTermList?.remove(card) == true) {
-                Log.d(
-                    "AndyPaukerApplication::deleteCard",
-                    "Deleted from ultra short term batch"
-                )
-            } else if (lesson?.shortTermList?.remove(card) == true) {
-                Log.d(
-                    "AndyPaukerApplication::deleteCard",
-                    "Deleted from short term batch"
-                )
-            } else {
-                Log.e(
-                    "AndyPaukerApplication::deleteCard",
-                    "Could not delete card from unlearned batch  "
-                )
-                return false
+            when {
+                lesson?.unlearnedBatch?.removeCard(card) == true -> {
+                    Log.d(
+                        "AndyPaukerApplication::deleteCard",
+                        "Deleted from unlearned batch"
+                    )
+                }
+                lesson?.ultraShortTermList?.remove(card) == true -> {
+                    Log.d(
+                        "AndyPaukerApplication::deleteCard",
+                        "Deleted from ultra short term batch"
+                    )
+                }
+                lesson?.shortTermList?.remove(card) == true -> {
+                    Log.d(
+                        "AndyPaukerApplication::deleteCard",
+                        "Deleted from short term batch"
+                    )
+                }
+                else -> {
+                    Log.e(
+                        "AndyPaukerApplication::deleteCard",
+                        "Could not delete card from unlearned batch  "
+                    )
+                    return false
+                }
             }
         }
         if (lesson?.summaryBatch?.removeCard(card) == true) {
@@ -761,7 +755,7 @@ class ModelManager private constructor() {
         val flashCard = getCard(position) ?: return Font()
         val font: Font?
         font =
-            if (side_ID == CardPackAdapter.Companion.KEY_SIDEA_ID) flashCard.frontSide.font else flashCard.reverseSide.font
+            if (side_ID == CardPackAdapter.KEY_SIDEA_ID) flashCard.frontSide.font else flashCard.reverseSide.font
         return font ?: Font()
     }
 
@@ -772,28 +766,24 @@ class ModelManager private constructor() {
      * @param font     Seite, bei der die Werte gesetzt werden sollen
      * @param cardSide Hiervon werden die Werte ausgelesen
      */
-    fun setFont(
-        font: Font?,
-        cardSide: TextView
-    ) {
-        var font = font
-        font = font ?: Font()
-        val textSize = font.textSize
+    fun setFont(font: Font?, cardSide: TextView) {
+        val tmpFont = font ?: Font()
+        val textSize = tmpFont.textSize
         cardSide.textSize = if (textSize > 16) textSize.toFloat() else 16.toFloat()
-        cardSide.setTextColor(font.textColor)
-        val bold = font.isBold
-        val italic = font.isItalic
+        cardSide.setTextColor(tmpFont.textColor)
+        val bold = tmpFont.isBold
+        val italic = tmpFont.isItalic
         if (bold && italic) cardSide.typeface = Typeface.create(
-            font.family,
+            tmpFont.family,
             Typeface.BOLD_ITALIC
         ) else if (bold) cardSide.typeface = Typeface.create(
-            font.family,
+            tmpFont.family,
             Typeface.BOLD
         ) else if (italic) cardSide.typeface = Typeface.create(
-            font.family,
+            tmpFont.family,
             Typeface.ITALIC
-        ) else cardSide.typeface = Typeface.create(font.family, Typeface.NORMAL)
-        val backgroundColor = font.backgroundColor
+        ) else cardSide.typeface = Typeface.create(tmpFont.family, Typeface.NORMAL)
+        val backgroundColor = tmpFont.backgroundColor
         if (backgroundColor != -1) cardSide.background =
             createBoxBackground(backgroundColor) else cardSide.setBackgroundResource(
             R.drawable.box_background
@@ -832,14 +822,18 @@ class ModelManager private constructor() {
      * Shuffle the card pack
      */
     private fun shuffleCurrentPack() {
-        Collections.shuffle(currentPack)
+        currentPack.shuffle()
     }
 
     /*
      * Return true if the pack needs shuffled
      */
-    private fun isShuffle(context: Context): Boolean { // Check if we need to add random learn
-        if (learningPhase == LearningPhase.SIMPLE_LEARNING || learningPhase == LearningPhase.REPEATING_STM || learningPhase == LearningPhase.REPEATING_USTM || learningPhase == LearningPhase.FILLING_USTM
+    private fun isShuffle(context: Context): Boolean {
+        // Check if we need to add random learn
+        if (learningPhase == LearningPhase.SIMPLE_LEARNING
+            || learningPhase == LearningPhase.REPEATING_STM
+            || learningPhase == LearningPhase.REPEATING_USTM
+            || learningPhase == LearningPhase.FILLING_USTM
         ) {
             if (settingsManager.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY)) {
                 return true

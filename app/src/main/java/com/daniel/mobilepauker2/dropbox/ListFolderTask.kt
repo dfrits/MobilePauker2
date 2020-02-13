@@ -28,7 +28,7 @@ class ListFolderTask internal constructor(
         }
     }
 
-    protected override fun doInBackground(vararg params: String): ListFolderResult? {
+    override fun doInBackground(vararg params: String): ListFolderResult? {
         mException = try {
             return mDbxClient!!.files()
                 .listFolderBuilder(params[0])
@@ -40,5 +40,4 @@ class ListFolderTask internal constructor(
         }
         return null
     }
-
 }

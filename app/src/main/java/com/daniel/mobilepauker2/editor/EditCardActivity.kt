@@ -33,8 +33,8 @@ class EditCardActivity : AEditCardActivity() {
                 "EditCardsActivity::OnCreate",
                 "Flash Card set to null"
             )
-            PaukerManager.Companion.showToast(
-                context as Activity,
+            PaukerManager.showToast(
+                applicationContext as Activity,
                 getString(R.string.edit_cards_no_card_available),
                 Toast.LENGTH_SHORT
             )
@@ -70,9 +70,10 @@ class EditCardActivity : AEditCardActivity() {
     }
 
     override fun okClicked(view: View?) {
-        if (sideAEditText!!.text.toString().trim { it <= ' ' }.isEmpty() || sideBEditText?.text.toString().trim { it <= ' ' }.isEmpty()) {
-            PaukerManager.Companion.showToast(
-                context as Activity,
+        if (sideAEditText!!.text.toString().trim { it <= ' ' }.isEmpty()
+            || sideBEditText?.text.toString().trim { it <= ' ' }.isEmpty()) {
+            PaukerManager.showToast(
+                applicationContext as Activity,
                 R.string.add_card_sides_empty_error,
                 Toast.LENGTH_SHORT
             )

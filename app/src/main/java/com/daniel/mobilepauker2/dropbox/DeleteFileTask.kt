@@ -38,7 +38,7 @@ class DeleteFileTask internal constructor(
             File(Constants.DROPBOX_PATH)
         val data: MutableList<DeleteResult> = ArrayList()
         for (localFile in params) {
-            if (!localFile.isEmpty()) {
+            if (localFile.isNotEmpty()) {
                 try {
                     data.add(mDbxClient!!.files().deleteV2("$remoteFolderPath/$localFile"))
                 } catch (e: DbxException) {

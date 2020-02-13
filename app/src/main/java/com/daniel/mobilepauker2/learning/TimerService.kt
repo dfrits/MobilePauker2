@@ -12,21 +12,17 @@ class TimerService : Service() {
     private val binder: IBinder = LocalBinder()
     private var callback: Callback? = null
     var ustmTotalTime = 0
-        private set
     private var ustm_timeRemaining: Long = 0
     private var ustm_timeout = Date(0)
     private var ustm_timer: Timer? = null
     private var ustm_timerPaused = false
     var isUstmTimerFinished = true
-        private set
     var stmTotalTime = 0
-        private set
     private var stm_timeRemaining: Long = 0
     private var stm_timeout = Date(0)
     private var stm_timer: Timer? = null
     private var stm_timerPaused = false
     var isStmTimerFinished = true
-        private set
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         ustmTotalTime = intent.getIntExtra(USTM_TOTAL_TIME, -1)

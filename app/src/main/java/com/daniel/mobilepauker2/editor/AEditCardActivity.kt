@@ -30,8 +30,7 @@ import com.rarepebble.colorpicker.ColorPickerView
  */
 abstract class AEditCardActivity : AppCompatActivity() {
     private var fontChanged = false
-    protected val context: Context = this
-    protected val modelManager: ModelManager? = ModelManager.Companion.instance()
+    protected val modelManager: ModelManager = ModelManager.instance()
     protected var flashCard: FlashCard? = null
     //SideA
     protected var sideAEditText: MPEditText? = null
@@ -60,10 +59,11 @@ abstract class AEditCardActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-        val imm =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        if (imm != null && currentFocus != null && imm.isAcceptingText) {
-            imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        currentFocus?.let {
+            if (imm.isAcceptingText) {
+                imm.hideSoftInputFromWindow(it.windowToken, 0)
+            }
         }
     }
 
@@ -145,11 +145,7 @@ abstract class AEditCardActivity : AppCompatActivity() {
         }
     }
 
-    private fun setNewFontDetails(
-        item: MenuItem,
-        font: Font,
-        cardSide: MPEditText?
-    ): Boolean {
+    private fun setNewFontDetails(item: MenuItem, font: Font, cardSide: MPEditText?): Boolean {
         when (item.itemId) {
             R.id.mBold -> {
                 font.isBold = !font.isBold
@@ -160,24 +156,23 @@ abstract class AEditCardActivity : AppCompatActivity() {
                 fontChanged = true
             }
             R.id.mBackground -> {
-                val bcPicker = ColorPickerView(context)
+                val bcPicker = ColorPickerView(applicationContext)
                 bcPicker.showHex(false)
                 bcPicker.setOriginalColor(font.backgroundColor)
                 bcPicker.setCurrentColor(
-                    PreferenceManager.getDefaultSharedPreferences(context)
+                    PreferenceManager.getDefaultSharedPreferences(applicationContext)
                         .getInt(
                             Constants.LAST_BACK_COLOR_CHOICE,
                             font.backgroundColor
                         )
                 )
                 bcPicker.showAlpha(false)
-                val bcBuilder =
-                    AlertDialog.Builder(context)
+                val bcBuilder = AlertDialog.Builder(applicationContext)
                 bcBuilder.setView(bcPicker)
                     .setTitle(R.string.background)
-                    .setPositiveButton(R.string.ok) { dialog, which ->
+                    .setPositiveButton(R.string.ok) { _, _ ->
                         val color = bcPicker.color
-                        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                        PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
                             .putInt(
                                 Constants.LAST_BACK_COLOR_CHOICE,
                                 color
@@ -190,24 +185,23 @@ abstract class AEditCardActivity : AppCompatActivity() {
                 bcBuilder.create().show()
             }
             R.id.mTextColor -> {
-                val tcPicker = ColorPickerView(context)
+                val tcPicker = ColorPickerView(applicationContext)
                 tcPicker.showHex(false)
                 tcPicker.setOriginalColor(font.textColor)
                 tcPicker.setCurrentColor(
-                    PreferenceManager.getDefaultSharedPreferences(context)
+                    PreferenceManager.getDefaultSharedPreferences(applicationContext)
                         .getInt(
                             Constants.LAST_TEXT_COLOR_CHOICE,
                             font.textColor
                         )
                 )
                 tcPicker.showAlpha(false)
-                val tcBuilder =
-                    AlertDialog.Builder(context)
+                val tcBuilder = AlertDialog.Builder(applicationContext)
                 tcBuilder.setView(tcPicker)
                     .setTitle(R.string.text_color)
-                    .setPositiveButton(R.string.ok) { dialog, which ->
+                    .setPositiveButton(R.string.ok) { _, _ ->
                         val color = tcPicker.color
-                        PreferenceManager.getDefaultSharedPreferences(context).edit()
+                        PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
                             .putInt(
                                 Constants.LAST_TEXT_COLOR_CHOICE,
                                 color
@@ -222,7 +216,7 @@ abstract class AEditCardActivity : AppCompatActivity() {
             R.id.mTextSize -> editTextSize(cardSide, font)
             R.id.mRepeatType -> {
                 fontChanged = true
-                flashCard!!.setRepeatByTyping(!flashCard!!.isRepeatedByTyping)
+                flashCard?.setRepeatByTyping(!(flashCard?.isRepeatedByTyping ?: true))
             }
             else -> return false
         }
@@ -241,10 +235,10 @@ abstract class AEditCardActivity : AppCompatActivity() {
         view.setText(oldSize)
         view.setSelection(0, oldSize.length)
         val builder =
-            AlertDialog.Builder(context)
+            AlertDialog.Builder(applicationContext)
         builder.setView(view)
             .setTitle(getString(R.string.text_size))
-            .setPositiveButton(R.string.ok) { dialog, which ->
+            .setPositiveButton(R.string.ok) { _, _ ->
                 val s = view.text.toString()
                 try {
                     val newSize = s.toInt()
@@ -254,18 +248,17 @@ abstract class AEditCardActivity : AppCompatActivity() {
                     cardSide!!.setFont(font)
                     fontChanged = true
                 } catch (e: NumberFormatException) {
-                    PaukerManager.Companion.showToast(
-                        context as Activity, R.string.number_format_error
+                    PaukerManager.showToast(
+                        applicationContext as Activity, R.string.number_format_error
                         , Toast.LENGTH_SHORT
                     )
                 }
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.dismiss() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
         val dialog = builder.create()
         dialog.setOnShowListener {
-            val imm =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm?.showSoftInput(view, 0)
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(view, 0)
         }
         dialog.show()
     }
@@ -275,7 +268,7 @@ abstract class AEditCardActivity : AppCompatActivity() {
         font: Font?,
         showRepeatTypeMenu: Boolean
     ): PopupMenu {
-        val dropdownMenu = PopupMenu(context, view)
+        val dropdownMenu = PopupMenu(applicationContext, view)
         val menu = dropdownMenu.menu
         dropdownMenu.menuInflater.inflate(R.menu.edit_font_pop_up, menu)
         setIcons(menu, font, showRepeatTypeMenu)
@@ -308,26 +301,23 @@ abstract class AEditCardActivity : AppCompatActivity() {
         font: Font?,
         showRepeatTypeMenu: Boolean
     ) {
-        var font = font
-        font = font ?: Font()
+        val iconFont = font ?: Font()
         // Size
-        var circle =
-            TextDrawable(font.textSize.toString())
+        var circle = TextDrawable(iconFont.textSize.toString())
         menu.findItem(R.id.mTextSize).icon = circle
         // Background
-        circle =
-            TextDrawable(font.backgroundColor)
+        circle = TextDrawable(iconFont.backgroundColor)
         menu.findItem(R.id.mBackground).icon = circle
         // TextColor
-        circle = TextDrawable(font.textColor)
+        circle = TextDrawable(iconFont.textColor)
         menu.findItem(R.id.mTextColor).icon = circle
         // Bold
         circle = TextDrawable("B")
-        circle.setBold(font.isBold)
+        circle.setBold(iconFont.isBold)
         menu.findItem(R.id.mBold).icon = circle
         // Italic
         circle = TextDrawable("I")
-        circle.setItalic(font.isItalic)
+        circle.setItalic(iconFont.isItalic)
         menu.findItem(R.id.mItalic).icon = circle
         // Repeat Type --> Nur bei der Vorderseite
         if (showRepeatTypeMenu) {

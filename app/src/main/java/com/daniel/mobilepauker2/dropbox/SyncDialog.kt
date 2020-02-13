@@ -4,21 +4,20 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.ConnectivityManager
+import android.net.Network
 import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
-import com.daniel.mobilepauker2.dropbox.NetworkStateReceiver.ReceiverCallback
-import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
+import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.dropbox.core.DbxException
 import com.dropbox.core.v2.files.*
 import java.io.File
@@ -30,15 +29,24 @@ import kotlin.collections.ArrayList
  * Created by dfritsch on 21.11.2018.
  * MobilePauker++
  */
+@Suppress("UNCHECKED_CAST")
 class SyncDialog : Activity() {
     private val context: Context = this
     private val modelManager: ModelManager = ModelManager.instance()
     private val paukerManager: PaukerManager = PaukerManager.instance()
     private var timeout: Timer? = null
     private var timerTask: TimerTask? = null
-    private var networkStateReceiver: NetworkStateReceiver? = null
     private var cancelbutton: Button? = null
     private lateinit var files: Array<File>
+    private val networkCallback = object : ConnectivityManager.NetworkCallback() {
+        override fun onLost(network: Network?) {
+            connectionLost()
+        }
+
+        override fun onUnavailable() {
+            connectionLost()
+        }
+    }
 
     // Hintergrundtasks
     private val tasks: MutableList<AsyncTask<*, *, *>> = ArrayList()
@@ -72,21 +80,7 @@ class SyncDialog : Activity() {
             return
         }
 
-        networkStateReceiver = NetworkStateReceiver(object : ReceiverCallback {
-            override fun connectionLost() {
-                PaukerManager.showToast(
-                    context as Activity,
-                    "Internetverbindung prüfen!",
-                    Toast.LENGTH_LONG
-                )
-                finishDialog(RESULT_CANCELED)
-            }
-        })
-
-        registerReceiver(
-            networkStateReceiver,
-            IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
-        )
+        cm.registerDefaultNetworkCallback(networkCallback)
 
         DropboxClientFactory.init(accessToken)
 
@@ -96,15 +90,25 @@ class SyncDialog : Activity() {
         startSync(intent, serializableExtra)
     }
 
+    private fun connectionLost() {
+        PaukerManager.showToast(
+            context as Activity,
+            "Internetverbindung prüfen!",
+            Toast.LENGTH_LONG
+        )
+        finishDialog(RESULT_CANCELED)
+    }
+
     private fun startSync(intent: Intent, serializableExtra: Serializable) {
-        val action = intent.action
-        if (SYNC_ALL_ACTION == action && serializableExtra is Array<*>) {
-            syncAllFiles(serializableExtra as Array<File>)
-        } else if (serializableExtra is File) {
-            syncFile(serializableExtra, action)
-        } else {
-            Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet")
-            finishDialog(RESULT_CANCELED)
+        intent.action?.let { action ->
+            if (SYNC_ALL_ACTION == action && serializableExtra is Array<*>) {
+                syncAllFiles(serializableExtra as Array<File>)
+            } else if (serializableExtra is File) {
+                syncFile(serializableExtra, action)
+            } else {
+                Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet")
+                finishDialog(RESULT_CANCELED)
+            }
         }
     }
 
@@ -132,73 +136,76 @@ class SyncDialog : Activity() {
         if (serializableExtra.exists()) {
             Log.d("SyncDialog:syncFile", "File exists")
             Log.d("SyncDialog:syncFile", "Syncaction: $action")
-            if (UPLOAD_FILE_ACTION == action) {
-                Log.d("SyncDialog:syncFile", "Upload just one file")
-                list.add(serializableExtra)
-                uploadFiles(list)
-                finishDialog(RESULT_OK)
-            } else if (SYNC_FILE_ACTION == action) {
-                Log.d(
-                    "SyncDialog:syncFile",
-                    "Download just one file"
-                )
-                showProgressbar()
-                showCancelButton()
-                val getFileMetadataTask =
-                    GetFileMetadataTask(
-                        DropboxClientFactory.client!!,
-                        object : GetFileMetadataTask.Callback {
-                            override fun onDataLoaded(metadata: Metadata?) {
-                                Log.d(
-                                    "SyncDialog:syncFile::onDataLoaded",
-                                    "Data loaded"
-                                )
-                                if (metadata is FileMetadata) {
-                                    val fileMetadata = metadata
-                                    if (serializableExtra.lastModified() < fileMetadata.clientModified.time) {
-                                        Log.d(
-                                            "SyncDialog:syncFile::onDataLoaded",
-                                            "File wird runtergeladen"
-                                        )
-                                        val metadataList: ArrayList<FileMetadata> =
-                                            ArrayList()
-                                        metadataList.add(fileMetadata)
-                                        downloadFiles(metadataList, fileMetadata.size.toInt())
-                                    } else {
-                                        Log.d(
-                                            "SyncDialog:syncFile::onDataLoaded",
-                                            "File wird NICHT runtergeladen"
+            when (action) {
+                UPLOAD_FILE_ACTION -> {
+                    Log.d("SyncDialog:syncFile", "Upload just one file")
+                    list.add(serializableExtra)
+                    uploadFiles(list)
+                    finishDialog(RESULT_OK)
+                }
+                SYNC_FILE_ACTION -> {
+                    Log.d(
+                        "SyncDialog:syncFile",
+                        "Download just one file"
+                    )
+                    showProgressbar()
+                    showCancelButton()
+                    val getFileMetadataTask =
+                        GetFileMetadataTask(
+                            DropboxClientFactory.client!!,
+                            object : GetFileMetadataTask.Callback {
+                                override fun onDataLoaded(result: Metadata?) {
+                                    Log.d(
+                                        "SyncDialog:syncFile::onDataLoaded",
+                                        "Data loaded"
+                                    )
+                                    if (result is FileMetadata) {
+                                        if (serializableExtra.lastModified() < result.clientModified.time) {
+                                            Log.d(
+                                                "SyncDialog:syncFile::onDataLoaded",
+                                                "File wird runtergeladen"
+                                            )
+                                            val metadataList: ArrayList<FileMetadata> =
+                                                ArrayList()
+                                            metadataList.add(result)
+                                            downloadFiles(metadataList, result.size.toInt())
+                                        } else {
+                                            Log.d(
+                                                "SyncDialog:syncFile::onDataLoaded",
+                                                "File wird NICHT runtergeladen"
+                                            )
+                                            finishDialog(RESULT_CANCELED)
+                                        }
+                                    } else if (result is DeletedMetadata) {
+                                        PaukerManager.showToast(
+                                            context as Activity,
+                                            "Datei ist nicht länger verfügbar auf Dropbox",
+                                            Toast.LENGTH_LONG
                                         )
                                         finishDialog(RESULT_CANCELED)
                                     }
-                                } else if (metadata is DeletedMetadata) {
+                                }
+
+                                override fun onError(e: DbxException?) {
                                     PaukerManager.showToast(
                                         context as Activity,
-                                        "Datei ist nicht länger verfügbar auf Dropbox",
+                                        R.string.error_synchronizing,
                                         Toast.LENGTH_LONG
                                     )
                                     finishDialog(RESULT_CANCELED)
                                 }
-                            }
-
-                            override fun onError(e: DbxException?) {
-                                PaukerManager.showToast(
-                                    context as Activity,
-                                    R.string.error_synchronizing,
-                                    Toast.LENGTH_LONG
-                                )
-                                finishDialog(RESULT_CANCELED)
-                            }
-                        }).execute(serializableExtra)
-                tasks.add(getFileMetadataTask)
-            } else {
-                Log.d("SyncDialog:syncFile", "File does not exist")
-                PaukerManager.showToast(
-                    context as Activity,
-                    R.string.error_synchronizing,
-                    Toast.LENGTH_LONG
-                )
-                finishDialog(RESULT_CANCELED)
+                            }).execute(serializableExtra)
+                    tasks.add(getFileMetadataTask)
+                }
+                else -> {
+                    Log.d("SyncDialog:syncFile", "File does not exist")
+                    PaukerManager.showToast(
+                        context as Activity,
+                        R.string.error_synchronizing,
+                        Toast.LENGTH_LONG
+                    )
+                    finishDialog(RESULT_CANCELED)
+                }
             }
         } else {
             Log.d("SyncDialog:syncFile", "File does not exist")
@@ -220,10 +227,10 @@ class SyncDialog : Activity() {
 
     private fun showCancelButton() {
         cancelbutton = findViewById(R.id.cancel_button)
-        cancelbutton?.setVisibility(View.VISIBLE)
+        cancelbutton?.visibility = View.VISIBLE
         Log.d(
             "SyncDialog::showCancelButton",
-            "Button is enabled: " + cancelbutton?.isEnabled()
+            "Button is enabled: " + cancelbutton?.isEnabled
         )
     }
 
@@ -237,32 +244,35 @@ class SyncDialog : Activity() {
             DropboxClientFactory.client,
             object : ListFolderTask.Callback {
                 override fun onDataLoaded(result: ListFolderResult?) {
-                    val dbFiles: MutableList<Metadata> =
-                        ArrayList() // Dateien in Dropbox mit der passenden Endung
-                    val dbDeletedFiles: MutableList<Metadata> =
-                        ArrayList() // Dateien, die in Dropbox gelöscht wurden
-                    val lokalAddedFiles =
-                        modelManager.getLokalAddedFiles(context)
-                    while (true) {
-                        val entries =
-                            result!!.entries
-                        for (entry in entries) {
-                            if (paukerManager.validateFilename(entry.name)) {
-                                if (entry is DeletedMetadata) {
-                                    if (!lokalAddedFiles.contains(entry.getName())) {
-                                        dbDeletedFiles.add(entry)
+                    // Dateien in Dropbox mit der passenden Endung
+                    val dbFiles: MutableList<Metadata> = ArrayList()
+
+                    // Dateien, die in Dropbox gelöscht wurden
+                    val dbDeletedFiles: MutableList<Metadata> = ArrayList()
+
+                    val lokalAddedFiles = modelManager.getLokalAddedFiles(context)
+
+                    result?.let {
+                        while (true) {
+                            val entries = result.entries
+                            for (entry in entries) {
+                                if (paukerManager.validateFilename(entry.name)) {
+                                    if (entry is DeletedMetadata) {
+                                        if (!lokalAddedFiles.contains(entry.getName())) {
+                                            dbDeletedFiles.add(entry)
+                                        }
+                                    } else {
+                                        dbFiles.add(entry)
                                     }
-                                } else {
-                                    dbFiles.add(entry)
                                 }
                             }
-                        }
-                        if (!result.hasMore) break
-                        try {
-                            DropboxClientFactory.client?.files()
-                                ?.listFolderContinue(result.cursor)
-                        } catch (e: DbxException) {
-                            e.printStackTrace()
+                            if (!result.hasMore) break
+                            try {
+                                DropboxClientFactory.client?.files()
+                                    ?.listFolderContinue(result.cursor)
+                            } catch (e: DbxException) {
+                                e.printStackTrace()
+                            }
                         }
                     }
                     deleteFiles(dbDeletedFiles, dbFiles)
@@ -289,13 +299,11 @@ class SyncDialog : Activity() {
                                         "please get in contact."
                             )
                             .setPositiveButton(R.string.ok, null)
-                            .setNeutralButton(
-                                "Send E-Mail"
-                            ) { dialog, which ->
+                            .setNeutralButton("Send E-Mail") { _, _ ->
                                 val reporter: ErrorReporter = ErrorReporter.instance()
                                 reporter.init(context)
                                 reporter.uncaughtException(null, e)
-                                reporter.CheckErrorAndSendMail()
+                                reporter.checkErrorAndSendMail()
                             }
                             .setOnDismissListener {
                                 PreferenceManager.getDefaultSharedPreferences(context).edit()
@@ -321,22 +329,17 @@ class SyncDialog : Activity() {
      * werden sollen
      * @param validatedFiles Files, die anschließend syncronisiert werden sollen
      */
-    private fun deleteFiles(
-        deletedFiles: List<Metadata>,
-        validatedFiles: List<Metadata>
-    ) {
+    private fun deleteFiles(deletedFiles: List<Metadata>, validatedFiles: List<Metadata>) {
         val lokalDeletedFiles =
-            modelManager!!.getLokalDeletedFiles(context) // Dateien, die lokal gelöscht wurden
-        if (files != null) {
-            val filesTMP: List<File> =
-                ArrayList(Arrays.asList(*files!!))
-            for (i in deletedFiles.indices) {
-                if (deletedFiles[i] is DeletedMetadata) {
-                    val metadata = deletedFiles[i] as DeletedMetadata
-                    val index = getFileIndex(File(metadata.name), filesTMP)
-                    if (index > -1) {
-                        filesTMP[index].delete()
-                    }
+            modelManager.getLokalDeletedFiles(context) // Dateien, die lokal gelöscht wurden
+        val filesTMP: List<File> = ArrayList(listOf(*files))
+
+        for (i in deletedFiles.indices) {
+            if (deletedFiles[i] is DeletedMetadata) {
+                val metadata = deletedFiles[i] as DeletedMetadata
+                val index = getFileIndex(File(metadata.name), filesTMP)
+                if (index > -1) {
+                    filesTMP[index].delete()
                 }
             }
         }
@@ -369,7 +372,7 @@ class SyncDialog : Activity() {
     ) {
         // Lokale Files kopieren, damit nichts verloren geht
         val filesTMP: List<File>
-        filesTMP = ArrayList(Arrays.asList(*files))
+        filesTMP = ArrayList(listOf(*files))
         val lokal: MutableList<File> =
             ArrayList() // Zum Hochladen
         val dropB: ArrayList<FileMetadata> =
@@ -397,11 +400,11 @@ class SyncDialog : Activity() {
                 }
             }
         }
-        if (!filesTMP.isEmpty()) lokal.addAll(filesTMP)
-        if (!lokal.isEmpty()) {
+        if (filesTMP.isNotEmpty()) lokal.addAll(filesTMP)
+        if (lokal.isNotEmpty()) {
             uploadFiles(lokal)
         }
-        if (!dropB.isEmpty()) {
+        if (dropB.isNotEmpty()) {
             downloadFiles(dropB, downloadSize)
         } else {
             setResult(if (modelManager.resetIndexFiles(context)) RESULT_OK else RESULT_CANCELED)
@@ -507,14 +510,9 @@ class SyncDialog : Activity() {
      * @param list Liste in der gesucht werden soll
      * @return Index. -1, falls File nicht vorhanden ist
      */
-    private fun getFileIndex(
-        file: File,
-        list: Collection<File>
-    ): Int {
-        var i = 0
-        for (item in list) {
+    private fun getFileIndex(file: File, list: Collection<File>): Int {
+        for ((i, item) in list.withIndex()) {
             if (item.name == file.name) return i
-            i++
         }
         return -1
     }
@@ -525,14 +523,9 @@ class SyncDialog : Activity() {
      * @param list     Liste in der gesucht werden soll
      * @return Index. -1, falls File nicht vorhanden ist
      */
-    private fun getFileIndex(
-        fileName: String,
-        list: Collection<String?>
-    ): Int {
-        var i = 0
-        for (name in list) {
+    private fun getFileIndex(fileName: String, list: Collection<String?>): Int {
+        for ((i, name) in list.withIndex()) {
             if (name == fileName) return i
-            i++
         }
         return -1
     }
@@ -552,9 +545,8 @@ class SyncDialog : Activity() {
         if (timeout != null && timerTask != null) {
             timeout!!.cancel()
         }
-        if (networkStateReceiver != null) {
-            unregisterReceiver(networkStateReceiver)
-        }
+        (context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager)
+            .unregisterNetworkCallback(networkCallback)
         cancelTasks()
         super.onDestroy()
     }
@@ -604,7 +596,7 @@ class SyncDialog : Activity() {
 
     private fun cancelTasks() {
         for (task in tasks) {
-            if (task != null && task.status != AsyncTask.Status.FINISHED) {
+            if (task.status != AsyncTask.Status.FINISHED) {
                 task.cancel(false)
                 tasks.remove(task)
             }

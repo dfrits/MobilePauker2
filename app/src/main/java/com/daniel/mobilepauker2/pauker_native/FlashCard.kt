@@ -22,8 +22,8 @@ class FlashCard : Card {
     var initialBatch = 0
 
     constructor(
-        frontSideText: String?,
-        reverseSideText: String?,
+        frontSideText: String,
+        reverseSideText: String,
         index: String?,
         learnStatus: String?
     ) : super(CardSide(), CardSide()) {
@@ -35,21 +35,20 @@ class FlashCard : Card {
         this.isLearned = learnStatus!!.contentEquals("true")
     }
 
-    constructor() : super(CardSide(), CardSide()) {}
+    constructor() : super(CardSide(), CardSide())
 
     enum class SideShowing {
         SIDE_A, SIDE_B
     }
 
-    var side =
-        SideShowing.SIDE_A
-    var sideAText: String?
+    var side = SideShowing.SIDE_A
+    var sideAText: String
         get() = frontSide.text
         set(sideAText) {
             frontSide.text = sideAText
         }
 
-    var sideBText: String?
+    var sideBText: String
         get() = reverseSide.text
         set(sideBText) {
             reverseSide.text = sideBText

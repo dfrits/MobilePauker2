@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.pauker_native
 
 import java.util.*
+import kotlin.math.pow
 
 /*
  * LongTermBatch.java
@@ -11,20 +12,14 @@ import java.util.*
  * a long term batch
  * @author Ronny.Standtke@gmx.net
  */
-class LongTermBatch(
-    /**
-     * returns the batch number
-     * @return the batch number
-     */
-    val batchNumber: Int
-) :
-    Batch(null) {
+@Suppress("unused")
+class LongTermBatch(private val batchNumber: Int) : Batch(null) {
     val expiredCards: MutableCollection<Card>
     /**
      * returns the expiration time of this batch
      * @return the expiration time of this batch
      */
-    val expirationTime: Long
+    private val expirationTime: Long
 
     /**
      * adds a card to this batch
@@ -123,8 +118,8 @@ class LongTermBatch(
      * @param batchNumber the number of this long term batch
      */
     init {
-        val factor = Math.pow(Math.E, batchNumber.toDouble())
-        expirationTime = (expirationUnit * factor) as Long
+        val factor = Math.E.pow(batchNumber.toDouble())
+        expirationTime = (expirationUnit * factor).toLong()
         expiredCards = ArrayList()
     }
 }

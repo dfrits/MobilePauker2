@@ -77,6 +77,7 @@ class DropboxAccDialog : Activity() {
         firstStart = false
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun cancelClicked(view: View?) {}
 
     companion object {

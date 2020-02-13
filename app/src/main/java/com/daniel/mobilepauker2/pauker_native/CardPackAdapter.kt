@@ -17,15 +17,9 @@
 */
 package com.daniel.mobilepauker2.pauker_native
 
-import android.content.Context
 import android.database.Cursor
 
-abstract class CardPackAdapter
-/**
- * Constructor - takes the context to allow the database to be
- * opened/created
- * @param context the Context within which to work
- */(protected val mContext: Context) {
+abstract class CardPackAdapter {
     abstract fun open(): CardPackAdapter
     abstract fun close()
     abstract fun createFlashCard(
@@ -59,5 +53,4 @@ abstract class CardPackAdapter
         const val KEY_INDEX_ID = 3
         const val KEY_LEARN_STATUS_ID = 4
     }
-
 }

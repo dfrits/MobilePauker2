@@ -18,6 +18,7 @@ import kotlin.collections.HashMap
  * hs-augsburg
  */
 class About : AppCompatActivity() {
+
     companion object {
         private val fileNameMap: MutableMap<Locale, String> = HashMap()
 

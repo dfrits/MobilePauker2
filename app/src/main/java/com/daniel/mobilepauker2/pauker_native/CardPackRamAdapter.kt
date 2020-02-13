@@ -21,10 +21,10 @@ import android.content.Context
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
 
-class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
+class CardPackRamAdapter : CardPackAdapter() {
     private val modelManager: ModelManager =
         ModelManager.instance()
-    private val cardCursor: FlashCardCursor
+    private val cardCursor: FlashCardCursor = FlashCardCursor()
     override fun open(): CardPackAdapter {
         return this
     }
@@ -34,14 +34,16 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
     }
 
     override fun createFlashCard(
-        sideA: String?, sideB: String?, index: Int,
+        sideA: String?,
+        sideB: String?,
+        index: Int,
         learnStatus: Boolean
     ): Long {
         val columnValues = arrayOfNulls<String>(5)
         columnValues[0] = "1"
         columnValues[1] = sideA
         columnValues[2] = sideB
-        columnValues[3] = Integer.toString(index)
+        columnValues[3] = index.toString()
         if (learnStatus) {
             columnValues[4] = "true"
         } else {
@@ -62,10 +64,6 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
         if (position >= modelManager.currentBatchSize) {
             throw CursorIndexOutOfBoundsException("After last row.")
         }
-        //******************************************************************
-//BUGFIX: Deleting cards caused a crash due to cursor moving out of bounds
-//Date: 29 October 2011
-//******************************************************************
         Log.d(
             "CardPackRamAdapter::deleteFlashCard",
             "CardCount - " + cardCursor.count
@@ -76,16 +74,11 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
             cardCursor.moveToPrevious()
         }
         returnVal = modelManager.deleteCard(position)
-        // Point to the first card if
-// * We deleted second last card (size now is 1)
-// * We have just deleted the first card
+
         if (cardCursor.count == 1 || requestFirst) {
             cardCursor.moveToFirst()
         }
         return returnVal
-        //******************************************************************
-//BUGFIX: End of bugfix
-//******************************************************************
     }
 
     override fun fetchAllFlashCards(): Cursor {
@@ -96,30 +89,24 @@ class CardPackRamAdapter(context: Context) : CardPackAdapter(context) {
         return cardCursor.count
     }
 
-    fun setCardLearned(rowId: Long) { // Ignore rowId here as not using database
-// Just set what ever card the cursor is pointing to as learned
-        modelManager!!.setCardLearned(cardCursor.position)
+    fun setCardLearned() {
+        modelManager.setCardLearned(cardCursor.position)
     }
 
-    fun setCardUnLearned(
-        context: Context,
-        rowId: Long
-    ) { // Ignore rowId here as not using database
-// Just set what ever card the cursor is pointing to as learned
-        modelManager!!.pullCurrentCard(cardCursor.position, context)
+    fun setCardUnLearned(context: Context) {
+        modelManager.pullCurrentCard(cardCursor.position, context)
     }
 
     val isLastCard: Boolean
         get() = cardCursor.isLast
 
     override fun updateFlashCard(
-        cardId: Long, sideA: String?, sideB: String?,
-        index: Int, learnStatus: Boolean
+        cardId: Long,
+        sideA: String?,
+        sideB: String?,
+        index: Int,
+        learnStatus: Boolean
     ): Boolean {
         return false
-    }
-
-    init {
-        cardCursor = FlashCardCursor()
     }
 }

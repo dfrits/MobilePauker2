@@ -41,39 +41,38 @@ open class Card
         }
         private set
     var expirationTime: Long = 0
-    override fun equals(obj: Any?): Boolean {
-        if (obj == null) {
+    override fun equals(other: Any?): Boolean {
+        if (other == null) {
             return false
         }
-        if (javaClass != obj.javaClass) {
+        if (javaClass != other.javaClass) {
             return false
         }
-        val other =
-            obj as Card
-        return (frontSide == other.frontSide
-                && reverseSide == other.reverseSide
-                && expirationTime == other.expirationTime)
+        val otherCard = other as Card
+        return (frontSide == otherCard.frontSide
+                && reverseSide == otherCard.reverseSide
+                && expirationTime == otherCard.expirationTime)
     }
 
     override fun hashCode(): Int {
         var hash = 3
-        hash = 47 * hash + if (frontSide != null) frontSide.hashCode() else 0
-        hash = 47 * hash + if (reverseSide != null) reverseSide.hashCode() else 0
+        hash = 47 * hash + frontSide.hashCode()
+        hash = 47 * hash + reverseSide.hashCode()
         hash = 47 * hash + (expirationTime xor (expirationTime ushr 32)).toInt()
         return hash
     }
 
-    override fun compareTo(otherCard: Card): Int {
-        val frontSideResult = frontSide.compareTo(otherCard.frontSide)
+    override fun compareTo(other: Card): Int {
+        val frontSideResult = frontSide.compareTo(other.frontSide)
         if (frontSideResult != 0) {
             return frontSideResult
         }
-        val reverseSideResult = reverseSide.compareTo(otherCard.reverseSide)
+        val reverseSideResult = reverseSide.compareTo(other.reverseSide)
         if (reverseSideResult != 0) {
             return reverseSideResult
         }
         // both sides are equal, base decision on expiration time
-        val otherExpirationTime = otherCard.getCalucalatedExpirationTime()
+        val otherExpirationTime = other.getCalucalatedExpirationTime()
         if (expirationTime < otherExpirationTime) {
             return -1
         } else if (expirationTime > otherExpirationTime) {
@@ -105,8 +104,7 @@ open class Card
     /**
      * determines if the card is learned or not
      * @return if true the card is learned
-     */
-    /**
+     *
      * sets if the card is learned or not
      * @param learned if true the cards state is set to learned and the current date is used as
      * learnedDate
@@ -140,7 +138,7 @@ open class Card
      * returns the expiration time of this card
      * @return the expiration time of this card
      */
-    fun getCalucalatedExpirationTime(): Long {
+    private fun getCalucalatedExpirationTime(): Long {
         return if (frontSide.isLearned) {
             frontSide.learnedTimestamp + expirationTime
         } else -1
@@ -178,49 +176,49 @@ open class Card
      * Pauker.REVERSE_SIDE Pauker.BOTH_SIDES
      * @return a list with search match indices
      */
-    fun search(
-        cardSide: Element?,
-        pattern: String?,
-        matchCase: Boolean
-    ): List<SearchHit> {
+    fun search(cardSide: Element?, pattern: String?, matchCase: Boolean): List<SearchHit> {
         val searchHits = LinkedList<SearchHit>()
-        if (cardSide == Element.FRONT_SIDE) {
-            searchHits.addAll(
-                frontSide.search(
-                    this,
-                    Element.FRONT_SIDE,
-                    pattern,
-                    matchCase
+        when (cardSide) {
+            Element.FRONT_SIDE -> {
+                searchHits.addAll(
+                    frontSide.search(
+                        this,
+                        Element.FRONT_SIDE,
+                        pattern,
+                        matchCase
+                    )
                 )
-            )
-            reverseSide.cancelSearch()
-        } else if (cardSide == Element.REVERSE_SIDE) {
-            frontSide.cancelSearch()
-            searchHits.addAll(
-                reverseSide.search(
-                    this,
-                    Element.REVERSE_SIDE,
-                    pattern,
-                    matchCase
+                reverseSide.cancelSearch()
+            }
+            Element.REVERSE_SIDE -> {
+                frontSide.cancelSearch()
+                searchHits.addAll(
+                    reverseSide.search(
+                        this,
+                        Element.REVERSE_SIDE,
+                        pattern,
+                        matchCase
+                    )
                 )
-            )
-        } else { // BOTH_SIDES
-            searchHits.addAll(
-                frontSide.search(
-                    this,
-                    Element.FRONT_SIDE,
-                    pattern,
-                    matchCase
+            }
+            else -> { // BOTH_SIDES
+                searchHits.addAll(
+                    frontSide.search(
+                        this,
+                        Element.FRONT_SIDE,
+                        pattern,
+                        matchCase
+                    )
                 )
-            )
-            searchHits.addAll(
-                reverseSide.search(
-                    this,
-                    Element.REVERSE_SIDE,
-                    pattern,
-                    matchCase
+                searchHits.addAll(
+                    reverseSide.search(
+                        this,
+                        Element.REVERSE_SIDE,
+                        pattern,
+                        matchCase
+                    )
                 )
-            )
+            }
         }
         return searchHits
     }

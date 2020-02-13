@@ -48,6 +48,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
  * Daniel Fritsch
  * hs-augsburg
  */
+@Suppress("UNUSED_PARAMETER")
 class MainMenu : AppCompatActivity() {
     private val modelManager: ModelManager = ModelManager.instance()
     private val paukerManager: PaukerManager = PaukerManager.instance()
@@ -92,10 +93,10 @@ class MainMenu : AppCompatActivity() {
                 .setCancelable(false)
                 .setPositiveButton(
                     getString(R.string.ok)
-                ) { dialog, id -> errorReporter.CheckErrorAndSendMail() }
+                ) { _, _ -> errorReporter.checkErrorAndSendMail() }
                 .setNeutralButton(
                     getString(R.string.cancel)
-                ) { dialog, id ->
+                ) { dialog, _ ->
                     errorReporter.deleteErrorFiles()
                     dialog.cancel()
                 }
@@ -121,7 +122,7 @@ class MainMenu : AppCompatActivity() {
         val description = modelManager.description
         val descriptionView = findViewById<TextView>(R.id.infoText)
         descriptionView.text = description
-        if (!description!!.isEmpty()) {
+        if (description.isNotEmpty()) {
             descriptionView.movementMethod = ScrollingMovementMethod()
         }
         val drawer = findViewById<SlidingUpPanelLayout>(R.id.drawerPanel)
@@ -148,7 +149,7 @@ class MainMenu : AppCompatActivity() {
         }
         var title = getString(R.string.app_name)
         if (modelManager.isLessonNotNew) {
-            title = paukerManager.readableFileName
+            title = paukerManager.readableFileName ?: title
         }
         setTitle(title)
     }
@@ -156,23 +157,25 @@ class MainMenu : AppCompatActivity() {
     private fun initChartList() { // Im Thread laufen lassen um MainThread zu entlasten
         val initthread = Thread(Runnable {
             chartView = findViewById(R.id.chartListView)
-            val layoutManager = LinearLayoutManager(
-                context,
-                LinearLayoutManager.HORIZONTAL, false
-            )
-            chartView?.setLayoutManager(layoutManager)
-            chartView?.setOverScrollMode(View.OVER_SCROLL_NEVER)
-            chartView?.setScrollContainer(true)
-            chartView?.setNestedScrollingEnabled(true)
-            runOnUiThread {
-                val onClickListener =
-                    object : ChartAdapterCallback {
-                        override fun onClick(position: Int) {
-                            showBatchDetails(position)
+            chartView?.let {
+                val layoutManager = LinearLayoutManager(
+                    context,
+                    LinearLayoutManager.HORIZONTAL, false
+                )
+                it.layoutManager = layoutManager
+                it.overScrollMode = View.OVER_SCROLL_NEVER
+                it.isScrollContainer = true
+                it.isNestedScrollingEnabled = true
+                runOnUiThread {
+                    val onClickListener =
+                        object : ChartAdapterCallback {
+                            override fun onClick(position: Int) {
+                                showBatchDetails(position)
+                            }
                         }
-                    }
-                val adapter = ChartAdapter(context, onClickListener)
-                chartView?.setAdapter(adapter)
+                    val adapter = ChartAdapter(context, onClickListener)
+                    it.adapter = adapter
+                }
             }
         })
         initthread.run()
@@ -202,16 +205,16 @@ class MainMenu : AppCompatActivity() {
             modelManager.isLessonNotNew || !modelManager.isLessonEmpty
         )
         if (modelManager.lessonSize > 0) {
-            search?.setVisible(true)
+            search?.isVisible = true
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM)
         } else {
-            search?.setVisible(false)
+            search?.isVisible = false
             open.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         }
         save.isVisible = paukerManager.isSaveRequired
         if (search?.isVisible == true) {
             val searchView =
-                search?.getActionView() as SearchView
+                search?.actionView as SearchView
             searchView.setIconifiedByDefault(false)
             searchView.isIconified = false
             searchView.queryHint = getString(R.string.search_hint)
@@ -230,7 +233,7 @@ class MainMenu : AppCompatActivity() {
                     return false
                 }
             })
-            searchView.setOnQueryTextFocusChangeListener { v, hasFocus -> if (!hasFocus) searchView.clearFocus() }
+            searchView.setOnQueryTextFocusChangeListener { _, hasFocus -> if (!hasFocus) searchView.clearFocus() }
         }
         return true
     }
@@ -264,7 +267,7 @@ class MainMenu : AppCompatActivity() {
             val builder = AlertDialog.Builder(context)
             builder.setMessage(R.string.close_without_saving_dialog_msg)
                 .setPositiveButton(R.string.cancel, null)
-                .setNeutralButton(R.string.close) { dialog, which -> finish() }
+                .setNeutralButton(R.string.close) { _, _ -> finish() }
             val dialog = builder.create()
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL)
@@ -284,11 +287,11 @@ class MainMenu : AppCompatActivity() {
         requestCode: Int, permissions: Array<String>,
         grantResults: IntArray
     ) {
-        if (requestCode == RQ_WRITE_EXT_OPEN && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        if (requestCode == RQ_WRITE_EXT_OPEN && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             openLesson()
         }
-        if (requestCode == RQ_WRITE_EXT_SAVE && grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+        if (requestCode == RQ_WRITE_EXT_SAVE && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
         ) {
             saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL)
         }
@@ -297,7 +300,7 @@ class MainMenu : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == Activity.RESULT_OK) {
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.saving_success,
                     Toast.LENGTH_SHORT
@@ -357,11 +360,14 @@ class MainMenu : AppCompatActivity() {
                     AlertDialog.Builder(context)
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
                     .setMessage(R.string.save_lesson_before_question)
-                    .setPositiveButton(R.string.save) { dialog, which -> saveLesson(
-                        Constants.REQUEST_CODE_SAVE_DIALOG_OPEN) }
+                    .setPositiveButton(R.string.save) { _, _ ->
+                        saveLesson(
+                            Constants.REQUEST_CODE_SAVE_DIALOG_OPEN
+                        )
+                    }
                     .setNeutralButton(
                         R.string.open_lesson
-                    ) { dialog, which ->
+                    ) { dialog, _ ->
                         startActivity(Intent(context, LessonImportActivity::class.java))
                         dialog.dismiss()
                     }
@@ -379,7 +385,7 @@ class MainMenu : AppCompatActivity() {
         initButtons()
         initChartList()
         initView()
-        PaukerManager.Companion.showToast(
+        PaukerManager.showToast(
             context as Activity,
             R.string.new_lession_created,
             Toast.LENGTH_SHORT
@@ -394,7 +400,7 @@ class MainMenu : AppCompatActivity() {
         val pref = PreferenceManager.getDefaultSharedPreferences(context)
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.app_name)
-            .setPositiveButton(R.string.next) { dialog, which ->
+            .setPositiveButton(R.string.next) { dialog, _ ->
                 pref.edit().putBoolean("FirstTime", false).apply()
                 requestPermissions(
                     arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
@@ -402,7 +408,7 @@ class MainMenu : AppCompatActivity() {
                 )
                 dialog.dismiss()
             }
-            .setNeutralButton(R.string.not_now) { dialog, which -> dialog.dismiss() }
+            .setNeutralButton(R.string.not_now) { dialog, _ -> dialog.dismiss() }
         if (shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             builder.setMessage(R.string.write_permission_rational_message)
         } else {
@@ -410,7 +416,7 @@ class MainMenu : AppCompatActivity() {
                 builder.setMessage(R.string.write_permission_info_message)
             } else {
                 builder.setMessage(R.string.write_permission_rational_message)
-                    .setPositiveButton(R.string.settings) { dialog, which ->
+                    .setPositiveButton(R.string.settings) { dialog, _ ->
                         val intent = Intent()
                         intent.action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
                         val uri =
@@ -441,30 +447,30 @@ class MainMenu : AppCompatActivity() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.reset_lesson_dialog_title)
             .setMessage(R.string.reset_lesson_dialog_info)
-            .setPositiveButton(R.string.reset) { dialog, which ->
+            .setPositiveButton(R.string.reset) { dialog, _ ->
                 modelManager.forgetAllCards()
                 paukerManager.isSaveRequired = true
                 initButtons()
                 initChartList()
                 initView()
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.lektion_zurückgesetzt,
                     Toast.LENGTH_SHORT
                 )
                 dialog.cancel()
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.cancel() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
     fun mNewLessonClicked(item: MenuItem?) {
-        if (paukerManager!!.isSaveRequired) {
+        if (paukerManager.isSaveRequired) {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.lesson_not_saved_dialog_title)
                 .setMessage(R.string.save_lesson_before_question)
-                .setPositiveButton(R.string.save) { dialog, which -> saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) }
-                .setNeutralButton(R.string.no) { dialog, which -> createNewLesson() }
+                .setPositiveButton(R.string.save) { _, _ -> saveLesson(Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON) }
+                .setNeutralButton(R.string.no) { _, _ -> createNewLesson() }
             builder.create().show()
         } else createNewLesson()
     }
@@ -488,27 +494,27 @@ class MainMenu : AppCompatActivity() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.reverse_sides_dialog_title)
             .setMessage(R.string.reverse_sides_dialog_info)
-            .setPositiveButton(R.string.flip_cards) { dialog, which ->
-                modelManager!!.flipAllCards()
+            .setPositiveButton(R.string.flip_cards) { dialog, _ ->
+                modelManager.flipAllCards()
                 paukerManager.isSaveRequired = true
                 initButtons()
                 initChartList()
                 initView()
-                PaukerManager.Companion.showToast(
+                PaukerManager.showToast(
                     context as Activity,
                     R.string.flip_sides_complete,
                     Toast.LENGTH_SHORT
                 )
                 dialog.cancel()
             }
-            .setNeutralButton(R.string.cancel) { dialog, which -> dialog.cancel() }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
     /**
      * Erstellt alle Channels
      */
-    fun createNotificationChannels() { // Für Notification
+    private fun createNotificationChannels() { // Für Notification
         createNotificationChannel(
             getString(R.string.channel_notify_name_other),
             null,

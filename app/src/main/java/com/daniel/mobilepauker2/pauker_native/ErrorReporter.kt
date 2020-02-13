@@ -37,11 +37,12 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     private val CustomParameters =
         HashMap<String, String>()
     private var context: Context? = null
-    fun AddCustomData(Key: String, Value: String) {
+
+    fun addCustomData(Key: String, Value: String) {
         CustomParameters[Key] = Value
     }
 
-    private fun CreateCustomInfoString(): String {
+    private fun createCustomInfoString(): String {
         val CustomInfo = StringBuilder()
         for (CurrentKey in CustomParameters.keys) {
             val CurrentVal = CustomParameters[CurrentKey]
@@ -56,7 +57,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     }
 
     private val availableInternalMemorySize: Long
-        private get() {
+        get() {
             val path = Environment.getDataDirectory()
             val stat = StatFs(path.path)
             val blockSize = stat.blockSizeLong
@@ -65,7 +66,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         }
 
     private val totalInternalMemorySize: Long
-        private get() {
+        get() {
             val path = Environment.getDataDirectory()
             val stat = StatFs(path.path)
             val blockSize = stat.blockSizeLong
@@ -73,7 +74,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
             return totalBlocks * blockSize
         }
 
-    private fun RecoltInformations() {
+    private fun recoltInformations() {
         try {
             val pm = context!!.packageManager
             val pi: PackageInfo
@@ -107,8 +108,8 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         }
     }
 
-    private fun CreateInformationString(): String {
-        RecoltInformations()
+    private fun createInformationString(): String {
+        recoltInformations()
         var ReturnVal = ""
         ReturnVal += "Version : $VersionName"
         ReturnVal += "\n"
@@ -168,10 +169,10 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         Report.append("==============")
         Report.append("\n")
         Report.append("\n")
-        Report.append(CreateInformationString())
+        Report.append(createInformationString())
         Report.append("Custom Informations :\n")
         Report.append("=====================\n")
-        Report.append(CreateCustomInfoString())
+        Report.append(createCustomInfoString())
         Report.append("\n\n")
         Report.append("Stack : \n")
         Report.append("======= \n")
@@ -193,10 +194,10 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         }
         printWriter.close()
         Report.append("****  End of current Report ***")
-        SaveAsFile(Report.toString())
+        saveAsFile(Report.toString())
     }
 
-    private fun SendErrorMail(ErrorContent: String) {
+    private fun sendErrorMail(ErrorContent: String) {
         val body =
             context!!.resources.getString(R.string.crash_report_mail_body) +
                     "\n\n" +
@@ -219,7 +220,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         )
     }
 
-    private fun SaveAsFile(ErrorContent: String) {
+    private fun saveAsFile(ErrorContent: String) {
         try {
             val FileName = "error.stacktrace"
             val trace =
@@ -271,7 +272,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         }
     }
 
-    fun CheckErrorAndSendMail() {
+    fun checkErrorAndSendMail() {
         try {
             FilePath = context!!.filesDir.absolutePath
             if (bIsThereAnyErrorFile()) {
@@ -287,7 +288,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
                 input.close()
                 // DELETE FILES !!!!
                 deleteErrorFiles()
-                SendErrorMail(WholeErrorText.toString())
+                sendErrorMail(WholeErrorText.toString())
             }
         } catch (e: Exception) {
             e.printStackTrace()

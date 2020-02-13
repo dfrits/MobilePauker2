@@ -35,8 +35,8 @@ class AddCardActivity : AEditCardActivity() {
             val builder =
                 AlertDialog.Builder(context)
             builder.setMessage(R.string.finish_add_card_message)
-                .setPositiveButton(R.string.yes) { dialog, which -> resetCardAndFinish() }
-                .setNeutralButton(R.string.cancel) { dialog, which -> dialog.dismiss() }
+                .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
+                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
             builder.create().show()
         }
     }
@@ -50,23 +50,30 @@ class AddCardActivity : AEditCardActivity() {
     }
 
     override fun okClicked(view: View?) {
-        val sideAText = sideAEditText!!.text.toString()
-        val sideBText = sideBEditText!!.text.toString()
-        if (!sideAText.isEmpty() && !sideBText.isEmpty()) {
-            ModelManager.Companion.instance()!!.addCard(flashCard!!, sideAText, sideBText)
-            PaukerManager.Companion.showToast(
+        val sideA = sideAEditText
+        val sideB = sideBEditText
+
+        if (sideA == null || sideB == null) {
+            return
+        }
+
+        val sideAText = sideA.text.toString()
+        val sideBText = sideB.text.toString()
+        if (sideAText.isNotEmpty() && sideBText.isNotEmpty()) {
+            ModelManager.instance().addCard(flashCard!!, sideAText, sideBText)
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.card_added,
                 Toast.LENGTH_SHORT
             )
-            sideAEditText!!.setText("")
-            sideBEditText!!.setText("")
+            sideA.setText("")
+            sideB.setText("")
             PaukerManager.instance().isSaveRequired = true
-            sideAEditText!!.requestFocus()
-            sideAEditText!!.setSelection(0, 0)
+            sideA.requestFocus()
+            sideA.setSelection(0, 0)
             if (checkBox != null && !checkBox!!.isChecked) finish()
         } else {
-            PaukerManager.Companion.showToast(
+            PaukerManager.showToast(
                 context as Activity,
                 R.string.add_card_sides_empty_error,
                 Toast.LENGTH_SHORT
@@ -79,6 +86,7 @@ class AddCardActivity : AEditCardActivity() {
         super.resetCardSides(view)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mKeepOpenClicked(item: MenuItem?) {
         val isChecked = checkBox!!.isChecked
         checkBox!!.isChecked = !isChecked

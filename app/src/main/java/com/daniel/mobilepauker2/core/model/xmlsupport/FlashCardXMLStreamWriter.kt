@@ -16,8 +16,8 @@ object FlashCardXMLStreamWriter {
     //TODO This sould de in a class of its own or in the Flash card xml stream writer...
     @Throws(SecurityException::class)
     fun saveLesson() {
-        val modelManager: ModelManager = ModelManager.Companion.instance()
-        val paukerManager: PaukerManager = PaukerManager.Companion.instance()
+        val modelManager: ModelManager = ModelManager.instance()
+        val paukerManager: PaukerManager = PaukerManager.instance()
         if (modelManager.isLessonNotNew) { // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
             val name = "neu_" + modelManager.filePath.name
             val path = modelManager.filePath.parent
@@ -143,7 +143,7 @@ object FlashCardXMLStreamWriter {
         if (serializer == null) {
             return false
         }
-        if (!isCardValid(card)) {
+        if (card == null) {
             // Be ultra safe as if anything goes wrong here we can lose the file on the sdcard
             // as the xml may not be well formed
             Log.e(
@@ -156,9 +156,9 @@ object FlashCardXMLStreamWriter {
             serializer.startTag("", "Card")
             // Frontside
             serializer.startTag("", "FrontSide")
-            if (card!!.isLearned) {
+            if (card.isLearned) {
                 val timeStamp = card.learnedTimestamp
-                serializer.attribute("", "LearnedTimestamp", java.lang.Long.toString(timeStamp))
+                serializer.attribute("", "LearnedTimestamp", timeStamp.toString())
             }
             try {
                 serializer.attribute(
@@ -266,7 +266,7 @@ object FlashCardXMLStreamWriter {
                 serializer.attribute(
                     "",
                     "LearnedTimestamp",
-                    java.lang.Long.toString(reverseTimeStamp)
+                    reverseTimeStamp.toString()
                 )
             }
             //EndofBugFix*****************
@@ -329,12 +329,5 @@ object FlashCardXMLStreamWriter {
             }
         }
         return true
-    }
-
-    private fun isCardValid(card: Card?): Boolean {
-        return if (card == null) {
-            false
-        } else card.frontSide != null &&
-                card.reverseSide != null
     }
 }

@@ -1,6 +1,7 @@
 package com.daniel.mobilepauker2.settings
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.daniel.mobilepauker2.R
 
@@ -12,7 +13,8 @@ import com.daniel.mobilepauker2.R
  * hs-augsburg
  */
 class SettingsManager {
-    fun getSettingsKey(context: Context, key: Keys?): String {
+
+    fun getSettingsKey(context: Context, key: Keys): String {
         return when (key) {
             Keys.STM -> context.getString(R.string.stm_key)
             Keys.USTM -> context.getString(R.string.ustm_key)
@@ -36,7 +38,7 @@ class SettingsManager {
         }
     }
 
-    private fun getDefaultStringValue(context: Context, key: Keys?): String {
+    private fun getDefaultStringValue(context: Context, key: Keys): String {
         return when (key) {
             Keys.STM -> context.getString(R.string.stm_default)
             Keys.USTM -> context.getString(R.string.ustm_default)
@@ -47,7 +49,7 @@ class SettingsManager {
         }
     }
 
-    private fun getDefaultBoolValue(context: Context, key: Keys?): Boolean {
+    private fun getDefaultBoolValue(context: Context, key: Keys): Boolean {
         return when (key) {
             Keys.AUTO_DOWNLOAD -> context.resources
                 .getBoolean(R.bool.auto_download_default)
@@ -70,20 +72,38 @@ class SettingsManager {
         }
     }
 
-    fun getBoolPreference(context: Context, key: Keys?): Boolean {
+    fun getBoolPreference(context: Context, key: Keys): Boolean {
         val prefKey = getSettingsKey(context, key)
         val defValue = getDefaultBoolValue(context, key)
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean(prefKey, defValue)
     }
 
-    fun getStringPreference(context: Context, key: Keys?): String {
+    fun getStringPreference(context: Context, key: Keys): String {
         val prefKey = getSettingsKey(context, key)
         val defValue = getDefaultStringValue(context, key)
         return PreferenceManager.getDefaultSharedPreferences(context).getString(prefKey, defValue)
+            ?: ""
     }
 
     enum class Keys {
-        ABOUT, AUTO_DOWNLOAD, AUTO_SAVE, AUTO_UPLOAD, CASE_SENSITIV, DB_PREFERENCE, ENABLE_EXPIRE_TOAST, FLIP_CARD_SIDES, HIDE_TIMES, LEARN_NEW_CARDS_RANDOMLY, REPEAT_CARDS, RETURN_FORGOTTEN_CARDS, RING_TONE, SHOW_CARD_NOTIFY, SHOW_TIMER_BAR, SHOW_TIMER_NOTIFY, STM, USTM
+        ABOUT,
+        AUTO_DOWNLOAD,
+        AUTO_SAVE,
+        AUTO_UPLOAD,
+        CASE_SENSITIV,
+        DB_PREFERENCE,
+        ENABLE_EXPIRE_TOAST,
+        FLIP_CARD_SIDES,
+        HIDE_TIMES,
+        LEARN_NEW_CARDS_RANDOMLY,
+        REPEAT_CARDS,
+        RETURN_FORGOTTEN_CARDS,
+        RING_TONE,
+        SHOW_CARD_NOTIFY,
+        SHOW_TIMER_BAR,
+        SHOW_TIMER_NOTIFY,
+        STM,
+        USTM
     }
 
     companion object {

@@ -8,19 +8,15 @@ import com.daniel.mobilepauker2.pauker_native.CardSide
 import com.daniel.mobilepauker2.pauker_native.Font
 
 class MPEditText : AppCompatEditText {
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(
-        context,
-        attrs
-    ) {
-    }
+    constructor(context: Context?) : super(context)
 
-    constructor(
-        context: Context?,
-        attrs: AttributeSet?,
-        defStyleAttr: Int
-    ) : super(context, attrs, defStyleAttr) {
-    }
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     fun setCard(cardside: CardSide?) {
         setText(cardside?.text)
@@ -28,7 +24,6 @@ class MPEditText : AppCompatEditText {
     }
 
     fun setFont(font: Font?) {
-        ModelManager.instance()
-            .setFont(font, this)
+        ModelManager.instance().setFont(font, this)
     }
 }

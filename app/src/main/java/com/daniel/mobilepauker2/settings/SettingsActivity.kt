@@ -14,6 +14,7 @@ import com.daniel.mobilepauker2.R
 class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // TODO Deprecated
         fragmentManager.beginTransaction()
             .replace(R.id.content,
                 SettingsFragment()

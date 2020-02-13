@@ -2,18 +2,20 @@
  * A Wrapper class of android.util.Log
  * Original author Prasanta Paul
  */
+@file:Suppress("unused")
+
 package com.daniel.mobilepauker2.pauker_native
 
 import android.util.Log
 
 object Log {
-    const val enableLog = true
-    const val VERBOSE = 0xA1
-    const val DEBUG = 0xA2
-    const val INFO = 0xA3
-    const val WARN = 0xA4
-    const val ERROR = 0xA5
-    const val logLevel = VERBOSE
+    private var enableLog = true
+    private const val VERBOSE = 0xA1
+    private const val DEBUG = 0xA2
+    private const val INFO = 0xA3
+    private const val WARN = 0xA4
+    private const val ERROR = 0xA5
+    private const val logLevel = VERBOSE
 
     fun i(tag: String?, msg: String?) {
         if (!enableLog || logLevel > INFO) {

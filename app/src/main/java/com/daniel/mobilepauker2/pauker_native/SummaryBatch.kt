@@ -7,12 +7,8 @@ package com.daniel.mobilepauker2.pauker_native
  */ /**
  * a temporary batch that contains all cards of a lesson
  */
-class SummaryBatch
-/**
- * creates a new SummaryBatch
- * @param lesson the lesson for this SummaryBatch
- */(private val lesson: Lesson) :
-    Batch(lesson.cards) {
+class SummaryBatch(private val lesson: Lesson) : Batch(lesson.cards) {
+
     /**
      * adds a card to this batch
      * @param card the new card
@@ -34,8 +30,7 @@ class SummaryBatch
             val longTermBatch = lesson.getLongTermBatch(batchNumber)
             longTermBatch.removeCard(card)
         } else {
-            val unlearnedBatch =
-                lesson.unlearnedBatch
+            val unlearnedBatch = lesson.unlearnedBatch
             unlearnedBatch.removeCard(card)
         }
         return card

@@ -184,7 +184,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
 
     private fun refreshSearchHits(): Boolean {
         searchHits.clear()
-        if (searchPattern == null || searchPattern!!.length == 0) {
+        if (searchPattern.isNullOrEmpty()) {
             return false
         }
         cards?.let {
@@ -307,7 +307,6 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
 
     /**
      * constructs a new Batch with all the cards in <CODE>cards</CODE>
-     * @param cards initial batch cards
      */
     init {
         if (cards == null) {

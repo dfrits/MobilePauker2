@@ -42,8 +42,7 @@ class SearchActivity : AppCompatActivity() {
     private var checkedCards: MutableList<FlashCard>? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        intent = getIntent()
-        if (Intent.ACTION_SEARCH == intent.getAction()) {
+        if (Intent.ACTION_SEARCH == intent.action) {
             setContentView(R.layout.search_cards)
             listView = findViewById(R.id.listView)
             itemPosition = Vector()
@@ -58,8 +57,7 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.browse, menu)
         val search = menu.findItem(R.id.mSearch)
-        val searchView =
-            search.actionView as SearchView
+        val searchView = search.actionView as SearchView
         searchView.queryHint = getString(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
@@ -72,11 +70,11 @@ class SearchActivity : AppCompatActivity() {
                 return true
             }
         })
-        searchView.setOnQueryTextFocusChangeListener { v, hasFocus -> if (!hasFocus) searchView.clearFocus() }
-        val query = intent!!.getStringExtra(SearchManager.QUERY)
+        searchView.setOnQueryTextFocusChangeListener { _, hasFocus -> if (!hasFocus) searchView.clearFocus() }
+        val query = intent.getStringExtra(SearchManager.QUERY)
         searchView.setQuery(query, true)
         searchView.setIconifiedByDefault(false)
-        if (!query.isEmpty()) {
+        if (query.isNotEmpty()) {
             search.expandActionView()
         }
         return true
@@ -182,11 +180,10 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showResults(results: List<FlashCard?>) {
-        val adapter =
-            CardAdapter(context, results)
+        val adapter = CardAdapter(context, results)
         listView?.adapter = adapter
         listView?.choiceMode = ListView.CHOICE_MODE_MULTIPLE_MODAL
-        listView?.onItemClickListener = OnItemClickListener { parent, view, position, id ->
+        listView?.onItemClickListener = OnItemClickListener { _, _, position, _ ->
             if (modalListener != null && modalListener?.activeState != null) {
                 listView!!.setItemChecked(position, !listView!!.isItemChecked(position))
                 return@OnItemClickListener
@@ -219,7 +216,7 @@ class SearchActivity : AppCompatActivity() {
                                 AlertDialog.Builder(context)
                             builder.setTitle(R.string.reset_cards)
                                 .setMessage(R.string.reset_cards_message)
-                                .setPositiveButton(R.string.yes) { dialog, which ->
+                                .setPositiveButton(R.string.yes) { _, _ ->
                                     for (card in checkedCards!!) {
                                         modelManager.forgetCard(card)
                                     }
@@ -240,7 +237,7 @@ class SearchActivity : AppCompatActivity() {
                                 AlertDialog.Builder(context)
                             builder.setTitle(R.string.instant_repeat)
                                 .setMessage(R.string.instant_repeat_message)
-                                .setPositiveButton(R.string.yes) { dialog, which ->
+                                .setPositiveButton(R.string.yes) { _, _ ->
                                     for (card in checkedCards!!) {
                                         modelManager.instantRepeatCard(card)
                                     }
@@ -261,7 +258,7 @@ class SearchActivity : AppCompatActivity() {
                                 AlertDialog.Builder(context)
                             builder.setTitle(R.string.flip_card_sides)
                                 .setMessage(R.string.flip_cards_message)
-                                .setPositiveButton(R.string.yes) { dialog, which ->
+                                .setPositiveButton(R.string.yes) { _, _ ->
                                     for (card in checkedCards!!) {
                                         card.flip()
                                     }
@@ -290,9 +287,9 @@ class SearchActivity : AppCompatActivity() {
                                 AlertDialog.Builder(context)
                             builder.setTitle(R.string.delete_card)
                                 .setMessage(R.string.delete_card_message)
-                                .setPositiveButton(R.string.yes) { dialog, which ->
+                                .setPositiveButton(R.string.yes) { _, _ ->
                                     for (card in checkedCards!!) {
-                                        val cardDeleted = modelManager!!.deleteCard(card)
+                                        val cardDeleted = modelManager.deleteCard(card)
                                         Log.d(
                                             "SearchActivity::MultiChoiceListener::deleteCards",
                                             "Card deleted: $cardDeleted"
@@ -300,7 +297,7 @@ class SearchActivity : AppCompatActivity() {
                                     }
                                     checkedCards = null
                                     paukerManager.isSaveRequired = true
-                                    modelManager!!.setCurrentPack(context, stackIndex)
+                                    modelManager.setCurrentPack(context, stackIndex)
                                     pack = modelManager.currentPack
                                     invalidateOptionsMenu()
                                 }
@@ -392,6 +389,7 @@ class SearchActivity : AppCompatActivity() {
      * Startet die Multiauswahl manuell.
      * @param item Nicht notwendig
      */
+    @Suppress("UNUSED_PARAMETER")
     fun mStartChooseClicked(item: MenuItem?) {
         if (modalListener != null) {
             listView!!.startActionMode(modalListener)
