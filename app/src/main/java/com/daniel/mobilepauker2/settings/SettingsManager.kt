@@ -34,7 +34,6 @@ class SettingsManager {
             Keys.SHOW_CARD_NOTIFY -> context.getString(R.string.show_card_notification)
             Keys.RING_TONE -> context.getString(R.string.ring_tone_preference)
             Keys.SHOW_TIMER_BAR -> context.getString(R.string.show_timer_bar)
-            else -> ""
         }
     }
 
