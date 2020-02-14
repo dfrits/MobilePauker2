@@ -57,6 +57,7 @@ class MainMenu : AppCompatActivity() {
     private var firstStart = true
     private var search: MenuItem? = null
     private var chartView: RecyclerView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Channel erstellen, falls noch nicht vorhanden
