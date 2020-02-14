@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".core.Application" />
+        <activity android:name="com.daniel.mobilepauker2.core.PaukerApplication" />
 
         <activity
-            android:name=".main.MainMenu"
+            android:name="com.daniel.mobilepauker2.main.MainMenu"
             android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustNothing">
             <intent-filter>
@@ -29,18 +29,18 @@
         </activity>
 
         <activity
-            android:name=".lessonimport.LessonImportActivity"
+            android:name="com.daniel.mobilepauker2.lessonimport.LessonImportActivity"
             android:label="@string/lessons"
             android:screenOrientation="portrait"
             android:parentActivityName=".main.MainMenu"
             android:theme="@style/OpenLessonTheme" />
 
         <activity
-            android:name=".editor.EditDescrptionActivity"
+            android:name="com.daniel.mobilepauker2.editor.EditDescrptionActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".browse.SearchActivity"
+            android:name="com.daniel.mobilepauker2.browse.SearchActivity"
             android:label="@string/search" />
 
         <activity
@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name=".core.About"
+            android:name="com.daniel.mobilepauker2.core.About"
             android:label="@string/about"
             android:screenOrientation="portrait">
 
@@ -70,42 +70,42 @@
         </activity>
 
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="com.daniel.mobilepauker2.settings.SettingsActivity"
             android:label="@string/settings"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".learning.LearnCardsActivity"
+            android:name="com.daniel.mobilepauker2.learning.LearnCardsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".lessonexport.SaveDialog"
+            android:name="com.daniel.mobilepauker2.lessonexport.SaveDialog"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:name=".dropbox.SyncDialog"
+            android:name="com.daniel.mobilepauker2.dropbox.SyncDialog"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:name=".dropbox.DropboxAccDialog"
+            android:name="com.daniel.mobilepauker2.dropbox.DropboxAccDialog"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar" />
 
         <activity
-            android:name=".editor.EditCardActivity"
+            android:name="com.daniel.mobilepauker2.editor.EditCardActivity"
             android:label="@string/edit_card"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".editor.AddCardActivity"
+            android:name="com.daniel.mobilepauker2.editor.AddCardActivity"
             android:label="@string/add_new_card"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateAlwaysHidden" />
 
         <activity
-            android:name=".lessonimport.LessonReceiver"
+            android:name="com.daniel.mobilepauker2.lessonimport.LessonReceiver"
             android:icon="@mipmap/ic_launcher"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:theme="@android:style/Theme.DeviceDefault.Dialog.NoActionBar">
@@ -141,9 +141,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".learning.TimerService" />
+        <service android:name="com.daniel.mobilepauker2.learning.TimerService" />
 
-        <receiver android:name=".core.BootReceiver">
+        <receiver android:name="com.daniel.mobilepauker2.core.BootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

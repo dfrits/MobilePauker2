@@ -192,7 +192,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
     private fun setupLesson(flashCardList: List<FlashCard>?, description: String?): Lesson {
         val newLesson = Lesson()
         val summaryBatch: Batch? = newLesson.summaryBatch
-        newLesson.description = description
+        newLesson.description = description ?: ""
 
         for (i in flashCardList!!.indices) {
             val flashCard = flashCardList[i]

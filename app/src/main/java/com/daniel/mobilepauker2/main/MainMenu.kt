@@ -37,6 +37,7 @@ import com.daniel.mobilepauker2.settings.SettingsActivity
 import com.daniel.mobilepauker2.main.statistics.ChartAdapter
 import com.daniel.mobilepauker2.main.statistics.ChartAdapter.ChartAdapterCallback
 import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerApplication
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -49,7 +50,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
  * hs-augsburg
  */
 @Suppress("UNUSED_PARAMETER")
-class MainMenu : AppCompatActivity() {
+open class MainMenu : PaukerApplication() {
     private val modelManager: ModelManager = ModelManager.instance()
     private val paukerManager: PaukerManager = PaukerManager.instance()
     private val settingsManager: SettingsManager = SettingsManager.instance()

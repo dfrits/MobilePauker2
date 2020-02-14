@@ -167,23 +167,24 @@ class ModelManager private constructor() {
         lesson?.addCard(flashCard)
     }
 
-    val batchStatistics: List<BatchStatistics?>
+    val batchStatistics: List<BatchStatistics>
         get() {
-            val batchSizes =
-                ArrayList<BatchStatistics?>()
-            val longTermBatches = lesson!!.longTermBatches
-            var i = 0
-            val size = longTermBatches.size
-            while (i < size) {
-                val longTermBatch = longTermBatches[i]
-                val numberOfCards = longTermBatch.numberOfCards
-                val expiredCards = longTermBatch.numberOfExpiredCards
-                if (numberOfCards == 0) {
-                    batchSizes.add(BatchStatistics(0, 0))
-                } else {
-                    batchSizes.add(BatchStatistics(numberOfCards, expiredCards))
+            val batchSizes = ArrayList<BatchStatistics>()
+            lesson?.let {
+                val longTermBatches = it.longTermBatches
+                var i = 0
+                val size = longTermBatches.size
+                while (i < size) {
+                    val longTermBatch = longTermBatches[i]
+                    val numberOfCards = longTermBatch.numberOfCards
+                    val expiredCards = longTermBatch.numberOfExpiredCards
+                    if (numberOfCards == 0) {
+                        batchSizes.add(BatchStatistics(0, 0))
+                    } else {
+                        batchSizes.add(BatchStatistics(numberOfCards, expiredCards))
+                    }
+                    i++
                 }
-                i++
             }
             return batchSizes
         }

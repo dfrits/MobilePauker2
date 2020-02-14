@@ -18,7 +18,7 @@ import java.util.*
 class ErrorReporter : Thread.UncaughtExceptionHandler {
     private var VersionName: String? = null
     private var PackageName: String? = null
-    private var FilePath: String? = null
+    private var filePath: String? = null
     private var PhoneModel: String? = null
     private var AndroidVersion: String? = null
     private var Board: String? = null
@@ -34,8 +34,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     private var Time: Long = 0
     private var Type: String? = null
     private var User: String? = null
-    private val CustomParameters =
-        HashMap<String, String>()
+    private val CustomParameters = HashMap<String, String>()
     private var context: Context? = null
 
     fun addCustomData(Key: String, Value: String) {
@@ -76,11 +75,11 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
 
     private fun recoltInformations() {
         try {
-            val pm = context!!.packageManager
+            val pm = context?.packageManager
             val pi: PackageInfo
             // Version
             if (pm != null) {
-                pi = pm.getPackageInfo(context!!.packageName, 0)
+                pi = pm.getPackageInfo(context?.packageName, 0)
                 VersionName = pi.versionName
                 // Package name
                 PackageName = pi.packageName
@@ -115,7 +114,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         ReturnVal += "\n"
         ReturnVal += "Package : $PackageName"
         ReturnVal += "\n"
-        ReturnVal += "FilePath : $FilePath"
+        ReturnVal += "FilePath : $filePath"
         ReturnVal += "\n"
         ReturnVal += "Phone Model$PhoneModel"
         ReturnVal += "\n"
@@ -198,8 +197,7 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     }
 
     private fun sendErrorMail(ErrorContent: String) {
-        val body =
-            context!!.resources.getString(R.string.crash_report_mail_body) +
+        val body = context?.resources?.getString(R.string.crash_report_mail_body) +
                     "\n\n" +
                     ErrorContent +
                     "\n\n"
@@ -210,9 +208,9 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("fritsch_daniel@gmx.de"))
         emailIntent.putExtra(
             Intent.EXTRA_SUBJECT,
-            context!!.getString(R.string.crash_report_mail_subject)
+            context?.getString(R.string.crash_report_mail_subject)
         )
-        /* Send it off to the Activity-Chooser */context!!.startActivity(
+        /* Send it off to the Activity-Chooser */context?.startActivity(
             Intent.createChooser(
                 emailIntent,
                 "Send mail..."
@@ -223,10 +221,9 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     private fun saveAsFile(ErrorContent: String) {
         try {
             val FileName = "error.stacktrace"
-            val trace =
-                context!!.openFileOutput(FileName, Context.MODE_PRIVATE)
-            trace.write(ErrorContent.toByteArray())
-            trace.close()
+            val trace = context?.openFileOutput(FileName, Context.MODE_PRIVATE)
+            trace?.write(ErrorContent.toByteArray())
+            trace?.close()
         } catch (e: Exception) {
             throw RuntimeException("Exception in ErrorReporter!")
         }
@@ -235,9 +232,12 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     private fun bIsThereAnyErrorFile(): Boolean {
         var bis: BufferedReader? = null
         return try {
-            val inputStream = context!!.openFileInput("error.stacktrace")
-            bis = BufferedReader(InputStreamReader(inputStream))
-            bis.readLine() != ""
+            context?.let {
+                val inputStream = it.openFileInput("error.stacktrace")
+                bis = BufferedReader(InputStreamReader(inputStream))
+                bis?.readLine() != ""
+            }
+            return true
         } catch (e: FileNotFoundException) {
             false
         } catch (e: IOException) {
@@ -252,19 +252,19 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
 
     val isThereAnyErrorsToReport: Boolean
         get() {
-            FilePath = context!!.filesDir.absolutePath
+            filePath = context?.filesDir?.absolutePath
             return bIsThereAnyErrorFile()
         }
 
     fun deleteErrorFiles() {
         try {
-            FilePath = context!!.filesDir.absolutePath
+            filePath = context?.filesDir?.absolutePath
             if (bIsThereAnyErrorFile()) {
                 val fos =
-                    context!!.openFileOutput("error.stacktrace", Context.MODE_PRIVATE)
+                    context?.openFileOutput("error.stacktrace", Context.MODE_PRIVATE)
                 val text = "\n"
-                fos.write(text.toByteArray())
-                fos.close()
+                fos?.write(text.toByteArray())
+                fos?.close()
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -274,13 +274,13 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
 
     fun checkErrorAndSendMail() {
         try {
-            FilePath = context!!.filesDir.absolutePath
+            filePath = context?.filesDir?.absolutePath
             if (bIsThereAnyErrorFile()) {
                 val WholeErrorText = StringBuilder()
                 WholeErrorText.append("New Trace collected :\n")
                 WholeErrorText.append("=====================\n ")
                 val input =
-                    BufferedReader(InputStreamReader(context!!.openFileInput("error.stacktrace")))
+                    BufferedReader(InputStreamReader(context?.openFileInput("error.stacktrace")))
                 var line: String?
                 while (input.readLine().also { line = it } != null) {
                     WholeErrorText.append(line).append("\n")

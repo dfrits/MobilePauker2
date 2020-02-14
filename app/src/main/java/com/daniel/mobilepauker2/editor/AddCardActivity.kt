@@ -33,7 +33,7 @@ class AddCardActivity : AEditCardActivity() {
             resetCardAndFinish()
         } else {
             val builder =
-                AlertDialog.Builder(context)
+                AlertDialog.Builder(applicationContext)
             builder.setMessage(R.string.finish_add_card_message)
                 .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
                 .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
@@ -43,7 +43,7 @@ class AddCardActivity : AEditCardActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.edit_card, menu)
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         checkBox = menu.findItem(R.id.mKeepOpen)
         checkBox?.isChecked = pref.getBoolean(Constants.KEEP_OPEN_KEY, true)
         return true
@@ -62,7 +62,7 @@ class AddCardActivity : AEditCardActivity() {
         if (sideAText.isNotEmpty() && sideBText.isNotEmpty()) {
             ModelManager.instance().addCard(flashCard!!, sideAText, sideBText)
             PaukerManager.showToast(
-                context as Activity,
+                applicationContext as Activity,
                 R.string.card_added,
                 Toast.LENGTH_SHORT
             )
@@ -74,7 +74,7 @@ class AddCardActivity : AEditCardActivity() {
             if (checkBox != null && !checkBox!!.isChecked) finish()
         } else {
             PaukerManager.showToast(
-                context as Activity,
+                applicationContext as Activity,
                 R.string.add_card_sides_empty_error,
                 Toast.LENGTH_SHORT
             )
@@ -90,7 +90,7 @@ class AddCardActivity : AEditCardActivity() {
     fun mKeepOpenClicked(item: MenuItem?) {
         val isChecked = checkBox!!.isChecked
         checkBox!!.isChecked = !isChecked
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
+        PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
             .putBoolean(Constants.KEEP_OPEN_KEY, !isChecked).apply()
     }
 }

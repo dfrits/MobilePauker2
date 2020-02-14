@@ -85,8 +85,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
         return gestureDetector!!.onTouchEvent(ev)
     }
 
-    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor> =
-        CursorLoader(context, mCardPackAdapter)
+    override fun onCreateLoader(id: Int, args: Bundle): Loader<Cursor>? = null
 
     override fun onLoadFinished(loader: Loader<Cursor>, cursor: Cursor) {
         mCardCursor = mCardPackAdapter!!.fetchAllFlashCards()
