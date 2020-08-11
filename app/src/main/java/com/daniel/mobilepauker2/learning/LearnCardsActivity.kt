@@ -202,7 +202,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.exit_learning_dialog)
+        builder.setTitle(getExitTitle())
             .setPositiveButton(R.string.yes) { _, _ ->
                 if (timerService != null) {
                     timerService!!.stopStmTimer()
@@ -277,6 +277,11 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             restartButton?.isVisible = false
         }
         return true
+    }
+
+    private fun getExitTitle(): Int = when (modelManager.learningPhase) {
+        LearningPhase.REPEATING_LTM -> R.string.exit_learning_dialog_repeating
+        else -> R.string.exit_learning_dialog
     }
 
     private fun initTimer() {
