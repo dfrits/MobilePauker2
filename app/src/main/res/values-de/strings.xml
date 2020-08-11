@@ -134,6 +134,7 @@
     <string name="edit_description_title">Lektionsbeschreibung</string>
     <string name="edit_info_text">Infotext bearbeiten</string>
     <string name="exit_learning_dialog">Lernen beenden?</string>
+    <string name="exit_learning_dialog_repeating">Wiederholung beenden?</string>
     <string name="expired_date">Ablaufdatum</string>
     <string name="front">Vorderseite</string>
     <string name="give_lesson_name_dialog_title">Gib der Lektion einen Namen</string>
