@@ -15,7 +15,7 @@ import com.daniel.mobilepauker2.R
 import java.io.*
 import java.util.*
 
-class ErrorReporter : Thread.UncaughtExceptionHandler {
+class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
     private var VersionName: String? = null
     private var PackageName: String? = null
     private var filePath: String? = null
@@ -35,7 +35,6 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
     private var Type: String? = null
     private var User: String? = null
     private val CustomParameters = HashMap<String, String>()
-    private var context: Context? = null
 
     fun addCustomData(Key: String, Value: String) {
         CustomParameters[Key] = Value
@@ -50,9 +49,8 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
         return CustomInfo.toString()
     }
 
-    fun init(context: Context?) {
+    fun init() {
         Thread.setDefaultUncaughtExceptionHandler(this)
-        this.context = context
     }
 
     private val availableInternalMemorySize: Long
@@ -294,12 +292,5 @@ class ErrorReporter : Thread.UncaughtExceptionHandler {
             e.printStackTrace()
             throw RuntimeException("Exception in ErrorReporter!")
         }
-    }
-
-    companion object {
-        private var instance: ErrorReporter? = null
-
-        fun instance(): ErrorReporter = instance
-            ?: ErrorReporter()
     }
 }

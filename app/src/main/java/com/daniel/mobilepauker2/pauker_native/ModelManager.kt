@@ -54,17 +54,19 @@ import java.util.*
  * * moving through learning phases
  * * moving cards between lesson batches
  */
-class ModelManager private constructor() {
+class ModelManager(
+        val paukerManager: PaukerManager,
+        val settingsManager: SettingsManager
+) {
     val currentPack: MutableList<FlashCard?> = ArrayList()
-    private val settingsManager: SettingsManager = SettingsManager.instance()
     var lesson: Lesson? = null
     private var mCurrentCard: FlashCard? = FlashCard()
     var learningPhase: LearningPhase? =
-        LearningPhase.NOTHING
+            LearningPhase.NOTHING
 
     private fun setupCurrentPack(context: Context) {
         var cardIterator: Iterator<Card?>? =
-            null
+                null
         lesson?.let {
             when (learningPhase) {
                 LearningPhase.NOTHING -> {
@@ -81,43 +83,43 @@ class ModelManager private constructor() {
                 }
                 LearningPhase.FILLING_USTM -> {
                     Log.d(
-                        "AndyPaukerApplication::setupCurrentPack",
-                        "Setting batch to UnlearnedBatch"
+                            "AndyPaukerApplication::setupCurrentPack",
+                            "Setting batch to UnlearnedBatch"
                     )
                     currentPack.clear()
                     cardIterator = it.unlearnedBatch.cards?.iterator()
                 }
                 LearningPhase.WAITING_FOR_USTM -> {
                     Log.d(
-                        "AndyPaukerApplication::setupCurrentPack",
-                        "Waiting for ustm"
+                            "AndyPaukerApplication::setupCurrentPack",
+                            "Waiting for ustm"
                     )
                     return
                 }
                 LearningPhase.REPEATING_USTM -> {
                     Log.d(
-                        "AndyPaukerApplication::setupCurrentPack",
-                        "Setting pack as ultra short term memory"
+                            "AndyPaukerApplication::setupCurrentPack",
+                            "Setting pack as ultra short term memory"
                     )
                     currentPack.clear()
                     cardIterator = it.ultraShortTermList.listIterator()
                 }
                 LearningPhase.WAITING_FOR_STM -> {
                     cardIterator = it.shortTermList
-                        .listIterator() // Need to put something in the iterator for requery
+                            .listIterator() // Need to put something in the iterator for requery
                 }
                 LearningPhase.REPEATING_STM -> {
                     Log.d(
-                        "AndyPaukerApplication::setupCurrentPack",
-                        "Setting pack as short term memory"
+                            "AndyPaukerApplication::setupCurrentPack",
+                            "Setting pack as short term memory"
                     )
                     currentPack.clear()
                     cardIterator = it.shortTermList.listIterator()
                 }
                 LearningPhase.REPEATING_LTM -> {
                     Log.d(
-                        "AndyPaukerApplication::setupCurrentPack",
-                        "Setting pack as expired cards"
+                            "AndyPaukerApplication::setupCurrentPack",
+                            "Setting pack as expired cards"
                     )
                     it.refreshExpiration()
                     currentPack.clear()
@@ -145,8 +147,8 @@ class ModelManager private constructor() {
     }
 
     private fun fillCurrentPack(
-        context: Context,
-        cardIterator: Iterator<Card?>?
+            context: Context,
+            cardIterator: Iterator<Card?>?
     ) {
         while (cardIterator!!.hasNext()) {
             currentPack.add(cardIterator.next() as FlashCard?)
@@ -192,8 +194,8 @@ class ModelManager private constructor() {
     fun editCard(position: Int, sideAText: String?, sideBText: String?) {
         if (position < 0 || position >= currentPack.size) {
             Log.e(
-                "AndyPaukerApplication::learnedCard",
-                "request to update a card with position outside the pack"
+                    "AndyPaukerApplication::learnedCard",
+                    "request to update a card with position outside the pack"
             )
             return
         }
@@ -209,8 +211,8 @@ class ModelManager private constructor() {
     fun setCardLearned(position: Int) {
         if (position < 0 || position >= currentPack.size) {
             Log.e(
-                "AndyPaukerApplication::learnedCard",
-                "request to update a card with position outside the pack"
+                    "AndyPaukerApplication::learnedCard",
+                    "request to update a card with position outside the pack"
             )
             return
         }
@@ -227,8 +229,8 @@ class ModelManager private constructor() {
     fun pullCurrentCard(position: Int, context: Context) {
         if (position < 0 || position >= currentPack.size) {
             Log.e(
-                "AndyPaukerApplication::setCardUnLearned",
-                "request to update a card with position outside the pack"
+                    "AndyPaukerApplication::setCardUnLearned",
+                    "request to update a card with position outside the pack"
             )
             return
         }
@@ -241,18 +243,18 @@ class ModelManager private constructor() {
                     mCurrentCard?.isLearned = false
                     if (lesson?.ultraShortTermList?.remove(card) == true) {
                         Log.d(
-                            "AndyPaukerApplication::setCurretnCardUnlearned",
-                            "Moved card from USTM to unlearned batch"
+                                "AndyPaukerApplication::setCurretnCardUnlearned",
+                                "Moved card from USTM to unlearned batch"
                         )
                     } else {
                         Log.e(
-                            "AndyPaukerApplication::setCurretnCardUnlearned",
-                            "Unable to delete card from USTM"
+                                "AndyPaukerApplication::setCurretnCardUnlearned",
+                                "Unable to delete card from USTM"
                         )
                     }
                     when (settingsManager.getStringPreference(
-                        context,
-                        Keys.RETURN_FORGOTTEN_CARDS
+                            context,
+                            Keys.RETURN_FORGOTTEN_CARDS
                     )) {
                         "1" -> lesson?.unlearnedBatch?.addCard(card)
                         "2" -> {
@@ -272,8 +274,8 @@ class ModelManager private constructor() {
                     card.isLearned = false
                     lesson?.shortTermList?.remove(card)
                     when (settingsManager.getStringPreference(
-                        context,
-                        Keys.RETURN_FORGOTTEN_CARDS
+                            context,
+                            Keys.RETURN_FORGOTTEN_CARDS
                     )) {
                         "1" -> lesson?.unlearnedBatch?.addCard(card)
                         "2" -> {
@@ -296,8 +298,8 @@ class ModelManager private constructor() {
                     val longTermBatch = lesson!!.getLongTermBatch(longTermBatchNumber)
                     longTermBatch.removeCard(card)
                     when (settingsManager.getStringPreference(
-                        context,
-                        Keys.RETURN_FORGOTTEN_CARDS
+                            context,
+                            Keys.RETURN_FORGOTTEN_CARDS
                     )) {
                         "1" -> lesson?.unlearnedBatch?.addCard(card)
                         "2" -> {
@@ -314,8 +316,8 @@ class ModelManager private constructor() {
                     }
                 }
                 else -> Log.e(
-                    "AndyPaukerApplication::setCurretnCardUnlearned",
-                    "Learning phase not supported"
+                        "AndyPaukerApplication::setCurretnCardUnlearned",
+                        "Learning phase not supported"
                 )
             }
         }
@@ -363,7 +365,7 @@ class ModelManager private constructor() {
                     longTermBatch.removeCard(currentCard)
                     // add card to next long term batch
                     if (lesson?.numberOfLongTermBatches
-                        == nextLongTermBatchNumber
+                            == nextLongTermBatchNumber
                     ) {
                         lesson!!.addLongTermBatch()
                     }
@@ -372,9 +374,9 @@ class ModelManager private constructor() {
                     currentCard.updateLearnedTimeStamp()
                 }
                 else -> throw RuntimeException(
-                    "unsupported learning phase \""
-                            + learningPhase
-                            + "\" -> can't find batch of card!"
+                        "unsupported learning phase \""
+                                + learningPhase
+                                + "\" -> can't find batch of card!"
                 )
             }
         }
@@ -383,7 +385,7 @@ class ModelManager private constructor() {
     val filePath: File
         get() {
             val filePath = (Environment.getExternalStorageDirectory()
-                .toString() + paukerManager.applicationDataDirectory
+                    .toString() + paukerManager.applicationDataDirectory
                     + paukerManager.currentFileName)
             return File(filePath)
         }
@@ -403,10 +405,10 @@ class ModelManager private constructor() {
             if (map[0] > Long.MIN_VALUE) {
                 val dateL = map[0]
                 val cal =
-                    Calendar.getInstance(Locale.getDefault())
+                        Calendar.getInstance(Locale.getDefault())
                 cal.timeInMillis = dateL
                 val date =
-                    DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
+                        DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
                 var text = context.getString(R.string.next_expire_date)
                 text = "$text $date"
                 PaukerManager.showToast(context as Activity, text, Toast.LENGTH_LONG * 2)
@@ -420,11 +422,11 @@ class ModelManager private constructor() {
         try {
             if (file.delete()) {
                 val fos = context.openFileOutput(
-                    Constants.DELETED_FILES_NAMES_FILE_NAME,
-                    Context.MODE_APPEND
+                        Constants.DELETED_FILES_NAMES_FILE_NAME,
+                        Context.MODE_APPEND
                 )
                 val text =
-                    "\n" + filename + ";*;" + System.currentTimeMillis()
+                        "\n" + filename + ";*;" + System.currentTimeMillis()
                 fos.write(text.toByteArray())
                 fos.close()
             } else return false
@@ -436,8 +438,8 @@ class ModelManager private constructor() {
             if (list.contains(filename)) {
                 resetAddedFilesData(context)
                 val fos = context.openFileOutput(
-                    Constants.ADDED_FILES_NAMES_FILE_NAME,
-                    Context.MODE_APPEND
+                        Constants.ADDED_FILES_NAMES_FILE_NAME,
+                        Context.MODE_APPEND
                 )
                 for (name in list) {
                     if (name != filename) {
@@ -456,7 +458,7 @@ class ModelManager private constructor() {
     fun addLesson(context: Context, file: File) {
         var filename = file.name
         val index =
-            if (filename.endsWith(".xml")) filename.indexOf(".xml") else filename.indexOf(".pau")
+                if (filename.endsWith(".xml")) filename.indexOf(".xml") else filename.indexOf(".pau")
         if (index != -1) {
             filename = filename.substring(0, index)
             addLesson(context, filename)
@@ -471,8 +473,8 @@ class ModelManager private constructor() {
     private fun addLesson(context: Context, fileName: String?) {
         try {
             val fos = context.openFileOutput(
-                Constants.ADDED_FILES_NAMES_FILE_NAME,
-                Context.MODE_APPEND
+                    Constants.ADDED_FILES_NAMES_FILE_NAME,
+                    Context.MODE_APPEND
             )
             val text = "\n" + fileName
             fos.write(text.toByteArray())
@@ -481,17 +483,17 @@ class ModelManager private constructor() {
         }
         try {
             val map =
-                getLokalDeletedFiles(context)
+                    getLokalDeletedFiles(context)
             if (map.keys.contains(fileName)) {
                 resetDeletedFilesData(context)
                 val fos = context.openFileOutput(
-                    Constants.DELETED_FILES_NAMES_FILE_NAME,
-                    Context.MODE_APPEND
+                        Constants.DELETED_FILES_NAMES_FILE_NAME,
+                        Context.MODE_APPEND
                 )
                 for ((key) in map) {
                     if (key != fileName) {
                         val newText =
-                            "\n" + fileName + ";*;" + System.currentTimeMillis()
+                                "\n" + fileName + ";*;" + System.currentTimeMillis()
                         fos.write(newText.toByteArray())
                     }
                 }
@@ -503,18 +505,18 @@ class ModelManager private constructor() {
 
     fun getLokalDeletedFiles(context: Context): Map<String?, String> {
         val filesToDelete: MutableMap<String?, String> =
-            HashMap()
+                HashMap()
         try {
             val fis =
-                context.openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME)
+                    context.openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME)
             val reader =
-                BufferedReader(InputStreamReader(fis))
+                    BufferedReader(InputStreamReader(fis))
             var fileName = reader.readLine()
             while (fileName != null) {
                 if (fileName.trim { it <= ' ' }.isNotEmpty()) {
                     try {
                         val split: Array<String?> =
-                            fileName.split(";*;").toTypedArray()
+                                fileName.split(";*;").toTypedArray()
                         val name = if (split[0] == null) "" else split[0]!!
                         val time = if (split[1] == null) "-1" else split[1]!!
                         filesToDelete[name] = time
@@ -531,12 +533,12 @@ class ModelManager private constructor() {
 
     fun getLokalAddedFiles(context: Context): List<String> {
         val filesToAdd: MutableList<String> =
-            ArrayList()
+                ArrayList()
         try {
             val fis =
-                context.openFileInput(Constants.ADDED_FILES_NAMES_FILE_NAME)
+                    context.openFileInput(Constants.ADDED_FILES_NAMES_FILE_NAME)
             val reader =
-                BufferedReader(InputStreamReader(fis))
+                    BufferedReader(InputStreamReader(fis))
             var fileName = reader.readLine()
             while (fileName != null) {
                 if (fileName.trim { it <= ' ' }.isNotEmpty()) {
@@ -552,8 +554,8 @@ class ModelManager private constructor() {
     fun resetDeletedFilesData(context: Context): Boolean {
         return try {
             val fos = context.openFileOutput(
-                Constants.DELETED_FILES_NAMES_FILE_NAME,
-                Context.MODE_PRIVATE
+                    Constants.DELETED_FILES_NAMES_FILE_NAME,
+                    Context.MODE_PRIVATE
             )
             val text = "\n"
             fos.write(text.toByteArray())
@@ -567,8 +569,8 @@ class ModelManager private constructor() {
     fun resetAddedFilesData(context: Context): Boolean {
         return try {
             val fos = context.openFileOutput(
-                Constants.ADDED_FILES_NAMES_FILE_NAME,
-                Context.MODE_PRIVATE
+                    Constants.ADDED_FILES_NAMES_FILE_NAME,
+                    Context.MODE_PRIVATE
             )
             val text = "\n"
             fos.write(text.toByteArray())
@@ -641,9 +643,9 @@ class ModelManager private constructor() {
      * @param asc_direction In welche Richtung sortiert werden soll
      */
     fun sortBatch(
-        stackIndex: Int,
-        sortByElement: Card.Element?,
-        asc_direction: Boolean
+            stackIndex: Int,
+            sortByElement: Card.Element?,
+            asc_direction: Boolean
     ) {
         val batch: Batch? = when (stackIndex) {
             0 -> lesson?.summaryBatch
@@ -677,39 +679,39 @@ class ModelManager private constructor() {
             val longTermBatch = lesson!!.getLongTermBatch(batchNumber)
             if (longTermBatch.removeCard(card)) {
                 Log.d(
-                    "AndyPaukerApplication::deleteCard",
-                    "Deleted from long term batch$batchNumber"
+                        "AndyPaukerApplication::deleteCard",
+                        "Deleted from long term batch$batchNumber"
                 )
             } else {
                 Log.e(
-                    "AndyPaukerApplication::deleteCard",
-                    "Card not in long term batch$batchNumber"
+                        "AndyPaukerApplication::deleteCard",
+                        "Card not in long term batch$batchNumber"
                 )
             }
         } else {
             when {
                 lesson?.unlearnedBatch?.removeCard(card) == true -> {
                     Log.d(
-                        "AndyPaukerApplication::deleteCard",
-                        "Deleted from unlearned batch"
+                            "AndyPaukerApplication::deleteCard",
+                            "Deleted from unlearned batch"
                     )
                 }
                 lesson?.ultraShortTermList?.remove(card) == true -> {
                     Log.d(
-                        "AndyPaukerApplication::deleteCard",
-                        "Deleted from ultra short term batch"
+                            "AndyPaukerApplication::deleteCard",
+                            "Deleted from ultra short term batch"
                     )
                 }
                 lesson?.shortTermList?.remove(card) == true -> {
                     Log.d(
-                        "AndyPaukerApplication::deleteCard",
-                        "Deleted from short term batch"
+                            "AndyPaukerApplication::deleteCard",
+                            "Deleted from short term batch"
                     )
                 }
                 else -> {
                     Log.e(
-                        "AndyPaukerApplication::deleteCard",
-                        "Could not delete card from unlearned batch  "
+                            "AndyPaukerApplication::deleteCard",
+                            "Could not delete card from unlearned batch  "
                     )
                     return false
                 }
@@ -717,13 +719,13 @@ class ModelManager private constructor() {
         }
         if (lesson?.summaryBatch?.removeCard(card) == true) {
             Log.d(
-                "AndyPaukerApplication::deleteCard",
-                "Deleted from summary batch"
+                    "AndyPaukerApplication::deleteCard",
+                    "Deleted from summary batch"
             )
         } else {
             Log.e(
-                "AndyPaukerApplication::deleteCard",
-                "Could not delete card from summary batch  "
+                    "AndyPaukerApplication::deleteCard",
+                    "Could not delete card from summary batch  "
             )
             return false
         }
@@ -731,8 +733,8 @@ class ModelManager private constructor() {
     }
 
     fun setLearningPhase(
-        context: Context,
-        learningPhase: LearningPhase?
+            context: Context,
+            learningPhase: LearningPhase?
     ) {
         this.learningPhase = learningPhase
         setupCurrentPack(context)
@@ -756,7 +758,7 @@ class ModelManager private constructor() {
         val flashCard = getCard(position) ?: return Font()
         val font: Font?
         font =
-            if (side_ID == CardPackAdapter.KEY_SIDEA_ID) flashCard.frontSide.font else flashCard.reverseSide.font
+                if (side_ID == CardPackAdapter.KEY_SIDEA_ID) flashCard.frontSide.font else flashCard.reverseSide.font
         return font ?: Font()
     }
 
@@ -775,19 +777,19 @@ class ModelManager private constructor() {
         val bold = tmpFont.isBold
         val italic = tmpFont.isItalic
         if (bold && italic) cardSide.typeface = Typeface.create(
-            tmpFont.family,
-            Typeface.BOLD_ITALIC
+                tmpFont.family,
+                Typeface.BOLD_ITALIC
         ) else if (bold) cardSide.typeface = Typeface.create(
-            tmpFont.family,
-            Typeface.BOLD
+                tmpFont.family,
+                Typeface.BOLD
         ) else if (italic) cardSide.typeface = Typeface.create(
-            tmpFont.family,
-            Typeface.ITALIC
+                tmpFont.family,
+                Typeface.ITALIC
         ) else cardSide.typeface = Typeface.create(tmpFont.family, Typeface.NORMAL)
         val backgroundColor = tmpFont.backgroundColor
         if (backgroundColor != -1) cardSide.background =
-            createBoxBackground(backgroundColor) else cardSide.setBackgroundResource(
-            R.drawable.box_background
+                createBoxBackground(backgroundColor) else cardSide.setBackgroundResource(
+                R.drawable.box_background
         )
     }
 
@@ -832,9 +834,9 @@ class ModelManager private constructor() {
     private fun isShuffle(context: Context): Boolean {
         // Check if we need to add random learn
         if (learningPhase == LearningPhase.SIMPLE_LEARNING
-            || learningPhase == LearningPhase.REPEATING_STM
-            || learningPhase == LearningPhase.REPEATING_USTM
-            || learningPhase == LearningPhase.FILLING_USTM
+                || learningPhase == LearningPhase.REPEATING_STM
+                || learningPhase == LearningPhase.REPEATING_USTM
+                || learningPhase == LearningPhase.FILLING_USTM
         ) {
             if (settingsManager.getBoolPreference(context, Keys.LEARN_NEW_CARDS_RANDOMLY)) {
                 return true
@@ -879,45 +881,45 @@ class ModelManager private constructor() {
          * not learning
          */
         NOTHING,
+
         /**
          * Just browsing the new cards - not learning
          */
         BROWSE_NEW,
+
         /**
          * Not using USTM or STM memory and timers
          */
         SIMPLE_LEARNING,
+
         /**
          * the phase of filling the ultra short term memory
          */
         FILLING_USTM,
+
         /**
          * the phase of waiting for the ultra short term memory
          */
         WAITING_FOR_USTM,
+
         /**
          * the phase of repeating the ultra short term memory
          */
         REPEATING_USTM,
+
         /**
          * the phase of waiting for the short term memory
          */
         WAITING_FOR_STM,
+
         /**
          * the phase of repeating the short term memory
          */
         REPEATING_STM,
+
         /**
          * the phase of repeating the long term memory
          */
         REPEATING_LTM
-    }
-
-    companion object {
-        private val paukerManager: PaukerManager = PaukerManager.instance()
-        private var instance: ModelManager? = null
-
-        fun instance(): ModelManager = instance
-            ?: ModelManager()
     }
 }

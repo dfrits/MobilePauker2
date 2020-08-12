@@ -28,7 +28,7 @@ import com.daniel.mobilepauker2.pauker_native.Log
 import java.io.File
 import java.io.IOException
 
-class PaukerManager private constructor() {
+class PaukerManager(val modelManager: ModelManager) {
     var currentFileName: String? =
         Constants.DEFAULT_FILE_NAME
         private set
@@ -65,7 +65,7 @@ class PaukerManager private constructor() {
             return false;
         }*/
         currentFileName = Constants.DEFAULT_FILE_NAME
-        ModelManager.instance().createNewLesson()
+        modelManager.createNewLesson()
     }
 
     // Todo replace this with the File Class
@@ -213,16 +213,10 @@ class PaukerManager private constructor() {
         val lesson = xmlFlashCardFeedParser.parse()
         setCurrentFileName(file.name)
         fileAbsolutePath = file.absolutePath
-        ModelManager.instance().lesson = lesson
+        modelManager.lesson = lesson
     }
 
     companion object {
-        private var instance: PaukerManager? = null
-
-        fun instance(): PaukerManager = instance
-            ?: PaukerManager()
-
-
         fun showToast(context: Activity, text: String?, duration: Int) {
             context.runOnUiThread {
                 if (text != null && text.isNotEmpty()) {
