@@ -109,6 +109,7 @@
     <string name="edit_description_title">Lesomschrijving</string>
     <string name="edit_info_text">Informatietekst bewerken</string>
     <string name="exit_learning_dialog">Wil je stoppen met leren?</string>
+    <string name="exit_learning_dialog_repeating">Exit Repeating?</string>
     <string name="front">Voorzijde</string>
     <string name="give_lesson_name_dialog_title">Voorzie de les van een naam</string>
     <string name="learn_new_card">Nieuwe kaarten leren</string>

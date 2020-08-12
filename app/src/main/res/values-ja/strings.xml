@@ -125,6 +125,7 @@
     <string name="edit_description_title">レッソンの情報</string>
     <string name="edit_info_text">レッソンの情報を編集</string>
     <string name="exit_learning_dialog">勉強を止めますか?</string>
+    <string name="exit_learning_dialog_repeating">復習を止めますか?</string>
     <string name="expired_date">有効期限日</string>
     <string name="front">面</string>
     <string name="give_lesson_name_dialog_title">名前を付けてください</string>
