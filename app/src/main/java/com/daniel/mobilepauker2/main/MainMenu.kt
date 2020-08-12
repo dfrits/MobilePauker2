@@ -50,7 +50,7 @@ import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
  * hs-augsburg
  */
 @Suppress("UNUSED_PARAMETER")
-open class MainMenu : PaukerApplication() {
+open class MainMenu : AppCompatActivity() {
     private val modelManager: ModelManager = ModelManager.instance()
     private val paukerManager: PaukerManager = PaukerManager.instance()
     private val settingsManager: SettingsManager = SettingsManager.instance()
