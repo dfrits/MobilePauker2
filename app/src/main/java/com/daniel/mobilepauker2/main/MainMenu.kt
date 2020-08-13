@@ -31,6 +31,7 @@ import com.daniel.mobilepauker2.settings.SettingsActivity
 import com.daniel.mobilepauker2.main.statistics.ChartAdapter
 import com.daniel.mobilepauker2.main.statistics.ChartAdapter.ChartAdapterCallback
 import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerApplication
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
@@ -45,7 +46,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
  * hs-augsburg
  */
 @Suppress("UNUSED_PARAMETER")
-open class MainMenu : AppCompatActivity() {
+open class MainMenu : PaukerApplication() {
     private val context: Context = this
     private var firstStart = true
     private var search: MenuItem? = null
