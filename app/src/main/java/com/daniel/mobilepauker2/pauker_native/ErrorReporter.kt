@@ -5,6 +5,7 @@
  */
 package com.daniel.mobilepauker2.pauker_native
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageInfo
@@ -73,11 +74,11 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
 
     private fun recoltInformations() {
         try {
-            val pm = context?.packageManager
+            val pm = context.packageManager
             val pi: PackageInfo
             // Version
             if (pm != null) {
-                pi = pm.getPackageInfo(context?.packageName, 0)
+                pi = pm.getPackageInfo(context.packageName, 0)
                 VersionName = pi.versionName
                 // Package name
                 PackageName = pi.packageName
@@ -153,8 +154,8 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
 
     override fun uncaughtException(t: Thread?, e: Throwable) {
         Log.d(
-            "ErrorReporter::uncaughtException",
-            "Building error report"
+                "ErrorReporter::uncaughtException",
+                "Building error report"
         )
         val Report = StringBuilder()
         val CurDate = Date()
@@ -182,7 +183,7 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
         Report.append("Cause : \n")
         Report.append("======= \n")
         // If the exception was thrown in a background thread inside
-// AsyncTask, then the actual exception can be found with getCause
+        // AsyncTask, then the actual exception can be found with getCause
         var cause = e.cause
         while (cause != null) {
             cause.printStackTrace(printWriter)
@@ -195,31 +196,32 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
     }
 
     private fun sendErrorMail(ErrorContent: String) {
-        val body = context?.resources?.getString(R.string.crash_report_mail_body) +
-                    "\n\n" +
-                    ErrorContent +
-                    "\n\n"
+        val body = context.resources?.getString(R.string.crash_report_mail_body) +
+                "\n\n" +
+                ErrorContent +
+                "\n\n"
         /* Create the Intent */
         val emailIntent = Intent(Intent.ACTION_SEND)
         /* Fill it with Data */emailIntent.type = "plain/text"
         emailIntent.putExtra(Intent.EXTRA_TEXT, body)
         emailIntent.putExtra(Intent.EXTRA_EMAIL, arrayOf("fritsch_daniel@gmx.de"))
         emailIntent.putExtra(
-            Intent.EXTRA_SUBJECT,
-            context?.getString(R.string.crash_report_mail_subject)
+                Intent.EXTRA_SUBJECT,
+                context.getString(R.string.crash_report_mail_subject)
         )
-        /* Send it off to the Activity-Chooser */context?.startActivity(
-            Intent.createChooser(
-                emailIntent,
-                "Send mail..."
-            )
+        /* Send it off to the Activity-Chooser */
+        (context as Activity).startActivity(
+                Intent.createChooser(
+                        emailIntent,
+                        "Send mail..."
+                )
         )
     }
 
     private fun saveAsFile(ErrorContent: String) {
         try {
             val FileName = "error.stacktrace"
-            val trace = context?.openFileOutput(FileName, Context.MODE_PRIVATE)
+            val trace = context.openFileOutput(FileName, Context.MODE_PRIVATE)
             trace?.write(ErrorContent.toByteArray())
             trace?.close()
         } catch (e: Exception) {
@@ -230,12 +232,11 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
     private fun bIsThereAnyErrorFile(): Boolean {
         var bis: BufferedReader? = null
         return try {
-            context?.let {
-                val inputStream = it.openFileInput("error.stacktrace")
-                bis = BufferedReader(InputStreamReader(inputStream))
-                bis?.readLine() != ""
-            }
-            return true
+            val inputStream = context.openFileInput("error.stacktrace")
+            bis = BufferedReader(InputStreamReader(inputStream))
+            val line = bis.readLine()
+
+            return line.isNotBlank() && line.isNotEmpty()
         } catch (e: FileNotFoundException) {
             false
         } catch (e: IOException) {
@@ -259,7 +260,7 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
             filePath = context?.filesDir?.absolutePath
             if (bIsThereAnyErrorFile()) {
                 val fos =
-                    context?.openFileOutput("error.stacktrace", Context.MODE_PRIVATE)
+                        context?.openFileOutput("error.stacktrace", Context.MODE_PRIVATE)
                 val text = "\n"
                 fos?.write(text.toByteArray())
                 fos?.close()
@@ -272,13 +273,13 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
 
     fun checkErrorAndSendMail() {
         try {
-            filePath = context?.filesDir?.absolutePath
+            filePath = context.filesDir?.absolutePath ?: filePath
             if (bIsThereAnyErrorFile()) {
                 val WholeErrorText = StringBuilder()
                 WholeErrorText.append("New Trace collected :\n")
                 WholeErrorText.append("=====================\n ")
                 val input =
-                    BufferedReader(InputStreamReader(context?.openFileInput("error.stacktrace")))
+                        BufferedReader(InputStreamReader(context.openFileInput("error.stacktrace")))
                 var line: String?
                 while (input.readLine().also { line = it } != null) {
                     WholeErrorText.append(line).append("\n")
@@ -290,7 +291,7 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            throw RuntimeException("Exception in ErrorReporter!")
+            throw RuntimeException("Exception in ErrorReporter! {${e.message}")
         }
     }
 

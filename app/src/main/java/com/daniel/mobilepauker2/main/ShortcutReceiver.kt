@@ -27,12 +27,15 @@ import com.daniel.mobilepauker2.core.model.ui.TextDrawable
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
+import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import java.io.IOException
 
 @Suppress("UNUSED_PARAMETER")
 class ShortcutReceiver : Activity() {
     private val paukerManager: PaukerManager = PaukerManager.instance()
     private val context: Context = this
+    lateinit var paukerAndModelManager: PaukerAndModelManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.progress_dialog)
@@ -129,7 +132,7 @@ class ShortcutReceiver : Activity() {
     private fun openLesson(filename: String) {
         try {
             if (paukerManager.currentFileName != filename) {
-                paukerManager.loadLessonFromFile(paukerManager.getFilePath(context, filename))
+                paukerAndModelManager.loadLessonFromFile(paukerManager.getFilePath(context, filename))
                 paukerManager.isSaveRequired = false
             }
             val intent = Intent(context, MainMenu::class.java)

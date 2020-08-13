@@ -27,6 +27,7 @@ import com.daniel.mobilepauker2.main.ShortcutReceiver
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.daniel.mobilepauker2.pauker_native.ModelManager
+import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import com.daniel.mobilepauker2.settings.SettingsManager
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.dropbox.core.android.Auth
@@ -55,6 +56,7 @@ class LessonImportActivity : AppCompatActivity() {
      * Speichert die letzte Selektion in der Liste.
      */
     private var lastSelection = -1
+    lateinit var paukerAndModelManager: PaukerAndModelManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -296,9 +298,9 @@ class LessonImportActivity : AppCompatActivity() {
                 )
             }
             init()
-            if (modelManager!!.isLessonNotNew) if (fileNames.contains(paukerManager?.currentFileName)) {
+            if (paukerManager!!.isLessonNotNew) if (fileNames.contains(paukerManager.currentFileName)) {
                 try {
-                    openLesson(paukerManager?.currentFileName)
+                    openLesson(paukerManager.currentFileName)
                 } catch (ignored: IOException) {
                     PaukerManager.showToast(
                         context as Activity,
@@ -309,7 +311,7 @@ class LessonImportActivity : AppCompatActivity() {
                         .addCustomData("ImportThread", "IOException?")
                 }
             } else {
-                paukerManager!!.setupNewApplicationLesson()
+                paukerAndModelManager.setupNewApplicationLesson()
                 paukerManager.isSaveRequired = false
             }
         }
@@ -418,8 +420,8 @@ class LessonImportActivity : AppCompatActivity() {
                         resetSelection(null)
                         ShortcutReceiver.deleteShortcut(context, filename)
                         if (!fileNames.contains(paukerManager?.currentFileName)) {
-                            paukerManager!!.setupNewApplicationLesson()
-                            paukerManager.isSaveRequired = false
+                            paukerAndModelManager.setupNewApplicationLesson()
+                            paukerManager!!.isSaveRequired = false
                         }
                     } else {
                         PaukerManager.showToast(
@@ -491,7 +493,7 @@ class LessonImportActivity : AppCompatActivity() {
      */
     @Throws(IOException::class)
     private fun openLesson(filename: String?) {
-        paukerManager!!.loadLessonFromFile(paukerManager.getFilePath(context, filename))
+        paukerAndModelManager.loadLessonFromFile(paukerManager!!.getFilePath(context, filename))
         paukerManager.isSaveRequired = false
     }
 

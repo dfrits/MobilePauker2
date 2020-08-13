@@ -28,11 +28,9 @@ import com.daniel.mobilepauker2.pauker_native.Log
 import java.io.File
 import java.io.IOException
 
-class PaukerManager(val modelManager: ModelManager) {
+class PaukerManager() {
 
-    var currentFileName: String? =
-            Constants.DEFAULT_FILE_NAME
-        private set
+    var currentFileName: String? = Constants.DEFAULT_FILE_NAME
     private var mFileAbsolutePath: String? = null
     var isSaveRequired = false
 
@@ -47,37 +45,25 @@ class PaukerManager(val modelManager: ModelManager) {
         get() =// The application data directory can change when a file is loaded
             Constants.DEFAULT_APP_FILE_DIRECTORY
 
-    /**
-     * Setup a new lesson in the default application directory
-     *
-     *
-     * Note the lesson is not created until it is saved
-     * Note this method appends .pau.gz to the application filename.
-     */
-    fun setupNewApplicationLesson() { /*String _filename = filename + ".pau.gz";
-        if (setCurrentFileName(_filename)) {
-            mApplicationDataDirectory = Constants.DEFAULT_APP_FILE_DIRECTORY;
-            String filePath = Environment.getExternalStorageDirectory() + getApplicationDataDirectory() + _filename;
-            File file = new File(filePath);
-            setCurrentFileName(file.getName());
-            setFileAbsolutePath(file.getAbsolutePath());
-            ModelManager.instance().createNewLesson(filename);
-            return true;
-        } else {
-            return false;
-        }*/
-        currentFileName = Constants.DEFAULT_FILE_NAME
-        modelManager.createNewLesson()
-    }
-
     // Todo replace this with the File Class
     var fileAbsolutePath: String?
         get() = mFileAbsolutePath
-        private set(fileAbsolutePath) { // Validate the filename
+        internal set(fileAbsolutePath) { // Validate the filename
             if (fileAbsolutePath == null) {
                 return
             }
             mFileAbsolutePath = fileAbsolutePath
+        }
+
+    val isLessonNotNew: Boolean
+        get() = currentFileName != Constants.DEFAULT_FILE_NAME
+
+    val filePath: File
+        get() {
+            val filePath = (Environment.getExternalStorageDirectory()
+                    .toString() + applicationDataDirectory
+                    + currentFileName)
+            return File(filePath)
         }
 
     fun setCurrentFileName(filename: String): Boolean {
@@ -208,20 +194,9 @@ class PaukerManager(val modelManager: ModelManager) {
         return false
     }
 
-    @Throws(IOException::class)
-    fun loadLessonFromFile(file: File?) {
-        val uri = file!!.toURI()
-        val xmlFlashCardFeedParser = FlashCardXMLPullFeedParser(uri.toURL())
-        val lesson = xmlFlashCardFeedParser.parse()
-        setCurrentFileName(file.name)
-        fileAbsolutePath = file.absolutePath
-        modelManager.lesson = lesson
-    }
-
     companion object {
-        lateinit var manager: PaukerManager
         fun instance(): PaukerManager {
-            return manager
+            return PaukerManager()
         }
 
         fun showToast(context: Activity, text: String?, duration: Int) {

@@ -25,6 +25,7 @@ import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.settings.SettingsManager
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import java.io.File
 
 /**
@@ -35,6 +36,8 @@ import java.io.File
 @Suppress("UNUSED_PARAMETER")
 class SaveDialog : Activity() {
     private val context: Context = this
+    lateinit var paukerAndModelManager: PaukerAndModelManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.progress_dialog)
@@ -67,7 +70,7 @@ class SaveDialog : Activity() {
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 dialog.dismiss()
                 if (paukerManager.setCurrentFileName(textField.text.toString())) {
-                    ModelManager.instance().addLesson(context)
+                    paukerAndModelManager.addLesson(context)
                     saveLesson()
                 } else {
                     setResult(RESULT_CANCELED)
@@ -150,7 +153,7 @@ class SaveDialog : Activity() {
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
         val path: String? = PaukerManager.instance().fileAbsolutePath
         val file =
-            path?.let { File(it) } ?: ModelManager.instance().filePath
+            path?.let { File(it) } ?: PaukerManager.instance().filePath
         intent.putExtra(SyncDialog.FILES, file)
         intent.action = SyncDialog.UPLOAD_FILE_ACTION
         startActivity(intent)

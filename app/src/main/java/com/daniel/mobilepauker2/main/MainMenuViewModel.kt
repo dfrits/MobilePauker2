@@ -13,17 +13,17 @@ import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.editor.AddCardActivity
 import com.daniel.mobilepauker2.learning.LearnCardsActivity
 import com.daniel.mobilepauker2.lessonexport.SaveDialog
-import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.ModelManager
+import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import com.daniel.mobilepauker2.settings.SettingsManager
 
 class MainMenuViewModel(
-        val modelManager: ModelManager,
-        val paukerManager: PaukerManager,
+        val paukerAndModelManager: PaukerAndModelManager,
         val settingsManager: SettingsManager,
-        val errorReporter: ErrorReporter,
         val context: Context
 ) : ViewModel() {
+    private val paukerManager = paukerAndModelManager.paukerManager
+    private val modelManager = paukerAndModelManager.modelManager
 
     fun isLessonSetup(): Boolean = modelManager.isLessonSetup
 
@@ -48,7 +48,7 @@ class MainMenuViewModel(
                     || index == 1 && modelManager.unlearnedBatchSize == 0
                     || modelManager.lessonSize == 0)
 
-    fun isLessonNotNew(): Boolean = modelManager.isLessonNotNew
+    fun isLessonNotNew(): Boolean = paukerManager.isLessonNotNew
 
     fun isLessonAndDescriptionEmpty(): Boolean = modelManager.isLessonEmpty
 
@@ -71,7 +71,8 @@ class MainMenuViewModel(
                 Toast.LENGTH_SHORT
         )
         paukerManager.isSaveRequired = false
-        modelManager.showExpireToast(context)
+        if (!settingsManager.getBoolPreference(context, SettingsManager.Keys.ENABLE_EXPIRE_TOAST))
+            paukerAndModelManager.showExpireToast(context)
     }
 
     fun showBatchDetails(index: Int) {
@@ -108,7 +109,7 @@ class MainMenuViewModel(
     }
 
     fun setupNewLesson() {
-        paukerManager.setupNewApplicationLesson()
+        paukerAndModelManager.setupNewApplicationLesson()
         paukerManager.isSaveRequired = false
     }
 

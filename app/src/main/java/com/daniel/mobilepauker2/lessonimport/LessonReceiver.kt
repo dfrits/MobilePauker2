@@ -17,11 +17,13 @@ import com.daniel.mobilepauker2.settings.SettingsManager
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.Log
+import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import java.io.*
 
 @Suppress("UNUSED_PARAMETER")
 class LessonReceiver : Activity() {
     private val context: Activity = this
+    lateinit var paukerAndModelManager: PaukerAndModelManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +86,7 @@ class LessonReceiver : Activity() {
                                 "LessonReceiver::importLesson",
                                 "lesson added"
                             )
-                            PaukerManager.instance().loadLessonFromFile(localFile)
+                            paukerAndModelManager.loadLessonFromFile(localFile)
                             Log.d(
                                 "LessonReceiver::importLesson",
                                 "lesson opend"

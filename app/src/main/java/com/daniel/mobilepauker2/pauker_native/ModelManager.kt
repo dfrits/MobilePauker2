@@ -54,10 +54,7 @@ import java.util.*
  * * moving through learning phases
  * * moving cards between lesson batches
  */
-class ModelManager(
-        val paukerManager: PaukerManager,
-        val settingsManager: SettingsManager
-) {
+class ModelManager(val settingsManager: SettingsManager) {
     val currentPack: MutableList<FlashCard?> = ArrayList()
     var lesson: Lesson? = null
     private var mCurrentCard: FlashCard? = FlashCard()
@@ -382,41 +379,6 @@ class ModelManager(
         }
     }
 
-    val filePath: File
-        get() {
-            val filePath = (Environment.getExternalStorageDirectory()
-                    .toString() + paukerManager.applicationDataDirectory
-                    + paukerManager.currentFileName)
-            return File(filePath)
-        }
-
-    /**
-     * Zeigt einen Toast mit dem nächsten Ablaufdatum an, wenn es in den Einstellungen aktiviert ist.
-     * @param context Kontext der aufrufenden Activity
-     */
-    fun showExpireToast(context: Context) {
-        if (!settingsManager.getBoolPreference(context, Keys.ENABLE_EXPIRE_TOAST)) return
-        val filePath = filePath
-        val uri = filePath.toURI()
-        val parser: FlashCardXMLPullFeedParser
-        try {
-            parser = FlashCardXMLPullFeedParser(uri.toURL())
-            val map = parser.nextExpireDate
-            if (map[0] > Long.MIN_VALUE) {
-                val dateL = map[0]
-                val cal =
-                        Calendar.getInstance(Locale.getDefault())
-                cal.timeInMillis = dateL
-                val date =
-                        DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
-                var text = context.getString(R.string.next_expire_date)
-                text = "$text $date"
-                PaukerManager.showToast(context as Activity, text, Toast.LENGTH_LONG * 2)
-            }
-        } catch (ignored: MalformedURLException) {
-        }
-    }
-
     fun deleteLesson(context: Context, file: File): Boolean {
         val filename = file.name
         try {
@@ -465,12 +427,7 @@ class ModelManager(
         }
     }
 
-    fun addLesson(context: Context) {
-        val filename = paukerManager.currentFileName
-        addLesson(context, filename)
-    }
-
-    private fun addLesson(context: Context, fileName: String?) {
+    fun addLesson(context: Context, fileName: String?) {
         try {
             val fos = context.openFileOutput(
                     Constants.ADDED_FILES_NAMES_FILE_NAME,
@@ -616,9 +573,6 @@ class ModelManager(
     fun flipAllCards() {
         lesson!!.flip()
     }
-
-    val isLessonNotNew: Boolean
-        get() = paukerManager.currentFileName != Constants.DEFAULT_FILE_NAME
 
     val isLessonSetup: Boolean
         get() = lesson != null
@@ -874,10 +828,9 @@ class ModelManager(
     }
 
     companion object{
-        lateinit var manager: ModelManager
 
         fun instance(): ModelManager {
-            return manager
+            return ModelManager(SettingsManager())
         }
     }
 

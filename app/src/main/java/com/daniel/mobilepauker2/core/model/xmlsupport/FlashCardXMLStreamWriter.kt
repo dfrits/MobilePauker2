@@ -2,25 +2,22 @@ package com.daniel.mobilepauker2.core.model.xmlsupport
 
 import android.util.Xml
 import com.daniel.mobilepauker2.core.PaukerManager
-import com.daniel.mobilepauker2.pauker_native.ModelManager
-import com.daniel.mobilepauker2.pauker_native.Card
-import com.daniel.mobilepauker2.pauker_native.Font
-import com.daniel.mobilepauker2.pauker_native.Lesson
-import com.daniel.mobilepauker2.pauker_native.Log
+import com.daniel.mobilepauker2.pauker_native.*
 import org.xmlpull.v1.XmlSerializer
 import java.io.*
 import java.util.zip.GZIPOutputStream
 
 object FlashCardXMLStreamWriter {
+    lateinit var paukerAndModelManager: PaukerAndModelManager
 
     //TODO This sould de in a class of its own or in the Flash card xml stream writer...
     @Throws(SecurityException::class)
     fun saveLesson() {
         val modelManager: ModelManager = ModelManager.instance()
         val paukerManager: PaukerManager = PaukerManager.instance()
-        if (modelManager.isLessonNotNew) { // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
-            val name = "neu_" + modelManager.filePath.name
-            val path = modelManager.filePath.parent
+        if (paukerManager.isLessonNotNew) { // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
+            val name = "neu_" + paukerManager.filePath.name
+            val path = paukerManager.filePath.parent
             val newxmlfile = File(path, name)
             Log.d(
                 "ModelManager::saveLesson",
@@ -46,7 +43,7 @@ object FlashCardXMLStreamWriter {
                 gzipOutputStream = GZIPOutputStream(fos)
                 var isRenamed = false
                 if (writeXML(modelManager.lesson, gzipOutputStream)) {
-                    isRenamed = newxmlfile.renameTo(modelManager.filePath)
+                    isRenamed = newxmlfile.renameTo(paukerManager.filePath)
                 }
                 newxmlfile.delete()
                 if (!isRenamed) {

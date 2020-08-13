@@ -1,7 +1,10 @@
 package com.daniel.mobilepauker2.learning
 
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
+import android.app.AlertDialog
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
@@ -19,21 +22,18 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
-import com.daniel.mobilepauker2.lessonexport.SaveDialog
-import com.daniel.mobilepauker2.editor.EditCardActivity
-import com.daniel.mobilepauker2.pauker_native.CardPackAdapter
-import com.daniel.mobilepauker2.pauker_native.FlashCard.SideShowing
+import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.core.model.ui.MPEditText
 import com.daniel.mobilepauker2.core.model.ui.MPTextView
+import com.daniel.mobilepauker2.editor.EditCardActivity
+import com.daniel.mobilepauker2.learning.TimerService.LocalBinder
+import com.daniel.mobilepauker2.lessonexport.SaveDialog
+import com.daniel.mobilepauker2.pauker_native.*
+import com.daniel.mobilepauker2.pauker_native.FlashCard.SideShowing
 import com.daniel.mobilepauker2.pauker_native.ModelManager.LearningPhase
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
-import com.daniel.mobilepauker2.learning.TimerService.LocalBinder
-import com.daniel.mobilepauker2.pauker_native.Font
-import com.daniel.mobilepauker2.core.Constants
-import com.daniel.mobilepauker2.pauker_native.ErrorReporter
-import com.daniel.mobilepauker2.pauker_native.Log
 import com.danilomendes.progressbar.InvertedTextProgressbar
 import java.util.*
 
@@ -62,6 +62,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     private var restartButton: MenuItem? = null
     private var timerAnimation: RelativeLayout? = null
     private var ustmTimerText: String? = null
+    lateinit var paukerAndModelManager: PaukerAndModelManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -186,7 +187,9 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                     Toast.LENGTH_SHORT
                 )
                 paukerManager?.isSaveRequired = false
-                modelManager.showExpireToast(context)
+
+                if (settingsManager.getBoolPreference(context, Keys.ENABLE_EXPIRE_TOAST))
+                    paukerAndModelManager.showExpireToast(context)
             } else {
                 PaukerManager.showToast(
                     context as Activity,
