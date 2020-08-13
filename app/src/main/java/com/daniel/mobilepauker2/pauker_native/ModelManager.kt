@@ -873,6 +873,14 @@ class ModelManager(
         }
     }
 
+    companion object{
+        lateinit var manager: ModelManager
+
+        fun instance(): ModelManager {
+            return manager
+        }
+    }
+
     /**
      * the learning phases
      */

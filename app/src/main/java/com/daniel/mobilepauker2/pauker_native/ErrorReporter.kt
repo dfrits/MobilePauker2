@@ -293,4 +293,12 @@ class ErrorReporter(val context: Context) : Thread.UncaughtExceptionHandler {
             throw RuntimeException("Exception in ErrorReporter!")
         }
     }
+
+    companion object {
+        lateinit var reporter: ErrorReporter
+
+        fun instance(): ErrorReporter {
+            return reporter
+        }
+    }
 }

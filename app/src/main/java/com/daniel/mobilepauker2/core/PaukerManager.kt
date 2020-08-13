@@ -29,11 +29,13 @@ import java.io.File
 import java.io.IOException
 
 class PaukerManager(val modelManager: ModelManager) {
+
     var currentFileName: String? =
-        Constants.DEFAULT_FILE_NAME
+            Constants.DEFAULT_FILE_NAME
         private set
     private var mFileAbsolutePath: String? = null
     var isSaveRequired = false
+
     /**
      * Get the default application data directory.
      *
@@ -117,19 +119,19 @@ class PaukerManager(val modelManager: ModelManager) {
      */
     @Throws(IOException::class)
     fun getFilePath(
-        context: Context,
-        filename: String?
+            context: Context,
+            filename: String?
     ): File { // Validate the filename
         if (!validateFilename(filename)) {
             showToast(
-                context as Activity,
-                R.string.error_filename_invalid,
-                Toast.LENGTH_LONG
+                    context as Activity,
+                    R.string.error_filename_invalid,
+                    Toast.LENGTH_LONG
             )
             throw IOException("Filename invalid")
         }
         val filePath =
-            Environment.getExternalStorageDirectory().toString() + applicationDataDirectory + filename
+                Environment.getExternalStorageDirectory().toString() + applicationDataDirectory + filename
         return File(filePath)
     }
 
@@ -155,8 +157,8 @@ class PaukerManager(val modelManager: ModelManager) {
         }
         if (!validateFileEnding(filename)) {
             Log.d(
-                "Validate Filename",
-                "File not ending with .pau.gz"
+                    "Validate Filename",
+                    "File not ending with .pau.gz"
             )
             return false
         }
@@ -175,7 +177,7 @@ class PaukerManager(val modelManager: ModelManager) {
     @Throws(SecurityException::class)
     fun listFiles(context: Context): Array<File>? {
         val appDirectory =
-            File(Environment.getExternalStorageDirectory().toString() + applicationDataDirectory)
+                File(Environment.getExternalStorageDirectory().toString() + applicationDataDirectory)
         val files: Array<File>
         if (!appDirectory.exists() && !appDirectory.mkdir()) {
             throw SecurityException()
@@ -184,9 +186,9 @@ class PaukerManager(val modelManager: ModelManager) {
             appDirectory.listFiles { file -> validateFilename(file.name) }
         } else {
             showToast(
-                context as Activity,
-                R.string.error_importflashcardfile_directory,
-                Toast.LENGTH_LONG
+                    context as Activity,
+                    R.string.error_importflashcardfile_directory,
+                    Toast.LENGTH_LONG
             )
             return null
         }
@@ -217,6 +219,11 @@ class PaukerManager(val modelManager: ModelManager) {
     }
 
     companion object {
+        lateinit var manager: PaukerManager
+        fun instance(): PaukerManager {
+            return manager
+        }
+
         fun showToast(context: Activity, text: String?, duration: Int) {
             context.runOnUiThread {
                 if (text != null && text.isNotEmpty()) {

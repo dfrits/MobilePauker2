@@ -301,7 +301,7 @@ class SyncDialog : Activity() {
                             .setPositiveButton(R.string.ok, null)
                             .setNeutralButton("Send E-Mail") { _, _ ->
                                 val reporter: ErrorReporter = ErrorReporter.instance()
-                                reporter.init(context)
+                                reporter.init()
                                 reporter.uncaughtException(null, e)
                                 reporter.checkErrorAndSendMail()
                             }
