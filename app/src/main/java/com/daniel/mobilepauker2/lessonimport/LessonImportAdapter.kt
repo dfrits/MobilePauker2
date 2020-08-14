@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.daniel.mobilepauker2.core.PaukerManager
-import java.util.*
 
 /**
  * Created by Daniel on 05.03.2018.
@@ -17,8 +16,8 @@ import java.util.*
  * hs-augsburg
  */
 class LessonImportAdapter(
-    context: Context,
-    private val data: ArrayList<String>
+        context: Context,
+        private val data: List<String>
 ) : ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, data) {
     override fun getView(
         position: Int,
