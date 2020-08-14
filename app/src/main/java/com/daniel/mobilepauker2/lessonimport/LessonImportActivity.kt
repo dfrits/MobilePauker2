@@ -110,7 +110,7 @@ class LessonImportActivity : AppCompatActivity() {
 
     private fun itemClicked(position: Int) {
         val item = lvLessons.getChildAt(position) ?: return
-        if (viewModel.isPositionSelected(position)) {
+        if (!viewModel.isPositionSelected(position)) {
             viewModel.lessonSelected(position)
             item.isSelected = true
             val text = try {
