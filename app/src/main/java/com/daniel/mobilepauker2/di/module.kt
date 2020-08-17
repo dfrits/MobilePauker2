@@ -20,5 +20,5 @@ val appModule = module {
     single { ErrorReporter(androidContext()) }
 
     viewModel { MainMenuViewModel(get(), get(), androidContext()) }
-    viewModel { LessonImportViewModel(get(), androidContext()) }
+    viewModel { LessonImportViewModel(get(), get(), androidContext()) }
 }

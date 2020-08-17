@@ -28,6 +28,7 @@ import java.util.*
 
 class LessonImportViewModel(
         val paukerAndModelManager: PaukerAndModelManager,
+        val settingsManager: SettingsManager,
         val context: Context
 ) : ViewModel() {
     private val paukerManager = paukerAndModelManager.paukerManager
@@ -86,8 +87,7 @@ class LessonImportViewModel(
                 context.getString(R.string.expired_cards) + " " + numberOfCards.toString()
             } else {
                 val dateL = map[0]
-                val cal =
-                        Calendar.getInstance(Locale.getDefault())
+                val cal = Calendar.getInstance(Locale.getDefault())
                 cal.timeInMillis = dateL
                 val date =
                         DateFormat.format("dd.MM.yyyy HH:mm", cal)
@@ -178,7 +178,7 @@ class LessonImportViewModel(
 
     fun openLesson(position: Int): Boolean {
         val filename = fileNamesLiveData.value?.get(position) as String
-        if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_DOWNLOAD)) {
+        if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_DOWNLOAD)) {
             val accessToken =
                     PreferenceManager.getDefaultSharedPreferences(context)
                             .getString(
