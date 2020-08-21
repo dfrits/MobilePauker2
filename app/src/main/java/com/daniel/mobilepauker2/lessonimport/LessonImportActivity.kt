@@ -17,6 +17,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.daniel.mobilepauker2.R
+import com.daniel.mobilepauker2.core.BaseActivity
+import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.dropbox.DropboxAccDialog
@@ -37,13 +39,12 @@ import java.io.IOException
  * hs-augsburg
  */
 @Suppress("UNUSED_PARAMETER")
-class LessonImportActivity : AppCompatActivity() {
+class LessonImportActivity : BaseActivity() {
     private val context: Context = this
     private var preferences: SharedPreferences? = null
 
-    lateinit var paukerAndModelManager: PaukerAndModelManager
-
     private val viewModel: LessonImportViewModel by viewModel()
+    override val baseViewModel: LessonImportViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +52,11 @@ class LessonImportActivity : AppCompatActivity() {
         setContentView(R.layout.open_lesson)
         initListView()
         viewModel.readFlashCardFiles()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        initObserver()
     }
 
     private fun initNothingFoundView(isEmpty: Boolean) {

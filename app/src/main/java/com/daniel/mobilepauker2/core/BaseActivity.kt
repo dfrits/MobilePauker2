@@ -5,12 +5,12 @@ import androidx.lifecycle.Observer
 import org.koin.android.viewmodel.ext.android.viewModel
 import toast
 
-abstract class BaseActivity:AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity() {
 
-    val baseViewModel: BaseViewModel by viewModel()
+    abstract val  baseViewModel: BaseViewModel?
 
-    protected open fun initObserver(){
-        baseViewModel.message.observe(this, Observer { event ->
+    protected open fun initObserver() {
+        baseViewModel?.message?.observe(this, Observer { event ->
             event.getContentIfNotHandled()?.let {
                 toast(it)
             }

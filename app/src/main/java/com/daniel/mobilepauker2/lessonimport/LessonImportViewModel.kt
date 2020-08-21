@@ -12,6 +12,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.daniel.mobilepauker2.R
+import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.core.model.xmlsupport.FlashCardXMLPullFeedParser
@@ -30,7 +31,7 @@ class LessonImportViewModel(
         val paukerAndModelManager: PaukerAndModelManager,
         val settingsManager: SettingsManager,
         val context: Context
-) : ViewModel() {
+) : BaseViewModel() {
     private val paukerManager = paukerAndModelManager.paukerManager
     private val modelManager = paukerAndModelManager.modelManager
     private val files: MutableList<File> = mutableListOf()
@@ -143,9 +144,8 @@ class LessonImportViewModel(
     }
 
     fun deleteLesson(filename: String) {
-        val filePath =
-                Environment.getExternalStorageDirectory().toString() +
-                        paukerManager.applicationDataDirectory + filename
+        val filePath = Environment.getExternalStorageDirectory().toString() +
+                paukerManager.applicationDataDirectory + filename
         val file = File(filePath)
         if (file.isFile) {
             if (modelManager.deleteLesson(context, file)) {
@@ -156,11 +156,7 @@ class LessonImportViewModel(
                     paukerManager.isSaveRequired = false
                 }
             } else {
-                PaukerManager.showToast(
-                        context as Activity,
-                        R.string.delete_lesson_error,
-                        Toast.LENGTH_SHORT
-                )
+                postMessage(R.string.delete_lesson_error)
             }
         }
     }
@@ -202,11 +198,7 @@ class LessonImportViewModel(
             )
             return false
         } else {
-            PaukerManager.showToast(
-                    context as Activity,
-                    R.string.open_lesson_hint,
-                    Toast.LENGTH_SHORT
-            )
+            postMessage(R.string.open_lesson_hint)
             openLesson(filename)
             return true
         }
@@ -222,7 +214,7 @@ class LessonImportViewModel(
 
     fun deleteShortCut(position: Int) {
         fileNamesLiveData.value?.get(position)?.let {
-            ShortcutReceiver.deleteShortcut(context,it)
+            ShortcutReceiver.deleteShortcut(context, it)
         }
     }
 
