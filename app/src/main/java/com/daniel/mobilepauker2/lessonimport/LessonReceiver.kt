@@ -10,6 +10,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
+import com.daniel.mobilepauker2.core.BaseActivity
+import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.dropbox.SyncDialog
 import com.daniel.mobilepauker2.main.MainMenu
 import com.daniel.mobilepauker2.pauker_native.ModelManager
@@ -18,11 +20,14 @@ import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
+import org.koin.android.viewmodel.ext.android.viewModel
+import org.koin.core.KoinComponent
 import java.io.*
 
 @Suppress("UNUSED_PARAMETER")
-class LessonReceiver : Activity() {
+class LessonReceiver : BaseActivity() {
     private val context: Activity = this
+    override val baseViewModel: BaseViewModel by viewModel()
     lateinit var paukerAndModelManager: PaukerAndModelManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,93 +38,77 @@ class LessonReceiver : Activity() {
         Log.d("LessonReceiver::importLesson", "ENTRY")
         if (intent == null || intent.data == null) {
             Log.d(
-                "LessonReceiver::importLesson filename: ",
-                "intent is null"
+                    "LessonReceiver::importLesson filename: ",
+                    "intent is null"
             )
-            PaukerManager.showToast(context, "Keine Paukerdatei", Toast.LENGTH_LONG)
+            baseViewModel.postMessage(R.string.error_no_pauker_file)
             finish()
         } else {
             val fileUri = intent.data
             val filePath = fileUri?.encodedPath
             Log.d(
-                "LessonReceiver::importLesson filePath: ",
-                filePath
+                    "LessonReceiver::importLesson filePath: ",
+                    filePath
             )
             if (filePath == null || PaukerManager.instance().isNameEmpty(filePath)) {
-                PaukerManager.showToast(
-                    context,
-                    "Keine Datei gefunden",
-                    Toast.LENGTH_SHORT
-                )
+                baseViewModel.postMessage(R.string.error_no_file_found)
                 finish()
             } else {
                 val localFile = File(
-                    Environment.getExternalStorageDirectory()
-                        .toString() + PaukerManager.instance().applicationDataDirectory,
-                    File(filePath).name
+                        Environment.getExternalStorageDirectory()
+                                .toString() + PaukerManager.instance().applicationDataDirectory,
+                        File(filePath).name
                 )
                 if (localFile.exists()) {
                     Log.d(
-                        "LessonReceiver::importLesson localFile: ",
-                        "File existiert bereits"
+                            "LessonReceiver::importLesson localFile: ",
+                            "File existiert bereits"
                     )
-                    PaukerManager.showToast(
-                        context,
-                        "Datei existiert bereits",
-                        Toast.LENGTH_LONG
-                    )
+                    baseViewModel.postMessage(R.string.error_file_already_exists, Toast.LENGTH_LONG)
                     finish()
                 } else {
                     try {
                         val inputStream =
-                            contentResolver.openInputStream(fileUri)
+                                contentResolver.openInputStream(fileUri)
                         val outputStream =
-                            FileOutputStream(localFile)
+                                FileOutputStream(localFile)
                         if (inputStream != null) {
                             copyFile(inputStream, outputStream)
                             Log.d(
-                                "LessonReceiver::importLesson",
-                                "import success"
+                                    "LessonReceiver::importLesson",
+                                    "import success"
                             )
                             ModelManager.instance().addLesson(context, localFile)
                             Log.d(
-                                "LessonReceiver::importLesson",
-                                "lesson added"
+                                    "LessonReceiver::importLesson",
+                                    "lesson added"
                             )
                             paukerAndModelManager.loadLessonFromFile(localFile)
                             Log.d(
-                                "LessonReceiver::importLesson",
-                                "lesson opend"
+                                    "LessonReceiver::importLesson",
+                                    "lesson opend"
                             )
                             Log.d(
-                                "LessonReceiver::importLesson",
-                                "start MainMenu"
+                                    "LessonReceiver::importLesson",
+                                    "start MainMenu"
                             )
-                            PaukerManager.showToast(
-                                context,
-                                R.string.lesson_import_success,
-                                Toast.LENGTH_LONG
-                            )
+                            baseViewModel.postMessage(R.string.lesson_import_success, Toast.LENGTH_LONG)
                             if (SettingsManager.instance().getBoolPreference(
-                                    context,
-                                    Keys.AUTO_UPLOAD
-                                )
+                                            context,
+                                            Keys.AUTO_UPLOAD
+                                    )
                             ) {
                                 uploadFile(localFile)
                                 Log.d(
-                                    "LessonReceiver::importLesson",
-                                    "Lesson uploaded"
+                                        "LessonReceiver::importLesson",
+                                        "Lesson uploaded"
                                 )
                             } else {
                                 restartApp()
                             }
                         }
                     } catch (e: IOException) {
-                        PaukerManager.showToast(
-                            context,
-                            "Fehler beim Einlesen",
-                            Toast.LENGTH_SHORT
-                        )
+                        baseViewModel.postMessage(R.string.error_while_reading)
                         finish()
                     }
                 }
@@ -127,13 +116,11 @@ class LessonReceiver : Activity() {
         }
     }
 
-    public override fun onActivityResult(
-        requestCode: Int,
-        resultCode: Int,
-        data: Intent
-    ) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG) {
             restartApp()
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -156,14 +143,14 @@ class LessonReceiver : Activity() {
 
     private fun uploadFile(localFile: File) {
         val accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-            .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
+                .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         val intent = Intent(context, SyncDialog::class.java)
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
         intent.putExtra(SyncDialog.FILES, localFile)
         intent.action = SyncDialog.UPLOAD_FILE_ACTION
         startActivityForResult(
-            intent,
-            Constants.REQUEST_CODE_SYNC_DIALOG
+                intent,
+                Constants.REQUEST_CODE_SYNC_DIALOG
         )
     }
 
