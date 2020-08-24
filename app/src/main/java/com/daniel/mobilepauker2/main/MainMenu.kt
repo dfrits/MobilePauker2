@@ -145,8 +145,9 @@ open class MainMenu : PaukerApplication() {
         title = viewModel.getTitle()
     }
 
-    private fun initChartList() { // Im Thread laufen lassen um MainThread zu entlasten
-        val initThread = Thread(Runnable {
+    private fun initChartList() {
+        // Im Thread laufen lassen um MainThread zu entlasten
+        val initThread = Thread {
             chartView = findViewById(R.id.chartListView)
             chartView?.let {
                 val layoutManager = LinearLayoutManager(
@@ -168,7 +169,7 @@ open class MainMenu : PaukerApplication() {
                     it.adapter = adapter
                 }
             }
-        })
+        }
         initThread.run()
     }
 

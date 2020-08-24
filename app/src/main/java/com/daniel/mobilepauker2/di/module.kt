@@ -1,6 +1,8 @@
 package com.daniel.mobilepauker2.di
 
+import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.core.PaukerManager
+import com.daniel.mobilepauker2.lessonimport.LessonImportViewModel
 import com.daniel.mobilepauker2.main.MainMenuViewModel
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.ModelManager
@@ -19,4 +21,6 @@ val appModule = module {
     single { ErrorReporter(androidContext()) }
 
     viewModel { MainMenuViewModel(get(), get(), androidContext()) }
+    viewModel { LessonImportViewModel(get(), get(), androidContext()) }
+    viewModel {  BaseViewModel() }
 }

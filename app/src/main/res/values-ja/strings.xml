@@ -245,5 +245,9 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
+    <string name="error_no_pauker_file">Keine Paukerdatei</string>
+    <string name="error_no_file_found">Keine Datei gefunden</string>
+    <string name="error_file_already_exists">Datei existiert bereits</string>
+    <string name="error_while_reading">Fehler beim Einlesen</string>
     <!-- endregion -->
 </resources>
