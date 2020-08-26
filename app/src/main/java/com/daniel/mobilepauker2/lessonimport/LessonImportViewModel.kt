@@ -131,13 +131,13 @@ class LessonImportViewModel(
 
     fun isPositionSelected(position: Int): Boolean = lastSelection == position
 
-    fun startSync(accessToken: String) {
+    fun startSync(accessToken: String, context: Activity) {
         this.accessToken = accessToken
         val syncIntent = Intent(context, SyncDialog::class.java)
         syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, this.accessToken)
         syncIntent.putExtra(SyncDialog.FILES, files.toTypedArray())
         syncIntent.action = SyncDialog.SYNC_ALL_ACTION
-        (context as Activity).startActivityForResult(
+        context.startActivityForResult(
                 syncIntent,
                 Constants.REQUEST_CODE_SYNC_DIALOG
         )
@@ -170,9 +170,9 @@ class LessonImportViewModel(
         openLesson(getSelectedFileName())
     }
 
-    fun openSelectedLesson(): Boolean = openLesson(lastSelection)
+    fun openSelectedLesson(context: Activity): Boolean = openLesson(lastSelection, context)
 
-    fun openLesson(position: Int): Boolean {
+    fun openLesson(position: Int, context: Activity): Boolean {
         val filename = fileNamesLiveData.value?.get(position) as String
         if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_DOWNLOAD)) {
             val accessToken =
@@ -188,7 +188,7 @@ class LessonImportViewModel(
             )
             syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
             syncIntent.action = SyncDialog.SYNC_FILE_ACTION
-            (context as Activity).startActivityForResult(
+            context.startActivityForResult(
                     syncIntent,
                     Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN
             )
@@ -216,11 +216,5 @@ class LessonImportViewModel(
         fileNamesLiveData.value?.get(position)?.let {
             ShortcutReceiver.deleteShortcut(context, it)
         }
-    }
-
-    fun openBrowserForDownload() {
-        val url = "http://pauker.sourceforge.net/pauker.php?page=lessons"
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        (context as Activity).startActivity(browserIntent)
     }
 }

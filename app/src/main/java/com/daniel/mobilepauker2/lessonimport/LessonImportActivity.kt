@@ -187,7 +187,7 @@ class LessonImportActivity : BaseActivity() {
                 )
                 deleteLesson(position)
             }
-            CONTEXT_OPEN -> viewModel.openLesson(position)
+            CONTEXT_OPEN -> viewModel.openLesson(position, this)
             CONTEXT_CREATE_SHORTCUT -> {
                 Log.d(
                         "LessonImportActivity::createShortcut", "create new dynamic " +
@@ -271,7 +271,7 @@ class LessonImportActivity : BaseActivity() {
                     null
             )
             if (accessToken != null) {
-                viewModel.startSync(accessToken)
+                viewModel.startSync(accessToken, this)
             }
         }
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
@@ -326,7 +326,7 @@ class LessonImportActivity : BaseActivity() {
                     Constants.REQUEST_CODE_DB_ACC_DIALOG
             )
         } else {
-            viewModel.startSync(accessToken)
+            viewModel.startSync(accessToken, this)
         }
     }
 
@@ -336,7 +336,7 @@ class LessonImportActivity : BaseActivity() {
      */
     fun mOpenLessonClicked(ignored: MenuItem?) {
         try {
-            if (viewModel.openSelectedLesson()) {
+            if (viewModel.openSelectedLesson(this)) {
                 finish()
             }
         } catch (e: IOException) {
@@ -371,9 +371,15 @@ class LessonImportActivity : BaseActivity() {
                         Html.FROM_HTML_MODE_LEGACY
                 )
         )
-                .setPositiveButton(R.string.next) { _, _ -> viewModel.openBrowserForDownload() }
+                .setPositiveButton(R.string.next) { _, _ -> openBrowserForDownload() }
                 .setNeutralButton(R.string.cancel, null)
         builder.create().show()
+    }
+
+    private fun openBrowserForDownload() {
+        val url = "http://pauker.sourceforge.net/pauker.php?page=lessons"
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        (context as Activity).startActivity(browserIntent)
     }
 
     companion object {
