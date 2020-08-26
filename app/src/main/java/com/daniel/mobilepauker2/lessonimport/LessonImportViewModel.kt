@@ -55,6 +55,7 @@ class LessonImportViewModel(
             paukerManager.listFiles(context)?.let {
                 // Sortieren
                 Arrays.sort(it) { o1, o2 -> o1.name.compareTo(o2.name) }
+                files.clear()
                 files.addAll(it.asIterable())
                 // Liste füllen und Endungen abschneiden
                 val names: MutableList<String> = mutableListOf()
