@@ -36,6 +36,7 @@ import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
 import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
+import kotlinx.android.synthetic.main.main_menu.*
 import org.koin.android.ext.android.get
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -50,7 +51,6 @@ open class MainMenu : PaukerApplication() {
     private val context: Context = this
     private var firstStart = true
     private var search: MenuItem? = null
-    private var chartView: RecyclerView? = null
 
     private val viewModel: MainMenuViewModel by viewModel()
 
@@ -110,25 +110,25 @@ open class MainMenu : PaukerApplication() {
     private fun initButtons() {
         val hasCardsToLearn = viewModel.hasCardsToLearn()
         val hasExpiredCards = viewModel.hasExpiredCards()
-        findViewById<View>(R.id.bLearnNewCard).isEnabled = hasCardsToLearn
-        findViewById<View>(R.id.bLearnNewCard).isClickable = hasCardsToLearn
-        findViewById<View>(R.id.tLearnNewCardDesc).isEnabled = hasCardsToLearn
-        findViewById<View>(R.id.bRepeatExpiredCards).isEnabled = hasExpiredCards
-        findViewById<View>(R.id.bRepeatExpiredCards).isClickable = hasExpiredCards
-        findViewById<View>(R.id.tRepeatExpiredCardsDesc).isEnabled = hasExpiredCards
+        bLearnNewCard.isEnabled = hasCardsToLearn
+        bLearnNewCard.isClickable = hasCardsToLearn
+        tLearnNewCardDesc.isEnabled = hasCardsToLearn
+        bRepeatExpiredCards.isEnabled = hasExpiredCards
+        bRepeatExpiredCards.isClickable = hasExpiredCards
+        tRepeatExpiredCardsDesc.isEnabled = hasExpiredCards
     }
 
     private fun initView() {
         invalidateOptionsMenu()
         val description = viewModel.getDescription()
-        val descriptionView = findViewById<TextView>(R.id.infoText)
+        val descriptionView = infoText
         descriptionView.text = description
         if (description.isNotEmpty()) {
             descriptionView.movementMethod = ScrollingMovementMethod()
         }
-        val drawer = findViewById<SlidingUpPanelLayout>(R.id.drawerPanel)
-        if (drawer != null) {
-            drawer.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+
+        drawerPanel?.let {
+            it.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
                 override fun onPanelSlide(
                         panel: View,
                         slideOffset: Float
@@ -140,13 +140,13 @@ open class MainMenu : PaukerApplication() {
                         previousState: PanelState,
                         newState: PanelState
                 ) {
-                    if (newState == PanelState.EXPANDED) findViewById<View>(R.id.drawerImage).rotation =
+                    if (newState == PanelState.EXPANDED) drawerImage.rotation =
                             180f
-                    if (newState == PanelState.COLLAPSED) findViewById<View>(R.id.drawerImage).rotation =
+                    if (newState == PanelState.COLLAPSED) drawerImage.rotation =
                             0f
                 }
             })
-            drawer.panelState = PanelState.COLLAPSED
+            it.panelState = PanelState.COLLAPSED
         }
 
         title = viewModel.getTitle()
@@ -155,8 +155,7 @@ open class MainMenu : PaukerApplication() {
     private fun initChartList() {
         // Im Thread laufen lassen um MainThread zu entlasten
         val initThread = Thread {
-            chartView = findViewById(R.id.chartListView)
-            chartView?.let {
+            chartListView?.let {
                 val layoutManager = LinearLayoutManager(
                         context,
                         LinearLayoutManager.HORIZONTAL, false
@@ -221,11 +220,6 @@ open class MainMenu : PaukerApplication() {
             searchView.setOnQueryTextFocusChangeListener { _, hasFocus -> if (!hasFocus) searchView.clearFocus() }
         }
         return true
-    }
-
-    override fun onPause() {
-        chartView = null
-        super.onPause()
     }
 
     public override fun onResume() {
