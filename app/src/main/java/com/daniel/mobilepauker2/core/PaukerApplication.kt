@@ -8,18 +8,17 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 
 open class PaukerApplication : AppCompatActivity() {
-    private var koinStarted = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        if (!koinStarted) {
+        try {
             startKoin {
                 androidLogger()
                 androidContext(baseContext)
                 modules(appModule)
             }
-            koinStarted = true
+        } catch (e: Exception) {
         }
     }
 }
