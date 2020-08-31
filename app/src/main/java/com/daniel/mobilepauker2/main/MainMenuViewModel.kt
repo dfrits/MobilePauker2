@@ -48,11 +48,6 @@ class MainMenuViewModel(
 
     fun getDescription(): String = modelManager.description
 
-    fun canShowBatchDetails(index: Int): Boolean =
-            (index > 1 && modelManager.batchStatistics[index - 2].batchSize == 0
-                    || index == 1 && modelManager.unlearnedBatchSize == 0
-                    || modelManager.lessonSize == 0)
-
     fun isLessonNotNew(): Boolean = paukerManager.isLessonNotNew
 
     fun isLessonAndDescriptionEmpty(): Boolean = modelManager.isLessonEmpty
@@ -81,13 +76,15 @@ class MainMenuViewModel(
     }
 
     fun showBatchDetails(index: Int) {
-        if (canShowBatchDetails(index)) {
-            val browseIntent = Intent(Intent.ACTION_SEARCH)
-            browseIntent.setClass(context, SearchActivity::class.java)
-            browseIntent.putExtra(SearchManager.QUERY, "")
-            browseIntent.putExtra(Constants.STACK_INDEX, index)
-            activity.startActivity(browseIntent)
-        }
+        if ((index > 1 && modelManager.batchStatistics[index - 2].batchSize == 0)
+                || (index == 1 && modelManager.unlearnedBatchSize == 0))
+            return
+
+        val browseIntent = Intent(Intent.ACTION_SEARCH)
+        browseIntent.setClass(context, SearchActivity::class.java)
+        browseIntent.putExtra(SearchManager.QUERY, "")
+        browseIntent.putExtra(Constants.STACK_INDEX, index)
+        activity.startActivity(browseIntent)
     }
 
     fun learnNewCardClicked() {
