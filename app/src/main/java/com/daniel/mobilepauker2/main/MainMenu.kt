@@ -56,22 +56,29 @@ open class MainMenu : PaukerApplication() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        viewModel.binUI(this)
+
         // Channel erstellen, falls noch nicht vorhanden
         Log.d(
-                "AlamNotificationReceiver::onReceive",
+                "AlarmNotificationReceiver::onReceive",
                 "Create Channels"
         )
         createNotificationChannels()
+
         val action = intent.action
         if (action != null && action == "Open Lesson") {
             startActivity(Intent(context, LessonImportActivity::class.java))
         }
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         setContentView(R.layout.main_menu)
+
         checkErrors()
+
         if (!viewModel.isLessonSetup()) {
             viewModel.createNewLesson()
         }
+
         init()
     }
 

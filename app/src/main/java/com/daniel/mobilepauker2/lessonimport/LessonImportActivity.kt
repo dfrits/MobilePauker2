@@ -212,11 +212,9 @@ class LessonImportActivity : BaseActivity() {
     override fun onResume() {
         super.onResume()
         val uid = Auth.getUid()
-        val storedUid =
-                preferences!!.getString(Constants.DROPBOX_USER_ID, null)
+        val storedUid = preferences!!.getString(Constants.DROPBOX_USER_ID, null)
         if (uid != null && uid != storedUid) {
-            preferences!!.edit()
-                    .putString(Constants.DROPBOX_USER_ID, uid).apply()
+            preferences!!.edit().putString(Constants.DROPBOX_USER_ID, uid).apply()
         }
     }
 

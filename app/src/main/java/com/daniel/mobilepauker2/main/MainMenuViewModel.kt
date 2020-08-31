@@ -24,6 +24,11 @@ class MainMenuViewModel(
 ) : ViewModel() {
     private val paukerManager = paukerAndModelManager.paukerManager
     private val modelManager = paukerAndModelManager.modelManager
+    private lateinit var activity: Activity
+
+    fun binUI(activity: Activity) {
+        this.activity = activity
+    }
 
     fun isLessonSetup(): Boolean = modelManager.isLessonSetup
 
@@ -81,7 +86,7 @@ class MainMenuViewModel(
             browseIntent.setClass(context, SearchActivity::class.java)
             browseIntent.putExtra(SearchManager.QUERY, "")
             browseIntent.putExtra(Constants.STACK_INDEX, index)
-            context.startActivity(browseIntent)
+            activity.startActivity(browseIntent)
         }
     }
 
@@ -91,21 +96,21 @@ class MainMenuViewModel(
         } else {
             modelManager.setLearningPhase(context, ModelManager.LearningPhase.FILLING_USTM)
         }
-        context.startActivity(Intent(context, LearnCardsActivity::class.java))
+        activity.startActivity(Intent(context, LearnCardsActivity::class.java))
     }
 
     fun repeatCardsClicked() {
         modelManager.setLearningPhase(context, ModelManager.LearningPhase.REPEATING_LTM)
         val importActivity = Intent(context, LearnCardsActivity::class.java)
-        context.startActivity(importActivity)
+        activity.startActivity(importActivity)
     }
 
     fun addNewCardClicked() {
-        context.startActivity(Intent(context, AddCardActivity::class.java))
+        activity.startActivity(Intent(context, AddCardActivity::class.java))
     }
 
     fun saveLessonForResult(requestCode: Int) {
-        (context as Activity).startActivityForResult(Intent(context, SaveDialog::class.java), requestCode)
+        activity.startActivityForResult(Intent(context, SaveDialog::class.java), requestCode)
     }
 
     fun setupNewLesson() {
