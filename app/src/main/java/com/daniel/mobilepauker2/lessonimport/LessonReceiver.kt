@@ -51,13 +51,14 @@ class LessonReceiver : BaseActivity(), KoinComponent {
                     "LessonReceiver::importLesson filePath: ",
                     filePath
             )
-            if (filePath == null || PaukerManager.instance().isNameEmpty(filePath)) {
+            val paukerManager = get<PaukerManager>()
+            if (filePath == null || paukerManager.isNameEmpty(filePath)) {
                 baseViewModel.postMessage(R.string.error_no_file_found)
                 finish()
             } else {
                 val localFile = File(
                         Environment.getExternalStorageDirectory()
-                                .toString() + PaukerManager.instance().applicationDataDirectory,
+                                .toString() + paukerManager.applicationDataDirectory,
                         File(filePath).name
                 )
                 if (localFile.exists()) {

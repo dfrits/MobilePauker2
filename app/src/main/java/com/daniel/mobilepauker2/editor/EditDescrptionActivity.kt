@@ -40,7 +40,8 @@ class EditDescrptionActivity : AppCompatActivity(), KoinComponent {
         }
         if (text != null && modelManager?.description != text) {
             modelManager?.description = text
-            PaukerManager.instance().isSaveRequired = true
+            val paukerManager = get<PaukerManager>()
+            paukerManager.isSaveRequired = true
         }
     }
 

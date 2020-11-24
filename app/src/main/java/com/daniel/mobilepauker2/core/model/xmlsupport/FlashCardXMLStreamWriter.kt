@@ -16,7 +16,7 @@ object FlashCardXMLStreamWriter : KoinComponent {
     @Throws(SecurityException::class)
     fun saveLesson() {
         val modelManager: ModelManager = get()
-        val paukerManager: PaukerManager = PaukerManager.instance()
+        val paukerManager: PaukerManager = get()
         if (paukerManager.isLessonNotNew) { // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
             val name = "neu_" + paukerManager.filePath.name
             val path = paukerManager.filePath.parent

@@ -21,6 +21,7 @@ import com.daniel.mobilepauker2.core.BaseActivity
 import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.core.PaukerManager
+import com.daniel.mobilepauker2.core.model.ShortcutReceiverHelper
 import com.daniel.mobilepauker2.dropbox.DropboxAccDialog
 import com.daniel.mobilepauker2.main.ShortcutReceiver
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
@@ -90,7 +91,7 @@ class LessonImportActivity : BaseActivity() {
                             CONTEXT_OPEN, 0, R.string.open_lesson
                     )
                     val pos = (menuInfo as AdapterContextMenuInfo).position
-                    if (ShortcutReceiver.hasShortcut(
+                    if (ShortcutReceiverHelper().hasShortcut(
                                     context,
                                     it.getItemAtPosition(pos) as String
                             )

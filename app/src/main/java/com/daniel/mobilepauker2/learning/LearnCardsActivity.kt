@@ -35,12 +35,13 @@ import com.daniel.mobilepauker2.pauker_native.FlashCard.SideShowing
 import com.daniel.mobilepauker2.pauker_native.ModelManager.LearningPhase
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.danilomendes.progressbar.InvertedTextProgressbar
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.util.*
 
 @Suppress("UNUSED_PARAMETER")
-class LearnCardsActivity : FlashCardSwipeScreenActivity(),
-    TimerService.Callback {
-    private val paukerManager: PaukerManager? = PaukerManager.instance()
+class LearnCardsActivity : FlashCardSwipeScreenActivity(), TimerService.Callback, KoinComponent {
+    private val paukerManager: PaukerManager? = get()
     private val context: Context = this
     private var pendingIntent: Intent? = null
     private var notificationManager: NotificationManagerCompat? = null
@@ -71,8 +72,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         setContentView(R.layout.learn_cards)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         if (modelManager.learningPhase != LearningPhase.REPEATING_LTM
-            && (modelManager.learningPhase != LearningPhase.SIMPLE_LEARNING
-                    || modelManager.learningPhase != LearningPhase.NOTHING)
+                && (modelManager.learningPhase != LearningPhase.SIMPLE_LEARNING
+                        || modelManager.learningPhase != LearningPhase.NOTHING)
         ) {
             if (mActivitySetupOk) {
                 initTimer()
@@ -87,32 +88,32 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         try {
             if (isCardCursorAvailable) {
                 currentCard.sideAText =
-                    mCardCursor!!.getString(CardPackAdapter.KEY_SIDEA_ID)
+                        mCardCursor!!.getString(CardPackAdapter.KEY_SIDEA_ID)
                 currentCard.sideBText =
-                    mCardCursor!!.getString(CardPackAdapter.KEY_SIDEB_ID)
+                        mCardCursor!!.getString(CardPackAdapter.KEY_SIDEB_ID)
                 val learnStatus =
-                    mCardCursor!!.getString(CardPackAdapter.KEY_LEARN_STATUS_ID)
+                        mCardCursor!!.getString(CardPackAdapter.KEY_LEARN_STATUS_ID)
                 currentCard.isLearned = learnStatus!!.contentEquals("1")
             } else {
                 currentCard.sideAText = ""
                 currentCard.sideBText = ""
                 Log.d(
-                    "FlashCardSwipeScreenActivity::updateCurrentCard",
-                    "Card Cursor not available"
+                        "FlashCardSwipeScreenActivity::updateCurrentCard",
+                        "Card Cursor not available"
                 )
             }
         } catch (e: Exception) {
             Log.e(
-                "FlashCardSwipeScreenActivity::updateCurrentCard",
-                "Caught Exception"
+                    "FlashCardSwipeScreenActivity::updateCurrentCard",
+                    "Caught Exception"
             )
             PaukerManager.showToast(
-                context as Activity,
-                R.string.load_card_data_error,
-                Toast.LENGTH_SHORT
+                    context as Activity,
+                    R.string.load_card_data_error,
+                    Toast.LENGTH_SHORT
             )
             ErrorReporter.instance()
-                .addCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?")
+                    .addCustomData("LearnCardsActivity::updateCurrentCard", "cursor problem?")
             finish()
         }
     }
@@ -144,8 +145,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     override fun cursorLoaded() {
         Log.d(
-            "LearnCardsActivity::cursorLoaded", "cursor loaded: " +
-                    "savedPos= " + mSavedCursorPosition
+                "LearnCardsActivity::cursorLoaded", "cursor loaded: " +
+                "savedPos= " + mSavedCursorPosition
         )
         if (mSavedCursorPosition == -1) {
             setCursorToFirst()
@@ -157,8 +158,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             updateCurrentCard()
             fillInData(flipCardSides)
             if (bShowMe?.visibility == View.VISIBLE
-                && (flipCardSides && currentCard.side == SideShowing.SIDE_A
-                        || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
+                    && (flipCardSides && currentCard.side == SideShowing.SIDE_A
+                            || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
             ) {
                 bShowMe?.visibility = View.GONE
                 lRepeatButtons?.visibility = View.VISIBLE
@@ -173,8 +174,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             fillInData(flipCardSides)
             setButtonsVisibility()
             if (bShowMe?.visibility == View.VISIBLE
-                && (flipCardSides && currentCard.side == SideShowing.SIDE_A
-                        || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
+                    && (flipCardSides && currentCard.side == SideShowing.SIDE_A
+                            || !flipCardSides && currentCard.side == SideShowing.SIDE_B)
             ) {
                 bShowMe?.visibility = View.GONE
                 lRepeatButtons?.visibility = View.VISIBLE
@@ -182,9 +183,9 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL) {
             if (resultCode == Activity.RESULT_OK) {
                 PaukerManager.showToast(
-                    context as Activity,
-                    R.string.saving_success,
-                    Toast.LENGTH_SHORT
+                        context as Activity,
+                        R.string.saving_success,
+                        Toast.LENGTH_SHORT
                 )
                 paukerManager?.isSaveRequired = false
 
@@ -192,9 +193,9 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
                     paukerAndModelManager.showExpireToast(context)
             } else {
                 PaukerManager.showToast(
-                    context as Activity,
-                    R.string.saving_error,
-                    Toast.LENGTH_SHORT
+                        context as Activity,
+                        R.string.saving_error,
+                        Toast.LENGTH_SHORT
                 )
             }
             finish()
@@ -206,24 +207,24 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(getExitTitle())
-            .setPositiveButton(R.string.yes) { _, _ ->
-                if (timerService != null) {
-                    timerService!!.stopStmTimer()
-                    timerService!!.stopUstmTimer()
-                    Log.d(
-                        "LearnCardsActivity::onBackPressed",
-                        "Finish and Timer stopped"
-                    )
-                } else {
-                    Log.d(
-                        "LearnCardsActivity::onBackPressed",
-                        "Finish and Service is null"
-                    )
+                .setPositiveButton(R.string.yes) { _, _ ->
+                    if (timerService != null) {
+                        timerService!!.stopStmTimer()
+                        timerService!!.stopUstmTimer()
+                        Log.d(
+                                "LearnCardsActivity::onBackPressed",
+                                "Finish and Timer stopped"
+                        )
+                    } else {
+                        Log.d(
+                                "LearnCardsActivity::onBackPressed",
+                                "Finish and Service is null"
+                        )
+                    }
+                    finish()
                 }
-                finish()
-            }
-            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
-            .create().show()
+                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                .create().show()
     }
 
     override fun onPause() {
@@ -263,7 +264,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         timerServiceIntent?.let { stopService(it) }
         timerServiceConnection?.let { unbindService(it) }
         val notifyManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notifyManager.cancelAll()
         isLearningRunning = false
         super.onDestroy()
@@ -298,12 +299,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         stmTimerBar?.minProgress = 0
         timerServiceConnection = object : ServiceConnection {
             override fun onServiceConnected(
-                name: ComponentName,
-                service: IBinder
+                    name: ComponentName,
+                    service: IBinder
             ) {
                 Log.d(
-                    "LearnActivity::initTimer",
-                    "onServiceConnectedCalled"
+                        "LearnActivity::initTimer",
+                        "onServiceConnectedCalled"
                 )
                 val binder = service as LocalBinder
                 timerService = binder.serviceInstance
@@ -316,8 +317,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
             override fun onServiceDisconnected(name: ComponentName) {
                 Log.d(
-                    "LearnActivity::initTimer",
-                    "onServiceDisconnectedCalled"
+                        "LearnActivity::initTimer",
+                        "onServiceDisconnectedCalled"
                 )
                 timerService!!.stopUstmTimer()
                 timerService!!.stopStmTimer()
@@ -388,8 +389,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             }
             LearningPhase.WAITING_FOR_USTM -> {
                 Log.d(
-                    "LearnCardsActivity::updateLearningPhase",
-                    "Waiting for USTM"
+                        "LearnCardsActivity::updateLearningPhase",
+                        "Waiting for USTM"
                 )
                 // Gif zeigen
                 showHideTimerAnimation()
@@ -463,8 +464,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     private fun finishLearning() {
         if (settingsManager.getBoolPreference(context, Keys.AUTO_SAVE)) {
             startActivityForResult(
-                Intent(context, SaveDialog::class.java),
-                Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL
+                    Intent(context, SaveDialog::class.java),
+                    Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL
             )
         } else {
             paukerManager?.isSaveRequired = true
@@ -506,7 +507,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         text = if (mCardCursor != null) {
             val currentCard = modelManager.getCard(mCardCursor!!.position)
             if (currentCard != null && currentCard.isRepeatedByTyping) getString(R.string.enter_answer) else getString(
-                R.string.show_me
+                    R.string.show_me
             )
         } else {
             getString(R.string.show_me)
@@ -551,43 +552,43 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
         val view = layoutInflater.inflate(R.layout.dialog_input, null)
         val inputField: MPEditText = view.findViewById(R.id.eTInput)
         builder.setView(view)
-            .setPositiveButton(R.string.proof) { dialog, _ ->
-                val cardText: String? = if (flipCardSides) {
-                    currentCard.sideAText
-                } else {
-                    currentCard.sideBText
+                .setPositiveButton(R.string.proof) { dialog, _ ->
+                    val cardText: String? = if (flipCardSides) {
+                        currentCard.sideAText
+                    } else {
+                        currentCard.sideBText
+                    }
+                    val caseSensitive =
+                            settingsManager.getBoolPreference(context, Keys.CASE_SENSITIV)
+                    val input = inputField.text.toString()
+                    if (caseSensitive && cardText == input) {
+                        yesClicked(null)
+                    } else if (cardText.equals(input, ignoreCase = true)) {
+                        yesClicked(null)
+                    } else showResultDialog(cardText, input)
+                    dialog.dismiss()
                 }
-                val caseSensitive =
-                    settingsManager.getBoolPreference(context, Keys.CASE_SENSITIV)
-                val input = inputField.text.toString()
-                if (caseSensitive && cardText == input) {
-                    yesClicked(null)
-                } else if (cardText.equals(input, ignoreCase = true)) {
-                    yesClicked(null)
-                } else showResultDialog(cardText, input)
-                dialog.dismiss()
-            }
-            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-            .setOnDismissListener {
-                val imm =
-                    getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                if (currentFocus != null && imm.isAcceptingText) {
-                    imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                .setOnDismissListener {
+                    val imm =
+                            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    if (currentFocus != null && imm.isAcceptingText) {
+                        imm.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
+                    }
                 }
-            }
         if (flipCardSides) {
             inputField.setFont(
-                modelManager.getCardFont(
-                    CardPackAdapter.KEY_SIDEA_ID,
-                    mCardCursor!!.position
-                )
+                    modelManager.getCardFont(
+                            CardPackAdapter.KEY_SIDEA_ID,
+                            mCardCursor!!.position
+                    )
             )
         } else {
             inputField.setFont(
-                modelManager.getCardFont(
-                    CardPackAdapter.KEY_SIDEB_ID,
-                    mCardCursor!!.position
-                )
+                    modelManager.getCardFont(
+                            CardPackAdapter.KEY_SIDEB_ID,
+                            mCardCursor!!.position
+                    )
             )
         }
         builder.create().show()
@@ -596,12 +597,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     @SuppressLint("InflateParams")
     private fun showResultDialog(cardText: String?, input: String) {
         val builder =
-            AlertDialog.Builder(context, R.style.ResultDialogTheme)
+                AlertDialog.Builder(context, R.style.ResultDialogTheme)
         val view = layoutInflater.inflate(R.layout.dialog_result, null)
         builder.setView(view)
-            .setPositiveButton("Weiterlegen") { _, _ -> yesClicked(null) }
-            .setNeutralButton("Zurücklegen") { _, _ -> noClicked(null) }
-            .setCancelable(false)
+                .setPositiveButton("Weiterlegen") { _, _ -> yesClicked(null) }
+                .setNeutralButton("Zurücklegen") { _, _ -> noClicked(null) }
+                .setCancelable(false)
         (view.findViewById<View>(R.id.tVRightAnswerText) as TextView).text = cardText
         (view.findViewById<View>(R.id.tVInputText) as TextView).text = input
         builder.create().show()
@@ -609,12 +610,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     private fun fillInData(flipCardSides: Boolean) { // Daten setzen
         val fontA = modelManager.getCardFont(
-            CardPackAdapter.KEY_SIDEA_ID,
-            mCardCursor!!.position
+                CardPackAdapter.KEY_SIDEA_ID,
+                mCardCursor!!.position
         )
         val fontB = modelManager.getCardFont(
-            CardPackAdapter.KEY_SIDEB_ID,
-            mCardCursor!!.position
+                CardPackAdapter.KEY_SIDEB_ID,
+                mCardCursor!!.position
         )
         val learningPhase = modelManager.learningPhase
         // Layoutcontents setzen
@@ -644,21 +645,21 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     private fun hasCardsToBeFlipped(): Boolean {
         val flipMode =
-            settingsManager.getStringPreference(context, Keys.FLIP_CARD_SIDES)
+                settingsManager.getStringPreference(context, Keys.FLIP_CARD_SIDES)
         val learningPhase = modelManager.learningPhase
         flipCardSides =
-            if (learningPhase == LearningPhase.REPEATING_LTM || learningPhase == LearningPhase.REPEATING_STM || learningPhase == LearningPhase.REPEATING_USTM) {
-                when (flipMode) {
-                    "1" -> true
-                    "2" -> {
-                        val rand = Random()
-                        rand.nextBoolean()
+                if (learningPhase == LearningPhase.REPEATING_LTM || learningPhase == LearningPhase.REPEATING_STM || learningPhase == LearningPhase.REPEATING_USTM) {
+                    when (flipMode) {
+                        "1" -> true
+                        "2" -> {
+                            val rand = Random()
+                            rand.nextBoolean()
+                        }
+                        else -> false
                     }
-                    else -> false
+                } else {
+                    false
                 }
-            } else {
-                false
-            }
         if (flipCardSides) {
             currentCard.side = SideShowing.SIDE_B
         } else {
@@ -668,12 +669,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     }
 
     private fun fillSideA(
-        titleResource: Int,
-        text: String?,
-        font: Font?
+            titleResource: Int,
+            text: String?,
+            font: Font?
     ) {
         (findViewById<View>(R.id.titelCardSideA) as TextView).text = getString(
-            titleResource
+                titleResource
         )
         val sideA = findViewById<MPTextView>(R.id.tCardSideA)
         sideA.setFont(font)
@@ -687,12 +688,12 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
      * @param text          Anzuzeigender Text
      */
     private fun fillSideB(
-        titleResource: Int,
-        text: String?,
-        font: Font?
+            titleResource: Int,
+            text: String?,
+            font: Font?
     ) {
         (findViewById<View>(R.id.titelCardSideB) as TextView).text = getString(
-            titleResource
+                titleResource
         )
         val sideB = findViewById<MPTextView>(R.id.tCardSideB_TV)
         if (text!!.isEmpty() || modelManager.getCard(mCardCursor!!.position)!!.isRepeatedByTyping) {
@@ -752,41 +753,41 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     fun mEditClicked(item: MenuItem?) {
         val intent = Intent(context, EditCardActivity::class.java)
         intent.putExtra(
-            Constants.CURSOR_POSITION,
-            mCardCursor!!.position
+                Constants.CURSOR_POSITION,
+                mCardCursor!!.position
         )
         pendingIntent = intent
         startActivityForResult(
-            intent,
-            Constants.REQUEST_CODE_EDIT_CARD
+                intent,
+                Constants.REQUEST_CODE_EDIT_CARD
         )
     }
 
     fun mDeleteClicked(item: MenuItem?) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage(R.string.delete_card_message)
-            .setPositiveButton(R.string.delete) { dialog, _ ->
-                // Muss vorher gespeichert werden, da sonst im Nachhinein der Wert
+                .setPositiveButton(R.string.delete) { dialog, _ ->
+                    // Muss vorher gespeichert werden, da sonst im Nachhinein der Wert
 // verfälscht werden kann!
-                val isLast = mCardCursor!!.isLast
-                if (modelManager.deleteCard(mCardCursor!!.position)) {
-                    if (isLast) { // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
-                        updateLearningPhase()
+                    val isLast = mCardCursor!!.isLast
+                    if (modelManager.deleteCard(mCardCursor!!.position)) {
+                        if (isLast) { // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
+                            updateLearningPhase()
+                        } else {
+                            updateCurrentCard()
+                            fillData()
+                            setButtonsVisibility()
+                        }
                     } else {
-                        updateCurrentCard()
-                        fillData()
-                        setButtonsVisibility()
+                        PaukerManager.showToast(
+                                context as Activity,
+                                "Löschen nicht möglich!",
+                                Toast.LENGTH_SHORT
+                        )
                     }
-                } else {
-                    PaukerManager.showToast(
-                        context as Activity,
-                        "Löschen nicht möglich!",
-                        Toast.LENGTH_SHORT
-                    )
+                    dialog.cancel()
                 }
-                dialog.cancel()
-            }
-            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
         builder.create().show()
     }
 
@@ -797,9 +798,9 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             restartButton!!.isVisible = true
         } else {
             PaukerManager.showToast(
-                context as Activity,
-                R.string.pause_timer_error,
-                Toast.LENGTH_LONG
+                    context as Activity,
+                    R.string.pause_timer_error,
+                    Toast.LENGTH_LONG
             )
         }
     }
@@ -811,9 +812,9 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             pauseButton!!.isVisible = true
         } else {
             PaukerManager.showToast(
-                context as Activity,
-                R.string.restart_timer_error,
-                Toast.LENGTH_LONG
+                    context as Activity,
+                    R.string.restart_timer_error,
+                    Toast.LENGTH_LONG
             )
         }
     }
@@ -852,7 +853,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
 
     fun noClicked(view: View?) {
         mCardPackAdapter!!.setCardUnLearned(
-            context
+                context
         )
         paukerManager?.isSaveRequired = true
         if (!mCardCursor!!.isLast) {
@@ -883,8 +884,7 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             if (ustmTimerBar!!.visibility == View.VISIBLE && !timerService!!.isUstmTimerFinished) {
                 val sec = elapsedTime % 60
                 ustmTimerText = String.format(
-                    Locale.getDefault()
-                    , "%d / %ds", sec, timerService?.ustmTotalTime
+                        Locale.getDefault(), "%d / %ds", sec, timerService?.ustmTotalTime
                 )
                 ustmTimerBar!!.setProgress(elapsedTime)
                 ustmTimerBar!!.text = ustmTimerText
@@ -899,13 +899,13 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             val min = elapsedTime / 60
             timerText = if (sec < 10) {
                 String.format(
-                    Locale.getDefault(),
-                    "%d:0%d / %d:00min", min, sec, timerService?.stmTotalTime
+                        Locale.getDefault(),
+                        "%d:0%d / %d:00min", min, sec, timerService?.stmTotalTime
                 )
             } else {
                 String.format(
-                    Locale.getDefault(),
-                    "%d:%d / %d:00min", min, sec, timerService?.stmTotalTime
+                        Locale.getDefault(),
+                        "%d:%d / %d:00min", min, sec, timerService?.stmTotalTime
                 )
             }
             stmTimerBar!!.setProgress(elapsedTime)
@@ -913,46 +913,46 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
             if (!isActivityVisible && !timerService!!.isStmTimerFinished) {
                 Log.d(
-                    "LearnActivity::STM-onStmTimerUpdate",
-                    "Acivity is not visible"
+                        "LearnActivity::STM-onStmTimerUpdate",
+                        "Acivity is not visible"
                 )
                 val ustmTimerBarText =
-                    if (timerService!!.isUstmTimerFinished && ustmTimerText != null) "" else getString(
-                        R.string.ustm
-                    ) + " " + ustmTimerText
+                        if (timerService!!.isUstmTimerFinished && ustmTimerText != null) "" else getString(
+                                R.string.ustm
+                        ) + " " + ustmTimerText
                 val timerbarText =
-                    ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText
+                        ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText
                 val contentIntent =
-                    if (pendingIntent == null) intent else pendingIntent!!
+                        if (pendingIntent == null) intent else pendingIntent!!
                 val mBuilder =
-                    NotificationCompat.Builder(
-                        context,
-                        Constants.TIMER_BAR_CHANNEL_ID
-                    )
-                        .setContentText(timerbarText)
-                        .setSmallIcon(R.drawable.notify_icon)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(
-                            PendingIntent.getActivity(
+                        NotificationCompat.Builder(
                                 context,
-                                0,
-                                contentIntent,
-                                0
-                            )
+                                Constants.TIMER_BAR_CHANNEL_ID
                         )
-                        .setAutoCancel(true)
-                        .setOngoing(true)
+                                .setContentText(timerbarText)
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(
+                                        PendingIntent.getActivity(
+                                                context,
+                                                0,
+                                                contentIntent,
+                                                0
+                                        )
+                                )
+                                .setAutoCancel(true)
+                                .setOngoing(true)
                 Log.d(
-                    "LearnActivity::STM-onStmTimerUpdate",
-                    "Notification created"
+                        "LearnActivity::STM-onStmTimerUpdate",
+                        "Notification created"
                 )
                 notificationManager!!.notify(
-                    Constants.TIME_BAR_ID,
-                    mBuilder.build()
+                        Constants.TIME_BAR_ID,
+                        mBuilder.build()
                 )
                 Log.d(
-                    "LearnActivity::STM-onStmTimerUpdate",
-                    "Show Notification"
+                        "LearnActivity::STM-onStmTimerUpdate",
+                        "Show Notification"
                 )
             }
         }
@@ -961,15 +961,15 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     override fun onUstmTimerFinish() {
         runOnUiThread {
             Log.d(
-                "LearnActivity::USTM-Timer finished",
-                "Timer finished"
+                    "LearnActivity::USTM-Timer finished",
+                    "Timer finished"
             )
             ustmTimerBar?.setProgress(timerService?.ustmTotalTime ?: 0 * 60)
             ustmTimerBar?.text = " "
             if (modelManager.learningPhase == LearningPhase.WAITING_FOR_USTM) {
                 Log.d(
-                    "Learnactivity::onUSTMTimerFinish",
-                    "USTM Timer finished, stop waiting!"
+                        "Learnactivity::onUSTMTimerFinish",
+                        "USTM Timer finished, stop waiting!"
                 )
                 stopWaiting = true
                 updateLearningPhase()
@@ -980,8 +980,8 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
     override fun onStmTimerFinish() {
         runOnUiThread {
             Log.d(
-                "LearnActivity::STM-Timer finished",
-                "Timer finished"
+                    "LearnActivity::STM-Timer finished",
+                    "Timer finished"
             )
             notificationManager!!.cancel(Constants.TIME_BAR_ID)
             stmTimerBar?.text = " "
@@ -991,47 +991,47 @@ class LearnCardsActivity : FlashCardSwipeScreenActivity(),
             }
             if (modelManager.learningPhase == LearningPhase.WAITING_FOR_STM) {
                 Log.d(
-                    "LearnActivity::onSTMTimerFinish",
-                    "STM Timer finished, stop waiting!"
+                        "LearnActivity::onSTMTimerFinish",
+                        "STM Timer finished, stop waiting!"
                 )
                 stopWaiting = true
                 updateLearningPhase()
             }
             // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
             val showNotify =
-                settingsManager.getBoolPreference(context, Keys.SHOW_TIMER_BAR)
+                    settingsManager.getBoolPreference(context, Keys.SHOW_TIMER_BAR)
             if (!isActivityVisible && timerService!!.isStmTimerFinished && showNotify) {
                 Log.d(
-                    "LearnActivity::STM-Timer finished",
-                    "Acivity is visible"
+                        "LearnActivity::STM-Timer finished",
+                        "Acivity is visible"
                 )
                 val mBuilder =
-                    NotificationCompat.Builder(
-                        context,
-                        Constants.NOTIFICATION_CHANNEL_ID
-                    )
-                        .setContentText(getString(R.string.stm_expired_notify_message))
-                        .setSmallIcon(R.drawable.notify_icon)
-                        .setContentTitle(getString(R.string.app_name))
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                        .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
-                        .setAutoCancel(true)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        NotificationCompat.Builder(
+                                context,
+                                Constants.NOTIFICATION_CHANNEL_ID
+                        )
+                                .setContentText(getString(R.string.stm_expired_notify_message))
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setContentTitle(getString(R.string.app_name))
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(PendingIntent.getActivity(context, 0, intent, 0))
+                                .setAutoCancel(true)
+                                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 Log.d(
-                    "LearnActivity::STM-Timer finished",
-                    "Notification created"
+                        "LearnActivity::STM-Timer finished",
+                        "Notification created"
                 )
                 Timer().schedule(object : TimerTask() {
                     override fun run() {
                         notificationManager!!.notify(
-                            Constants.NOTIFICATION_ID,
-                            mBuilder.build()
+                                Constants.NOTIFICATION_ID,
+                                mBuilder.build()
                         )
                     }
                 }, 1000)
                 Log.d(
-                    "LearnActivity::STM-Timer finished",
-                    "Notification shown"
+                        "LearnActivity::STM-Timer finished",
+                        "Notification shown"
                 )
             }
         }

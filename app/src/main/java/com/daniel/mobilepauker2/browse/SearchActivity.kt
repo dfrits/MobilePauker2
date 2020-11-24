@@ -22,6 +22,7 @@ import com.daniel.mobilepauker2.pauker_native.Card
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.Log
 import org.koin.android.ext.android.get
+import org.koin.core.KoinComponent
 import java.util.*
 
 /**
@@ -34,7 +35,7 @@ import java.util.*
 class SearchActivity : AppCompatActivity() {
     private val context: Context = this
     private val modelManager: ModelManager = get()
-    private val paukerManager: PaukerManager = PaukerManager.instance()
+    private val paukerManager: PaukerManager = get()
     private var modalListener: SearchResultMultiChoiceModeListener? = null
     private var itemPosition: Vector<Int>? = null
     private var listView: ListView? = null

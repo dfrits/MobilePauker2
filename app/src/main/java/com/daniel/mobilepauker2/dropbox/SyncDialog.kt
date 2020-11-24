@@ -35,7 +35,7 @@ import kotlin.collections.ArrayList
 class SyncDialog : Activity(), KoinComponent {
     private val context: Context = this
     private val modelManager: ModelManager = get()
-    private val paukerManager: PaukerManager = PaukerManager.instance()
+    private val paukerManager: PaukerManager = get()
     private var timeout: Timer? = null
     private var timerTask: TimerTask? = null
     private var cancelbutton: Button? = null

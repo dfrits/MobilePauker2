@@ -90,7 +90,8 @@ class EditCardActivity : AEditCardActivity(), KoinComponent {
                 sideBEditText!!.text.toString()
             )
             if (detectChanges()) {
-                PaukerManager.instance().isSaveRequired = true
+                val paukerManager = get<PaukerManager>()
+                paukerManager.isSaveRequired = true
                 setResult(Activity.RESULT_OK)
             }
             finish()

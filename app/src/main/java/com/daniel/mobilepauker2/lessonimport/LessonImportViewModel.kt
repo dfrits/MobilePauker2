@@ -15,6 +15,7 @@ import com.daniel.mobilepauker2.R
 import com.daniel.mobilepauker2.core.BaseViewModel
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.core.PaukerManager
+import com.daniel.mobilepauker2.core.model.ShortcutReceiverHelper
 import com.daniel.mobilepauker2.core.model.xmlsupport.FlashCardXMLPullFeedParser
 import com.daniel.mobilepauker2.dropbox.SyncDialog
 import com.daniel.mobilepauker2.main.ShortcutReceiver
@@ -151,7 +152,7 @@ class LessonImportViewModel(
         if (file.isFile) {
             if (modelManager.deleteLesson(context, file)) {
                 readFlashCardFiles()
-                ShortcutReceiver.deleteShortcut(context, filename)
+                ShortcutReceiverHelper().deleteShortcut(context, filename)
                 if (fileNamesLiveData.value?.contains(paukerManager.currentFileName) == true) {
                     paukerAndModelManager.setupNewApplicationLesson()
                     paukerManager.isSaveRequired = false
@@ -208,14 +209,14 @@ class LessonImportViewModel(
 
     fun createShortCut(position: Int) {
         fileNamesLiveData.value?.get(position)?.let {
-            ShortcutReceiver.createShortcut(context, it)
+            ShortcutReceiverHelper().createShortcut(context, it)
         }
     }
 
 
     fun deleteShortCut(position: Int) {
         fileNamesLiveData.value?.get(position)?.let {
-            ShortcutReceiver.deleteShortcut(context, it)
+            ShortcutReceiverHelper().deleteShortcut(context, it)
         }
     }
 }

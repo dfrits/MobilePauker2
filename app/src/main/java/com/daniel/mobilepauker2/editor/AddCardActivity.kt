@@ -71,7 +71,8 @@ class AddCardActivity : AEditCardActivity(), KoinComponent {
             )
             sideA.setText("")
             sideB.setText("")
-            PaukerManager.instance().isSaveRequired = true
+            val paukerManager = get<PaukerManager>()
+            paukerManager.isSaveRequired = true
             sideA.requestFocus()
             sideA.setSelection(0, 0)
             if (checkBox != null && !checkBox!!.isChecked) finish()

@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.daniel.mobilepauker2.core.PaukerManager
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * Created by Daniel on 05.03.2018.
@@ -18,7 +20,7 @@ import com.daniel.mobilepauker2.core.PaukerManager
 class LessonImportAdapter(
         context: Context,
         private val data: List<String>
-) : ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, data) {
+) : ArrayAdapter<String>(context, android.R.layout.simple_list_item_1, data), KoinComponent {
     override fun getView(
         position: Int,
         convertView: View?,
@@ -31,7 +33,8 @@ class LessonImportAdapter(
             view.setBackgroundColor(Color.TRANSPARENT)
         }
         val tv = view.findViewById<TextView>(android.R.id.text1)
-        val name: String? = PaukerManager.instance().getReadableFileName(data[position])
+        val paukerManager = get<PaukerManager>()
+        val name: String? = paukerManager.getReadableFileName(data[position])
         tv.text = name
         return view
     }
