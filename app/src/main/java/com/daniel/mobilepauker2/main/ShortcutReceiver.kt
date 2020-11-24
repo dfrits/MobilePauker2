@@ -17,22 +17,24 @@ import android.view.View
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
-import com.daniel.mobilepauker2.learning.LearnCardsActivity
-import com.daniel.mobilepauker2.dropbox.SyncDialog
-import com.daniel.mobilepauker2.settings.SettingsManager
-import com.daniel.mobilepauker2.settings.SettingsManager.Keys
-import com.daniel.mobilepauker2.core.model.ui.TextDrawable
 import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerManager
+import com.daniel.mobilepauker2.core.model.ui.TextDrawable
+import com.daniel.mobilepauker2.dropbox.SyncDialog
+import com.daniel.mobilepauker2.learning.LearnCardsActivity
 import com.daniel.mobilepauker2.pauker_native.ErrorReporter
 import com.daniel.mobilepauker2.pauker_native.Log
 import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
+import com.daniel.mobilepauker2.settings.SettingsManager
+import com.daniel.mobilepauker2.settings.SettingsManager.Keys
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.io.IOException
 
 @Suppress("UNUSED_PARAMETER")
-class ShortcutReceiver : Activity() {
-    private val paukerManager: PaukerManager = PaukerManager.instance()
+class ShortcutReceiver : Activity(), KoinComponent {
+    private val paukerManager: PaukerManager = get()
     private val context: Context = this
     lateinit var paukerAndModelManager: PaukerAndModelManager
 
@@ -53,23 +55,23 @@ class ShortcutReceiver : Activity() {
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
             if (resultCode == RESULT_OK) {
                 Log.d(
-                    "ShortcutReceiver::onActivityResult",
-                    "File wurde aktualisiert"
+                        "ShortcutReceiver::onActivityResult",
+                        "File wurde aktualisiert"
                 )
             } else {
                 Log.d(
-                    "ShortcutReceiver::onActivityResult",
-                    "File wurde nicht aktualisiert"
+                        "ShortcutReceiver::onActivityResult",
+                        "File wurde nicht aktualisiert"
                 )
             }
             val filename =
-                intent.getStringExtra(Constants.SHORTCUT_EXTRA)
+                    intent.getStringExtra(Constants.SHORTCUT_EXTRA)
             if (filename != null) {
                 openLesson(filename)
             } else {
                 Log.d(
-                    "ShortcutReceiver::onActivityResult",
-                    "Filename is null"
+                        "ShortcutReceiver::onActivityResult",
+                        "Filename is null"
                 )
             }
         }
@@ -82,34 +84,34 @@ class ShortcutReceiver : Activity() {
     private fun openLesson(shortcutIntent: Intent) {
         if (LearnCardsActivity.isLearningRunning) {
             PaukerManager.showToast(
-                context as Activity,
-                R.string.shortcut_open_error_learning_running,
-                Toast.LENGTH_SHORT
+                    context as Activity,
+                    R.string.shortcut_open_error_learning_running,
+                    Toast.LENGTH_SHORT
             )
             return
         }
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             PaukerManager.showToast(
-                context as Activity,
-                R.string.shortcut_open_error_permission,
-                Toast.LENGTH_SHORT
+                    context as Activity,
+                    R.string.shortcut_open_error_permission,
+                    Toast.LENGTH_SHORT
             )
             return
         }
         val filename =
-            shortcutIntent.getStringExtra(Constants.SHORTCUT_EXTRA) ?: return
+                shortcutIntent.getStringExtra(Constants.SHORTCUT_EXTRA) ?: return
         if (SettingsManager.instance().getBoolPreference(context, Keys.AUTO_DOWNLOAD)) {
             Log.d(
-                "ShortcutReceiver::openLesson",
-                "Check for newer version on DB"
+                    "ShortcutReceiver::openLesson",
+                    "Check for newer version on DB"
             )
             val accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
+                    .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
             val syncIntent = Intent(context, SyncDialog::class.java)
             try {
                 syncIntent.putExtra(
-                    SyncDialog.FILES,
-                    paukerManager.getFilePath(context, filename)
+                        SyncDialog.FILES,
+                        paukerManager.getFilePath(context, filename)
                 )
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -117,8 +119,8 @@ class ShortcutReceiver : Activity() {
             syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
             syncIntent.action = SyncDialog.SYNC_FILE_ACTION
             startActivityForResult(
-                syncIntent,
-                Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN
+                    syncIntent,
+                    Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN
             )
         } else {
             openLesson(filename)
@@ -141,132 +143,14 @@ class ShortcutReceiver : Activity() {
             finish()
         } catch (e: IOException) {
             PaukerManager.showToast(
-                context as Activity,
-                getString(R.string.error_reading_from_xml),
-                Toast.LENGTH_SHORT
+                    context as Activity,
+                    getString(R.string.error_reading_from_xml),
+                    Toast.LENGTH_SHORT
             )
             ErrorReporter.instance()
-                .addCustomData("ImportThread", "IOException?")
+                    .addCustomData("ImportThread", "IOException?")
         }
     }
 
     fun cancelClicked(view: View?) {}
-
-    companion object {
-        /**
-         * Erstellt einen Shortcut und fügt diesen hinzu.
-         * @param filename Name der Lektion, von der ein Shortcut erstellt werden soll
-         */
-        fun createShortcut(context: Context, filename: String) {
-            val shortcutManager = context.getSystemService(
-                ShortcutManager::class.java
-            )
-            if (shortcutManager != null) {
-                if (shortcutManager.dynamicShortcuts.size == 5) {
-                    Log.d(
-                        "LessonImportActivity::createShortcut",
-                        "already 5 shortcuts created"
-                    )
-                    PaukerManager.showToast(
-                        context as Activity,
-                        R.string.shortcut_create_error,
-                        Toast.LENGTH_LONG
-                    )
-                } else {
-                    val intent = Intent(context, ShortcutReceiver::class.java)
-                    intent.action = Constants.SHORTCUT_ACTION
-                    intent.putExtra(
-                        Constants.SHORTCUT_EXTRA,
-                        filename
-                    )
-                    val icon =
-                        TextDrawable(filename[0].toString())
-                    icon.setBold(true)
-                    val readableName = PaukerManager.instance().getReadableFileName(filename)
-                    if (readableName != null) {
-                        val shortcut = ShortcutInfo.Builder(context, filename)
-                            .setShortLabel(readableName)
-                            .setIcon(Icon.createWithBitmap(drawableToBitmap(icon)))
-                            .setIntent(intent)
-                            .build()
-                        shortcutManager.addDynamicShortcuts(listOf(shortcut))
-                        PaukerManager.showToast(
-                            context as Activity,
-                            R.string.shortcut_added,
-                            Toast.LENGTH_SHORT
-                        )
-                        Log.d(
-                            "LessonImportActivity::createShortcut",
-                            "Shortcut created"
-                        )
-                    } else {
-                        PaukerManager.showToast(
-                            context as Activity,
-                            R.string.shortcut_create_error,
-                            Toast.LENGTH_SHORT
-                        )
-                        Log.d(
-                            "LessonImportActivity::createShortcut",
-                            "Shortcut not created"
-                        )
-                    }
-                }
-            }
-        }
-
-        fun deleteShortcut(context: Context, ID: String) {
-            val shortcutManager = context.getSystemService(
-                ShortcutManager::class.java
-            )
-            if (shortcutManager != null) {
-                shortcutManager.removeDynamicShortcuts(listOf(ID))
-                PaukerManager.showToast(
-                    context as Activity,
-                    R.string.shortcut_removed,
-                    Toast.LENGTH_SHORT
-                )
-                Log.d(
-                    "LessonImportActivity::deleteShortcut",
-                    "Shortcut deleted"
-                )
-            }
-        }
-
-        /**
-         * Wandelt das Drawable in ein Bitmap um.
-         * @param drawable TextDrawable
-         * @return Bitmap
-         */
-        private fun drawableToBitmap(drawable: Drawable): Bitmap {
-            val bitmap: Bitmap = if (drawable.intrinsicWidth <= 0 || drawable.intrinsicHeight <= 0) {
-                Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888)
-            } else {
-                Bitmap.createBitmap(
-                    drawable.intrinsicWidth,
-                    drawable.intrinsicHeight,
-                    Bitmap.Config.ARGB_8888
-                )
-            }
-            val canvas = Canvas(bitmap)
-            drawable.setBounds(0, 0, canvas.width, canvas.height)
-            drawable.draw(canvas)
-            return bitmap
-        }
-
-        fun hasShortcut(context: Context, ID: String): Boolean {
-            val shortcutManager = context.getSystemService(
-                ShortcutManager::class.java
-            )
-            if (shortcutManager != null) {
-                val shortcuts =
-                    shortcutManager.dynamicShortcuts
-                for (info in shortcuts) {
-                    if (info.id == ID) {
-                        return true
-                    }
-                }
-            }
-            return false
-        }
-    }
 }

@@ -6,6 +6,8 @@ import com.daniel.mobilepauker2.core.PaukerManager
 import com.dropbox.core.DbxException
 import com.dropbox.core.v2.DbxClientV2
 import com.dropbox.core.v2.files.FileMetadata
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -17,7 +19,7 @@ import java.util.*
 class DownloadFileTask internal constructor(
     private val mDbxClient: DbxClientV2?,
     private val mCallback: Callback
-) : AsyncTask<FileMetadata, FileMetadata, List<File>>() {
+) : AsyncTask<FileMetadata, FileMetadata, List<File>>(), KoinComponent {
 
     override fun onPostExecute(result: List<File>) {
         super.onPostExecute(result)
@@ -40,9 +42,10 @@ class DownloadFileTask internal constructor(
             val list: MutableList<File> =
                 ArrayList()
             for (metadata in params) {
+                val paukerManager = get<PaukerManager>()
                 val path = File(
                     Environment.getExternalStorageDirectory()
-                        .toString() + PaukerManager.instance().applicationDataDirectory
+                        .toString() + paukerManager.applicationDataDirectory
                 )
                 val file = File(path, metadata.name)
                 // Make sure the Downloads directory exists.

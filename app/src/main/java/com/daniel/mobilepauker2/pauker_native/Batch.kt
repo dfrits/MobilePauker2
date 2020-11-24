@@ -9,11 +9,11 @@ import java.util.logging.Logger
  * a batch is part of a lesson
  * @author Ronny.Standtke@gmx.net
  */
-open class Batch internal constructor(cards: MutableList<Card>?) {
+open class Batch internal constructor(cards: MutableList<Card> = mutableListOf()) {
     /**
      * the list of all cards in this batch
      */
-    var cards: MutableList<Card>? = null
+    var cards: MutableList<Card> = mutableListOf()
 
     private abstract class AbstractCardComparator<Card> : Comparator<Card> {
         private var ascending = true
@@ -48,7 +48,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
      * @return the card at index <CODE>i</CODE>
      */
     fun getCard(index: Int): Card? {
-        return cards?.let { it[index] }
+        return cards.let { it[index] }
     }
 
     /**
@@ -56,7 +56,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
      * @param card the new card
      */
     open fun addCard(card: Card) {
-        cards?.add(card)
+        cards.add(card)
         card.isLearned = false
     }
 
@@ -66,7 +66,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
      * @param card  the new card
      */
     fun addCard(index: Int, card: Card) {
-        cards?.add(index, card)
+        cards.add(index, card)
         card.isLearned = false
     }
 
@@ -90,7 +90,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
         // will break!
         // ("real" batches dont have the current search info)
         // remove card
-        return cards?.remove(card) ?: false
+        return cards.remove(card) ?: false
     }
 
     /**
@@ -101,7 +101,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
     open fun removeCard(index: Int): Card? { // save current search hit
         savedSearchHit = getCurrentSearchHit()
         // remove card
-        val card = cards?.removeAt(index)
+        val card = cards.removeAt(index)
         // re-fill searchHits list (all indices are potentially wrong now)
         search(searchPattern, matchCase, searchSide)
         // restore current search hit
@@ -115,7 +115,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
      * @return the index of the card
      */
     fun indexOf(card: Card?): Int {
-        return cards?.indexOf(card) ?: -1
+        return cards.indexOf(card) ?: -1
     }
 
     /**
@@ -187,7 +187,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
         if (searchPattern.isNullOrEmpty()) {
             return false
         }
-        cards?.let {
+        cards.let {
             for (card in it) {
                 searchHits.addAll(card.search(searchSide, searchPattern, matchCase))
             }
@@ -309,9 +309,7 @@ open class Batch internal constructor(cards: MutableList<Card>?) {
      * constructs a new Batch with all the cards in <CODE>cards</CODE>
      */
     init {
-        if (cards == null) {
-            this.cards = ArrayList()
-        } else {
+        if (cards.isNotEmpty()) {
             this.cards = cards
         }
         searchHits = LinkedList()

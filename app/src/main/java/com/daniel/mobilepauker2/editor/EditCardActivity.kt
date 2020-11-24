@@ -10,11 +10,13 @@ import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.pauker_native.Font
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.Log
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * Created by dfritsch on 22.03.2018.
  */
-class EditCardActivity : AEditCardActivity() {
+class EditCardActivity : AEditCardActivity(), KoinComponent {
     private var cardPosition = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +28,8 @@ class EditCardActivity : AEditCardActivity() {
                 "Card Position null $cardPosition"
             )
         } else {
-            flashCard = ModelManager.instance().getCard(cardPosition)
+            val modelManager = get<ModelManager>()
+            flashCard = modelManager.getCard(cardPosition)
         }
         if (flashCard == null) {
             Log.w(
@@ -80,13 +83,15 @@ class EditCardActivity : AEditCardActivity() {
             return
         }
         if (cardPosition >= 0) {
-            ModelManager.instance().editCard(
+            val modelManager = get<ModelManager>()
+            modelManager.editCard(
                 cardPosition,
                 sideAEditText!!.text.toString(),
                 sideBEditText!!.text.toString()
             )
             if (detectChanges()) {
-                PaukerManager.instance().isSaveRequired = true
+                val paukerManager = get<PaukerManager>()
+                paukerManager.isSaveRequired = true
                 setResult(Activity.RESULT_OK)
             }
             finish()

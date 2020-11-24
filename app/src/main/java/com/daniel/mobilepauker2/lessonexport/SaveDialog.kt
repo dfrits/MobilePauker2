@@ -26,6 +26,8 @@ import com.daniel.mobilepauker2.settings.SettingsManager
 import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import com.daniel.mobilepauker2.core.Constants
 import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.io.File
 
 /**
@@ -34,7 +36,7 @@ import java.io.File
  * hs-augsburg
  */
 @Suppress("UNUSED_PARAMETER")
-class SaveDialog : Activity() {
+class SaveDialog : Activity(), KoinComponent {
     private val context: Context = this
     lateinit var paukerAndModelManager: PaukerAndModelManager
 
@@ -45,7 +47,8 @@ class SaveDialog : Activity() {
         progressBar.visibility = View.VISIBLE
         val title = findViewById<TextView>(R.id.pTitle)
         title.setText(R.string.saving_title)
-        if (PaukerManager.instance().readableFileName == Constants.DEFAULT_FILE_NAME) {
+        val paukerManager = get<PaukerManager>()
+        if (paukerManager.readableFileName == Constants.DEFAULT_FILE_NAME) {
             openDialog()
         } else {
             saveLesson()
@@ -65,7 +68,7 @@ class SaveDialog : Activity() {
         val textField = view.findViewById<EditText>(R.id.eTGiveLessonName)
         val builder =
             AlertDialog.Builder(context, R.style.NamingDialogTheme)
-        val paukerManager: PaukerManager = PaukerManager.instance()
+        val paukerManager = get<PaukerManager>()
         builder.setView(view)
             .setPositiveButton(R.string.ok) { dialog, _ ->
                 dialog.dismiss()
@@ -151,9 +154,10 @@ class SaveDialog : Activity() {
             .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         val intent = Intent(context, SyncDialog::class.java)
         intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken)
-        val path: String? = PaukerManager.instance().fileAbsolutePath
+        val paukerManager = get<PaukerManager>()
+        val path: String? = paukerManager.fileAbsolutePath
         val file =
-            path?.let { File(it) } ?: PaukerManager.instance().filePath
+            path?.let { File(it) } ?: paukerManager.filePath
         intent.putExtra(SyncDialog.FILES, file)
         intent.action = SyncDialog.UPLOAD_FILE_ACTION
         startActivity(intent)

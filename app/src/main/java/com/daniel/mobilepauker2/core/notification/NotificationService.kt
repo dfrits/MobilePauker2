@@ -8,10 +8,12 @@ import androidx.core.app.JobIntentService
 import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.core.model.xmlsupport.FlashCardXMLPullFeedParser
 import com.daniel.mobilepauker2.pauker_native.Log
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.io.IOException
 import java.net.URI
 
-class NotificationService : JobIntentService() {
+class NotificationService : JobIntentService(), KoinComponent {
 
     override fun onHandleWork(intent: Intent) {
         setAlarm()
@@ -38,7 +40,7 @@ class NotificationService : JobIntentService() {
 
     private val newestExpireTime: Long
         get() {
-            val paukerManager: PaukerManager = PaukerManager.instance()
+            val paukerManager: PaukerManager = get()
             val files = try {
                 paukerManager.listFiles(this)
             } catch (e: SecurityException) {

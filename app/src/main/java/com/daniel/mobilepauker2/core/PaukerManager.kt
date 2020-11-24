@@ -195,10 +195,6 @@ class PaukerManager() {
     }
 
     companion object {
-        fun instance(): PaukerManager {
-            return PaukerManager()
-        }
-
         fun showToast(context: Activity, text: String?, duration: Int) {
             context.runOnUiThread {
                 if (text != null && text.isNotEmpty()) {
