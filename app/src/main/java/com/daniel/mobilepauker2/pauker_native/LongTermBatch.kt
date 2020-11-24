@@ -13,7 +13,7 @@ import kotlin.math.pow
  * @author Ronny.Standtke@gmx.net
  */
 @Suppress("unused")
-class LongTermBatch(private val batchNumber: Int) : Batch(null) {
+class LongTermBatch(private val batchNumber: Int) : Batch() {
     val expiredCards: MutableCollection<Card>
     /**
      * returns the expiration time of this batch
@@ -28,7 +28,7 @@ class LongTermBatch(private val batchNumber: Int) : Batch(null) {
     override fun addCard(card: Card) {
         card.longTermBatchNumber = batchNumber
         card.expirationTime = expirationTime
-        cards?.add(card)
+        cards.add(card)
     }
 
     /**
@@ -49,7 +49,7 @@ class LongTermBatch(private val batchNumber: Int) : Batch(null) {
             val learnedCards: MutableCollection<Card> =
                 ArrayList()
             val currentTime = System.currentTimeMillis()
-            for (card in cards!!) {
+            for (card in cards) {
                 val learnedTime = card.learnedTimestamp
                 val diff = currentTime - learnedTime
                 if (diff < expirationTime) {
@@ -96,7 +96,7 @@ class LongTermBatch(private val batchNumber: Int) : Batch(null) {
     fun refreshExpiration() {
         expiredCards.clear()
         val currentTime = System.currentTimeMillis()
-        for (card in cards!!) {
+        for (card in cards) {
             val learnedTime = card.learnedTimestamp
             val diff = currentTime - learnedTime
             if (diff > expirationTime) {

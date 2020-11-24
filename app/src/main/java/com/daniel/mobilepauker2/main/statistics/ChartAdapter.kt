@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.daniel.mobilepauker2.R
-import com.daniel.mobilepauker2.core.PaukerManager
-import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.main.statistics.ChartBar.ChartBarCallback
+import com.daniel.mobilepauker2.pauker_native.ModelManager
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import java.util.*
@@ -22,19 +21,15 @@ import kotlin.math.max
  * hs-augsburg
  */
 class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?) :
-    RecyclerView.Adapter<ChartAdapter.ViewHolder>(), KoinComponent {
+        RecyclerView.Adapter<ChartAdapter.ViewHolder>(), KoinComponent {
     private val modelManager: ModelManager = get()
     private val batchStatistics: List<BatchStatistics?>?
     private val callback: ChartAdapterCallback?
     private val lessonSize: Int
     private val chartBars: List<ChartBar>
 
-    override fun onCreateViewHolder(
-        parent: ViewGroup,
-        position: Int
-    ): ViewHolder {
-        val v =
-            LayoutInflater.from(context).inflate(R.layout.chart_bar, parent, false)
+    override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
+        val v = LayoutInflater.from(context).inflate(R.layout.chart_bar, parent, false)
         val titel: String
         val abgl: Int
         val ungel: Int
@@ -72,8 +67,8 @@ class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?
     }
 
     override fun onBindViewHolder(
-        holder: ViewHolder,
-        position: Int
+            holder: ViewHolder,
+            position: Int
     ) {
     }
 
@@ -86,7 +81,7 @@ class ChartAdapter(private val context: Context, callback: ChartAdapterCallback?
     }
 
     class ViewHolder(val view: View) :
-        RecyclerView.ViewHolder(view)
+            RecyclerView.ViewHolder(view)
 
     interface ChartAdapterCallback {
         fun onClick(position: Int)

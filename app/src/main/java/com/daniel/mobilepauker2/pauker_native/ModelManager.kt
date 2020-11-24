@@ -827,13 +827,6 @@ class ModelManager(val settingsManager: SettingsManager) {
         }
     }
 
-    companion object{
-
-        fun instance(): ModelManager {
-            return ModelManager(SettingsManager())
-        }
-    }
-
     /**
      * the learning phases
      */

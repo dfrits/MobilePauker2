@@ -191,7 +191,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
 
     private fun setupLesson(flashCardList: List<FlashCard>?, description: String?): Lesson {
         val newLesson = Lesson()
-        val summaryBatch: Batch? = newLesson.summaryBatch
+        val summaryBatch: Batch = newLesson.summaryBatch
         newLesson.description = description ?: ""
 
         for (i in flashCardList!!.indices) {
@@ -232,7 +232,7 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                 }
 
             batch.addCard(flashCard)
-            summaryBatch!!.addCard(flashCard)
+            summaryBatch.addCard(flashCard)
         }
         newLesson.refreshExpiration()
         printLessonToDebug(newLesson)

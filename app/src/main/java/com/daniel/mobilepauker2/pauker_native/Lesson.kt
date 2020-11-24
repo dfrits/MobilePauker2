@@ -16,7 +16,7 @@ import java.util.logging.Logger
 class Lesson {
     var description: String = ""
     val summaryBatch: SummaryBatch
-    val unlearnedBatch: Batch = Batch(null)
+    val unlearnedBatch: Batch = Batch()
     val ultraShortTermList: MutableList<Card>
     val shortTermList: MutableList<Card>
     internal val longTermBatches: MutableList<LongTermBatch>
