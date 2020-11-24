@@ -6,8 +6,11 @@ import androidx.appcompat.widget.AppCompatEditText
 import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.pauker_native.CardSide
 import com.daniel.mobilepauker2.pauker_native.Font
+import org.koin.core.Koin
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class MPEditText : AppCompatEditText {
+class MPEditText : AppCompatEditText, KoinComponent {
     constructor(context: Context?) : super(context)
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -24,6 +27,7 @@ class MPEditText : AppCompatEditText {
     }
 
     fun setFont(font: Font?) {
-        ModelManager.instance().setFont(font, this)
+        val modelManager = get<ModelManager>()
+        modelManager.setFont(font, this)
     }
 }

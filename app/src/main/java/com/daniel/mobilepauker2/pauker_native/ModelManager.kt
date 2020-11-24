@@ -17,27 +17,20 @@
  */
 package com.daniel.mobilepauker2.pauker_native
 
-import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
-import android.os.Environment
-import android.text.format.DateFormat
 import android.widget.TextView
-import android.widget.Toast
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
 import com.daniel.mobilepauker2.core.Constants
-import com.daniel.mobilepauker2.settings.SettingsManager.Keys
-import com.daniel.mobilepauker2.core.model.xmlsupport.FlashCardXMLPullFeedParser
-import com.daniel.mobilepauker2.settings.SettingsManager
 import com.daniel.mobilepauker2.main.statistics.BatchStatistics
+import com.daniel.mobilepauker2.settings.SettingsManager
+import com.daniel.mobilepauker2.settings.SettingsManager.Keys
 import java.io.BufferedReader
 import java.io.File
 import java.io.IOException
 import java.io.InputStreamReader
-import java.net.MalformedURLException
 import java.util.*
 
 /**
@@ -58,8 +51,7 @@ class ModelManager(val settingsManager: SettingsManager) {
     val currentPack: MutableList<FlashCard?> = ArrayList()
     var lesson: Lesson? = null
     private var mCurrentCard: FlashCard? = FlashCard()
-    var learningPhase: LearningPhase? =
-            LearningPhase.NOTHING
+    var learningPhase: LearningPhase? = LearningPhase.NOTHING
 
     private fun setupCurrentPack(context: Context) {
         var cardIterator: Iterator<Card?>? =

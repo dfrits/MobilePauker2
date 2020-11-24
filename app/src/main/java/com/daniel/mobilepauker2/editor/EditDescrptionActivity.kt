@@ -3,9 +3,11 @@ package com.daniel.mobilepauker2.editor
 import android.os.Bundle
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
+import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.pauker_native.ModelManager
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * Created by Daniel on 06.03.2018.
@@ -14,9 +16,9 @@ import com.daniel.mobilepauker2.pauker_native.ModelManager
  * Daniel Fritsch
  * hs-augsburg
  */
-class EditDescrptionActivity : AppCompatActivity() {
+class EditDescrptionActivity : AppCompatActivity(), KoinComponent {
     private var editText: EditText? = null
-    private val modelManager: ModelManager? = ModelManager.instance()
+    private val modelManager: ModelManager? = get()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

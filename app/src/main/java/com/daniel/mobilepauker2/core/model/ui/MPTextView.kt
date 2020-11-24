@@ -6,8 +6,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.daniel.mobilepauker2.pauker_native.ModelManager
 import com.daniel.mobilepauker2.pauker_native.CardSide
 import com.daniel.mobilepauker2.pauker_native.Font
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class MPTextView : AppCompatTextView {
+class MPTextView : AppCompatTextView, KoinComponent {
 
     constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
@@ -25,6 +27,7 @@ class MPTextView : AppCompatTextView {
     }
 
     fun setFont(font: Font?) {
-        ModelManager.instance().setFont(font, this)
+        val modelManager = get<ModelManager>()
+        modelManager.setFont(font, this)
     }
 }

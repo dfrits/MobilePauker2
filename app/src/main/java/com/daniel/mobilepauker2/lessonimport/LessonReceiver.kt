@@ -22,10 +22,11 @@ import com.daniel.mobilepauker2.pauker_native.Log
 import com.daniel.mobilepauker2.pauker_native.PaukerAndModelManager
 import org.koin.android.viewmodel.ext.android.viewModel
 import org.koin.core.KoinComponent
+import org.koin.core.get
 import java.io.*
 
 @Suppress("UNUSED_PARAMETER")
-class LessonReceiver : BaseActivity() {
+class LessonReceiver : BaseActivity(), KoinComponent {
     private val context: Activity = this
     override val baseViewModel: BaseViewModel by viewModel()
     lateinit var paukerAndModelManager: PaukerAndModelManager
@@ -78,7 +79,8 @@ class LessonReceiver : BaseActivity() {
                                     "LessonReceiver::importLesson",
                                     "import success"
                             )
-                            ModelManager.instance().addLesson(context, localFile)
+                            val modelManager = get<ModelManager>()
+                            modelManager.addLesson(context, localFile)
                             Log.d(
                                     "LessonReceiver::importLesson",
                                     "lesson added"

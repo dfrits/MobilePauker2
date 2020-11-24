@@ -20,10 +20,11 @@ package com.daniel.mobilepauker2.pauker_native
 import android.content.Context
 import android.database.Cursor
 import android.database.CursorIndexOutOfBoundsException
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class CardPackRamAdapter : CardPackAdapter() {
-    private val modelManager: ModelManager =
-        ModelManager.instance()
+class CardPackRamAdapter : CardPackAdapter(), KoinComponent {
+    private val modelManager: ModelManager = get()
     private val cardCursor: FlashCardCursor = FlashCardCursor()
     override fun open(): CardPackAdapter {
         return this
@@ -34,10 +35,10 @@ class CardPackRamAdapter : CardPackAdapter() {
     }
 
     override fun createFlashCard(
-        sideA: String?,
-        sideB: String?,
-        index: Int,
-        learnStatus: Boolean
+            sideA: String?,
+            sideB: String?,
+            index: Int,
+            learnStatus: Boolean
     ): Long {
         val columnValues = arrayOfNulls<String>(5)
         columnValues[0] = "1"
@@ -65,8 +66,8 @@ class CardPackRamAdapter : CardPackAdapter() {
             throw CursorIndexOutOfBoundsException("After last row.")
         }
         Log.d(
-            "CardPackRamAdapter::deleteFlashCard",
-            "CardCount - " + cardCursor.count
+                "CardPackRamAdapter::deleteFlashCard",
+                "CardCount - " + cardCursor.count
         )
         if (cardCursor.isFirst) {
             requestFirst = true
@@ -101,11 +102,11 @@ class CardPackRamAdapter : CardPackAdapter() {
         get() = cardCursor.isLast
 
     override fun updateFlashCard(
-        cardId: Long,
-        sideA: String?,
-        sideB: String?,
-        index: Int,
-        learnStatus: Boolean
+            cardId: Long,
+            sideA: String?,
+            sideB: String?,
+            index: Int,
+            learnStatus: Boolean
     ): Boolean {
         return false
     }

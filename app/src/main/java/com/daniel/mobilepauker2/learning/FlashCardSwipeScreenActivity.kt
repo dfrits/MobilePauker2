@@ -28,18 +28,20 @@ import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.daniel.mobilepauker2.pauker_native.*
 import com.daniel.mobilepauker2.settings.SettingsManager
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
-    LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, KoinComponent {
     //TODO Weg und dafür Viewmodel
 
     protected val settingsManager: SettingsManager = SettingsManager.instance()
-    protected val modelManager: ModelManager = ModelManager.instance()
+    protected val modelManager: ModelManager = get()
     protected val INSTANCESTATE_CURSOR_POSITION = "INSTANCESTATE_CURSOR_POSITION"
     private val context: Context = this
     protected var mCardCursor: Cursor? = null
     protected var currentCard =
-        FlashCard()
+            FlashCard()
     protected var gestureDetector: GestureDetector? = null
     protected var mCardPackAdapter: CardPackRamAdapter? = null
     protected var mActivitySetupOk = false
@@ -49,18 +51,18 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mCardPackAdapter =
-            CardPackRamAdapter()
+                CardPackRamAdapter()
         // Setup the cursor
         Log.d(
-            "FlashCardSwipeScreenActivity::onCreate",
-            "Seting up cursor"
+                "FlashCardSwipeScreenActivity::onCreate",
+                "Seting up cursor"
         )
         LOADER_ID = 1
         loaderManager.initLoader(LOADER_ID, null, this)
         // Setup Gesture detection
         Log.d(
-            "FlashCardSwipeScreenActivity::onCreate",
-            "Setting up gesture detection"
+                "FlashCardSwipeScreenActivity::onCreate",
+                "Setting up gesture detection"
         )
         gestureDetector = GestureDetector(context, MyGestureDetector())
         mActivitySetupOk = true
@@ -73,8 +75,8 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         Log.d(
-            "FlashCardSwipeScreenActivity::onRestoreInstanceState",
-            "Entry"
+                "FlashCardSwipeScreenActivity::onRestoreInstanceState",
+                "Entry"
         )
         mSavedCursorPosition = savedInstanceState.getInt(INSTANCESTATE_CURSOR_POSITION)
         super.onRestoreInstanceState(savedInstanceState)
@@ -93,8 +95,8 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
         if (mCardCursor == null || mCardCursor!!.count <= 0) // no cards available
         {
             Log.d(
-                "FlashCardSwipeScreenActivity::onCreate",
-                "No cards available so stopping"
+                    "FlashCardSwipeScreenActivity::onCreate",
+                    "No cards available so stopping"
             )
             mActivitySetupOk = false
             finish()
@@ -116,7 +118,7 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
      */
     protected fun reloadStack() {
         mCardPackAdapter =
-            CardPackRamAdapter()
+                CardPackRamAdapter()
         mSavedCursorPosition = -1
         loaderManager.destroyLoader(LOADER_ID)
         refreshCursor()
@@ -133,8 +135,8 @@ abstract class FlashCardSwipeScreenActivity : AppCompatActivity(),
             val cursor = mCardCursor as FlashCardCursor
             if (modelManager.currentBatchSize == 0) {
                 Log.d(
-                    "FlashCArdCursor::requery",
-                    "Warning - cursor requery on empty card pack"
+                        "FlashCArdCursor::requery",
+                        "Warning - cursor requery on empty card pack"
                 )
             } else {
                 cursor.moveToFirst()

@@ -3,33 +3,35 @@ package com.daniel.mobilepauker2.core.model.xmlsupport
 import android.util.Xml
 import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.pauker_native.*
+import org.koin.core.KoinComponent
+import org.koin.core.get
 import org.xmlpull.v1.XmlSerializer
 import java.io.*
 import java.util.zip.GZIPOutputStream
 
-object FlashCardXMLStreamWriter {
+object FlashCardXMLStreamWriter : KoinComponent {
     lateinit var paukerAndModelManager: PaukerAndModelManager
 
     //TODO This sould de in a class of its own or in the Flash card xml stream writer...
     @Throws(SecurityException::class)
     fun saveLesson() {
-        val modelManager: ModelManager = ModelManager.instance()
+        val modelManager: ModelManager = get()
         val paukerManager: PaukerManager = PaukerManager.instance()
         if (paukerManager.isLessonNotNew) { // Neuen temporären Pfad, damit alte erstmal bestehen bleibt
             val name = "neu_" + paukerManager.filePath.name
             val path = paukerManager.filePath.parent
             val newxmlfile = File(path, name)
             Log.d(
-                "ModelManager::saveLesson",
-                "Filename = " + paukerManager.currentFileName
+                    "ModelManager::saveLesson",
+                    "Filename = " + paukerManager.currentFileName
             )
             Log.d(
-                "ModelManager::saveLesson",
-                "Directory= " + paukerManager.fileAbsolutePath
+                    "ModelManager::saveLesson",
+                    "Directory= " + paukerManager.fileAbsolutePath
             )
             Log.d(
-                "ModelManager::saveLesson",
-                "Directory= " + newxmlfile.absolutePath
+                    "ModelManager::saveLesson",
+                    "Directory= " + newxmlfile.absolutePath
             )
             val gzipOutputStream: GZIPOutputStream
             try {
@@ -52,14 +54,14 @@ object FlashCardXMLStreamWriter {
                 gzipOutputStream.close()
             } catch (e: FileNotFoundException) {
                 Log.e(
-                    "ModelManager::saveLesson",
-                    "can't create FileOutputStream"
+                        "ModelManager::saveLesson",
+                        "can't create FileOutputStream"
                 )
                 throw RuntimeException(e)
             } catch (e: IOException) {
                 Log.e(
-                    "ModelManager::saveLesson",
-                    "exception in saveLesson() method"
+                        "ModelManager::saveLesson",
+                        "exception in saveLesson() method"
                 )
                 throw RuntimeException(e)
             }
@@ -70,8 +72,8 @@ object FlashCardXMLStreamWriter {
         val serializer = Xml.newSerializer()
         if (serializer == null) {
             Log.e(
-                "FlashCardXMLStreamWriter::writeXML",
-                "Serializer is null"
+                    "FlashCardXMLStreamWriter::writeXML",
+                    "Serializer is null"
             )
             return false // TODO error code
         }
@@ -92,8 +94,8 @@ object FlashCardXMLStreamWriter {
                 for (card in it) {
                     if (!serializeCard(card, serializer)) {
                         Log.w(
-                            "FlashCardXMLStreamWriter::writeXML",
-                            "Failed to serialise card"
+                                "FlashCardXMLStreamWriter::writeXML",
+                                "Failed to serialise card"
                         )
                     }
                 }
@@ -113,8 +115,8 @@ object FlashCardXMLStreamWriter {
                     for (card in longTermBatch.cards!!) {
                         if (!serializeCard(card, serializer)) {
                             Log.w(
-                                "FlashCardXMLStreamWriter::writeXML",
-                                "Failed to serialise card"
+                                    "FlashCardXMLStreamWriter::writeXML",
+                                    "Failed to serialise card"
                             )
                         }
                     }
@@ -129,8 +131,8 @@ object FlashCardXMLStreamWriter {
             true
         } catch (e: Exception) {
             Log.e(
-                "FlashCardXMLStreamWriter::writeXML",
-                "Exception caught"
+                    "FlashCardXMLStreamWriter::writeXML",
+                    "Exception caught"
             )
             false
         }
@@ -144,8 +146,8 @@ object FlashCardXMLStreamWriter {
             // Be ultra safe as if anything goes wrong here we can lose the file on the sdcard
             // as the xml may not be well formed
             Log.e(
-                "FlashCardXMLStreamWriter::serializeCard",
-                "Card not valid"
+                    "FlashCardXMLStreamWriter::serializeCard",
+                    "Card not valid"
             )
             return false
         }
@@ -159,30 +161,30 @@ object FlashCardXMLStreamWriter {
             }
             try {
                 serializer.attribute(
-                    "",
-                    "Orientation",
-                    card.frontSide.orientation?.orientation.toString()
+                        "",
+                        "Orientation",
+                        card.frontSide.orientation?.orientation.toString()
                 )
                 serializer.attribute("", "RepeatByTyping", card.isRepeatedByTyping.toString())
             } catch (e: IOException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Frontsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Frontsideoptions!"
                 )
             } catch (e: IllegalArgumentException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Frontsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Frontsideoptions!"
                 )
             } catch (e: IllegalStateException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Frontsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Frontsideoptions!"
                 )
             } catch (e: NullPointerException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Frontsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Frontsideoptions!"
                 )
             }
             serializer.startTag("", "Text")
@@ -205,23 +207,23 @@ object FlashCardXMLStreamWriter {
                 }
             } catch (e: IOException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Frontside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Frontside!"
                 )
             } catch (e: IllegalArgumentException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Frontside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Frontside!"
                 )
             } catch (e: IllegalStateException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Frontside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Frontside!"
                 )
             } catch (e: NullPointerException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Frontside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Frontside!"
                 )
             }
             serializer.endTag("", "FrontSide")
@@ -229,30 +231,30 @@ object FlashCardXMLStreamWriter {
             serializer.startTag("", "ReverseSide")
             try {
                 serializer.attribute(
-                    "",
-                    "Orientation",
-                    card.reverseSide.orientation?.orientation.toString()
+                        "",
+                        "Orientation",
+                        card.reverseSide.orientation?.orientation.toString()
                 )
                 serializer.attribute("", "RepeatByTyping", card.isRepeatedByTyping.toString())
             } catch (e: IOException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Backsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Backsideoptions!"
                 )
             } catch (e: IllegalArgumentException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Backsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Backsideoptions!"
                 )
             } catch (e: IllegalStateException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Backsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Backsideoptions!"
                 )
             } catch (e: NullPointerException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Backsideoptions!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Backsideoptions!"
                 )
             }
             // BugFix*******************
@@ -261,9 +263,9 @@ object FlashCardXMLStreamWriter {
             val reverseTimeStamp = card.reverseSide.learnedTimestamp
             if (reverseTimeStamp != 0L) {
                 serializer.attribute(
-                    "",
-                    "LearnedTimestamp",
-                    reverseTimeStamp.toString()
+                        "",
+                        "LearnedTimestamp",
+                        reverseTimeStamp.toString()
                 )
             }
             //EndofBugFix*****************
@@ -286,30 +288,30 @@ object FlashCardXMLStreamWriter {
                 }
             } catch (e: IOException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Backside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Backside!"
                 )
             } catch (e: IllegalArgumentException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Backside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Backside!"
                 )
             } catch (e: IllegalStateException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Backside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Backside!"
                 )
             } catch (e: NullPointerException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "exception while serialising Font of Backside!"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "exception while serialising Font of Backside!"
                 )
             }
             serializer.endTag("", "ReverseSide")
         } catch (e: Exception) {
             Log.e(
-                "FlashCardXMLStreamWriter::serialiseCard",
-                "exception while serialising card!"
+                    "FlashCardXMLStreamWriter::serialiseCard",
+                    "exception while serialising card!"
             )
             return false
             //throw new RuntimeException(e);
@@ -320,8 +322,8 @@ object FlashCardXMLStreamWriter {
                 serializer.endTag("", "Card")
             } catch (e: IOException) {
                 Log.e(
-                    "FlashCardXMLStreamWriter::serialiseCard",
-                    "Error of serializer. Can't end card"
+                        "FlashCardXMLStreamWriter::serialiseCard",
+                        "Error of serializer. Can't end card"
                 )
             }
         }

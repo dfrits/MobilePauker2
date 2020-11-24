@@ -8,18 +8,20 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.R
+import com.daniel.mobilepauker2.core.Constants
+import com.daniel.mobilepauker2.core.PaukerManager
 import com.daniel.mobilepauker2.pauker_native.FlashCard
 import com.daniel.mobilepauker2.pauker_native.ModelManager
-import com.daniel.mobilepauker2.core.Constants
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
 /**
  * Created by dfritsch on 22.03.2018.
  * veesy.de
  * hs-augsburg
  */
-class AddCardActivity : AEditCardActivity() {
+class AddCardActivity : AEditCardActivity(), KoinComponent {
     private var checkBox: MenuItem? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,10 +35,10 @@ class AddCardActivity : AEditCardActivity() {
             resetCardAndFinish()
         } else {
             val builder =
-                AlertDialog.Builder(applicationContext)
+                    AlertDialog.Builder(applicationContext)
             builder.setMessage(R.string.finish_add_card_message)
-                .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
-                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+                    .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
+                    .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
             builder.create().show()
         }
     }
@@ -60,11 +62,12 @@ class AddCardActivity : AEditCardActivity() {
         val sideAText = sideA.text.toString()
         val sideBText = sideB.text.toString()
         if (sideAText.isNotEmpty() && sideBText.isNotEmpty()) {
-            ModelManager.instance().addCard(flashCard!!, sideAText, sideBText)
+            val modelManager = get<ModelManager>()
+            modelManager.addCard(flashCard!!, sideAText, sideBText)
             PaukerManager.showToast(
-                applicationContext as Activity,
-                R.string.card_added,
-                Toast.LENGTH_SHORT
+                    applicationContext as Activity,
+                    R.string.card_added,
+                    Toast.LENGTH_SHORT
             )
             sideA.setText("")
             sideB.setText("")
@@ -74,9 +77,9 @@ class AddCardActivity : AEditCardActivity() {
             if (checkBox != null && !checkBox!!.isChecked) finish()
         } else {
             PaukerManager.showToast(
-                applicationContext as Activity,
-                R.string.add_card_sides_empty_error,
-                Toast.LENGTH_SHORT
+                    applicationContext as Activity,
+                    R.string.add_card_sides_empty_error,
+                    Toast.LENGTH_SHORT
             )
         }
     }
@@ -91,6 +94,6 @@ class AddCardActivity : AEditCardActivity() {
         val isChecked = checkBox!!.isChecked
         checkBox!!.isChecked = !isChecked
         PreferenceManager.getDefaultSharedPreferences(applicationContext).edit()
-            .putBoolean(Constants.KEEP_OPEN_KEY, !isChecked).apply()
+                .putBoolean(Constants.KEEP_OPEN_KEY, !isChecked).apply()
     }
 }

@@ -19,9 +19,11 @@ package com.daniel.mobilepauker2.pauker_native
 
 import android.database.AbstractCursor
 import android.database.CursorIndexOutOfBoundsException
+import org.koin.core.KoinComponent
+import org.koin.core.get
 
-class FlashCardCursor : AbstractCursor() {
-    private val modelManager: ModelManager = ModelManager.instance()
+class FlashCardCursor : AbstractCursor(), KoinComponent {
+    private val modelManager: ModelManager = get()
     private val flashColumnCount: Int = columnNames.size
 
     /**
