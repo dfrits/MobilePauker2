@@ -2,10 +2,8 @@ package com.daniel.mobilepauker2.core.model.xmlsupport
 
 import android.util.SparseLongArray
 import android.util.Xml
-import com.daniel.mobilepauker2.pauker_native.FlashCard
-import com.daniel.mobilepauker2.pauker_native.*
 import com.daniel.mobilepauker2.core.Constants
-import com.daniel.mobilepauker2.pauker_native.Log
+import com.daniel.mobilepauker2.pauker_native.*
 import org.xmlpull.v1.XmlPullParser
 import java.net.URL
 import java.util.*
@@ -34,12 +32,12 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                         name = parser.name
                         if (name.equals(LESSON, ignoreCase = true)) {
                             val lessonFormatString =
-                                parser.getAttributeValue(null, "LessonFormat")
+                                    parser.getAttributeValue(null, "LessonFormat")
                             if (lessonFormatString != null) {
                                 val lessonFormat = lessonFormatString.toFloat()
                                 Log.d(
-                                    "FlashCardXMLPullFeedParser::parse",
-                                    "Lesson format is $lessonFormat"
+                                        "FlashCardXMLPullFeedParser::parse",
+                                        "Lesson format is $lessonFormat"
                                 )
                             }
                         } else if (name.equals(DESCRIPTION, ignoreCase = true)) {
@@ -49,49 +47,49 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                             }
                         } else if (name.equals(CARD, ignoreCase = true)) {
                             currentFlashCard =
-                                FlashCard()
+                                    FlashCard()
                         } else if (name.equals(BATCH, ignoreCase = true)) {
                             batchCount++
                         } else if (currentFlashCard != null) {
                             currentFlashCard.initialBatch =
-                                batchCount - 1 // This line is repeated many times!
+                                    batchCount - 1 // This line is repeated many times!
                             if (name.equals(FRONTSIDE, ignoreCase = true)
-                                || name.equals(REVERSESIDE, ignoreCase = true)
+                                    || name.equals(REVERSESIDE, ignoreCase = true)
                             ) {
                                 var orientation =
-                                    parser.getAttributeValue(null, "Orientation")
+                                        parser.getAttributeValue(null, "Orientation")
                                 orientation = orientation ?: Constants.STANDARD_ORIENTATION
                                 val repeatByTyping =
-                                    parser.getAttributeValue(null, "RepeatByTyping")
+                                        parser.getAttributeValue(null, "RepeatByTyping")
                                 val bRepeatByTyping =
-                                    if (repeatByTyping == null) Constants.STANDARD_REPEAT else repeatByTyping == "true"
+                                        if (repeatByTyping == null) Constants.STANDARD_REPEAT else repeatByTyping == "true"
                                 val learnedTimestamp =
-                                    parser.getAttributeValue(null, "LearnedTimestamp")
+                                        parser.getAttributeValue(null, "LearnedTimestamp")
                                 if (name.equals(FRONTSIDE, ignoreCase = true)) {
                                     SIDEA = true
                                     SIDEB = false
                                     currentFlashCard.frontSide.orientation =
-                                        ComponentOrientation(
-                                            orientation
-                                        )
+                                            ComponentOrientation(
+                                                    orientation
+                                            )
                                     currentFlashCard.setRepeatByTyping(bRepeatByTyping)
                                     if (learnedTimestamp != null) {
                                         val l =
-                                            learnedTimestamp.trim { it <= ' ' }.toLong()
+                                                learnedTimestamp.trim { it <= ' ' }.toLong()
                                         currentFlashCard.setLearnedTimeStamp(l)
                                     }
                                 } else if (name.equals(REVERSESIDE, ignoreCase = true)) {
                                     SIDEA = false
                                     SIDEB = true
                                     currentFlashCard.reverseSide.orientation =
-                                        ComponentOrientation(
-                                            orientation
-                                        )
+                                            ComponentOrientation(
+                                                    orientation
+                                            )
                                     currentFlashCard.reverseSide
-                                        .setRepeatByTyping(bRepeatByTyping)
+                                            .setRepeatByTyping(bRepeatByTyping)
                                     if (learnedTimestamp != null) {
                                         val l =
-                                            learnedTimestamp.trim { it <= ' ' }.toLong()
+                                                learnedTimestamp.trim { it <= ' ' }.toLong()
                                         currentFlashCard.reverseSide.setLearnedTimeStamp(l)
                                     }
                                 }
@@ -113,14 +111,14 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                                 //Log.d("FlashCardXMLPullFeedParser::parse","sideB=" + currentFlashCard.getSideBText());
                             } else if (name.equals(FONT, ignoreCase = true)) {
                                 var background =
-                                    parser.getAttributeValue(null, "Background")
+                                        parser.getAttributeValue(null, "Background")
                                 var bold = parser.getAttributeValue(null, "Bold")
                                 var family =
-                                    parser.getAttributeValue(null, "Family")
+                                        parser.getAttributeValue(null, "Family")
                                 var foreground =
-                                    parser.getAttributeValue(null, "Foreground")
+                                        parser.getAttributeValue(null, "Foreground")
                                 var italic =
-                                    parser.getAttributeValue(null, "Italic")
+                                        parser.getAttributeValue(null, "Italic")
                                 var size = parser.getAttributeValue(null, "Size")
                                 // Set to defaults if null
                                 if (background == null) {
@@ -143,21 +141,21 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                                 }
                                 if (SIDEA) {
                                     currentFlashCard.frontSide.font = Font(
-                                        background,
-                                        bold,
-                                        family,
-                                        foreground,
-                                        italic,
-                                        size
+                                            background,
+                                            bold,
+                                            family,
+                                            foreground,
+                                            italic,
+                                            size
                                     )
                                 } else if (SIDEB) {
                                     currentFlashCard.reverseSide.font = Font(
-                                        background,
-                                        bold,
-                                        family,
-                                        foreground,
-                                        italic,
-                                        size
+                                            background,
+                                            bold,
+                                            family,
+                                            foreground,
+                                            italic,
+                                            size
                                     )
                                 }
                             }
@@ -166,15 +164,15 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                     XmlPullParser.END_TAG -> {
                         name = parser.name
                         if (name.equals(
-                                CARD,
-                                ignoreCase = true
-                            ) && currentFlashCard != null
+                                        CARD,
+                                        ignoreCase = true
+                                ) && currentFlashCard != null
                         ) {
                             flashCards!!.add(currentFlashCard)
                         } else if (name.equals(
-                                LESSON,
-                                ignoreCase = true
-                            )
+                                        LESSON,
+                                        ignoreCase = true
+                                )
                         ) {
                             done = true
                         }
@@ -200,23 +198,23 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                 flashCard.isLearned = false
             } else {
                 flashCard.frontSide.isLearned =
-                    true // Warning using flash card set learned here sets the learned timestamp!
+                        true // Warning using flash card set learned here sets the learned timestamp!
             }
 
             if (newLesson.numberOfLongTermBatches < flashCard.initialBatch - 2) {
                 Log.d(
-                    "FC~XMLPullFeedParser::setupLesson",
-                    "num of long term batches=" + newLesson.numberOfLongTermBatches
+                        "FC~XMLPullFeedParser::setupLesson",
+                        "num of long term batches=" + newLesson.numberOfLongTermBatches
                 )
                 Log.d(
-                    "FC~XMLPullFeedParser::setupLesson",
-                    "card initla batch=" + flashCard.initialBatch
+                        "FC~XMLPullFeedParser::setupLesson",
+                        "card initla batch=" + flashCard.initialBatch
                 )
                 val batchesToAdd =
-                    flashCard.initialBatch - 2 - newLesson.numberOfLongTermBatches
+                        flashCard.initialBatch - 2 - newLesson.numberOfLongTermBatches
                 Log.d(
-                    "FC~XMLPullFeedParser::setupLesson",
-                    "batchsToAdd$batchesToAdd"
+                        "FC~XMLPullFeedParser::setupLesson",
+                        "batchsToAdd$batchesToAdd"
                 )
                 for (j in 0 until batchesToAdd) {
                     newLesson.addLongTermBatch()
@@ -224,12 +222,12 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
             }
 
             val batch =
-                if (flashCard.isLearned) {
-                    // must put the card into the corresponding long term batch
-                    newLesson.getLongTermBatch(flashCard.initialBatch - 3)
-                } else { // must put the card into the unlearned batch
-                    newLesson.unlearnedBatch
-                }
+                    if (flashCard.isLearned) {
+                        // must put the card into the corresponding long term batch
+                        newLesson.getLongTermBatch(flashCard.initialBatch - 3)
+                    } else { // must put the card into the unlearned batch
+                        newLesson.unlearnedBatch
+                    }
 
             batch.addCard(flashCard)
             summaryBatch.addCard(flashCard)
@@ -264,35 +262,35 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
                             name = parser.name
                             if (name.equals(LESSON, ignoreCase = true)) {
                                 val lessonFormatString =
-                                    parser.getAttributeValue(null, "LessonFormat")
+                                        parser.getAttributeValue(null, "LessonFormat")
                                 if (lessonFormatString != null) {
                                     val lessonFormat = lessonFormatString.toFloat()
                                     Log.d(
-                                        "FlashCardXMLPullFeedParser::parse",
-                                        "Lesson format is $lessonFormat"
+                                            "FlashCardXMLPullFeedParser::parse",
+                                            "Lesson format is $lessonFormat"
                                     )
                                 }
                             } else if (name.equals(BATCH, ignoreCase = true)) {
                                 batchCount++
                             } else if (name.equals(FRONTSIDE, ignoreCase = true)
-                                || name.equals(REVERSESIDE, ignoreCase = true)
+                                    || name.equals(REVERSESIDE, ignoreCase = true)
                             ) {
                                 val learnedTimestamp =
-                                    parser.getAttributeValue(null, "LearnedTimestamp")
+                                        parser.getAttributeValue(null, "LearnedTimestamp")
                                 if (learnedTimestamp != null) {
                                     val factor = Math.E.pow(batchCount - 4.toDouble())
                                     val expirationTime =
-                                        (LongTermBatch.expirationUnit * factor).toLong()
+                                            (LongTermBatch.expirationUnit * factor).toLong()
                                     try {
                                         val expireTimeStamp =
-                                            learnedTimestamp.toLong() + expirationTime
+                                                learnedTimestamp.toLong() + expirationTime
                                         if (nextExpireTimeStamp == Long.MIN_VALUE
-                                            || expireTimeStamp < nextExpireTimeStamp
+                                                || expireTimeStamp < nextExpireTimeStamp
                                         ) {
                                             nextExpireTimeStamp = expireTimeStamp
                                         }
                                         val diff =
-                                            currentTimestamp - learnedTimestamp.toLong()
+                                                currentTimestamp - learnedTimestamp.toLong()
                                         if (diff > expirationTime) {
                                             expiredCards++
                                         }
@@ -322,32 +320,32 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBaseFeedParser(feedUrl
     private fun printLessonToDebug(lesson: Lesson) {
         var cards = lesson.learnedCards
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of learned cards is " + cards.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Size of learned cards is " + cards.size
         )
         cards = lesson.expiredCards
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of expired cards is " + cards.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Size of expired cards is " + cards.size
         )
         cards = lesson.shortTermList
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of shortTerm cards is " + cards.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Size of shortTerm cards is " + cards.size
         )
         cards = lesson.cards
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of all cards is " + cards.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Size of all cards is " + cards.size
         )
         cards = lesson.ultraShortTermList
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Size of ultraShortTerm cards is " + cards.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Size of ultraShortTerm cards is " + cards.size
         )
         Log.d(
-            "FlashCardXMLPullFeedParser::setupLesson",
-            "Number of longterm batches is" + lesson.longTermBatches.size
+                "FlashCardXMLPullFeedParser::setupLesson",
+                "Number of longterm batches is" + lesson.longTermBatches.size
         )
     }
 }

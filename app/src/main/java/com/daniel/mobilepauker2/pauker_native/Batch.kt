@@ -9,7 +9,7 @@ import java.util.logging.Logger
  * a batch is part of a lesson
  * @author Ronny.Standtke@gmx.net
  */
-open class Batch internal constructor(cards: MutableList<Card> = mutableListOf()) {
+open class Batch internal constructor(newCards: MutableList<Card> = mutableListOf()) {
     /**
      * the list of all cards in this batch
      */
@@ -40,14 +40,14 @@ open class Batch internal constructor(cards: MutableList<Card> = mutableListOf()
      * returns the number of cards in this batch
      * @return the number of cards in this batch
      */
-    val numberOfCards: Int = cards?.size ?: 0
+    val numberOfCards: Int = cards.size
 
     /**
      * returns the card at the index <CODE>i</CODE>
      * @param index the index of the returned card
      * @return the card at index <CODE>i</CODE>
      */
-    fun getCard(index: Int): Card? {
+    fun getCard(index: Int): Card {
         return cards.let { it[index] }
     }
 
@@ -90,7 +90,7 @@ open class Batch internal constructor(cards: MutableList<Card> = mutableListOf()
         // will break!
         // ("real" batches dont have the current search info)
         // remove card
-        return cards.remove(card) ?: false
+        return cards.remove(card)
     }
 
     /**
@@ -309,8 +309,8 @@ open class Batch internal constructor(cards: MutableList<Card> = mutableListOf()
      * constructs a new Batch with all the cards in <CODE>cards</CODE>
      */
     init {
-        if (cards.isNotEmpty()) {
-            this.cards = cards
+        if (newCards.isNotEmpty()) {
+            cards = newCards
         }
         searchHits = LinkedList()
     }
