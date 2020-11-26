@@ -19,31 +19,26 @@ import java.util.*
  * Daniel Fritsch
  * hs-augsburg
  */
-class CardAdapter(
-    myContext: Context,
-    private val items: List<FlashCard?>
-) : ArrayAdapter<FlashCard?>(myContext, R.layout.search_result, items) {
+class CardAdapter(myContext: Context, private val items: List<FlashCard?>)
+    : ArrayAdapter<FlashCard?>(myContext, R.layout.search_result, items) {
 
-    override fun getView(position: Int, convertView: View, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
         val card = items[position]
-        if (card != null) {
+        if (card != null && convertView != null) {
             val sideA: MPTextView = convertView.findViewById(R.id.tCardSideA)
             val sideB: MPTextView = convertView.findViewById(R.id.tCardSideB)
             val learnedAt = convertView.findViewById<TextView>(R.id.tLearnedTime)
             val expireAt = convertView.findViewById<TextView>(R.id.tExpireTime)
             val stackNumber = convertView.findViewById<TextView>(R.id.tStackNumber)
-            val repeatType =
-                convertView.findViewById<ImageView>(R.id.iRepeatType)
+            val repeatType = convertView.findViewById<ImageView>(R.id.iRepeatType)
             sideA.setCard(card.frontSide)
             sideB.setCard(card.reverseSide)
             // learnedAt und stackNumber
             val learnedTime = card.learnedTimestamp
             if (learnedTime != 0L) {
-                val cal =
-                    Calendar.getInstance(Locale.getDefault())
+                val cal = Calendar.getInstance(Locale.getDefault())
                 cal.timeInMillis = learnedTime
-                val date =
-                    DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
+                val date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
                 var text = context.getString(R.string.learned_at) + " " + date
                 learnedAt.text = text
                 val stack = card.longTermBatchNumber
@@ -55,11 +50,9 @@ class CardAdapter(
             val expirationTime = card.expirationTime
             if (expirationTime != -1L) {
                 expireAt.visibility = View.VISIBLE
-                val cal =
-                    Calendar.getInstance(Locale.getDefault())
+                val cal = Calendar.getInstance(Locale.getDefault())
                 cal.timeInMillis = expirationTime
-                val date =
-                    DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
+                val date = DateFormat.format("dd.MM.yyyy HH:mm", cal).toString()
                 var text: String = if (expirationTime < System.currentTimeMillis()) {
                     context.getString(R.string.expired_at)
                 } else {
@@ -69,13 +62,11 @@ class CardAdapter(
                 expireAt.text = text
             }
             // repeatType
-            val drawable =
-                if (card.isRepeatedByTyping) R.drawable.rt_typing
-                else R.drawable.rt_thinking
+            val drawable = if (card.isRepeatedByTyping) R.drawable.rt_typing
+            else R.drawable.rt_thinking
 
             repeatType.setImageResource(drawable)
         }
         return convertView
     }
-
 }
