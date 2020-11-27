@@ -218,10 +218,10 @@ public class PaukerManager {
 
     public File[] listFiles(final Context context) throws SecurityException {
         File appDirectory = new File(Environment.getExternalStorageDirectory() + getApplicationDataDirectory());
-        File[] files;
+        File[] files = new File[0];
 
         if (!appDirectory.exists() && !appDirectory.mkdir()) {
-            throw new SecurityException();
+            return files;
         }
 
         if (appDirectory.exists() && appDirectory.isDirectory()) {
@@ -233,7 +233,7 @@ public class PaukerManager {
             });
         } else {
             showToast((Activity) context, R.string.error_importflashcardfile_directory, Toast.LENGTH_LONG);
-            return null;
+            return files;
         }
         return files;
     }
