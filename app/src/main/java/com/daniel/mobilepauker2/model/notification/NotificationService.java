@@ -48,23 +48,25 @@ public class NotificationService extends JobIntentService {
         URI uri;
         FlashCardXMLPullFeedParser parser;
 
-        for (File file : files) {
-            if (!(paukerManager.isSaveRequired() && paukerManager.getCurrentFileName().equals(file.getName()))) {
-                try {
-                    uri = paukerManager.getFilePath(this, file.getName()).toURI();
-                    parser = new FlashCardXMLPullFeedParser(uri.toURL());
-                    SparseLongArray map = parser.getNextExpireDate();
-                    if (map.get(0) > Long.MIN_VALUE) {
-                        if (map.get(1, 0) > 0) {
-                            return 0;
-                        } else {
-                            if (newestTime == -1 || map.get(0) < newestTime) {
-                                newestTime = map.get(0);
+        if (files != null) {
+            for (File file : files) {
+                if (!(paukerManager.isSaveRequired() && paukerManager.getCurrentFileName().equals(file.getName()))) {
+                    try {
+                        uri = paukerManager.getFilePath(this, file.getName()).toURI();
+                        parser = new FlashCardXMLPullFeedParser(uri.toURL());
+                        SparseLongArray map = parser.getNextExpireDate();
+                        if (map.get(0) > Long.MIN_VALUE) {
+                            if (map.get(1, 0) > 0) {
+                                return 0;
+                            } else {
+                                if (newestTime == -1 || map.get(0) < newestTime) {
+                                    newestTime = map.get(0);
+                                }
                             }
                         }
+                    } catch (IOException ignored) {
+                        Log.d("NotificationService::setAlarm", "Cannot read File");
                     }
-                } catch (IOException ignored) {
-                    Log.d("NotificationService::setAlarm", "Cannot read File");
                 }
             }
         }
