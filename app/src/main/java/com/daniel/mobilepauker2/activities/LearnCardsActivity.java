@@ -33,7 +33,6 @@ import com.daniel.mobilepauker2.model.MPTextView;
 import com.daniel.mobilepauker2.model.ModelManager.LearningPhase;
 import com.daniel.mobilepauker2.model.SettingsManager;
 import com.daniel.mobilepauker2.model.TimerService;
-import com.daniel.mobilepauker2.model.TimerServiceV2;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
 import com.daniel.mobilepauker2.utils.Constants;
 import com.daniel.mobilepauker2.utils.ErrorReporter;
@@ -47,7 +46,6 @@ import java.util.TimerTask;
 
 import static android.app.Notification.VISIBILITY_PUBLIC;
 import static android.view.View.GONE;
-import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static com.daniel.mobilepauker2.PaukerManager.showToast;
 import static com.daniel.mobilepauker2.model.FlashCard.SideShowing.SIDE_A;
@@ -68,7 +66,7 @@ import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
 
-public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements TimerServiceV2.Callback {
+public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements TimerService.Callback {
     private static boolean isLearningRunning;
     private static boolean isActivityVisible;
     private final PaukerManager paukerManager = PaukerManager.instance();
@@ -81,7 +79,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     private boolean stopWaiting = false;
     private boolean firstStart = true;
     private ServiceConnection timerServiceConnection;
-    private TimerServiceV2 timerService;
+    private TimerService timerService;
     private Intent timerServiceIntent;
     private InvertedTextProgressbar ustmTimerBar;
     private InvertedTextProgressbar stmTimerBar;
@@ -111,7 +109,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
             // super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
             if (mActivitySetupOk) {
                 //initTimer();
-                initTimerV2();
+                initTimer();
                 /*if (ustmTimer != null && stmTimer != null) {
                     findViewById(R.id.lTimerFrame).setVisibility(VISIBLE);
                     startUSTMTimer();
@@ -307,7 +305,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     }
 
     /**
-     * Falls die Acitvity vom System beendet wird, die Timer aber noch laufen.
+     * Falls die Activity vom System beendet wird, die Timer aber noch laufen.
      */
     @Override
     protected void onDestroy() {
@@ -344,7 +342,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
         return true;
     }
 
-    private void initTimerV2() {
+    private void initTimer() {
         int ustmTotalTime = Integer.parseInt(settingsManager.getStringPreference(context, USTM));
         ustmTimerBar = findViewById(R.id.UKZGTimerBar);
         ustmTimerBar.setMaxProgress(ustmTotalTime);
@@ -358,8 +356,9 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
         timerServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                Log.d("LearnActivity::initTimerV2", "onServiceConnectedCalled");
-                TimerServiceV2.LocalBinder binder = (TimerServiceV2.LocalBinder) service;
+                PaukerManager.showToast((Activity) context, "Service connected", Toast.LENGTH_SHORT);
+                Log.d("LearnActivity::initTimer", "onServiceConnectedCalled");
+                TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
                 timerService = binder.getServiceInstance();
                 timerService.registerClient((Activity) context);
                 timerService.startUstmTimer();
@@ -369,14 +368,20 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
             }
 
             @Override
+            public void onBindingDied(ComponentName name) {
+                PaukerManager.showToast((Activity) context, "Binding died", Toast.LENGTH_SHORT);
+            }
+
+            @Override
             public void onServiceDisconnected(ComponentName name) {
-                Log.d("LearnActivity::initTimerV2", "onServiceDisconnectedCalled");
+                PaukerManager.showToast((Activity) context, "Service Disconnected", Toast.LENGTH_SHORT);
+                Log.d("LearnActivity::initTimer", "onServiceDisconnectedCalled");
                 timerService.stopUstmTimer();
                 timerService.stopStmTimer();
             }
         };
 
-        timerServiceIntent = new Intent(context, TimerServiceV2.class);
+        timerServiceIntent = new Intent(context, TimerService.class);
         timerServiceIntent.putExtra(TimerService.USTM_TOTAL_TIME, ustmTotalTime);
         timerServiceIntent.putExtra(TimerService.STM_TOTAL_TIME, stmTotalTime);
         startService(timerServiceIntent);
