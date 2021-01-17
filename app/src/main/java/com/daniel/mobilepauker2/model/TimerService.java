@@ -1,6 +1,5 @@
 package com.daniel.mobilepauker2.model;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
@@ -16,9 +15,16 @@ import java.util.TimerTask;
 public class TimerService extends Service {
     public static final String USTM_TOTAL_TIME = "USTM_TOTAL_TIME";
     public static final String STM_TOTAL_TIME = "STM_TOTAL_TIME";
-    private final IBinder binder = new LocalBinder();
-    private Callback callback;
 
+    //Broadcast
+    public static final String ustm_receiver = "com.paukertimerservice.ustm_time_receiver";
+    public static final String stm_receiver = "com.paukertimerservice.stm_time_receiver";
+    public static final String ustm_finished_receiver = "com.paukertimerservice.ustm_finished_receiver";
+    public static final String stm_finished_receiver = "com.paukertimerservice.stm_finished_receiver";
+    public static final String ustm_time = "USTM_TIME";
+    public static final String stm_time = "STM_TIME";
+
+    private final IBinder binder = new LocalBinder();
     private int ustm_totalTime;
     private long ustm_timeRemaining = 0;
     private Date ustm_timeout = new Date(0);
@@ -68,12 +74,6 @@ public class TimerService extends Service {
         return false;
     }
 
-
-
-    public void registerClient(Activity activity) {
-        callback = (Callback) activity;
-    }
-
     private void onUstmTimerTick() {
         long timeRemaining = ustm_timeout.getTime() - new Date().getTime();
         int totalSec = (int) (timeRemaining / 1000);
@@ -82,7 +82,8 @@ public class TimerService extends Service {
                 ustm_timeRemaining = timeRemaining;
                 int timeElapsed = ustm_totalTime - totalSec;
 
-                callback.onUstmTimerUpdate(timeElapsed);
+
+                onUstmTimerUpdate(timeElapsed);
             }
         } else {
             Log.d("TimerService::USTM-Timer finished", "Timer finished");
@@ -98,7 +99,7 @@ public class TimerService extends Service {
                 stm_timeRemaining = timeRemaining;
                 int timeElapsed = stm_totalTime * 60 - totalSec;
 
-                callback.onStmTimerUpdate(timeElapsed);
+                onStmTimerUpdate(timeElapsed);
             }
         } else {
             Log.d("TimerService::STM-Timer finished", "Timer finished");
@@ -181,7 +182,7 @@ public class TimerService extends Service {
             ustm_timer.cancel();
             ustm_timer.purge();
             ustm_timerFinished = true;
-            callback.onUstmTimerFinish();
+            onUstmTimerFinish();
         }
     }
 
@@ -190,8 +191,30 @@ public class TimerService extends Service {
             stm_timer.cancel();
             stm_timer.purge();
             stm_timerFinished = true;
-            callback.onStmTimerFinish();
+            onStmTimerFinish();
         }
+    }
+
+    private void onUstmTimerUpdate(int timeElapsed) {
+        Intent intent = new Intent(ustm_receiver);
+        intent.putExtra(ustm_time, timeElapsed);
+        sendBroadcast(intent);
+    }
+
+    private void onStmTimerUpdate(int timeElapsed) {
+        Intent intent = new Intent(stm_receiver);
+        intent.putExtra(stm_time, timeElapsed);
+        sendBroadcast(intent);
+    }
+
+    private void onUstmTimerFinish() {
+        Intent intent = new Intent(ustm_finished_receiver);
+        sendBroadcast(intent);
+    }
+
+    private void onStmTimerFinish() {
+        Intent intent = new Intent(stm_finished_receiver);
+        sendBroadcast(intent);
     }
 
     public boolean isUstmTimerPaused() {
@@ -216,16 +239,6 @@ public class TimerService extends Service {
 
     public int getStmTotalTime() {
         return stm_totalTime;
-    }
-
-    public interface Callback {
-        void onUstmTimerUpdate(int elapsedTime);
-
-        void onStmTimerUpdate(int elapsedTime);
-
-        void onUstmTimerFinish();
-
-        void onStmTimerFinish();
     }
 
     public class LocalBinder extends Binder {

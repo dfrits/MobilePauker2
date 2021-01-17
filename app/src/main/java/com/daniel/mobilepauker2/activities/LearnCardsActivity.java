@@ -5,10 +5,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -66,7 +68,7 @@ import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID;
 import static com.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID;
 
-public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements TimerService.Callback {
+public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
     private static boolean isLearningRunning;
     private static boolean isActivityVisible;
     private final PaukerManager paukerManager = PaukerManager.instance();
@@ -91,6 +93,141 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     private MenuItem restartButton;
     private RelativeLayout timerAnimation;
     private String ustmTimerText;
+
+    //Broadcast Receiver
+    private final BroadcastReceiver ustmFinishedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
+
+                    ustmTimerBar.setProgress(timerService.getUstmTotalTime() * 60);
+                    ustmTimerBar.setText(" ");
+
+                    if (modelManager.getLearningPhase() == WAITING_FOR_USTM) {
+                        Log.d("Learnactivity::onUSTMTimerFinish", "USTM Timer finished, stop waiting!");
+                        stopWaiting = true;
+                        updateLearningPhase();
+                    }
+                }
+            });
+        }
+    };
+    private final BroadcastReceiver stmFinishedBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("LearnActivity::STM-Timer finished", "Timer finished");
+
+                    notificationManager.cancel(TIME_BAR_ID);
+
+                    stmTimerBar.setText(" ");
+                    stmTimerBar.setProgress(timerService.getStmTotalTime() * 60);
+
+                    if (pauseButton != null) {
+                        pauseButton.setVisible(false);
+                    }
+
+                    if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
+                        Log.d("Learnactivity::onSTMTimerFinish", "STM Timer finished, stop waiting!");
+                        stopWaiting = true;
+                        updateLearningPhase();
+                    }
+
+                    // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
+                    boolean showNotify = settingsManager.getBoolPreference(context, SHOW_TIMER_BAR);
+                    if (!isActivityVisible && timerService.isStmTimerFinished() && showNotify) {
+                        Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
+
+                        final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                                .setContentText(getString(R.string.stm_expired_notify_message))
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setContentTitle(getString(R.string.app_name))
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                                .setAutoCancel(true)
+                                .setVisibility(VISIBILITY_PUBLIC);
+
+                        Log.d("LearnActivity::STM-Timer finished", "Notification created");
+
+                        new Timer().schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+                            }
+                        }, 1000);
+
+                        Log.d("LearnActivity::STM-Timer finished", "Notification shown");
+                    }
+                }
+            });
+        }
+    };
+    private final BroadcastReceiver ustmTimeBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final int timeElapsed = intent.getIntExtra(TimerService.ustm_time, 0);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (ustmTimerBar.getVisibility() == VISIBLE && !timerService.isUstmTimerFinished()) {
+                        int sec = timeElapsed % 60;
+
+                        ustmTimerText = String.format(Locale.getDefault()
+                                , "%d / %ds", sec, timerService.getUstmTotalTime());
+                        ustmTimerBar.setProgress(timeElapsed);
+                        ustmTimerBar.setText(ustmTimerText);
+                    }
+                }
+            });
+        }
+    };
+    private final BroadcastReceiver stmTimeBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, Intent intent) {
+            final int timeElapsed = intent.getIntExtra(TimerService.stm_time, 0);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    String timerText;
+                    int sec = timeElapsed % 60;
+                    int min = timeElapsed / 60;
+                    if (sec < 10) {
+                        timerText = String.format(Locale.getDefault(),
+                                "%d:0%d / %d:00min", min, sec, timerService.getStmTotalTime());
+                    } else {
+                        timerText = String.format(Locale.getDefault(),
+                                "%d:%d / %d:00min", min, sec, timerService.getStmTotalTime());
+                    }
+                    stmTimerBar.setProgress(timeElapsed);
+                    stmTimerBar.setText(timerText);
+
+                    // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
+                    if (!isActivityVisible && !timerService.isStmTimerFinished()) {
+                        Log.d("LearnActivity::STM-onStmTimerUpdate", "Acivity is not visible");
+                        String ustmTimerBarText = timerService.isUstmTimerFinished() && ustmTimerText != null ? ""
+                                : getString(R.string.ustm) + " " + ustmTimerText;
+                        String timerbarText = ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText;
+                        Intent contentIntent = pendingIntent == null ? getIntent() : pendingIntent;
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
+                                .setContentText(timerbarText)
+                                .setSmallIcon(R.drawable.notify_icon)
+                                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                .setContentIntent(PendingIntent.getActivity(context, 0, contentIntent, 0))
+                                .setAutoCancel(true)
+                                .setOngoing(true);
+                        Log.d("LearnActivity::STM-onStmTimerUpdate", "Notification created");
+                        notificationManager.notify(TIME_BAR_ID, mBuilder.build());
+                        Log.d("LearnActivity::STM-onStmTimerUpdate", "Show Notification");
+                    }
+                }
+            });
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -360,16 +497,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 Log.d("LearnActivity::initTimer", "onServiceConnectedCalled");
                 TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
                 timerService = binder.getServiceInstance();
-                timerService.registerClient((Activity) context);
+                registerListener();
                 timerService.startUstmTimer();
                 timerService.startStmTimer();
                 findViewById(R.id.lTimerFrame).setVisibility(VISIBLE);
                 timerAnimation = findViewById(R.id.timerAnimationPanel);
-            }
-
-            @Override
-            public void onBindingDied(ComponentName name) {
-                PaukerManager.showToast((Activity) context, "Binding died", Toast.LENGTH_SHORT);
             }
 
             @Override
@@ -378,6 +510,11 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
                 Log.d("LearnActivity::initTimer", "onServiceDisconnectedCalled");
                 timerService.stopUstmTimer();
                 timerService.stopStmTimer();
+            }
+
+            @Override
+            public void onBindingDied(ComponentName name) {
+                PaukerManager.showToast((Activity) context, "Binding died", Toast.LENGTH_SHORT);
             }
         };
 
@@ -388,8 +525,15 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
         bindService(timerServiceIntent, timerServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
+    private void registerListener() {
+        registerReceiver(ustmTimeBroadcastReceiver, new IntentFilter(TimerService.ustm_receiver));
+        registerReceiver(stmTimeBroadcastReceiver, new IntentFilter(TimerService.stm_receiver));
+        registerReceiver(ustmFinishedBroadcastReceiver, new IntentFilter(TimerService.ustm_finished_receiver));
+        registerReceiver(stmFinishedBroadcastReceiver, new IntentFilter(TimerService.stm_finished_receiver));
+    }
+
     private void pauseTimer() {
-        if (timerService!=null) {
+        if (timerService != null) {
             timerService.pauseTimers();
             if (!timerService.isStmTimerFinished()) {
                 disableButtons();
@@ -398,7 +542,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
     }
 
     private void restartTimer() {
-        if (timerService!=null) {
+        if (timerService != null) {
             timerService.restartTimers();
             enableButtons();
         }
@@ -967,133 +1111,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity implements 
 
     public void showCard(View view) {
         screenTouched();
-    }
-
-    @Override
-    public void onUstmTimerUpdate(final int timeElapsed) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (ustmTimerBar.getVisibility() == VISIBLE && !timerService.isUstmTimerFinished()) {
-                    int sec = timeElapsed % 60;
-
-                    ustmTimerText = String.format(Locale.getDefault()
-                            , "%d / %ds", sec, timerService.getUstmTotalTime());
-                    ustmTimerBar.setProgress(timeElapsed);
-                    ustmTimerBar.setText(ustmTimerText);
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onStmTimerUpdate(final int timeElapsed) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                String timerText;
-                int sec = timeElapsed % 60;
-                int min = timeElapsed / 60;
-                if (sec < 10) {
-                    timerText = String.format(Locale.getDefault(),
-                            "%d:0%d / %d:00min", min, sec, timerService.getStmTotalTime());
-                } else {
-                    timerText = String.format(Locale.getDefault(),
-                            "%d:%d / %d:00min", min, sec, timerService.getStmTotalTime());
-                }
-                stmTimerBar.setProgress(timeElapsed);
-                stmTimerBar.setText(timerText);
-
-                // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
-                if (!isActivityVisible && !timerService.isStmTimerFinished()) {
-                    Log.d("LearnActivity::STM-onStmTimerUpdate", "Acivity is not visible");
-                    String ustmTimerBarText = timerService.isUstmTimerFinished() && ustmTimerText != null ? ""
-                            : getString(R.string.ustm) + " " + ustmTimerText;
-                    String timerbarText = ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText;
-                    Intent contentIntent = pendingIntent == null ? getIntent() : pendingIntent;
-                    NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
-                            .setContentText(timerbarText)
-                            .setSmallIcon(R.drawable.notify_icon)
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                            .setContentIntent(PendingIntent.getActivity(context, 0, contentIntent, 0))
-                            .setAutoCancel(true)
-                            .setOngoing(true);
-                    Log.d("LearnActivity::STM-onStmTimerUpdate", "Notification created");
-                    notificationManager.notify(TIME_BAR_ID, mBuilder.build());
-                    Log.d("LearnActivity::STM-onStmTimerUpdate", "Show Notification");
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onUstmTimerFinish() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("LearnActivity::USTM-Timer finished", "Timer finished");
-
-                ustmTimerBar.setProgress(timerService.getUstmTotalTime() * 60);
-                ustmTimerBar.setText(" ");
-
-                if (modelManager.getLearningPhase() == WAITING_FOR_USTM) {
-                    Log.d("Learnactivity::onUSTMTimerFinish", "USTM Timer finished, stop waiting!");
-                    stopWaiting = true;
-                    updateLearningPhase();
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onStmTimerFinish() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("LearnActivity::STM-Timer finished", "Timer finished");
-
-                notificationManager.cancel(TIME_BAR_ID);
-
-                stmTimerBar.setText(" ");
-                stmTimerBar.setProgress(timerService.getStmTotalTime() * 60);
-
-                if (pauseButton != null) {
-                    pauseButton.setVisible(false);
-                }
-
-                if (modelManager.getLearningPhase() == WAITING_FOR_STM) {
-                    Log.d("Learnactivity::onSTMTimerFinish", "STM Timer finished, stop waiting!");
-                    stopWaiting = true;
-                    updateLearningPhase();
-                }
-
-                // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
-                boolean showNotify = settingsManager.getBoolPreference(context, SHOW_TIMER_BAR);
-                if (!isActivityVisible && timerService.isStmTimerFinished() && showNotify) {
-                    Log.d("LearnActivity::STM-Timer finished", "Acivity is visible");
-
-                    final NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                            .setContentText(getString(R.string.stm_expired_notify_message))
-                            .setSmallIcon(R.drawable.notify_icon)
-                            .setContentTitle(getString(R.string.app_name))
-                            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                            .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
-                            .setAutoCancel(true)
-                            .setVisibility(VISIBILITY_PUBLIC);
-
-                    Log.d("LearnActivity::STM-Timer finished", "Notification created");
-
-                    new Timer().schedule(new TimerTask() {
-                        @Override
-                        public void run() {
-                            notificationManager.notify(NOTIFICATION_ID, mBuilder.build());
-                        }
-                    }, 1000);
-
-                    Log.d("LearnActivity::STM-Timer finished", "Notification shown");
-                }
-            }
-        });
     }
 
     public static boolean isLearningRunning() {
