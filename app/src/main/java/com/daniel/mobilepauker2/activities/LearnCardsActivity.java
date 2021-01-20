@@ -245,14 +245,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
             // A check on mActivitySetupOk is done here as onCreate is called even if the
             // super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
             if (mActivitySetupOk) {
-                //initTimer();
                 initTimer();
-                /*if (ustmTimer != null && stmTimer != null) {
-                    findViewById(R.id.lTimerFrame).setVisibility(VISIBLE);
-                    startUSTMTimer();
-                    startSTMTimer();
-                    timerAnimation = findViewById(R.id.timerAnimationPanel);
-                }*/
             }
         } else if (modelManager.getLearningPhase() == REPEATING_LTM) {
             repeatingLTM = true;
@@ -361,15 +354,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
                 showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
-
-                /*if (settingsManager.getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
-                    String accessToken = PreferenceManager.getDefaultSharedPreferences(context)
-                            .getString(Constants.DROPBOX_ACCESS_TOKEN, null);
-                    Intent intent = new Intent(context, SyncDialog.class);
-                    intent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
-                    intent.putExtra(SyncDialog.FILES, new File(paukerManager.getFileAbsolutePath()));
-                    startActivity(intent);
-                }*/
             } else {
                 showToast((Activity) context, R.string.saving_error, Toast.LENGTH_SHORT);
             }
@@ -493,7 +477,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         timerServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                PaukerManager.showToast((Activity) context, "Service connected", Toast.LENGTH_SHORT);
                 Log.d("LearnActivity::initTimer", "onServiceConnectedCalled");
                 TimerService.LocalBinder binder = (TimerService.LocalBinder) service;
                 timerService = binder.getServiceInstance();
@@ -506,7 +489,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                PaukerManager.showToast((Activity) context, "Service Disconnected", Toast.LENGTH_SHORT);
                 Log.d("LearnActivity::initTimer", "onServiceDisconnectedCalled");
                 timerService.stopUstmTimer();
                 timerService.stopStmTimer();
@@ -514,7 +496,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
             @Override
             public void onBindingDied(ComponentName name) {
-                PaukerManager.showToast((Activity) context, "Binding died", Toast.LENGTH_SHORT);
             }
         };
 
@@ -964,13 +945,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
      * gegangen.
      */
     private void pushCursorToNext() {
-        /*initStackSize--;
-        if (checkStackSize()) {
-            setLearningPhase(modelManager.getLearningPhase());
-            reloadStack();
-        } else {
-            mCardCursor.moveToNext();
-        }*/
         if (modelManager.getLearningPhase() == REPEATING_LTM) {
             modelManager.setLearningPhase(context, modelManager.getLearningPhase());
             reloadStack();
@@ -1066,8 +1040,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast() && !timerService.isUstmTimerFinished()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             // Letzte Karte oder Timer abgelaufen. Darum Lernphase aktualisieren
             updateLearningPhase();
@@ -1085,8 +1057,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             completedLearning = true;
         }
@@ -1100,8 +1070,6 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
 
         if (!mCardCursor.isLast()) {
             pushCursorToNext();
-            /*updateCurrentCard();
-            fillData();*/
         } else {
             completedLearning = true;
         }
