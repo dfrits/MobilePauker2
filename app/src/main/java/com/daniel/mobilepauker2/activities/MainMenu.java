@@ -49,6 +49,7 @@ import static com.daniel.mobilepauker2.model.SettingsManager.Keys.HIDE_TIMES;
 import static com.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NORMAL;
 import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID;
+import static com.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID_old;
 
 /**
  * Created by Daniel on 24.02.2018.
@@ -76,6 +77,7 @@ public class MainMenu extends AppCompatActivity {
         // Channel erstellen, falls noch nicht vorhanden
         Log.d("AlamNotificationReceiver::onReceive", "Create Channels");
         createNotificationChannels();
+        deleteOldChannel();
 
         String action = getIntent().getAction();
         if (action != null && action.equals("Open Lesson")) {
@@ -203,7 +205,7 @@ public class MainMenu extends AppCompatActivity {
                 });
             }
         });
-        initthread.run();
+        initthread.start();
     }
 
     private void showBatchDetails(int index) {
@@ -582,41 +584,47 @@ public class MainMenu extends AppCompatActivity {
     /**
      * Erstellt alle Channels
      */
-    public void createNotificationChannels() {
+    private void createNotificationChannels() {
         // Für Notification
         createNotificationChannel(getString(R.string.channel_notify_name_other),
                 null,
                 NotificationManager.IMPORTANCE_DEFAULT,
                 NOTIFICATION_CHANNEL_ID,
-                true);
+                false);
 
         // Timerbar
         createNotificationChannel(getString(R.string.channel_timerbar_name),
                 getString(R.string.channel_timerbar_description),
-                NotificationManager.IMPORTANCE_LOW,
+                NotificationManager.IMPORTANCE_HIGH,
                 TIMER_BAR_CHANNEL_ID,
-                false);
+                true);
+    }
 
+    private void deleteOldChannel() {
         // Falls der TimerChannel noch existiert
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
         if (notificationManager != null) {
             notificationManager.deleteNotificationChannel("Timers");
-            Log.d("MainMenu::createNotificationChannel", "Timer channel deleted");
+            Log.d("MainMenu::createNotificationChannel", "Timers channel deleted");
+
+            notificationManager.deleteNotificationChannel(TIMER_BAR_CHANNEL_ID_old);
+            Log.d("MainMenu::deleteOldChannel", "Timer channel deleted");
         }
     }
 
     /**
      * Hilfsmethode zum Erstellen der Channels
      */
-    private void createNotificationChannel(String channelName, String description, int importance, String ID, boolean playSound) {
+    private void createNotificationChannel(String channelName, String description, int importance, String ID, boolean beSilent) {
         NotificationChannel channel = new NotificationChannel(ID, channelName, importance);
 
         if (description != null) {
             channel.setDescription(description);
         }
 
-        if (!playSound) {
+        if (beSilent) {
             channel.setSound(null, null);
+            channel.enableVibration(false);
         }
 
         NotificationManager notificationManager = getSystemService(NotificationManager.class);
