@@ -179,33 +179,21 @@ public class MainMenu extends AppCompatActivity {
     }
 
     private void initChartList() {
-        // Im Thread laufen lassen um MainThread zu entlasten
-        Thread initthread = new Thread(new Runnable() {
+        chartView = findViewById(R.id.chartListView);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
+                LinearLayoutManager.HORIZONTAL, false);
+        chartView.setLayoutManager(layoutManager);
+        chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        chartView.setScrollContainer(true);
+        chartView.setNestedScrollingEnabled(true);
+        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
             @Override
-            public void run() {
-                chartView = findViewById(R.id.chartListView);
-                final LinearLayoutManager layoutManager = new LinearLayoutManager(context,
-                        LinearLayoutManager.HORIZONTAL, false);
-                chartView.setLayoutManager(layoutManager);
-                chartView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-                chartView.setScrollContainer(true);
-                chartView.setNestedScrollingEnabled(true);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ChartAdapterCallback onClickListener = new ChartAdapterCallback() {
-                            @Override
-                            public void onClick(int position) {
-                                showBatchDetails(position);
-                            }
-                        };
-                        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
-                        chartView.setAdapter(adapter);
-                    }
-                });
+            public void onClick(int position) {
+                showBatchDetails(position);
             }
-        });
-        initthread.start();
+        };
+        final ChartAdapter adapter = new ChartAdapter(context, onClickListener);
+        chartView.setAdapter(adapter);
     }
 
     private void showBatchDetails(int index) {
@@ -402,7 +390,7 @@ public class MainMenu extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             checkPermission(RQ_WRITE_EXT_OPEN);
         } else {
-           if (paukerManager.isSaveRequired()) {
+            if (paukerManager.isSaveRequired()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(R.string.lesson_not_saved_dialog_title)
                         .setMessage(R.string.save_lesson_before_question)
