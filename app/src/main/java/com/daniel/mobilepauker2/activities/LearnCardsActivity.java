@@ -397,6 +397,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
         } catch (Exception e) {
             mSavedCursorPosition = -1;
         }
+        ((TextView)findViewById(R.id.log)).setText("Pause");
     }
 
     @Override
@@ -430,6 +431,7 @@ public class LearnCardsActivity extends FlashCardSwipeScreenActivity {
      */
     @Override
     protected void onDestroy() {
+        ((TextView)findViewById(R.id.log)).setText("Destroy");
         if (timerServiceConnection != null && timerServiceIntent != null) {
             stopService(timerServiceIntent);
             unbindService(timerServiceConnection);

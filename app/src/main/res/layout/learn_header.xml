@@ -123,4 +123,16 @@
         android:fontFamily="serif"
         android:textColor="@color/black"
         android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/log"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tAllCards"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tKZGCards"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:text="hello"
+        android:textSize="14sp" />
 </merge>
