@@ -149,6 +149,7 @@ public class SaveDialog extends Activity {
             @Override
             public boolean handleMessage(Message msg) {
                 boolean result = msg.getData().getBoolean(Constants.MESSAGE_BOOL_KEY);
+                String message = msg.getData().getString(Constants.MESSAGE_MSG_KEY);
                 if (result) {
                     setResult(RESULT_OK);
                     if (SettingsManager.instance().getBoolPreference(context, SettingsManager.Keys.AUTO_UPLOAD)) {
@@ -156,13 +157,14 @@ public class SaveDialog extends Activity {
                     }
                 } else {
                     showToast((Activity)context, R.string.saving_error, Toast.LENGTH_SHORT);
+                    showToast((Activity)context, message, Toast.LENGTH_SHORT);
                     setResult(RESULT_CANCELED);
                 }
                 finish();
                 return result;
             }
         }));
-        saveThread.run();
+        saveThread.start();
     }
 
     private void uploadCurrentFile() {

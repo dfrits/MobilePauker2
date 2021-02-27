@@ -4,6 +4,7 @@ import android.util.Xml;
 
 import com.daniel.mobilepauker2.PaukerManager;
 import com.daniel.mobilepauker2.model.ModelManager;
+import com.daniel.mobilepauker2.model.SaveResult;
 import com.daniel.mobilepauker2.model.pauker_native.Batch;
 import com.daniel.mobilepauker2.model.pauker_native.Card;
 import com.daniel.mobilepauker2.model.pauker_native.Font;
@@ -23,7 +24,7 @@ import java.util.zip.GZIPOutputStream;
 public class FlashCardXMLStreamWriter {
 
     //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
-    public static void saveLesson() throws SecurityException {
+    public static SaveResult saveLesson() throws SecurityException {
         final ModelManager modelManager = ModelManager.instance();
         final PaukerManager paukerManager = PaukerManager.instance();
         if (modelManager.isLessonNotNew()) {
@@ -39,10 +40,10 @@ public class FlashCardXMLStreamWriter {
             GZIPOutputStream gzipOutputStream;
             try {
                 if (!new File(path).exists() && !new File(path).mkdirs()) {
-                    return;
+                    return new SaveResult(false, "Cannot create Folder. Permission denied?");
                 }
                 if (!newxmlfile.exists() && !newxmlfile.createNewFile()) {
-                    return;
+                    return new SaveResult(false, "Cannot create new File. Permission denied?");
                 }
 
                 FileOutputStream fos = new FileOutputStream(newxmlfile);
@@ -53,20 +54,22 @@ public class FlashCardXMLStreamWriter {
                 }
                 //noinspection ResultOfMethodCallIgnored
                 newxmlfile.delete();
-                if (!isRenamed) {
-
-                    throw new SecurityException("Saving not possible. Unkown error.");
-                }
-
                 gzipOutputStream.close();
+
+                if (!isRenamed) {
+                    return new SaveResult(false, "Saving not possible. File not renameable.");
+                }
             } catch (FileNotFoundException e) {
                 Log.e("ModelManager::saveLesson", "can't create FileOutputStream");
-                throw new RuntimeException(e);
+                return new SaveResult(false, e.getMessage());
             } catch (IOException e) {
                 Log.e("ModelManager::saveLesson", "exception in saveLesson() method");
-                throw new RuntimeException(e);
+                return new SaveResult(false, e.getMessage());
             }
+            return new SaveResult(true, "");
         }
+
+        return new SaveResult(false, "Lesson has no Name");
     }
 
     private static boolean writeXML(Lesson lesson, OutputStream outputStream) {

@@ -352,6 +352,8 @@ public class MainMenu extends AppCompatActivity {
                 showToast((Activity) context, R.string.saving_success, Toast.LENGTH_SHORT);
                 paukerManager.setSaveRequired(false);
                 modelManager.showExpireToast(context);
+            } else {
+                showToast((Activity) context, R.string.saving_error, Toast.LENGTH_LONG);
             }
             invalidateOptionsMenu();
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
