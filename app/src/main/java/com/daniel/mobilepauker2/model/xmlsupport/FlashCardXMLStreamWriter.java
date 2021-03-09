@@ -24,7 +24,7 @@ import java.util.zip.GZIPOutputStream;
 public class FlashCardXMLStreamWriter {
 
     //TODO This sould de in a class of its own or in the Flash cardd xml stream writer...
-    public static SaveResult saveLesson() throws SecurityException {
+    public static SaveResult saveLesson() {
         final ModelManager modelManager = ModelManager.instance();
         final PaukerManager paukerManager = PaukerManager.instance();
         if (modelManager.isLessonNotNew()) {
@@ -52,6 +52,7 @@ public class FlashCardXMLStreamWriter {
                 if (FlashCardXMLStreamWriter.writeXML(modelManager.getLesson(), gzipOutputStream)) {
                     isRenamed = newxmlfile.renameTo(modelManager.getFilePath());
                 }
+
                 //noinspection ResultOfMethodCallIgnored
                 newxmlfile.delete();
                 gzipOutputStream.close();
@@ -64,6 +65,9 @@ public class FlashCardXMLStreamWriter {
                 return new SaveResult(false, e.getMessage());
             } catch (IOException e) {
                 Log.e("ModelManager::saveLesson", "exception in saveLesson() method");
+                return new SaveResult(false, e.getMessage());
+            } catch (Exception e) {
+                Log.e("ModelManager::saveLesson", "Other Excpetion");
                 return new SaveResult(false, e.getMessage());
             }
             return new SaveResult(true, "");
