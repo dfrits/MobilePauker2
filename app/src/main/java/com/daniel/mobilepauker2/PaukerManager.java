@@ -52,6 +52,7 @@ public class PaukerManager {
         return instance;
     }
 
+    // TODO Toaster
     public static void showToast(final Activity context, final String text, final int duration) {
         context.runOnUiThread(new Runnable() {
             @Override
@@ -63,6 +64,7 @@ public class PaukerManager {
         });
     }
 
+    // TODO Toaster
     public static void showToast(Activity context, int textResource, int duration) {
         showToast(context, context.getString(textResource), duration);
     }
@@ -84,7 +86,7 @@ public class PaukerManager {
      * Note the lesson is not created until it is saved
      * Note this method appends .pau.gz to the application filename.
      */
-    public void setupNewApplicationLesson() {
+    public void setupNewApplicationLesson() { // TODO LessonManager
         /*String _filename = filename + ".pau.gz";
         if (setCurrentFileName(_filename)) {
             mApplicationDataDirectory = Constants.DEFAULT_APP_FILE_DIRECTORY;
@@ -105,7 +107,6 @@ public class PaukerManager {
         return mFileAbsolutePath;
     }
 
-    // Todo replace this with the File Class
     private void setFileAbsolutePath(String fileAbsolutePath) {
         // Validate the filename
         if (fileAbsolutePath == null) {
