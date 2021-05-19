@@ -99,7 +99,7 @@ public class ModelManager {
         return instance;
     }
 
-    private void setupCurrentPack(Context context) {
+    private void setupCurrentPack(Context context) { // TODO LessonManager
 
         Iterator<Card> cardIterator = null;
 
@@ -169,7 +169,7 @@ public class ModelManager {
         }
     }
 
-    public void setCurrentPack(Context context, int stackIndex) {
+    public void setCurrentPack(Context context, int stackIndex) { // TODO LessonManager
         Iterator<Card> cardIterator;
         if (getLessonSize() > 0) {
             mCurrentPack.clear();
@@ -189,7 +189,7 @@ public class ModelManager {
         }
     }
 
-    private void fillCurrentPack(Context context, Iterator<Card> cardIterator) {
+    private void fillCurrentPack(Context context, Iterator<Card> cardIterator) { // TODO LessonManager
         while (cardIterator.hasNext()) {
             mCurrentPack.add((FlashCard) cardIterator.next());
         }
@@ -199,18 +199,18 @@ public class ModelManager {
         }
     }
 
-    void addCard(String sideA, String sideB, String index, String learnStatus) {
+    void addCard(String sideA, String sideB, String index, String learnStatus) { // TODO LessonManager
         FlashCard newCard = new FlashCard(sideA, sideB, index, learnStatus);
         mLesson.getUnlearnedBatch().addCard(newCard);
     }
 
-    public void addCard(FlashCard flashCard, String sideA, String sideB) {
+    public void addCard(FlashCard flashCard, String sideA, String sideB) { // TODO LessonManager
         flashCard.setSideAText(sideA);
         flashCard.setSideBText(sideB);
         getLesson().addCard(flashCard);
     }
 
-    public List<BatchStatistics> getBatchStatistics() {
+    public List<BatchStatistics> getBatchStatistics() { // TODO LessonManager
         ArrayList<BatchStatistics> batchSizes = new ArrayList<>();
 
         List<LongTermBatch> longTermBatches = mLesson.getLongTermBatches();
@@ -229,7 +229,7 @@ public class ModelManager {
         return batchSizes;
     }
 
-    public void editCard(int position, String sideAText, String sideBText) {
+    public void editCard(int position, String sideAText, String sideBText) { // TODO LessonManager
         if (position < 0 || position >= mCurrentPack.size()) {
             Log.e("AndyPaukerApplication::learnedCard", "request to update a card with position outside the pack");
             return;
@@ -244,7 +244,7 @@ public class ModelManager {
      * correctly, we have to move the current card one batch further
      * @param position .
      */
-    void setCardLearned(int position) {
+    void setCardLearned(int position) { // TODO LessonManager
         if (position < 0 || position >= mCurrentPack.size()) {
             Log.e("AndyPaukerApplication::learnedCard", "request to update a card with position outside the pack");
             return;
@@ -261,7 +261,7 @@ public class ModelManager {
      * @param position .
      * @param context  .
      */
-    void pullCurrentCard(int position, Context context) {
+    void pullCurrentCard(int position, Context context) { // TODO LessonManager
         if (position < 0 || position >= mCurrentPack.size()) {
             Log.e("AndyPaukerApplication::setCardUnLearned", "request to update a card with position outside the pack");
             return;
@@ -367,7 +367,7 @@ public class ModelManager {
      * While repeating cards the user acknowledged that the card was remembered
      * correctly, we have to move the current card one batch further
      */
-    private void pushCurrentCard() {
+    private void pushCurrentCard() { // TODO LessonManager
         //Log.d("AndyPaukerApplication::pushCurrentCard","Entry : Learning phase = ");
         LongTermBatch longTermBatch;
 
@@ -431,7 +431,7 @@ public class ModelManager {
     }
 
     @NonNull
-    public File getFilePath() {
+    public File getFilePath() { // TODO DataManager
         String filePath = Environment.getExternalStorageDirectory()
                 + paukerManager.getApplicationDataDirectory()
                 + paukerManager.getCurrentFileName();
@@ -442,7 +442,7 @@ public class ModelManager {
      * Zeigt einen Toast mit dem nächsten Ablaufdatum an, wenn es in den Einstellungen aktiviert ist.
      * @param context Kontext der aufrufenden Activity
      */
-    public void showExpireToast(Context context) {
+    public void showExpireToast(Context context) { // TODO Toaster
         if (!settingsManager.getBoolPreference(context, ENABLE_EXPIRE_TOAST))
             return;
 
@@ -465,7 +465,7 @@ public class ModelManager {
         }
     }
 
-    public boolean deleteLesson(Context context, File file) {
+    public boolean deleteLesson(Context context, File file) { // TODO DataManager
         String filename = file.getName();
         try {
             if (file.delete()) {
@@ -497,7 +497,7 @@ public class ModelManager {
         }
     }
 
-    public void addLesson(Context context, File file) {
+    public void addLesson(Context context, File file) { // TODO DataManager
         String filename = file.getName();
         int index = filename.endsWith(".xml") ? filename.indexOf(".xml") : filename.indexOf(".pau");
         if (index != -1) {
@@ -506,12 +506,12 @@ public class ModelManager {
         }
     }
 
-    public void addLesson(Context context) {
+    public void addLesson(Context context) { // TODO DataManager
         String filename = paukerManager.getCurrentFileName();
         addLesson(context, filename);
     }
 
-    private void addLesson(Context context, String fileName) {
+    private void addLesson(Context context, String fileName) { // TODO DataManager
         try {
             FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_APPEND);
             String text = "\n" + fileName;
@@ -538,7 +538,7 @@ public class ModelManager {
     }
 
     @NonNull
-    public Map<String, String> getLokalDeletedFiles(Context context) {
+    public Map<String, String> getLokalDeletedFiles(Context context) { // TODO DataManager
         Map<String, String> filesToDelete = new HashMap<>();
         try {
             FileInputStream fis = context.openFileInput(Constants.DELETED_FILES_NAMES_FILE_NAME);
@@ -562,7 +562,7 @@ public class ModelManager {
         return filesToDelete;
     }
 
-    public List<String> getLokalAddedFiles(Context context) {
+    public List<String> getLokalAddedFiles(Context context) { // TODO DataManager
         List<String> filesToAdd = new ArrayList<>();
         try {
             FileInputStream fis = context.openFileInput(Constants.ADDED_FILES_NAMES_FILE_NAME);
@@ -579,7 +579,7 @@ public class ModelManager {
         return filesToAdd;
     }
 
-    public boolean resetDeletedFilesData(Context context) {
+    public boolean resetDeletedFilesData(Context context) { // TODO DataManager
         try {
             FileOutputStream fos = context.openFileOutput(Constants.DELETED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
             String text = "\n";
@@ -591,7 +591,7 @@ public class ModelManager {
         }
     }
 
-    public boolean resetAddedFilesData(Context context) {
+    public boolean resetAddedFilesData(Context context) { // TODO DataManager
         try {
             FileOutputStream fos = context.openFileOutput(Constants.ADDED_FILES_NAMES_FILE_NAME, MODE_PRIVATE);
             String text = "\n";
@@ -603,14 +603,14 @@ public class ModelManager {
         }
     }
 
-    public boolean resetIndexFiles(Context context) {
+    public boolean resetIndexFiles(Context context) { // TODO DataManager Kann weg?
         return resetDeletedFilesData(context) && resetAddedFilesData(context);
     }
 
     /**
      * Move all cards in USTM and STM back to unlearned batch
      */
-    public void resetLesson() {
+    public void resetLesson() { // TODO LessonManager
         List<Card> ustmList = mLesson.getUltraShortTermList();
         List<Card> stmList = mLesson.getShortTermList();
 
@@ -631,32 +631,32 @@ public class ModelManager {
      */
     public void forgetAllCards() {
         mLesson.reset();
-    }
+    } // TODO LessonManager
 
     /**
      * Dreht alle Karten um.
      */
     public void flipAllCards() {
         mLesson.flip();
-    }
+    } // TODO LessonManager
 
-    public boolean isLessonNotNew() {
+    public boolean isLessonNotNew() { // TODO LessonManager
         return !paukerManager.getCurrentFileName().equals(Constants.DEFAULT_FILE_NAME);
     }
 
     public boolean isLessonSetup() {
         return mLesson != null;
-    }
+    } // TODO LessonManager
 
     /**
      * Prüft ob die Lektion leer ist.
      * @return True, wenn keine Karten vorhanden sind und die Beschreibung leer ist
      */
-    public boolean isLessonEmpty() {
+    public boolean isLessonEmpty() { // TODO LessonManager
         return isLessonSetup() && mLesson.getCards().isEmpty() && mLesson.getDescription().isEmpty();
     }
 
-    public void createNewLesson() {
+    public void createNewLesson() { // TODO LessonManager
         Log.d("AndyPaukerApplication::setupNewLesson", "Entry");
         Lesson newLesson = new Lesson();
         setLesson(newLesson);
@@ -666,7 +666,7 @@ public class ModelManager {
      * Sortiert den Batch, aber aktuellisiert nicht den aktuellen.
      * @param stackIndex    Index des Batchs
      * @param sortByElement Nach diesem Element wird soriert
-     * @param asc_direction In welche Richtung sortiert werden soll
+     * @param asc_direction In welche Richtung sortiert werden soll // TODO LessonManager
      */
     public void sortBatch(int stackIndex, Card.Element sortByElement, boolean asc_direction) {
         Batch batch;
@@ -689,7 +689,7 @@ public class ModelManager {
      * @param position Position der Karte
      * @return True, wenn Karte erfolgreich gelöscht wurde
      */
-    public boolean deleteCard(int position) {
+    public boolean deleteCard(int position) { // TODO LessonManager
 
         Card card = mCurrentPack.get(position);
 
@@ -705,7 +705,7 @@ public class ModelManager {
      * @param card Zu löschende Karte
      * @return True, wenn Karte erfolgreich gelöscht wurde
      */
-    public boolean deleteCard(Card card) {
+    public boolean deleteCard(Card card) { // TODO LessonManager
         Log.d("AndyPaukerApplication::deleteCard", "entry");
 
         if (card.isLearned()) {
@@ -738,24 +738,24 @@ public class ModelManager {
         return true;
     }
 
-    public void setLearningPhase(Context context, LearningPhase learningPhase) {
+    public void setLearningPhase(Context context, LearningPhase learningPhase) { // TODO LearningPhase
         mLearningPhase = learningPhase;
         setupCurrentPack(context);
     }
 
     public LearningPhase getLearningPhase() {
         return mLearningPhase;
-    }
+    } // TODO LearningPhase
 
     public String getDescription() {
         return mLesson.getDescription();
-    }
+    } // TODO LessonManager
 
     public void setDescription(String s) {
         mLesson.setDescription(s);
-    }
+    } // TODO LessonManager
 
-    public FlashCard getCard(int position) {
+    public FlashCard getCard(int position) { // TODO LessonManager
         if (position < 0 || position >= mCurrentPack.size()) {
             return null;
         } else {
@@ -763,7 +763,7 @@ public class ModelManager {
         }
     }
 
-    public Font getCardFont(int side_ID, int position) {
+    public Font getCardFont(int side_ID, int position) { // TODO LessonManager
         FlashCard flashCard = getCard(position);
 
         if (flashCard == null) return new Font();
@@ -782,7 +782,7 @@ public class ModelManager {
      * @param font     Seite, bei der die Werte gesetzt werden sollen
      * @param cardSide Hiervon werden die Werte ausgelesen
      */
-    void setFont(@Nullable Font font, TextView cardSide) {
+    void setFont(@Nullable Font font, TextView cardSide) { // TODO ModelManager
         font = font == null ? new Font() : font;
 
         int textSize = font.getTextSize();
@@ -806,7 +806,7 @@ public class ModelManager {
     }
 
     @NonNull
-    private GradientDrawable createBoxBackground(int backgroundColor) {
+    private GradientDrawable createBoxBackground(int backgroundColor) { // TODO ModelManager
         GradientDrawable background = new GradientDrawable();
         background.setShape(GradientDrawable.RECTANGLE);
         background.setCornerRadius(2);
@@ -815,55 +815,56 @@ public class ModelManager {
         return background;
     }
 
+    //TODO Have an enum BATCH_TYPE and pass that into a single getBatchSize(BatchType)
+
     public int getCurrentBatchSize() {
         return mCurrentPack.size();
-    }
+    } // TODO BatchType
 
     public int getLessonSize() {
         return mLesson.getCards().size();
-    }
+    } // TODO BatchType
 
-    public int getExpiredCardsSize() {
+    public int getExpiredCardsSize() { // TODO BatchType
         return mLesson.getNumberOfExpiredCards();
     }
 
-    public int getUnlearnedBatchSize() {
+    public int getUnlearnedBatchSize() { // TODO BatchType
         return mLesson.getUnlearnedBatch().getCards().size();
     }
 
-    //TODO Have an enum BATCH_TYPE and pass that into a single getBatchSize(BatchType)
 
-    public int getUltraShortTermMemorySize() {
+    public int getUltraShortTermMemorySize() { // TODO BatchType
         return mLesson.getUltraShortTermList().size();
     }
 
-    public int getShortTermMemorySize() {
+    public int getShortTermMemorySize() { // TODO BatchType
         return mLesson.getShortTermList().size();
     }
 
-    public List<FlashCard> getCurrentPack() {
+    public List<FlashCard> getCurrentPack() { // TODO LessonManager
         return mCurrentPack;
     }
 
-    public Lesson getLesson() {
+    public Lesson getLesson() { // TODO LessonManager
         return mLesson;
     }
 
-    public void setLesson(Lesson lesson) {
+    public void setLesson(Lesson lesson) { // TODO LessonManager
         mLesson = lesson;
     }
 
     /*
      * Shuffle the card pack
      */
-    private void shuffleCurrentPack() {
+    private void shuffleCurrentPack() { // TODO LessonManager
         Collections.shuffle(mCurrentPack);
     }
 
     /*
      * Return true if the pack needs shuffled
      */
-    private boolean isShuffle(Context context) {
+    private boolean isShuffle(Context context) { // TODO LessonManager
         // Check if we need to add random learn
         if (mLearningPhase == LearningPhase.SIMPLE_LEARNING ||
                 mLearningPhase == LearningPhase.REPEATING_STM ||
@@ -879,7 +880,7 @@ public class ModelManager {
                 && settingsManager.getBoolPreference(context, LEARN_NEW_CARDS_RANDOMLY);
     }
 
-    public void forgetCard(Card card) {
+    public void forgetCard(Card card) { // TODO LessonManager
         if (!card.isLearned())
             return;
 
@@ -890,7 +891,7 @@ public class ModelManager {
         }
     }
 
-    public void instantRepeatCard(Card card) {
+    public void instantRepeatCard(Card card) { // TODO LessonManager
         Batch batch = getBatchOfCard(card);
         int index = batch.indexOf(card);
         if (index != -1) {
@@ -898,7 +899,7 @@ public class ModelManager {
         }
     }
 
-    private Batch getBatchOfCard(Card card) {
+    private Batch getBatchOfCard(Card card) { // TODO LessonManager
         int batchNumber = card.getLongTermBatchNumber();
         if (batchNumber == 0)
             return mLesson.getSummaryBatch();
@@ -911,7 +912,7 @@ public class ModelManager {
     /**
      * the learning phases
      */
-    public enum LearningPhase {
+    public enum LearningPhase { // TODO Eigene Klasse
 
         /**
          * not learning
