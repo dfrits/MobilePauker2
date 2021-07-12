@@ -640,7 +640,7 @@ public class ModelManager {
         mLesson.flip();
     } // TODO LessonManager
 
-    public boolean isLessonNotNew() { // TODO LessonManager
+    public boolean isLessonNotNew() { // TODO DataManager
         return !paukerManager.getCurrentFileName().equals(Constants.DEFAULT_FILE_NAME);
     }
 
@@ -663,7 +663,7 @@ public class ModelManager {
     }
 
     /**
-     * Sortiert den Batch, aber aktuellisiert nicht den aktuellen.
+     * Sortiert den Batch, aber aktuallisiert nicht den aktuellen.
      * @param stackIndex    Index des Batchs
      * @param sortByElement Nach diesem Element wird soriert
      * @param asc_direction In welche Richtung sortiert werden soll // TODO LessonManager

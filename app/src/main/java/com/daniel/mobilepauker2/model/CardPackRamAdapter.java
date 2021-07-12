@@ -43,7 +43,7 @@ public class CardPackRamAdapter extends CardPackAdapter {
         cardCursor.close();
     }
 
-    @Override
+    @Override // Nicht benötigt
     public long createFlashCard(String sideA, String sideB, int index,
                                 boolean learnStatus) {
 
