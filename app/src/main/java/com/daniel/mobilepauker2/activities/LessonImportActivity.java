@@ -263,17 +263,6 @@ public class LessonImportActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-        String uid = Auth.getUid();
-        String storedUid = preferences.getString(Constants.DROPBOX_USER_ID, null);
-        if (uid != null && !uid.equals(storedUid)) {
-            preferences.edit().putString(Constants.DROPBOX_USER_ID, uid).apply();
-        }
-    }
-
-    @Override
     public void finish() {
         if (errorMessage != null) {
             PaukerManager.showToast(this, errorMessage, Toast.LENGTH_LONG);
@@ -336,6 +325,17 @@ public class LessonImportActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        String uid = Auth.getUid();
+        String storedUid = preferences.getString(Constants.DROPBOX_USER_ID, null);
+        if (uid != null && !uid.equals(storedUid)) {
+            preferences.edit().putString(Constants.DROPBOX_USER_ID, uid).apply();
+        }
+    }
+
     /**
      * Syncronisiert die Dateien. Wird vom Nutzer ausgelöst.
      * <p>
@@ -354,6 +354,7 @@ public class LessonImportActivity extends AppCompatActivity {
     }
 
     private void startSync() {
+        files = files == null ? new File[0] : files;
         Intent syncIntent = new Intent(context, SyncDialog.class);
         syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
         syncIntent.putExtra(SyncDialog.FILES, files);
