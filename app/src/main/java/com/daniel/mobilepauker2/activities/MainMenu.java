@@ -75,19 +75,19 @@ public class MainMenu extends AppCompatActivity {
 
         // Channel erstellen, falls noch nicht vorhanden
         Log.d("AlamNotificationReceiver::onReceive", "Create Channels");
-        createNotificationChannels();
+        createNotificationChannels(); // TODO
 
-        String action = getIntent().getAction();
+        String action = getIntent().getAction(); // TODO
         if (action != null && action.equals("Open Lesson")) {
             startActivity(new Intent(context, LessonImportActivity.class));
         }
 
-        ErrorReporter.instance().init(context);
+        ErrorReporter.instance().init(context); // TODO
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main_menu);
 
-        checkErrors();
+        checkErrors(); // TODO
 
         if (!modelManager.isLessonSetup()) {
             modelManager.createNewLesson();
@@ -206,7 +206,7 @@ public class MainMenu extends AppCompatActivity {
         initthread.run();
     }
 
-    private void showBatchDetails(int index) {
+    private void showBatchDetails(int index) { // TODO
         if (modelManager.getLessonSize() == 0) return;
 
         Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
