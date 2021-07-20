@@ -250,7 +250,7 @@ public class MainMenu extends AppCompatActivity {
             searchView.setQueryHint(getString(R.string.search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
-                public boolean onQueryTextSubmit(String query) {
+                public boolean onQueryTextSubmit(String query) {// TODO
                     Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
                     browseIntent.setClass(context, SearchActivity.class);
                     browseIntent.putExtra(SearchManager.QUERY, query);
@@ -326,7 +326,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onDestroy() { // TODO
         NotificationService.enqueueWork(context);
         isPaukerActive = false;
         super.onDestroy();
@@ -357,7 +357,7 @@ public class MainMenu extends AppCompatActivity {
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
             createNewLesson();
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == RESULT_OK) {
-            startActivity(new Intent(context, LessonImportActivity.class));
+            startActivity(new Intent(context, LessonImportActivity.class)); // TODO
         }
     }
 
@@ -389,7 +389,7 @@ public class MainMenu extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             checkPermission(RQ_WRITE_EXT_SAVE);
         } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
+            startActivityForResult(new Intent(context, SaveDialog.class), requestCode); // TODO
         }
     }
 
@@ -413,13 +413,13 @@ public class MainMenu extends AppCompatActivity {
                         .setNeutralButton(R.string.open_lesson, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(context, LessonImportActivity.class));
+                                startActivity(new Intent(context, LessonImportActivity.class)); // TODO
                                 dialog.dismiss();
                             }
                         });
                 builder.create().show();
             } else
-                startActivity(new Intent(context, LessonImportActivity.class));
+                startActivity(new Intent(context, LessonImportActivity.class)); // TODO
         }
     }
 
