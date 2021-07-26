@@ -298,7 +298,7 @@ public class LessonImportActivity extends AppCompatActivity {
                         openLesson(paukerManager.getCurrentFileName());
                     } catch (IOException ignored) {
                         PaukerManager.showToast((Activity) context, R.string.reopen_lesson_error, Toast.LENGTH_LONG);
-                        ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
+                        ErrorReporter.instance().AddCustomData("ImportThread", "IOException?"); // TODO
                     }
                 } else {
                     paukerManager.setupNewApplicationLesson();
@@ -322,7 +322,7 @@ public class LessonImportActivity extends AppCompatActivity {
                 finish();
             } catch (IOException e) {
                 PaukerManager.showToast((Activity) context, R.string.error_reading_from_xml, Toast.LENGTH_LONG);
-                ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
+                ErrorReporter.instance().AddCustomData("ImportThread", "IOException?"); // TODO
             }
         }
     }
@@ -345,8 +345,8 @@ public class LessonImportActivity extends AppCompatActivity {
     public void syncManuallyClicked(MenuItem item) {
         accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null);
         if (accessToken == null) {
-            Intent assIntent = new Intent(context, DropboxAccDialog.class);
-            assIntent.putExtra(DropboxAccDialog.AUTH_MODE, true);
+            Intent assIntent = new Intent(context, DropboxAccDialog.class); // TODO
+            assIntent.putExtra(DropboxAccDialog.AUTH_MODE, true); // TODO
             startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG);
         } else {
             startSync();
@@ -354,7 +354,7 @@ public class LessonImportActivity extends AppCompatActivity {
     }
 
     private void startSync() {
-        Intent syncIntent = new Intent(context, SyncDialog.class);
+        Intent syncIntent = new Intent(context, SyncDialog.class); // TODO
         syncIntent.putExtra(SyncDialog.ACCESS_TOKEN, accessToken);
         syncIntent.putExtra(SyncDialog.FILES, files);
         syncIntent.setAction(SyncDialog.SYNC_ALL_ACTION);
@@ -426,7 +426,7 @@ public class LessonImportActivity extends AppCompatActivity {
         } catch (IOException e) {
             resetSelection(null);
             PaukerManager.showToast((Activity) context, getString(R.string.error_reading_from_xml), Toast.LENGTH_SHORT);
-            ErrorReporter.instance().AddCustomData("ImportThread", "IOException?");
+            ErrorReporter.instance().AddCustomData("ImportThread", "IOException?"); // TODO
         }
     }
 
