@@ -35,7 +35,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/infoText" />
-
+<!--
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fBDownloadNewLesson"
         android:layout_width="wrap_content"
@@ -45,5 +45,5 @@
         android:layout_margin="10dp"
         android:onClick="downloadNewLesson"
         android:src="@drawable/button_download_lesson"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"/>-->
 </RelativeLayout>
