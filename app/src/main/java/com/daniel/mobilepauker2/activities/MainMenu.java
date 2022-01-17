@@ -75,19 +75,19 @@ public class MainMenu extends AppCompatActivity {
 
         // Channel erstellen, falls noch nicht vorhanden
         Log.d("AlamNotificationReceiver::onReceive", "Create Channels");
-        createNotificationChannels(); // TODO
+        createNotificationChannels();
 
         String action = getIntent().getAction(); // TODO
         if (action != null && action.equals("Open Lesson")) {
             startActivity(new Intent(context, LessonImportActivity.class));
         }
 
-        ErrorReporter.instance().init(context); // TODO
+        ErrorReporter.instance().init(context);
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
         setContentView(R.layout.main_menu);
 
-        checkErrors(); // TODO
+        checkErrors();
 
         if (!modelManager.isLessonSetup()) {
             modelManager.createNewLesson();
@@ -206,7 +206,7 @@ public class MainMenu extends AppCompatActivity {
         initthread.run();
     }
 
-    private void showBatchDetails(int index) { // TODO
+    private void showBatchDetails(int index) {
         if (modelManager.getLessonSize() == 0) return;
 
         Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
@@ -250,7 +250,7 @@ public class MainMenu extends AppCompatActivity {
             searchView.setQueryHint(getString(R.string.search_hint));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
-                public boolean onQueryTextSubmit(String query) {// TODO
+                public boolean onQueryTextSubmit(String query) {
                     Intent browseIntent = new Intent(Intent.ACTION_SEARCH);
                     browseIntent.setClass(context, SearchActivity.class);
                     browseIntent.putExtra(SearchManager.QUERY, query);
@@ -285,6 +285,11 @@ public class MainMenu extends AppCompatActivity {
     public void onResume() {
         Log.d("MainMenuActivity::onResume", "ENTRY");
         super.onResume();
+
+        if (LearnCardsActivity.isLearningRunning()) {
+            Intent intent = new Intent(context, LearnCardsActivity.class);
+            startActivity(intent);
+        }
 
         modelManager.resetLesson();
 
@@ -326,7 +331,7 @@ public class MainMenu extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() { // TODO
+    protected void onDestroy() {
         NotificationService.enqueueWork(context);
         isPaukerActive = false;
         super.onDestroy();
@@ -357,7 +362,7 @@ public class MainMenu extends AppCompatActivity {
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON && resultCode == RESULT_OK) {
             createNewLesson();
         } else if (requestCode == Constants.REQUEST_CODE_SAVE_DIALOG_OPEN && resultCode == RESULT_OK) {
-            startActivity(new Intent(context, LessonImportActivity.class)); // TODO
+            startActivity(new Intent(context, LessonImportActivity.class));
         }
     }
 
@@ -389,7 +394,7 @@ public class MainMenu extends AppCompatActivity {
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             checkPermission(RQ_WRITE_EXT_SAVE);
         } else {
-            startActivityForResult(new Intent(context, SaveDialog.class), requestCode); // TODO
+            startActivityForResult(new Intent(context, SaveDialog.class), requestCode);
         }
     }
 
@@ -413,13 +418,13 @@ public class MainMenu extends AppCompatActivity {
                         .setNeutralButton(R.string.open_lesson, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                startActivity(new Intent(context, LessonImportActivity.class)); // TODO
+                                startActivity(new Intent(context, LessonImportActivity.class));
                                 dialog.dismiss();
                             }
                         });
                 builder.create().show();
             } else
-                startActivity(new Intent(context, LessonImportActivity.class)); // TODO
+                startActivity(new Intent(context, LessonImportActivity.class));
         }
     }
 
