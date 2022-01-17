@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class LessonReceiver extends Activity {
+public class LessonReceiver extends Activity { // TODO
     private final Activity context = this;
 
     @Override
