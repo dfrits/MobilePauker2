@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.daniel.mobilepauker2.model.notification.NotificationService;
 import com.daniel.mobilepauker2.utils.Log;
 
-public class BootReceiver extends BroadcastReceiver {
+public class BootReceiver extends BroadcastReceiver { // TODO
 
     @Override
     public void onReceive(Context context, Intent intent) {
