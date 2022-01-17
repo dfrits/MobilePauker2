@@ -7,7 +7,7 @@ import android.content.Intent;
 import com.daniel.mobilepauker2.model.notification.NotificationService;
 import com.daniel.mobilepauker2.utils.Log;
 
-public class BootReceiver extends BroadcastReceiver { // TODO
+public class BootReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -24,8 +24,5 @@ public class BootReceiver extends BroadcastReceiver { // TODO
         // Notification neu setzen
         NotificationService.enqueueWork(context);
         Log.d("BootReceiver::onReceive", "NotificationService started");
-
-        // Autosync
-        // TODO implementieren
     }
 }
