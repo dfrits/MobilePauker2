@@ -99,7 +99,7 @@
     <!-- endregion -->
 
     <!-- region Sonstiges -->
-    <string name="app_name" translatable="false">Mobile Pauker ++</string>
+    <string name="app_name" translatable="false">Old Pauker ++</string>
     <string name="association">Association</string>
     <string name="background">Background</string>
     <string name="bold">Bold</string>
