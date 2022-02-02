@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/synchronizing_title">
+    // Auto upload
+    <SwitchPreference
+        android:defaultValue="@bool/auto_upload_default"
+        android:enabled="false"
+        android:key="@string/auto_upload"
+        android:summary="@string/auto_sync_disabled_summ"
+        android:title="@string/auto_upload_title" />
+    // Button zum verwalten des DB-Acc
+    <Preference
+        android:key="@string/associate_dropbox"
+        android:title="@string/associate_dropbox_title" />
+</PreferenceScreen>

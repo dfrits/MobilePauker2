@@ -192,10 +192,8 @@
     <!-- region Titles -->
     <string name="about_title">モバイルぽーかーについて</string>
     <string name="associate_dropbox_title">Dropboxに接続する</string>
-    <string name="auto_download_title">自動ダウンロード</string>
-    <string name="auto_save_title">自動法損</string>
-    <string name="auto_upload_title">自動アップロード</string>
     <string name="case_sensitive_title">大文字と小文字を区別する</string>
+    <string name="auto_upload_title">自動アップロード</string>
     <string name="expire_toast_title">有効期限情報を見せる</string>
     <string name="flip_card_sides_title">カードの側を交わす</string>
     <string name="flip_cards">側を交わす</string>
@@ -215,11 +213,9 @@
     <!-- endregion -->
 
     <!-- region Beschreibungen -->
-    <string name="auto_save_summ">勉強を終わったら自動で法損する</string>
     <string name="auto_sync_disabled_summ">Dropboxと接続したアカウントはありません</string>
-    <string name="auto_sync_enabled_download_summ">レッソンを法損したら同期する</string>
-    <string name="auto_sync_enabled_upload_summ">レッソンを法損したら同期する</string>
     <string name="case_sensitive_summ">カードが入力によって繰り返される場合</string>
+    <string name="auto_sync_enabled_upload_summ">レッソンを法損したら同期する</string>
     <string name="expire_toast_summ">法損をしたら次の有効期限の情報を表示する</string>
     <string name="flip_card_sides_summ">復習でどんな側がまず見せられる (%s)</string>
     <string name="hide_times_summ">超短期記憶と短期記憶のタイマーが勉強で欠かされる</string>
@@ -244,5 +240,17 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
+    <string name="error_removing_file">Error removing File!</string>
+    <string name="error_moving_file">Error moving File</string>
+    <string name="warning">Warning!</string>
+    <string name="overwrite_file_question">Overwrite File?</string>
+    <string name="check_internet_connection">Internetverbindung prüfen!</string>
+    <string name="error_invalid_token_message">There is something wrong with the dropbox token. Maybe it is solved by the next try.</string>
+    <string name="sync_success">Synchronized successfully</string>
+    <string name="already_connected">Bereits verbunden</string>
+    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
+    <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
+    <string name="tap_enter_answer">Tap to enter your answer.</string>
+    <string name="deleting_impossible">Löschen nicht möglich!</string>
     <!-- endregion -->
 </resources>

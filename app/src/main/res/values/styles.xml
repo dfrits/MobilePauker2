@@ -20,6 +20,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="AppTheme.NoActionBar.Dialog" parent="Theme.AppCompat.Dialog.Alert" >
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="ResultDialogTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:background">@color/box_background</item>
     </style>

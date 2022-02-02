@@ -15,6 +15,12 @@
         android:visible="false"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/mHideTimer"
+        android:checkable="true"
+        android:onClick="mHideTimerClicked"
+        android:title="@string/hide_times"
+        app:showAsAction="never" />
+    <item
         android:onClick="mEditClicked"
         android:title="@string/edit_card"
         app:showAsAction="never" />

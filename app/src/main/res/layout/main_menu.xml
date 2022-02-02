@@ -30,7 +30,7 @@
                 android:textSize="12sp" />
         </RelativeLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chartListView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -93,7 +93,7 @@
         android:layout_marginBottom="5dp"
         android:layout_weight="50">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonPanel"
             android:layout_width="100dp"
             android:layout_height="match_parent">
@@ -126,7 +126,7 @@
                     android:padding="5dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/button_add_card"
-                    android:tint="@color/color_selector_buttons_homescreen" />
+                    app:tint="@color/color_selector_buttons_homescreen" />
 
                 <TextView
                     android:id="@+id/tAddNewCardsDesc"
@@ -176,7 +176,7 @@
                     android:padding="5dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/button_learn_new_cards"
-                    android:tint="@color/color_selector_buttons_homescreen"
+                    app:tint="@color/color_selector_buttons_homescreen"
                     android:tintMode="src_in" />
 
                 <TextView
@@ -225,7 +225,7 @@
                     android:padding="5dp"
                     android:scaleType="fitCenter"
                     android:src="@drawable/button_repeat_cards"
-                    android:tint="@color/color_selector_buttons_homescreen"
+                    app:tint="@color/color_selector_buttons_homescreen"
                     android:tintMode="src_in" />
 
                 <TextView
@@ -246,7 +246,7 @@
                     android:textAlignment="center"
                     android:textColor="@color/text_color" />
             </RelativeLayout>
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/infoText"

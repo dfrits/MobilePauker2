@@ -16,7 +16,7 @@
     <string name="error_synchronizing">Can\'t synchronize</string>
     <string name="error_upload">Error while uploading File</string>
     <string name="file_already_exists">File is already existing!</string>
-    <string name="load_card_data_error">Erro while loading card!</string>
+    <string name="load_card_data_error">Error while loading card!</string>
     <string name="no_lesson_found">No Lesson found…</string>
     <string name="number_format_error">Please type in just numbers</string>
     <string name="pause_timer_error">Time cannot be paused now</string>
@@ -199,13 +199,11 @@
     <!-- region Keys -->
     <string name="about" translatable="false">About</string>
     <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
-    <string name="auto_download" translatable="false">Auto Download</string>
-    <string name="auto_save" translatable="false">Auto Save</string>
     <string name="auto_upload" translatable="false">Auto Upload</string>
     <string name="case_sensitive" translatable="false">Case sensitiv</string>
     <string name="expire_toast" translatable="false">Enable Expire Toast</string>
     <string name="flip_card_sides" translatable="false">Flip card sides</string>
-    <string name="hide_times" translatable="false">Hide times</string>
+    <string name="hide_times" translatable="false">Hide Times</string>
     <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
     <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
     <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
@@ -221,8 +219,6 @@
     <!-- region Titles -->
     <string name="about_title">About MobilePauker++</string>
     <string name="associate_dropbox_title">Associate with Dropbox</string>
-    <string name="auto_download_title">Auto Download</string>
-    <string name="auto_save_title">Auto Save</string>
     <string name="auto_upload_title">Auto Upload</string>
     <string name="case_sensitive_title">Case sensitiv</string>
     <string name="expire_toast_title">Show Expire Toast</string>
@@ -244,11 +240,9 @@
     <!-- endregion -->
 
     <!-- region Beschreibungen -->
-    <string name="auto_save_summ">Save automatically after every session</string>
     <string name="auto_sync_disabled_summ">No account associated yet</string>
-    <string name="auto_sync_enabled_download_summ">Synchronize every time before you open a lesson</string>
-    <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
     <string name="case_sensitive_summ">If cards are repeated by input</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
     <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
         lesson</string>
     <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
@@ -286,5 +280,17 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
+    <string name="error_removing_file">Error removing File!</string>
+    <string name="error_moving_file">Error moving File</string>
+    <string name="warning">Warning!</string>
+    <string name="overwrite_file_question">Overwrite File?</string>
+    <string name="check_internet_connection">Internetverbindung prüfen!</string>
+    <string name="error_invalid_token_message">There is something wrong with the dropbox token. Maybe it is solved by the next try.</string>
+    <string name="sync_success">Synchronized successfully</string>
+    <string name="already_connected">Bereits verbunden</string>
+    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
+    <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
+    <string name="tap_enter_answer">Tap to enter your answer.</string>
+    <string name="deleting_impossible">Löschen nicht möglich!</string>
     <!-- endregion -->
 </resources>

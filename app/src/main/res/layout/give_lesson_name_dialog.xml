@@ -32,8 +32,31 @@
         android:id="@+id/tFileExistingHint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:text="@string/file_already_exists"
         android:textColor="@android:color/holo_red_dark"
-        android:layout_marginStart="10dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/bCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:background="@android:color/transparent"
+            android:onClick="cancelClicked"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/bOK"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:background="@android:color/transparent"
+            android:onClick="okClicked"
+            android:text="@string/ok" />
+    </RelativeLayout>
 </LinearLayout>

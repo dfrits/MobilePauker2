@@ -45,7 +45,7 @@
                 android:src="@drawable/button_edit_font"
                 tools:ignore="ContentDescription" />
 
-            <com.daniel.mobilepauker2.model.MPEditText
+            <de.daniel.mobilepauker2.models.view.MPEditText
                 android:id="@+id/eTSideA"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -95,7 +95,7 @@
                 android:src="@drawable/button_edit_font"
                 tools:ignore="ContentDescription" />
 
-            <com.daniel.mobilepauker2.model.MPEditText
+            <de.daniel.mobilepauker2.models.view.MPEditText
                 android:id="@+id/eTSideB"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

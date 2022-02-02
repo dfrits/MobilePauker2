@@ -201,8 +201,6 @@
     <!-- region Titles -->
     <string name="about_title">Über MobilePauker++</string>
     <string name="associate_dropbox_title">Mit Dropbox verbinden</string>
-    <string name="auto_download_title">Automatischer Download</string>
-    <string name="auto_save_title">Automatisches Speichern</string>
     <string name="auto_upload_title">Automatischer Upload</string>
     <string name="case_sensitive_title">Groß- und Kleinschreibung beachten</string>
     <string name="expire_toast_title">Ablaufdatuminfo anzeigen</string>
@@ -224,13 +222,11 @@
     <!-- endregion -->
 
     <!-- region Beschreibungen -->
-    <string name="auto_save_summ">Speichert automatisch nach jeder Sitzung</string>
     <string name="auto_sync_disabled_summ">Noch kein Account verknüpft</string>
-    <string name="auto_sync_enabled_download_summ">Synchronisiert jedes mal vor dem Öffnen einer Lektion</string>
-    <string name="auto_sync_enabled_upload_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
     <string name="case_sensitive_summ">Wenn Karten durch Eingabe wiederholt werden</string>
     <string name="expire_toast_summ">Zeigt eine Infozeile mit dem nächsten Ablaufdatum nach dem
         Speichern an</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronisiert jedes mal nach dem Speichern einer Lektion</string>
     <string name="flip_card_sides_summ">Welche Seite beim Wiederholen zuerst gezeigt wird (%s)</string>
     <string name="hide_times_summ">UKZG und KZG Timer werden beim Lernen ausgeblendet</string>
     <string name="learn_new_cards_randomly_summ">Karten durchwürfeln vorm Lernen</string>
@@ -258,5 +254,17 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="error_removing_file">Error removing File!</string>
+    <string name="error_moving_file">Error moving File</string>
+    <string name="warning">Warning!</string>
+    <string name="overwrite_file_question">Overwrite File?</string>
+    <string name="check_internet_connection">Internetverbindung prüfen!</string>
+    <string name="error_invalid_token_message">There is something wrong with the dropbox token. Maybe it is solved by the next try.</string>
+    <string name="sync_success">Synchronized successfully</string>
+    <string name="already_connected">Bereits verbunden</string>
+    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
+    <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
+    <string name="tap_enter_answer">Tap to enter your answer.</string>
+    <string name="deleting_impossible">Löschen nicht möglich!</string>
     <!-- endregion -->
 </resources>

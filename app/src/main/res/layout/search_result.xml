@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:id="@+id/search_result_bg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <com.daniel.mobilepauker2.model.MPTextView
+        <de.daniel.mobilepauker2.models.view.MPTextView
             android:id="@+id/tCardSideA"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -24,7 +25,7 @@
             android:textColor="@color/black"
             android:textSize="18sp" />
 
-        <com.daniel.mobilepauker2.model.MPTextView
+        <de.daniel.mobilepauker2.models.view.MPTextView
             android:id="@+id/tCardSideB"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -34,7 +35,7 @@
             android:fontFamily="serif"
             android:padding="2dp"
             android:textColor="@color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
     </LinearLayout>
 
     <RelativeLayout

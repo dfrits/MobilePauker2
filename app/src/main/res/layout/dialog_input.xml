@@ -16,7 +16,7 @@
         android:textStyle="bold"
         android:labelFor="@+id/eTInput"/>
 
-    <com.daniel.mobilepauker2.model.MPEditText
+    <de.daniel.mobilepauker2.models.view.MPEditText
         android:id="@+id/eTInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
