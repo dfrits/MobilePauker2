@@ -27,7 +27,7 @@ class SettingsFragmentNotifications : PreferenceFragmentCompat(),
         (context?.applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
         addPreferencesFromResource(R.xml.preferences_notifications)
         val preferenceScreen: PreferenceScreen = preferenceScreen
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.registerOnSharedPreferenceChangeListener(this)
         init(preferenceScreen)
     }
 
@@ -46,7 +46,7 @@ class SettingsFragmentNotifications : PreferenceFragmentCompat(),
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     private fun init(preference: Preference) {

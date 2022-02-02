@@ -27,7 +27,7 @@ class SettingsFragmentMain : PreferenceFragmentCompat(),
         (context?.applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
         addPreferencesFromResource(R.xml.preferences_main)
         val preferenceScreen: PreferenceScreen = preferenceScreen
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.registerOnSharedPreferenceChangeListener(this)
         init(preferenceScreen)
     }
 
@@ -46,10 +46,10 @@ class SettingsFragmentMain : PreferenceFragmentCompat(),
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.unregisterOnSharedPreferenceChangeListener(this)
     }
 
-    override fun onDisplayPreferenceDialog(preference: Preference?) {
+    override fun onDisplayPreferenceDialog(preference: Preference) {
         if (activity is PaukerSettings) {
             val dialog: DialogFragment = when (preference) {
                 is EditTextPreference -> {

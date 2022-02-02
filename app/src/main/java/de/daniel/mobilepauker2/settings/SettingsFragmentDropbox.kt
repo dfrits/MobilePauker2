@@ -22,7 +22,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         (context?.applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
         addPreferencesFromResource(R.xml.preferences_dropbox)
         val preferenceScreen: PreferenceScreen = preferenceScreen
-        preferenceScreen.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.registerOnSharedPreferenceChangeListener(this)
         init(preferenceScreen)
     }
 
@@ -43,7 +43,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
 
     override fun onPause() {
         super.onPause()
-        preferenceScreen.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+        preferenceScreen.sharedPreferences!!.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     private fun init(preference: Preference) {
@@ -71,7 +71,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         Log.d("SettingsFragment::initSyncPrefs", "init syncprefs")
         val dbPref: Preference? =
             findPreference(settingsManager.getSettingsKey(SettingsManager.Keys.DB_PREFERENCE))
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val accessToken = pref.getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         if (accessToken == null) {
             setPrefAss(dbPref)
