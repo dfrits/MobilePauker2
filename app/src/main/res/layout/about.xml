@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/aboutPanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/defaultBackground"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/iAppIcon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintEnd_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/aboutPanel"
+        app:layout_constraintWidth_default="percent"
+        app:layout_constraintWidth_max="100dp"
+        app:layout_constraintWidth_percent="0.2"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/tVersion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/iAppIcon" />
+
+    <TextView
+        android:id="@+id/tAboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:fontFamily="serif"
+        android:text="@string/about_app_name"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@id/aboutPanel"
+        app:layout_constraintTop_toBottomOf="@+id/tVersion" />
+
+    <WebView
+        android:id="@+id/tAboutText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:overScrollMode="never"
+        app:layout_constraintBottom_toBottomOf="@+id/aboutPanel"
+        app:layout_constraintTop_toBottomOf="@+id/tAboutTitle" />
+</androidx.constraintlayout.widget.ConstraintLayout>

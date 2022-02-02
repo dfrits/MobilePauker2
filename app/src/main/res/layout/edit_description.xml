@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="5dp"
+    android:background="@color/defaultBackground">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:labelFor="@+id/editField"
+        android:text="@string/edit_description_title"
+        android:textAlignment="center"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/editField"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/title"
+        android:background="@drawable/box_background"
+        android:fontFamily="serif"
+        android:inputType="textCapSentences|textMultiLine"
+        android:nestedScrollingEnabled="true"
+        android:padding="3dp"
+        android:scrollbars="vertical"
+        android:gravity="top"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        android:hint="@string/no_description"/>
+
+</RelativeLayout>

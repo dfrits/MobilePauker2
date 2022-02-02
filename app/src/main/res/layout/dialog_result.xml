@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="2dp"
+    android:padding="2dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_result_message"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+            <TextView
+                android:id="@+id/tRightAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dialog_result_right_answer"
+                android:fontFamily="serif"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tInputAnswer"
+                android:layout_alignStart="@+id/tRightAnswer"
+                android:layout_below="@+id/tVRightAnswerText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="@string/dialog_result_input_answer"
+                android:fontFamily="serif"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tVRightAnswerText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toEndOf="@+id/tRightAnswer"
+                android:fontFamily="serif"
+                android:layout_marginStart="5dp"
+                android:layout_alignTop="@id/tRightAnswer"
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tVInputText"
+                android:layout_width="match_parent"
+                android:layout_toEndOf="@+id/tInputAnswer"
+                android:layout_alignStart="@+id/tVRightAnswerText"
+                android:layout_below="@id/tVRightAnswerText"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:layout_alignTop="@id/tInputAnswer"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+    </RelativeLayout>
+</LinearLayout>

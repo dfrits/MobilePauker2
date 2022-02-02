@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLearnCardsView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
+
+    <include
+        android:id="@+id/lLearnHeader"
+        layout="@layout/learn_header" />
+
+    <LinearLayout
+        android:id="@+id/fCardSides"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lLearnButtonsFrame"
+        android:layout_below="@id/tAllCards"
+        android:layout_margin="5dp"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/titelCardSideA"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:text="@string/front"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <de.daniel.mobilepauker2.models.view.MPTextView
+                android:id="@+id/tCardSideA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/titelCardSideA"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/titelCardSideB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:labelFor="@+id/eTSideB"
+                android:text="@string/back"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <de.daniel.mobilepauker2.models.view.MPTextView
+                android:id="@+id/tCardSideB_TV"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/titelCardSideB"
+                android:paddingStart="2dp"
+                android:paddingEnd="2dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <include layout="@layout/timer_animation" />
+
+    <include
+        android:id="@+id/lLearnButtonsFrame"
+        layout="@layout/learn_buttons_frame" />
+</RelativeLayout>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mSearch"
+        android:icon="@drawable/menu_search"
+        android:onClick="mOpenSearchClicked"
+        android:title="@string/search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always|collapseActionView"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/mStartChoose"
+        android:onClick="mStartChooseClicked"
+        android:title="@string/choose"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mSortBy"
+        android:title="@string/sort_by"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/mSortASC"
+                android:title="@string/asc">
+                <menu>
+                    <item
+                        android:id="@+id/mSortFrontASC"
+                        android:title="@string/front" />
+                    <item
+                        android:id="@+id/mSortBackASC"
+                        android:title="@string/back" />
+                    <item
+                        android:id="@+id/mSortBatchnumberASC"
+                        android:title="@string/batchnumber" />
+                    <item
+                        android:id="@+id/mSortLearnedDateASC"
+                        android:title="@string/learned_date" />
+                    <item
+                        android:id="@+id/mSortExpiredDateASC"
+                        android:title="@string/expired_date" />
+                    <item
+                        android:id="@+id/mSortRepetTypeASC"
+                        android:title="@string/repeat_type" />
+                </menu>
+            </item>
+
+            <item
+                android:id="@+id/mSortDSC"
+                android:title="@string/dsc">
+                <menu>
+                    <item
+                        android:id="@+id/mSortFrontDSC"
+                        android:title="@string/front" />
+                    <item
+                        android:id="@+id/mSortBackDSC"
+                        android:title="@string/back" />
+                    <item
+                        android:id="@+id/mSortBatchnumberDSC"
+                        android:title="@string/batchnumber" />
+                    <item
+                        android:id="@+id/mSortLearnedDateDSC"
+                        android:title="@string/learned_date" />
+                    <item
+                        android:id="@+id/mSortExpiredDateDSC"
+                        android:title="@string/expired_date" />
+                    <item
+                        android:id="@+id/mSortRepetTypeDSC"
+                        android:title="@string/repeat_type" />
+                </menu>
+            </item>
+        </menu>
+    </item>
+</menu>

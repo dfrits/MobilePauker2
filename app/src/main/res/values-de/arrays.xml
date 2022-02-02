@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    // Entries
+    <string-array name="repeat_cards_entries">
+        <item>Neueste zuerst</item>
+        <item>Älteste zuerst</item>
+        <item>Zufall</item>
+    </string-array>
+
+    <string-array name="return_forgotten_cards_entries">
+        <item>Oben drauf</item>
+        <item>Unten drunter</item>
+        <item>Zufall</item>
+    </string-array>
+
+    <string-array name="flip_card_sides_entries">
+        <item>Vorderseite</item>
+        <item>Rückseite</item>
+        <item>Zufall</item>
+    </string-array>
+
+    // Values
+    <string-array name="simple_settings_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+</resources>

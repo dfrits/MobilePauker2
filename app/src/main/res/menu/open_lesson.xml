@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/mSyncFilesWithDropbox"
+        android:icon="@drawable/menu_dropbox"
+        android:onClick="syncManuallyClicked"
+        android:title="@string/sync_manually"
+        android:visible="true"
+        app:showAsAction="always"
+        tools:ignore="AlwaysShowAction" />
+
+    <item
+        android:id="@+id/mOpenLesson"
+        android:onClick="mOpenLessonClicked"
+        android:title="@string/open_lesson"
+        android:visible="false"
+        app:showAsAction="always" />
+</menu>

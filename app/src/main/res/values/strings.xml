@@ -1,0 +1,296 @@
+<resources>
+    <!-- region Errors -->
+    <string name="add_card_sides_empty_error">One or both sides are empty</string>
+    <string name="crash_report_mail_body">Thanks for sending a crash report!</string>
+    <string name="crash_report_mail_subject">Mobile Pauker++: Crash report</string>
+    <string name="crash_report_message">Oops! Mobile Pauker++ crashed last time, please e-mail the
+        error report to help fix this…</string>
+    <string name="crash_report_title">Crash Report</string>
+    <string name="delete_lesson_error">Can\'t delete Lesson</string>
+    <string name="edit_cards_no_card_available">No card avialable</string>
+    <string name="error_file_not_found">The File was not found, please try again manually</string>
+    <string name="error_filename_invalid">File name is invalid</string>
+    <string name="error_filename_not_pauker">File is not compatible (.pau.gz)</string>
+    <string name="error_importflashcardfile_directory">Unable to access directory on SD card</string>
+    <string name="error_reading_from_xml">File is invalid or corrupted</string>
+    <string name="error_synchronizing">Can\'t synchronize</string>
+    <string name="error_upload">Error while uploading File</string>
+    <string name="file_already_exists">File is already existing!</string>
+    <string name="load_card_data_error">Error while loading card!</string>
+    <string name="no_lesson_found">No Lesson found…</string>
+    <string name="number_format_error">Please type in just numbers</string>
+    <string name="pause_timer_error">Time cannot be paused now</string>
+    <string name="reopen_lesson_error">Dataset of the lesson can\'t be updatet automatically!
+        Please reopen the lesson manually.</string>
+    <string name="restart_timer_error">Time cannot be resarted now</string>
+    <string name="saving_error">Error saving Lesson</string>
+    <string name="simple_error_message">An error has occurred</string>
+    <string name="shortcut_create_error">You already added 5 shortcuts. First remove one.</string>
+    <string name="shortcut_open_error_learning_running">The Learning is currently active!</string>
+    <string name="shortcut_open_error_permission">Permission not granted yet!</string>
+    <string name="synchro_canceled_by_user">Update canceled!</string>
+    <string name="synchro_timeout">Synchronizing timed out</string>
+    <!-- endregion -->
+
+    <!-- region Infos -->
+    <string name="card_added">Card added</string>
+    <string name="cards_expire_notify_msg">Cards are expired.</string>
+    <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close
+        without saving?</string>
+    <string name="compare_ques_answ">Right answer: %s\nYour answer: %s</string>
+    <string name="delete_card_message">Do you really want to delete the card?</string>
+    <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
+    <string name="expire_at">Expire at:</string>
+    <string name="expired">Expired</string>
+    <string name="expired_at">Expired at:</string>
+    <string name="expired_cards">Number of expired cards:</string>
+    <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
+    <string name="flip_cards_message">Do you want to flip the sides of the selected cards?</string>
+    <string name="flip_sides_complete">Sides fliped</string>
+    <string name="import_title">Lesson is imported. Please wait…</string>
+    <string name="info_text_hint">Description of the lesson</string>
+    <string name="instant_repeat_message">Do you want to repeat the selected cards now?</string>
+    <string name="learncards_finished_learning">Finished Learning</string>
+    <string name="learncards_show_hint">Try to remember the back of this card!</string>
+    <string name="learncards_waiting_stm_timer">Waiting on short term memory timer</string>
+    <string name="learned">Learned</string>
+    <string name="learned_at">Learned at:</string>
+    <string name="lektion_zurückgesetzt">Lesson reseted</string>
+    <string name="lesson_import_success">Lesson imported</string>
+    <string name="new_lession_created">New Lesson created</string>
+    <string name="next_expire_date">Next expire date:</string>
+    <string name="no_description">No description yet…</string>
+    <string name="not_learned_yet">Not learned yet!</string>
+    <string name="nothing_learned_yet">Nothing learned yet!</string>
+    <string name="open_lesson_hint">Lesson will be opened</string>
+    <string name="put_back">Put back</string>
+    <string name="put_further">Still continue</string>
+    <string name="put_in_your_answer">Type in your Answer</string>
+    <string name="reset_cards_message">Do you want to reset the selected cards?</string>
+    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side
+        have to be shown first</string>
+    <string name="saving_success">File saved</string>
+    <string name="search_hint">Search card</string>
+    <string name="skipWaiting">Timer still running…</string>
+    <string name="sr_repeat_type">Repeat type:</string>
+    <string name="stack">Stack</string>
+    <string name="stm">STM</string>
+    <string name="stm_timer_paused">STM \"Pause\"</string>
+    <string name="sum">Sum</string>
+    <string name="synchronizing">Synchronizing…</string>
+    <string name="timer_finished">\"Finished!\"</string>
+    <string name="untrained">Untrained</string>
+    <string name="ustm">USTM</string>
+    <string name="ustm_timer_paused">USTM \"Pause\"</string>
+    <string name="write_permission_info_message">To open and save lessons MobilePauker++ needs the
+        permission to access the storage.</string>
+    <string name="write_permission_rational_message">You can\'t open Lessons if you don\'t grant
+        this Permission!</string>
+    <string name="wrong_answer">Your Answer was wrong!</string>
+    <!-- endregion -->
+
+    <!-- region Sonstiges -->
+    <string name="app_name" translatable="false">Mobile Pauker ++</string>
+    <string name="association">Association</string>
+    <string name="background">Background</string>
+    <string name="bold">Bold</string>
+    <string name="cancel">Cancel</string>
+    <string name="close">Close</string>
+    <string name="delete">Delete</string>
+    <string name="italic">Italic</string>
+    <string name="no">No</string>
+    <string name="ok">OK</string>
+    <string name="proof">Proof</string>
+    <string name="repeat_type">Repeat type</string>
+    <string name="save">Save</string>
+    <string name="text_color">Text color</string>
+    <string name="text_size">Text size</string>
+    <string name="unlinking">Unlinking</string>
+    <string name="yes">Yes</string>
+    <!-- endregion -->
+
+    <!-- region Content Descriptions und Titles-->
+    <string name="about_app_name">What is Mobile Pauker++</string>
+    <string name="add_new_card">New card</string>
+    <string name="asc">Ascending</string>
+    <string name="back">Back</string>
+    <string name="bar_chart_title">Statistics</string>
+    <string name="batchnumber">Stacknumber</string>
+    <string name="change_sides">Change sides of the cards</string>
+    <string name="choose">Choose</string>
+    <string name="delete_card">Delete card</string>
+    <string name="dsc">Descending</string>
+    <string name="edit_card">Edit Card</string>
+    <string name="edit_description_title">Lesson Description</string>
+    <string name="edit_info_text">Edit info text</string>
+    <string name="exit_learning_dialog">Exit Learning?</string>
+    <string name="expired_date">Expired date</string>
+    <string name="front">Front</string>
+    <string name="give_lesson_name_dialog_title">Give the lesson a name</string>
+    <string name="instant_repeat">Instant Repeat</string>
+    <string name="learn_new_card">Learn new cards</string>
+    <string name="learned_date">Learned date</string>
+    <string name="lektion_verwalten_titel">Manage Lesson</string>
+    <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
+    <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
+    <string name="lessons">Lessons</string>
+    <string name="new_lesson">New lesson</string>
+    <string name="new_lesson_dialog_title">Create new Lesson?</string>
+    <string name="next">Next</string>
+    <string name="not_now">Not now</string>
+    <string name="open_lesson">Open Lesson</string>
+    <string name="pause_timer">Pause Time</string>
+    <string name="repeat_card_now">Instant repeat</string>
+    <string name="repeat_expired_cards">Repeat expired cards</string>
+    <string name="repeat_question">Knew it?</string>
+    <string name="repeat_type_description">Repeat Type Image</string>
+    <string name="repeat_type_input">Repeat by input</string>
+    <string name="repeat_type_thinking">Repeat by remembering</string>
+    <string name="reset_card">Reset Card</string>
+    <string name="reset_cards">Reset Cards</string>
+    <string name="reset_lesson">Reset lesson</string>
+    <string name="reset_lesson_dialog_title">Reset Lesson?</string>
+    <string name="restart_timer">Restart Time</string>
+    <string name="reverse_sides_dialog_title">Flip all card sides?</string>
+    <string name="save_lesson">Save lesson</string>
+    <string name="save_lesson_before_question">Do you want to save before?</string>
+    <string name="saving_title">Saving… Please wait!</string>
+    <string name="search">Search</string>
+    <string name="select_all">Choose all</string>
+    <string name="settings">Settings</string>
+    <string name="shortcut_add">Add Shortcut</string>
+    <string name="shortcut_added">Shortcut added</string>
+    <string name="shortcut_remove">Remove Shortcut</string>
+    <string name="shortcut_removed">Shortcut removed</string>
+    <string name="sort_by">Sort by</string>
+    <string name="sync_manually">Syncronize with Dropbox</string>
+    <!-- endregion -->
+
+    <!-- region Buttontexte -->
+    <string name="add">Add</string>
+    <string name="enter_answer">Enter answer</string>
+    <string name="go_on">Go on</string>
+    <string name="learn">Learn</string>
+    <string name="next_card">Next card -&gt;</string>
+    <string name="repeat">Repeat</string>
+    <string name="reset">Reset</string>
+    <string name="show_me">Show me!</string>
+    <string name="skip_waiting_button">Doesn\'t matter! Go on!</string>
+    <!-- endregion -->
+
+    <!-- region Settings -->
+
+    <!-- region Gruppentitel -->
+    <string name="learning_cards">Learning cards</string>
+    <string name="notifications">Notifications</string>
+    <string name="other">General</string>
+    <string name="times">Times</string>
+    <!-- endregion -->
+
+    <!-- region Keys -->
+    <string name="about" translatable="false">About</string>
+    <string name="associate_dropbox" translatable="false">Associate with Dropbox</string>
+    <string name="auto_upload" translatable="false">Auto Upload</string>
+    <string name="case_sensitive" translatable="false">Case sensitiv</string>
+    <string name="expire_toast" translatable="false">Enable Expire Toast</string>
+    <string name="flip_card_sides" translatable="false">Flip card sides</string>
+    <string name="hide_times" translatable="false">Hide Times</string>
+    <string name="learn_new_cards_randomly" translatable="false">Learn new cards randomly</string>
+    <string name="repeat_cards_mode" translatable="false">Repeat cards</string>
+    <string name="return_forgotten_cards" translatable="false">Return forgotten cards</string>
+    <string name="ring_tone_preference" translatable="false">Ring tone preference</string>
+    <string name="show_card_notification" translatable="false">Card Expire Notification</string>
+    <string name="show_timer_bar" translatable="false">Timer Bar Notification</string>
+    <string name="show_timer_notification" translatable="false">Show Timer Notification</string>
+    <string name="stm_key" translatable="false">STM</string>
+    <string name="unlink_dropbox" translatable="false">Unlink Dropbox</string>
+    <string name="ustm_key" translatable="false">USTM</string>
+    <!-- endregion -->
+
+    <!-- region Titles -->
+    <string name="about_title">About MobilePauker++</string>
+    <string name="associate_dropbox_title">Associate with Dropbox</string>
+    <string name="auto_upload_title">Auto Upload</string>
+    <string name="case_sensitive_title">Case sensitiv</string>
+    <string name="expire_toast_title">Show Expire Toast</string>
+    <string name="flip_card_sides_title">First shown card side</string>
+    <string name="flip_cards">Flip sides</string>
+    <string name="hide_times_title">Hide times</string>
+    <string name="learn_new_cards_randomly_title">Learn new cards randomly</string>
+    <string name="offen_lassen_checkbox">Keep open</string>
+    <string name="repeat_cards_mode_title">Repeat cards</string>
+    <string name="return_forgotten_cards_title">Return forgotten cards</string>
+    <string name="ring_tone_preference_title">Sound</string>
+    <string name="show_card_notification_title">Card expired</string>
+    <string name="show_timer_bar_title">Timer bar</string>
+    <string name="show_timer_notification_title">Timer Notification</string>
+    <string name="stm_title">STM</string>
+    <string name="synchronizing_title">Synchronizing</string>
+    <string name="unlink_dropbox_title">Unlink Dropbox</string>
+    <string name="ustm_title">USTM</string>
+    <!-- endregion -->
+
+    <!-- region Beschreibungen -->
+    <string name="auto_sync_disabled_summ">No account associated yet</string>
+    <string name="case_sensitive_summ">If cards are repeated by input</string>
+    <string name="auto_sync_enabled_upload_summ">Synchronize every time after you saved a lesson</string>
+    <string name="expire_toast_summ">Shows a info line with the next expire date after saving the
+        lesson</string>
+    <string name="flip_card_sides_summ">Which side to show first when learning (%s)</string>
+    <string name="hide_times_summ">Hide USTM and STM timers while learning</string>
+    <string name="learn_new_cards_randomly_summ">Shuffle cards bevor learning session</string>
+    <string name="repeat_cards_summ">The order how to repeat expired cards (%s)</string>
+    <string name="return_forgotten_cards_summ">Where to return forgotten cards (%s)</string>
+    <string name="show_card_notification_summ">Notifies you when a card expire</string>
+    <string name="show_timer_notification_summ">Notifies you, when the timers expire and the app is not
+        opend</string>
+    <string name="stm_summ">Short Term Memory: %smin</string>
+    <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
+    <!-- endregion -->
+
+    <!-- region Defaultwerte -->
+    <string name="flip_card_sides_default" translatable="false">0</string>
+    <string name="repeat_cards_default" translatable="false">0</string>
+    <string name="return_forgotten_cards_default" translatable="false">0</string>
+    <string name="stm_default" translatable="false">12</string>
+    <string name="ustm_default" translatable="false">18</string>
+    <!-- endregion -->
+
+    <!-- endregion -->
+
+    <!-- region Notifications -->
+    <string name="channel_notify_name_other">General</string>
+    <string name="channel_timerbar_description">Shows the time in the notification bar if the App is
+        not shown.</string>
+    <string name="channel_timerbar_name">Timer bar</string>
+    <string name="stm_expired_notify_message">Short-Term-Memory Timer has expired. Tap to repeat
+        cards.</string>
+    <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to
+        repeat cards.</string>
+    <!-- endregion -->
+
+    <!-- region Neue Strings -->
+    <string name="New">New Strings are automatically below here</string>
+    <string name="error_removing_file">Error removing File!</string>
+    <string name="error_moving_file">Error moving File</string>
+    <string name="warning">Warning!</string>
+    <string name="overwrite_file_question">Overwrite File?</string>
+    <string name="check_internet_connection">Internetverbindung prüfen!</string>
+    <string name="error_invalid_token_message">There is something wrong with the dropbox token. Maybe it is solved by the next try.</string>
+    <string name="sync_success">Synchronized successfully</string>
+    <string name="already_connected">Bereits verbunden</string>
+    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
+    <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
+    <string name="tap_enter_answer">Tap to enter your answer.</string>
+    <string name="deleting_impossible">Löschen nicht möglich!</string>
+    <!-- endregion -->
+</resources>

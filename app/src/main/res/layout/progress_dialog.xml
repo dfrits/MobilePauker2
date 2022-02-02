@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="visible">
+
+    <ProgressBar
+        android:id="@+id/pBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pTitle"
+        android:indeterminate="true"
+        android:indeterminateTint="@color/colorPrimary"
+        android:max="100"
+        android:progressTint="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/pTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        tools:text="Syncen"
+        tools:visibility="visible" />
+
+    <Button
+        android:id="@+id/cancel_button"
+        android:onClick="cancelClicked"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/pBar"
+        android:layout_alignEnd="@+id/pBar"
+        android:background="@android:color/transparent"
+        android:text="@string/cancel"
+        android:textColor="@color/color_selector_buttons_dialog_dark"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
+</RelativeLayout>

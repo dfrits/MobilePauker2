@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lButtons"
+        android:orientation="vertical"
+        android:padding="5dp"
+        tools:showIn="@layout/edit_card">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tFront"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:labelFor="@+id/eTSideA"
+                android:text="@string/front"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/mSideA"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/eTSideA"
+                android:layout_alignTop="@+id/tFront"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontA"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <de.daniel.mobilepauker2.models.view.MPEditText
+                android:id="@+id/eTSideA"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tFront"
+                android:background="@drawable/box_background"
+                android:focusable="true"
+                android:fontFamily="serif"
+                android:gravity="top"
+                android:importantForAutofill="no"
+                android:inputType="text|textMultiLine"
+                android:longClickable="true"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="2dp"
+            android:layout_weight="50"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/tBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="serif"
+                android:labelFor="@+id/eTSideB"
+                android:text="@string/back"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/mSideB"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/eTSideB"
+                android:layout_alignTop="@+id/tBack"
+                android:layout_alignEnd="@+id/eTSideB"
+                android:layout_marginBottom="3dp"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:elevation="2dp"
+                android:onClick="editFontB"
+                android:scaleType="fitCenter"
+                android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription" />
+
+            <de.daniel.mobilepauker2.models.view.MPEditText
+                android:id="@+id/eTSideB"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tBack"
+                android:background="@drawable/box_background"
+                android:focusable="true"
+                android:fontFamily="serif"
+                android:gravity="top"
+                android:importantForAutofill="no"
+                android:inputType="text|textMultiLine"
+                android:longClickable="true"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp"
+                android:scrollHorizontally="false"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:weightSum="5">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="3">
+
+            <Button
+                android:id="@+id/bReset"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:onClick="resetCardSides"
+                android:text="@string/reset" />
+
+            <Button
+                android:id="@+id/bOK"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/bReset"
+                android:onClick="okClicked"
+                android:text="@string/ok" />
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+</RelativeLayout>

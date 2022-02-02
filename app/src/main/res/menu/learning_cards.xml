@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mPauseButton"
+        android:icon="@drawable/menu_pause"
+        android:onClick="mPauseTimerClicked"
+        android:title="@string/pause_timer"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mRestartButton"
+        android:icon="@drawable/menu_play"
+        android:onClick="mRestartTimerClicked"
+        android:title="@string/restart_timer"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/mHideTimer"
+        android:checkable="true"
+        android:onClick="mHideTimerClicked"
+        android:title="@string/hide_times"
+        app:showAsAction="never" />
+    <item
+        android:onClick="mEditClicked"
+        android:title="@string/edit_card"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mFlipSides"
+        android:onClick="mFlipSidesClicked"
+        android:title="@string/flip_card_sides"
+        app:showAsAction="never" />
+    <item
+        android:onClick="mDeleteClicked"
+        android:title="@string/delete_card"
+        app:showAsAction="never" />
+</menu>

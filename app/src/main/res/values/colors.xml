@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#58ACFA</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+    <color name="grey">#FFCCCCCC</color>
+    <color name="defaultBackground">#FAFAFA</color>
+    <color name="unlearned">#b53f5e</color>
+    <color name="learned">#5eb53f</color>
+    <color name="expired">#3f8cb5</color>
+    <color name="chosen">#B7C9FF</color>
+    <color name="action_menu_bg">#7C7C7C</color>
+    <color name="drawer_background">#f1f1f1</color>
+    <color name="box_background">#F2F2F2</color>
+</resources>

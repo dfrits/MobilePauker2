@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lLearnButtonsFrame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true">
+
+    <RelativeLayout
+        android:id="@+id/lBRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/frage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/bYes"
+            android:fontFamily="serif"
+            android:padding="3dp"
+            android:text="@string/repeat_question"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/bYes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/bNo"
+            android:onClick="yesClicked"
+            android:text="@string/yes" />
+
+        <Button
+            android:id="@+id/bNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:onClick="noClicked"
+            android:text="@string/no" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/bNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:onClick="nextCard"
+        android:text="@string/next_card"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/bShowMe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:onClick="showCard"
+        android:text="@string/show_me"
+        android:visibility="gone" />
+
+    <RelativeLayout
+        android:id="@+id/lBSkipWaiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/tTimerRunning"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/bSkipWaiting"
+            android:fontFamily="serif"
+            android:padding="3dp"
+            android:text="@string/skipWaiting"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/bSkipWaiting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:onClick="skipWaiting"
+            android:text="@string/skip_waiting_button" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/lBInputRepeat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tTypeAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toStartOf="@+id/bProofInput"
+            android:fontFamily="serif"
+            android:padding="3dp"
+            android:text="@string/put_in_your_answer"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <Button
+            android:id="@+id/bProofInput"
+            android:layout_alignParentEnd="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"  />
+    </RelativeLayout>
+</RelativeLayout>

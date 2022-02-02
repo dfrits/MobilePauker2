@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="AlwaysShowAction">
+
+    <item
+        android:id="@+id/mResetCard"
+        android:icon="@drawable/reset_card"
+        android:title="@string/reset_card"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/mRepeatNow"
+        android:icon="@drawable/repeat_now"
+        android:title="@string/repeat_card_now"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/mFlipSides"
+        android:icon="@drawable/flip_sides"
+        android:title="@string/flip_card_sides"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/mSelectAll"
+        android:title="@string/select_all"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/mRepeatType"
+        android:title="@string/repeat_type"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/mRepeatTypeInput"
+                android:title="@string/repeat_type_input" />
+
+            <item
+                android:id="@+id/mRepeatTypeThinking"
+                android:title="@string/repeat_type_thinking" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/mDeleteCard"
+        android:title="@string/delete_card"
+        app:showAsAction="never" />
+</menu>

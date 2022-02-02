@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mTextSize"
+        android:title="@string/text_size"/>
+    <item
+        android:id="@+id/mBackground"
+        android:title="@string/background" />
+    <item
+        android:id="@+id/mTextColor"
+        android:title="@string/text_color" />
+    <item
+        android:id="@+id/mBold"
+        android:title="@string/bold" />
+    <item
+        android:id="@+id/mItalic"
+        android:title="@string/italic" />
+    <item
+        android:id="@+id/mRepeatType"
+        android:title="@string/repeat_type"
+        android:visible="false"/>
+</menu>

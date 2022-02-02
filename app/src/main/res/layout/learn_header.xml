@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:lib="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout
+        android:id="@+id/lTimerFrame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/lTimerBarFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="100">
+
+            <RelativeLayout
+                android:id="@+id/UKZGTimerFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/UKZGTimerBarDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/ustm"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.danilomendes.progressbar.InvertedTextProgressbar
+                    android:id="@+id/UKZGTimerBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@+id/UKZGTimerBarDesc"
+                    android:background="@drawable/timer_bar_background"
+                    android:maxWidth="150dp"
+                    android:minWidth="120dp"
+                    android:src="@drawable/timer_bar_foreground"
+                    lib:text_color="@color/black"
+                    lib:text_inverted_color="@color/defaultBackground" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/KZGTimerFrame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/KZGTimerBarDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:fontFamily="sans-serif"
+                    android:text="@string/stm"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
+
+                <com.danilomendes.progressbar.InvertedTextProgressbar
+                    android:id="@+id/KZGTimerBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="5dp"
+                    android:layout_toEndOf="@+id/KZGTimerBarDesc"
+                    android:background="@drawable/timer_bar_background"
+                    android:maxWidth="150dp"
+                    android:minWidth="120dp"
+                    android:src="@drawable/timer_bar_foreground"
+                    lib:text_color="@color/black"
+                    lib:text_inverted_color="@color/defaultBackground" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/vDivider"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_below="@+id/lTimerBarFrame"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/darker_gray" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tAllCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lTimerFrame"
+        android:layout_marginStart="10dp"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tUKZGCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tAllCards"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tAllCards"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tKZGCards"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tAllCards"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@+id/tUKZGCards"
+        android:fontFamily="serif"
+        android:textColor="@color/black"
+        android:textSize="14sp" />
+</merge>

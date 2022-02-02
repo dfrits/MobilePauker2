@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:williamchart="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/labelsGroup"
+    android:layout_width="80dp"
+    android:layout_height="match_parent">
+
+    <com.db.chart.view.StackBarChartView
+        android:id="@+id/chartBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/abgelaufenValue"
+        williamchart:chart_axis="false" />
+
+    <TextView
+        android:id="@+id/abgelaufenValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/gelerntValue"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/gelerntValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/sumValue"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/sumValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:fontFamily="serif"
+        android:textAlignment="center"
+        android:textSize="12sp" />
+</RelativeLayout>
