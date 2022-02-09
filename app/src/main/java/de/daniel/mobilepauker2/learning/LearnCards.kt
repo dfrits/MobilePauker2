@@ -602,7 +602,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     currentCard.sideBText
                 }
                 val caseSensitive =
-                    settingsManager.getBoolPreference(CASE_SENSITIV)
+                    settingsManager.getBoolPreference(CASE_SENSITIVE)
                 val input: String = inputField.text.toString()
                 if (caseSensitive && cardText == input) {
                     yesClicked(null)

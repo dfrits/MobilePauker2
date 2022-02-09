@@ -17,7 +17,7 @@ class SettingsManager @Inject constructor(val context: Context) {
             Keys.AUTO_UPLOAD -> context.getString(R.string.auto_upload)
             Keys.HIDE_TIMES -> context.getString(R.string.hide_times)
             Keys.REPEAT_CARDS -> context.getString(R.string.repeat_cards_mode)
-            Keys.CASE_SENSITIV -> context.getString(R.string.case_sensitive)
+            Keys.CASE_SENSITIVE -> context.getString(R.string.case_sensitive)
             Keys.FLIP_CARD_SIDES -> context.getString(R.string.flip_card_sides)
             Keys.DB_PREFERENCE -> context.getString(R.string.associate_dropbox)
             Keys.RETURN_FORGOTTEN_CARDS -> context.getString(R.string.return_forgotten_cards)
@@ -27,6 +27,7 @@ class SettingsManager @Inject constructor(val context: Context) {
             Keys.SHOW_CARD_NOTIFY -> context.getString(R.string.show_card_notification)
             Keys.RING_TONE -> context.getString(R.string.ring_tone_preference)
             Keys.SHOW_TIMER_BAR -> context.getString(R.string.show_timer_bar)
+            Keys.RESET_SYNC-> context.getString(R.string.reset_sync)
             else -> ""
         }
     }
@@ -47,7 +48,7 @@ class SettingsManager @Inject constructor(val context: Context) {
         return when (key) {
             Keys.HIDE_TIMES -> context.resources.getBoolean(R.bool.hide_times_default)
             Keys.AUTO_UPLOAD -> context.resources.getBoolean(R.bool.auto_upload_default)
-            Keys.CASE_SENSITIV -> context.resources.getBoolean(R.bool.case_sensitive_default)
+            Keys.CASE_SENSITIVE -> context.resources.getBoolean(R.bool.case_sensitive_default)
             Keys.LEARN_NEW_CARDS_RANDOMLY -> context.resources.getBoolean(R.bool.learn_new_cards_randomly_default)
             Keys.ENABLE_EXPIRE_TOAST -> context.resources.getBoolean(R.bool.expire_toast_default)
             Keys.SHOW_TIMER_NOTIFY -> context.resources.getBoolean(R.bool.show_timer_notification_default)
@@ -71,7 +72,7 @@ class SettingsManager @Inject constructor(val context: Context) {
 
     enum class Keys {
         ABOUT,
-        CASE_SENSITIV,
+        CASE_SENSITIVE,
         AUTO_UPLOAD,
         DB_PREFERENCE,
         ENABLE_EXPIRE_TOAST,
@@ -85,6 +86,7 @@ class SettingsManager @Inject constructor(val context: Context) {
         SHOW_TIMER_BAR,
         SHOW_TIMER_NOTIFY,
         STM,
-        USTM
+        USTM,
+        RESET_SYNC
     }
 }

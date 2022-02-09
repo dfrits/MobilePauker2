@@ -59,7 +59,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
 
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
         override fun onLost(network: Network) {
-            errorOccured(Exception(getString(R.string.check_internet_connection)))
+            errorOccurred(Exception(getString(R.string.check_internet_connection)))
         }
 
         override fun onAvailable(network: Network) {
@@ -69,7 +69,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         }
 
         override fun onUnavailable() {
-            errorOccured(Exception(getString(R.string.check_internet_connection)))
+            errorOccurred(Exception(getString(R.string.check_internet_connection)))
         }
     }
 
@@ -82,14 +82,14 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
 
         val cm = context.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         if (!isInternetAvailable(cm)) {
-            errorOccured(Exception(getString(R.string.check_internet_connection)))
+            errorOccurred(Exception(getString(R.string.check_internet_connection)))
         }
 
         val intent = intent
         accessToken = intent.getStringExtra(ACCESS_TOKEN)
         if (accessToken == null) {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet")
-            errorOccured()
+            errorOccurred()
             return
         }
 
@@ -144,7 +144,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
     fun cancelClicked(view: View) {
         Log.d("SyncDialog::cancelClicked", "Cancel Sync")
         view.isEnabled = false
-        errorOccured(Exception(getString(R.string.synchro_canceled_by_user)))
+        errorOccurred(Exception(getString(R.string.synchro_canceled_by_user)))
     }
 
     private fun startSync(intent: Intent, serializableExtra: Serializable) {
@@ -155,7 +155,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
             syncFile(serializableExtra, action)
         } else {
             Log.d("SyncDialog::OnCreate", "Synchro mit falschem Extra gestartet")
-            errorOccured()
+            errorOccurred()
         }
     }
 
@@ -167,7 +167,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
     private fun syncAllFiles(serializableExtra: List<File>) {
         showDialog()
         files = serializableExtra
-        startTimer()
+        //startTimer()
         initObserver()
         files?.let { list ->
             viewModel.loadDataFromDropbox(
@@ -219,7 +219,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         timeout = Timer()
         timerTask = object : TimerTask() {
             override fun run() {
-                errorOccured(Exception(getString(R.string.synchro_timeout)))
+                errorOccurred(Exception(getString(R.string.synchro_timeout)))
             }
         }
         timeout?.schedule(timerTask, 60000)
@@ -235,7 +235,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
                     )
                 }
                 viewModel.tasksLiveData.observe(lifecycleOwner) { if (it.isEmpty()) syncFinished() }
-                viewModel.errorLiveData.observe(lifecycleOwner) { errorOccured(it) }
+                viewModel.errorLiveData.observe(lifecycleOwner) { errorOccurred(it) }
             }
         }
     }
@@ -273,7 +273,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         })
     }
 
-    private fun errorOccured(e: Exception? = null) {
+    private fun errorOccurred(e: Exception? = null) {
         val errorMessage = e?.message ?: getString(R.string.simple_error_message)
         toaster.showToast(
             context as Activity,

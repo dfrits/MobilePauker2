@@ -18,8 +18,8 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
         MutableLiveData()
     val tasksLiveData: LiveData<List<CoroutinesAsyncTask<*, *, *>>> = _tasksLiveData
 
-    private val _errorLiveData = MutableLiveData<Exception>()
-    val errorLiveData: LiveData<Exception> = _errorLiveData
+    private val _errorLiveData = MutableLiveData<Exception?>()
+    val errorLiveData: LiveData<Exception?> = _errorLiveData
 
     private val _downloadList = MutableLiveData<List<FileMetadata>>()
     val downloadList: LiveData<List<FileMetadata>> = _downloadList
@@ -197,7 +197,7 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
     }
 
     private fun compareFiles(
-        lokalFiles: List<File>,
+        localFiles: List<File>,
         dbFiles: List<Metadata>,
         cachedFiles: List<File>?
     ) {
@@ -208,9 +208,9 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
 
         dbFiles.forEach { dbFile ->
             if (dbFile is DeletedMetadata) {
-                lokalFiles.find(dbFile)?.let { filesToDeleteLocal.add(it) }
+                localFiles.find(dbFile)?.let { filesToDeleteLocal.add(it) }
             } else {
-                val localFile = lokalFiles.find(dbFile as FileMetadata)
+                val localFile = localFiles.find(dbFile as FileMetadata)
                 val cachedFile = cachedFiles?.find(dbFile)
                 if (localFile == null && cachedFile == null) {
                     filesToDownload.add(dbFile)
@@ -227,7 +227,7 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
             }
         }
 
-        lokalFiles.forEach { localFile ->
+        localFiles.forEach { localFile ->
             val dbFile = dbFiles.find(localFile) as FileMetadata?
             val cachedFile = cachedFiles?.find(localFile)
             if (dbFile == null && cachedFile == null && filesToDeleteLocal.find(localFile) == null) {
@@ -242,7 +242,7 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
         }
 
         cachedFiles?.forEach { cachedFile ->
-            val localFile = lokalFiles.find(cachedFile)
+            val localFile = localFiles.find(cachedFile)
             val dbFile = dbFiles.find(cachedFile)
 
             if (localFile == null && dbFile != null) {

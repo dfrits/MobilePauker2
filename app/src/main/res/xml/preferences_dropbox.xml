@@ -8,7 +8,12 @@
         android:key="@string/auto_upload"
         android:summary="@string/auto_sync_disabled_summ"
         android:title="@string/auto_upload_title" />
-    // Button zum verwalten des DB-Acc
+    // Button zum Zurücksetzen des Cursors
+    <Preference
+        android:key="@string/reset_sync"
+        android:title="@string/reset_sync_title"
+        android:summary="@string/reset_sync_sum"/>
+    // Button zum Verwalten des DB-Acc
     <Preference
         android:key="@string/associate_dropbox"
         android:title="@string/associate_dropbox_title" />

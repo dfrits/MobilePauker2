@@ -4,12 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Toast
 import androidx.preference.*
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
+import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.dropbox.DropboxAccDialog
+import de.daniel.mobilepauker2.settings.SettingsManager.Keys
 import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Log
+import de.daniel.mobilepauker2.utils.Toaster
 import javax.inject.Inject
 
 class SettingsFragmentDropbox : PreferenceFragmentCompat(),
@@ -17,6 +21,12 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
 
     @Inject
     lateinit var settingsManager: SettingsManager
+
+    @Inject
+    lateinit var dataManager: DataManager
+
+    @Inject
+    lateinit var toaster: Toaster
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         (context?.applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
@@ -38,7 +48,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
 
     override fun onResume() {
         super.onResume()
-        updatePrefSummary(findPreference(settingsManager.getSettingsKey(SettingsManager.Keys.RING_TONE)))
+        updatePrefSummary(findPreference(settingsManager.getSettingsKey(Keys.RING_TONE)))
     }
 
     override fun onPause() {
@@ -58,7 +68,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
 
     private fun removeSyncPrefAndSetAutoSync(enableAutoSync: Boolean) {
         val switchUp =
-            findPreference(settingsManager.getSettingsKey(SettingsManager.Keys.AUTO_UPLOAD)) as SwitchPreference?
+            findPreference(settingsManager.getSettingsKey(Keys.AUTO_UPLOAD)) as SwitchPreference?
         if (enableAutoSync) {
             switchUp?.setSummary(R.string.auto_sync_enabled_upload_summ)
         } else {
@@ -70,7 +80,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
     private fun initSyncPrefs() {
         Log.d("SettingsFragment::initSyncPrefs", "init syncprefs")
         val dbPref: Preference? =
-            findPreference(settingsManager.getSettingsKey(SettingsManager.Keys.DB_PREFERENCE))
+            findPreference(settingsManager.getSettingsKey(Keys.DB_PREFERENCE))
         val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val accessToken = pref.getString(Constants.DROPBOX_ACCESS_TOKEN, null)
         if (accessToken == null) {
@@ -80,6 +90,10 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
             setPrefUnlink(dbPref)
             Log.d("SettingsFragment::initSyncPrefs", "enable autosync")
             removeSyncPrefAndSetAutoSync(true)
+
+            val syncPref: Preference? =
+                findPreference(settingsManager.getSettingsKey(Keys.RESET_SYNC))
+            initResetSyncClicked(syncPref)
         }
     }
 
@@ -95,6 +109,14 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         removeSyncPrefAndSetAutoSync(false)
     }
 
+    private fun initResetSyncClicked(syncPref: Preference?) {
+        syncPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            dataManager.cacheCursor(null)
+            toaster.showToast(context as Activity, "Sync Reset", Toast.LENGTH_SHORT) // TODO String
+            false
+        }
+    }
+
     private fun setPrefUnlink(dbPref: Preference?) {
         dbPref?.setTitle(R.string.unlink_dropbox_title)
         val unlIntent = Intent(context, DropboxAccDialog::class.java)
@@ -108,7 +130,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
 
     private fun updatePrefSummary(preference: Preference?) {
         preference?.key?.let { preferenceKey ->
-            if (preferenceKey == settingsManager.getSettingsKey(SettingsManager.Keys.DB_PREFERENCE)) {
+            if (preferenceKey == settingsManager.getSettingsKey(Keys.DB_PREFERENCE)) {
                 initSyncPrefs()
             }
         }

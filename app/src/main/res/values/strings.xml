@@ -292,5 +292,8 @@
     <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
     <string name="tap_enter_answer">Tap to enter your answer.</string>
     <string name="deleting_impossible">Löschen nicht möglich!</string>
+    <string name="reset_sync">Reset Synchronisation</string>
+    <string name="reset_sync_title">Reset Synchronisation</string>
+    <string name="reset_sync_sum">Reset the Synchronisation for example when a Lesson will not be uploaded</string>
     <!-- endregion -->
 </resources>
