@@ -167,6 +167,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
 
     override fun onPause() {
         chartView = null
+        NotificationService.enqueueWork(context)
         super.onPause()
     }
 
@@ -213,11 +214,6 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         if (requestCode == RQ_WRITE_EXT_SAVE_NEW && grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             checkLessonNameThenSave(REQUEST_CODE_SAVE_DIALOG_NEW_LESSON)
         }
-    }
-
-    override fun onDestroy() {
-        NotificationService.enqueueWork(context)
-        super.onDestroy()
     }
 
     private fun saveFinished(requestCode: Int) {

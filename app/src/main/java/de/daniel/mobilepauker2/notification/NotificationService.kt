@@ -2,9 +2,9 @@ package de.daniel.mobilepauker2.notification
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import androidx.work.*
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
@@ -44,7 +44,7 @@ class NotificationService(val context: Context, workerParams: WorkerParameters) 
 
         if (newestTime > -1 && alarmManager != null) {
             alarmIntent = Intent(context, AlarmNotificationReceiver::class.java)
-            pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, 0)
+            pendingIntent = PendingIntent.getBroadcast(context, 0, alarmIntent, FLAG_IMMUTABLE)
             alarmManager[AlarmManager.RTC_WAKEUP, newestTime] = pendingIntent
             Log.d("NotificationService::setAlarm", "Alarm set")
         }
@@ -81,9 +81,10 @@ class NotificationService(val context: Context, workerParams: WorkerParameters) 
         return newestTime
     }
 
-    companion object{
+    companion object {
         fun enqueueWork(context: Context) {
-            val notificationWorkRequest : WorkRequest = OneTimeWorkRequestBuilder<NotificationService>().build()
+            val notificationWorkRequest: WorkRequest =
+                OneTimeWorkRequestBuilder<NotificationService>().build()
             WorkManager.getInstance(context).enqueue(notificationWorkRequest)
         }
     }

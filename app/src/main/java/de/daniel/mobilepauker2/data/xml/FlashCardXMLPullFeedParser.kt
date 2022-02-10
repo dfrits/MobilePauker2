@@ -14,7 +14,6 @@ import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Log
 import org.xmlpull.v1.XmlPullParser
 import java.net.URL
-import java.util.*
 import kotlin.math.pow
 
 class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBasedFeedParser(feedUrl) {
@@ -24,8 +23,9 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBasedFeedParser(feedUr
         val parser = Xml.newPullParser()
         var batchCount = 0
         var description = "No Description"
+        val inputStream = getInputStream()
         return try {
-            parser.setInput(getInputStream(), null)
+            parser.setInput(inputStream, null)
             var eventType = parser.eventType
             var currentFlashCard: FlashCard? = null
             var SIDEA = false
@@ -211,6 +211,8 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBasedFeedParser(feedUr
         } catch (e: Exception) {
             Log.e("FlashCardXMLPullFeedParser:parse()", e.message, e)
             throw RuntimeException(e)
+        } finally {
+            inputStream?.close()
         }
     }
 
@@ -265,8 +267,9 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBasedFeedParser(feedUr
     fun getNextExpireDate(): NextExpireDateResult {
         val parser = Xml.newPullParser()
         val currentTimestamp = System.currentTimeMillis()
+        val inputStream = getInputStream()
         return try {
-            parser.setInput(getInputStream(), null)
+            parser.setInput(inputStream, null)
             var eventType = parser.eventType
             var nextExpireTimeStamp = Long.MIN_VALUE
             var batchCount = 0
@@ -325,6 +328,8 @@ class FlashCardXMLPullFeedParser(feedUrl: URL) : FlashCardBasedFeedParser(feedUr
         } catch (e: Exception) {
             Log.e("FlashCardXMLPullFeedParser:parse()", e.message, e)
             throw RuntimeException(e)
+        } finally {
+            inputStream?.close()
         }
     }
 
