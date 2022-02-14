@@ -32,6 +32,12 @@
     <string name="shortcut_open_error_permission">Berechtigung noch nicht vorhanden!</string>
     <string name="synchro_canceled_by_user">Update abgebrochen!</string>
     <string name="synchro_timeout">Synchronisation abgelaufen</string>
+    <string name="error_removing_file">Fehler beim Entfernen der Datei!</string>
+    <string name="error_moving_file">Fehler beim Verschieben der Datei</string>
+    <string name="error_invalid_token_message">Es stimmt etwas mit dem Dropboxtoken nicht.
+        Bitte versuche es erneut.</string>
+    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
+    <string name="error_dropbox_file_older_than_local">Datei auf Dropbox ist älter als diese!</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -98,6 +104,13 @@
     <string name="write_permission_rational_message">Wenn du die Berechtigung nicht gibst, kannst du
         keine Lektion öffnen!</string>
     <string name="wrong_answer">Deine Antwort war falsch!</string>
+    <string name="warning">Warnung!</string>
+    <string name="overwrite_file_question">Datei überschreiben?</string>
+    <string name="check_internet_connection">Internetverbindung prüfen!</string>
+    <string name="sync_success">Synchronisation erfolgreich</string>
+    <string name="already_connected">Bereits verbunden</string>
+    <string name="tap_enter_answer">Tippen um Antwort einzugeben.</string>
+    <string name="deleting_impossible">Löschen nicht möglich!</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -219,6 +232,7 @@
     <string name="synchronizing_title">Synchronisierung</string>
     <string name="unlink_dropbox_title">Dropbox trennen</string>
     <string name="ustm_title">UKZG</string>
+    <string name="reset_sync_title">Synchronisation zurücksetzen</string>
     <!-- endregion -->
 
     <!-- region Beschreibungen -->
@@ -237,6 +251,8 @@
         nicht offen ist.</string>
     <string name="stm_summ">Kurzzeit-Gedächtnis: %smin</string>
     <string name="ustm_summ">Ultrakurzzeit-Gedächtnis: %ss</string>
+    <string name="reset_sync_sum">Setze die Synchronisation zurück, wenn z.B. eine Lektion nicht
+        hochgeladen wird</string>
     <!-- endregion -->
 
     <!-- endregion -->
@@ -254,20 +270,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
-    <string name="error_removing_file">Error removing File!</string>
-    <string name="error_moving_file">Error moving File</string>
-    <string name="warning">Warning!</string>
-    <string name="overwrite_file_question">Overwrite File?</string>
-    <string name="check_internet_connection">Internetverbindung prüfen!</string>
-    <string name="error_invalid_token_message">There is something wrong with the dropbox token. Maybe it is solved by the next try.</string>
-    <string name="sync_success">Synchronized successfully</string>
-    <string name="already_connected">Bereits verbunden</string>
-    <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
-    <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
-    <string name="tap_enter_answer">Tap to enter your answer.</string>
-    <string name="deleting_impossible">Löschen nicht möglich!</string>
-    <string name="reset_sync">Reset Synchronisation</string>
-    <string name="reset_sync_title">Reset Synchronisation</string>
-    <string name="reset_sync_sum">Reset the Synchronisation for example when a Lesson will not be uploaded</string>
     <!-- endregion -->
 </resources>
