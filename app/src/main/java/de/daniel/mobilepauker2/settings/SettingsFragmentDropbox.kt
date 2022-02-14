@@ -112,7 +112,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
     private fun initResetSyncClicked(syncPref: Preference?) {
         syncPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dataManager.cacheCursor(null)
-            toaster.showToast(context as Activity, "Sync Reset", Toast.LENGTH_SHORT) // TODO String
+            toaster.showToast(context as Activity, getString(R.string.sync_reset_success), Toast.LENGTH_SHORT)
             false
         }
     }

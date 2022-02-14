@@ -102,6 +102,7 @@
     <string name="already_connected">すでに接続されています</string>
     <string name="tap_enter_answer">タップして回答を入力してください。</string>
     <string name="deleting_impossible">削除できません！</string>
+    <string name="sync_reset_success">同期リセット</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->

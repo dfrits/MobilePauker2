@@ -109,6 +109,7 @@
     <string name="already_connected">Already connected</string>
     <string name="tap_enter_answer">Tap to enter your answer.</string>
     <string name="deleting_impossible">Cannot delete!</string>
+    <string name="sync_reset_success">Synchronisation reset</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
