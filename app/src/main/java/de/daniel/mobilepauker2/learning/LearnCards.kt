@@ -710,19 +710,19 @@ class LearnCards : FlashCardSwipeScreen() {
         val stmCards: TextView = findViewById(R.id.tKZGCards)
         var text: String
         if (repeatingLTM) {
-            text = "${getString(R.string.expired)}:%d"
+            text = "${getString(R.string.expired)}: %d"
             text = String.format(text, mCardCursor.count - mCardCursor.position)
             allCards.text = text
             ustmCards.visibility = View.GONE
             stmCards.visibility = View.GONE
         } else {
-            text = "${getString(R.string.untrained)}:%d"
+            text = "${getString(R.string.untrained)}: %d"
             text = String.format(text, lessonManager.getBatchSize(BatchType.UNLEARNED))
             allCards.text = text
-            text = "${getString(R.string.ustm)}:%d"
+            text = "${getString(R.string.ustm)}: %d"
             text = String.format(text, lessonManager.getBatchSize(BatchType.ULTRA_SHORT_TERM))
             ustmCards.text = text
-            text = "${getString(R.string.stm)}:%d"
+            text = "${getString(R.string.stm)}: %d"
             text = String.format(text, lessonManager.getBatchSize(BatchType.SHORT_TERM))
             stmCards.text = text
         }

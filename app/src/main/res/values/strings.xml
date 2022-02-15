@@ -60,7 +60,7 @@
     <string name="expired_cards">Number of expired cards:</string>
     <string name="finish_add_card_message">Card is not added yet. Do you really want to leave?</string>
     <string name="flip_cards_message">Do you want to flip the sides of the selected cards?</string>
-    <string name="flip_sides_complete">Sides fliped</string>
+    <string name="flip_sides_complete">Sides flipped</string>
     <string name="import_title">Lesson is imported. Please wait…</string>
     <string name="info_text_hint">Description of the lesson</string>
     <string name="instant_repeat_message">Do you want to repeat the selected cards now?</string>
@@ -69,7 +69,7 @@
     <string name="learncards_waiting_stm_timer">Waiting on short term memory timer</string>
     <string name="learned">Learned</string>
     <string name="learned_at">Learned at:</string>
-    <string name="lektion_zurückgesetzt">Lesson reseted</string>
+    <string name="lektion_zurückgesetzt">Lesson reset</string>
     <string name="lesson_import_success">Lesson imported</string>
     <string name="new_lession_created">New Lesson created</string>
     <string name="next_expire_date">Next expire date:</string>
