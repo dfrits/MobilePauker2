@@ -7,6 +7,7 @@ import de.daniel.mobilepauker2.lesson.LessonManager
 import de.daniel.mobilepauker2.lesson.card.Card
 import de.daniel.mobilepauker2.lesson.card.FlashCard
 import de.daniel.mobilepauker2.utils.Log
+import de.daniel.mobilepauker2.utils.Utility.Companion.unaccent
 import java.util.*
 import javax.inject.Inject
 
@@ -127,13 +128,16 @@ class SearchViewModel @Inject constructor() {
             return pack
         } else {
             var card: FlashCard
+            val unaccentedQuery = query.unaccent()
             for (i in pack.indices) {
                 card = pack[i]
                 Log.d("SearchActivity::ShowResults", "Index - " + card.id)
-                val frontSide: String = card.frontSide.text.lowercase()
-                val backSide: String = card.reverseSide.text.lowercase()
+                val frontSide: String = card.frontSide.text.lowercase().unaccent()
+                val backSide: String = card.reverseSide.text.lowercase().unaccent()
 
-                if (frontSide.contains(query.lowercase()) || backSide.contains(query.lowercase())) {
+                if (frontSide.contains(unaccentedQuery.lowercase())
+                    || backSide.contains(unaccentedQuery.lowercase())
+                ) {
                     results.add(card)
                     itemPosition.add(i)
                 }

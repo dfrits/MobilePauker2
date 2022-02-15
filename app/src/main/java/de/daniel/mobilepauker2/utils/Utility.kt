@@ -9,7 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import de.daniel.mobilepauker2.learning.LearnCards
+import java.text.Normalizer
 
 
 class Utility {
@@ -70,6 +70,12 @@ class Utility {
                 }
             }
             return false
+        }
+
+        private val REGEX_UNACCENT = "\\p{InCombiningDiacriticalMarks}+".toRegex()
+        fun CharSequence.unaccent(): String {
+            val temp = Normalizer.normalize(this, Normalizer.Form.NFD)
+            return REGEX_UNACCENT.replace(temp, "")
         }
     }
 }
