@@ -981,7 +981,7 @@ class LearnCards : FlashCardSwipeScreen() {
                                 context,
                                 0,
                                 contentIntent,
-                                0
+                                PendingIntent.FLAG_IMMUTABLE
                             )
                         )
                         .setAutoCancel(true)
