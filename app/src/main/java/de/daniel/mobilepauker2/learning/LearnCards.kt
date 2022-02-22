@@ -161,7 +161,7 @@ class LearnCards : FlashCardSwipeScreen() {
     override fun cursorLoaded() {
         Log.d(
             "LearnCardsActivity::cursorLoaded", "cursor loaded: " +
-                "savedPos= " + mSavedCursorPosition
+                    "savedPos= " + mSavedCursorPosition
         )
 
         if (mSavedCursorPosition == -1) {
@@ -175,7 +175,7 @@ class LearnCards : FlashCardSwipeScreen() {
             fillInData(flipCardSides)
             if (bShowMe!!.visibility == View.VISIBLE
                 && (flipCardSides && currentCard.side == SIDE_A
-                    || !flipCardSides && currentCard.side == SIDE_B)
+                        || !flipCardSides && currentCard.side == SIDE_B)
             ) {
                 bShowMe!!.visibility = View.GONE
                 lRepeatButtons!!.visibility = View.VISIBLE
@@ -191,7 +191,7 @@ class LearnCards : FlashCardSwipeScreen() {
             setButtonsVisibility()
             if (bShowMe?.visibility == View.VISIBLE
                 && (flipCardSides && currentCard.side == SIDE_A
-                    || !flipCardSides && currentCard.side == SIDE_B)
+                        || !flipCardSides && currentCard.side == SIDE_B)
             ) {
                 bShowMe!!.visibility = View.GONE
                 lRepeatButtons!!.visibility = View.VISIBLE
@@ -240,7 +240,12 @@ class LearnCards : FlashCardSwipeScreen() {
         }
         notificationManager?.cancelAll()
         if (!firstStart && !restartButton!!.isVisible) {
-            restartTimer()
+            if (currentPhase != REPEATING_LTM
+                && (currentPhase != SIMPLE_LEARNING
+                        || currentPhase != NOTHING)
+            ) {
+                restartTimer()
+            }
             if (mSavedCursorPosition != -1) {
                 refreshCursor()
             }
@@ -287,7 +292,7 @@ class LearnCards : FlashCardSwipeScreen() {
     private fun init() {
         if (currentPhase != REPEATING_LTM
             && (currentPhase != SIMPLE_LEARNING
-                || currentPhase != NOTHING)
+                    || currentPhase != NOTHING)
         ) {
             // A check on mActivitySetupOk is done here as onCreate is called even if the
             // super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
@@ -981,7 +986,7 @@ class LearnCards : FlashCardSwipeScreen() {
                                 context,
                                 0,
                                 contentIntent,
-                                0
+                                PendingIntent.FLAG_IMMUTABLE
                             )
                         )
                         .setAutoCancel(true)
