@@ -914,7 +914,14 @@ class LearnCards : FlashCardSwipeScreen() {
                             .setSmallIcon(R.drawable.notify_icon)
                             .setContentTitle(getString(R.string.app_name))
                             .setPriority(PRIORITY_DEFAULT)
-                            .setContentIntent(PendingIntent.getActivity(context, 0, getIntent(), 0))
+                            .setContentIntent(
+                                PendingIntent.getActivity(
+                                    context,
+                                    0,
+                                    getIntent(),
+                                    PendingIntent.FLAG_IMMUTABLE
+                                )
+                            )
                             .setAutoCancel(true)
                             .setVisibility(VISIBILITY_PUBLIC)
                     Log.d("LearnActivity::STM-Timer finished", "Notification created")
