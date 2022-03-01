@@ -4,7 +4,7 @@ import android.graphics.*
 import android.graphics.drawable.ShapeDrawable
 import android.graphics.drawable.shapes.OvalShape
 
-class TextDrawable(private val text: String, private val backColor: Int) :
+class TextDrawable(private val text: String, backColor: Int) :
     ShapeDrawable(OvalShape()) {
     private val size = 120
 
