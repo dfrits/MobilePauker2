@@ -59,6 +59,7 @@ import de.daniel.mobilepauker2.utils.Log
 import de.daniel.mobilepauker2.utils.Toaster
 import javax.inject.Inject
 
+@Suppress("PrivatePropertyName")
 class MainMenu : AppCompatActivity(R.layout.main_menu) {
     @Inject
     lateinit var viewModel: MainMenuViewModel
@@ -88,6 +89,8 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        isRunning = true
 
         (applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
 
@@ -196,7 +199,10 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             dialog.show()
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned))
-        } else super.onBackPressed()
+        } else {
+            isRunning = false
+            super.onBackPressed()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -379,11 +385,11 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     private fun showPermissionDialog(requestCode: Int) {
-        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+        val pref = getDefaultSharedPreferences(context)
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.app_name)
             .setPositiveButton(R.string.next) { dialog, _ ->
-                PreferenceManager.getDefaultSharedPreferences(context)
+                getDefaultSharedPreferences(context)
                     .edit().putBoolean("FirstTime", false).apply()
                 requestPermission(requestCode)
                 dialog.dismiss()
@@ -510,6 +516,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     // Menu clicks
+    @Suppress("UNUSED_PARAMETER")
     fun mSaveFileClicked(menuItem: MenuItem) {
         checkSavePermissionThenSave(REQUEST_CODE_SAVE_DIALOG_NORMAL)
     }
@@ -518,10 +525,12 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         (menuItem.actionView as SearchView).isIconified = false
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mOpenLessonClicked(menuItem: MenuItem) {
         openLesson()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mNewLessonClicked(menuItem: MenuItem) {
         if (dataManager.saveRequired) {
             val builder = AlertDialog.Builder(context)
@@ -535,6 +544,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         } else createNewLesson()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mResetLessonClicked(menuItem: MenuItem) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.reset_lesson_dialog_title)
@@ -556,6 +566,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         builder.create().show()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mFlipSidesClicked(menuItem: MenuItem) {
         val builder = AlertDialog.Builder(context)
         builder.setTitle(R.string.reverse_sides_dialog_title)
@@ -577,21 +588,25 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         builder.create().show()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mEditInfoTextClicked(menuItem: MenuItem) {
         startActivity(Intent(context, EditDescription::class.java))
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mSettingsClicked(menuItem: MenuItem) {
         startActivity(Intent(context, PaukerSettings::class.java))
     }
 
     // Button clicks
 
+    @Suppress("UNUSED_PARAMETER")
     fun addNewCard(view: View) {
         startActivity(Intent(context, AddCard::class.java))
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun learnNewCard(view: View) {
         if (settingsManager.getBoolPreference(HIDE_TIMES)) {
             setLearningPhase(SIMPLE_LEARNING)
@@ -603,6 +618,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         startActivity(Intent(context, LearnCards::class.java))
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun repeatCards(view: View) {
         setLearningPhase(REPEATING_LTM)
         lessonManager.setupCurrentPack()
@@ -611,7 +627,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     // Notification
-    fun createNotificationChannels() {
+    private fun createNotificationChannels() {
         // Für Notification
         createNotificationChannel(
             getString(R.string.channel_notify_name_other),
@@ -621,7 +637,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             true
         )
 
-        // Timerbar
+        // TimerBar
         createNotificationChannel(
             getString(R.string.channel_timerbar_name),
             getString(R.string.channel_timerbar_description),
@@ -661,5 +677,10 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             "AlamNotificationReceiver::createNotificationChannel",
             "Channel created: $channelName"
         )
+    }
+
+    companion object {
+        var isRunning = false
+            private set
     }
 }

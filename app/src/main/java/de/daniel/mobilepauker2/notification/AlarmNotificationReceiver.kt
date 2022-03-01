@@ -14,7 +14,6 @@ import de.daniel.mobilepauker2.settings.SettingsManager
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID
 import de.daniel.mobilepauker2.utils.Log
-import de.daniel.mobilepauker2.utils.Utility
 import javax.inject.Inject
 
 class AlarmNotificationReceiver : BroadcastReceiver() {
@@ -45,14 +44,14 @@ class AlarmNotificationReceiver : BroadcastReceiver() {
             .setContentTitle(context.getString(R.string.app_name))
             .setContentIntent(pendingIntent)
             .setContentText(context.getString(R.string.cards_expire_notify_msg))
-        Log.d("AlamNotificationReceiver::onReceive", "Notification build")
+        Log.d("AlarmNotificationReceiver::onReceive", "Notification build")
 
-        val isAppRunning = Utility.isAppRunning(context)
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        Log.d("AlamNotificationReceiver::onReceive", "PaukerActive: $isAppRunning")
-        val showNotify: Boolean = settingsManager.getBoolPreference(SettingsManager.Keys.SHOW_CARD_NOTIFY)
-        if (!isAppRunning && showNotify) {
+        Log.d("AlarmNotificationReceiver::onReceive", "PaukerActive: ${MainMenu.isRunning}")
+        val showNotify: Boolean =
+            settingsManager.getBoolPreference(SettingsManager.Keys.SHOW_CARD_NOTIFY)
+        if (!MainMenu.isRunning && showNotify) {
             notificationManager.notify(NOTIFICATION_ID, builder.build())
             Log.d("AlamNotificationReceiver::onReceive", "Notification send")
         }

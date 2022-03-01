@@ -218,6 +218,9 @@ class LearnCards : FlashCardSwipeScreen() {
             .setPositiveButton(R.string.yes) { _, _ ->
                 stopBothTimer()
                 Log.d("LearnCardsActivity::onBackPressed", "Finish and Timer stopped")
+                unbindTimerService()
+                notificationManager?.cancelAll()
+                isRunning = false
                 finish()
             }
             .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
@@ -257,17 +260,6 @@ class LearnCards : FlashCardSwipeScreen() {
         firstStart = false
     }
 
-    override fun onDestroy() {
-        isRunning = false
-
-        if (timerServiceConnection != null) {
-            stopService(timerServiceIntent)
-            unbindService(timerServiceConnection!!)
-        }
-        notificationManager?.cancelAll()
-        super.onDestroy()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.learning_cards, menu)
         pauseButton = menu.findItem(R.id.mPauseButton)
@@ -287,6 +279,13 @@ class LearnCards : FlashCardSwipeScreen() {
             else ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
 
         return true
+    }
+
+    private fun unbindTimerService() {
+        if (timerServiceConnection != null) {
+            stopService(timerServiceIntent)
+            unbindService(timerServiceConnection!!)
+        }
     }
 
     private fun init() {
@@ -746,6 +745,7 @@ class LearnCards : FlashCardSwipeScreen() {
 
     /* MenuButton clicks */
 
+    @Suppress("UNUSED_PARAMETER")
     fun mEditClicked(item: MenuItem?) {
         val intent = Intent(context, EditCard::class.java)
         intent.putExtra(Constants.CURSOR_POSITION, mCardCursor.position)
@@ -753,6 +753,7 @@ class LearnCards : FlashCardSwipeScreen() {
         startActivityForResult(intent, Constants.REQUEST_CODE_EDIT_CARD)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mDeleteClicked(item: MenuItem?) {
         val builder = AlertDialog.Builder(context)
         builder.setMessage(R.string.delete_card_message)
@@ -802,6 +803,7 @@ class LearnCards : FlashCardSwipeScreen() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun mFlipSidesClicked(item: MenuItem?) {
         lessonManager.getCardFromCurrentPack(mCardCursor.position)?.flipSides()
         dataManager.saveRequired = true
@@ -831,6 +833,7 @@ class LearnCards : FlashCardSwipeScreen() {
     }
 
     /* Button clicks */
+    @Suppress("UNUSED_PARAMETER")
     fun nextCard(view: View?) {
         // Karte ein Deck weiterschieben
         mCardPackAdapter!!.setCardLearned()
@@ -842,11 +845,13 @@ class LearnCards : FlashCardSwipeScreen() {
         }
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun skipWaiting(view: View?) {
         stopWaiting = true
         updateLearningPhase()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun noClicked(view: View?) {
         mCardPackAdapter!!.setCardUnLearned()
         dataManager.saveRequired = true
@@ -858,6 +863,7 @@ class LearnCards : FlashCardSwipeScreen() {
         updateLearningPhase()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun yesClicked(view: View?) {
         mCardPackAdapter!!.setCardLearned()
         dataManager.saveRequired = true
@@ -869,6 +875,7 @@ class LearnCards : FlashCardSwipeScreen() {
         updateLearningPhase()
     }
 
+    @Suppress("UNUSED_PARAMETER")
     fun showCard(view: View?) {
         screenTouched()
     }
