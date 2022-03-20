@@ -257,7 +257,7 @@ class LearnCards : FlashCardSwipeScreen() {
         firstStart = false
     }
 
-    override fun onDestroy() {
+    override fun finish() {
         isRunning = false
 
         if (timerServiceConnection != null) {
@@ -265,7 +265,7 @@ class LearnCards : FlashCardSwipeScreen() {
             unbindService(timerServiceConnection!!)
         }
         notificationManager?.cancelAll()
-        super.onDestroy()
+        super.finish()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
