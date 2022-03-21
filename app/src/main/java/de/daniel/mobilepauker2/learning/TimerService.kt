@@ -1,17 +1,18 @@
 package de.daniel.mobilepauker2.learning
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
-import android.provider.Settings
-import de.daniel.mobilepauker2.BuildConfig.APPLICATION_ID
+import de.daniel.mobilepauker2.notification.AlarmNotificationReceiver
 import de.daniel.mobilepauker2.utils.Log
 import java.util.*
 
-class TimerService: Service() {
+class TimerService : Service() {
     private val binder: IBinder = LocalBinder()
     private var ustm_totalTime = 0
     private var ustm_timeRemaining: Long = 0
@@ -41,8 +42,10 @@ class TimerService: Service() {
         ustm_totalTime = intent.getIntExtra(Companion.USTM_TOTAL_TIME, -1)
         stm_totalTime = intent.getIntExtra(Companion.STM_TOTAL_TIME, -1)
         if (ustm_totalTime == -1 || stm_totalTime == -1) {
-            Log.d("TimerService::onStartCommand", "Invalid total time: USTM= "
-                + ustm_totalTime + "; STM= " + stm_totalTime)
+            Log.d(
+                "TimerService::onStartCommand", "Invalid total time: USTM= "
+                        + ustm_totalTime + "; STM= " + stm_totalTime
+            )
             stopSelf()
             return START_NOT_STICKY
         }
@@ -127,6 +130,7 @@ class TimerService: Service() {
             val time = currentTime + stm_totalTime * 60 * 1000
             stm_timeout = Date(time)
             scheduleStmTimer()
+            setAlarm()
             stm_timerFinished = false
             stm_timerPaused = false
         }
@@ -139,6 +143,26 @@ class TimerService: Service() {
                 onStmTimerTick()
             }
         }, 0, 1000)
+    }
+
+    private fun setAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+        val alarmIntent: Intent
+        val pendingIntent: PendingIntent
+        val alarmTime = System.currentTimeMillis() + stm_timeout.time
+
+        if (alarmManager != null) {
+            alarmIntent = Intent(stm_finished_receiver)
+            pendingIntent = PendingIntent.getBroadcast(
+                applicationContext, 0, alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            alarmManager.cancel(pendingIntent)
+
+            alarmManager[AlarmManager.RTC_WAKEUP, alarmTime] = pendingIntent
+            Log.d("NotificationService::setAlarm", "Alarm set")
+        }
     }
 
     fun pauseTimers() {
@@ -165,6 +189,7 @@ class TimerService: Service() {
             time = currentTime + stm_timeRemaining
             stm_timeout = Date(time)
             scheduleStmTimer()
+            setAlarm()
             stm_timerPaused = false
         }
     }
@@ -188,24 +213,24 @@ class TimerService: Service() {
     }
 
     private fun onUstmTimerUpdate(timeElapsed: Int) {
-        val intent = Intent(Companion.ustm_receiver)
-        intent.putExtra(Companion.ustm_time, timeElapsed)
+        val intent = Intent(ustm_receiver)
+        intent.putExtra(ustm_time, timeElapsed)
         sendBroadcast(intent)
     }
 
     private fun onStmTimerUpdate(timeElapsed: Int) {
-        val intent = Intent(Companion.stm_receiver)
-        intent.putExtra(Companion.stm_time, timeElapsed)
+        val intent = Intent(stm_receiver)
+        intent.putExtra(stm_time, timeElapsed)
         sendBroadcast(intent)
     }
 
     private fun onUstmTimerFinish() {
-        val intent = Intent(Companion.ustm_finished_receiver)
+        val intent = Intent(ustm_finished_receiver)
         sendBroadcast(intent)
     }
 
     private fun onStmTimerFinish() {
-        val intent = Intent(Companion.stm_finished_receiver)
+        val intent = Intent(stm_finished_receiver)
         sendBroadcast(intent)
     }
 
