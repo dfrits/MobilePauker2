@@ -260,6 +260,17 @@ class LearnCards : FlashCardSwipeScreen() {
         firstStart = false
     }
 
+    override fun finish() {
+        isRunning = false
+
+        if (timerServiceConnection != null) {
+            stopService(timerServiceIntent)
+            unbindService(timerServiceConnection!!)
+        }
+        notificationManager?.cancelAll()
+        super.finish()
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.learning_cards, menu)
         pauseButton = menu.findItem(R.id.mPauseButton)
