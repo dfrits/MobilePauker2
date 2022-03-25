@@ -1,10 +1,14 @@
 package de.daniel.mobilepauker2.learning
 
+import android.annotation.SuppressLint
 import android.app.Service
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
+import android.provider.Settings
 import de.daniel.mobilepauker2.utils.Log
 import java.util.*
 
@@ -33,11 +37,22 @@ class TimerService : Service() {
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PeriSecure:MyWakeLock")
     }
 
+    @SuppressLint("BatteryLife")
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         wakeLock?.acquire(stm_totalTime + 60000L)
 
-        ustm_totalTime = intent.getIntExtra(USTM_TOTAL_TIME, -1)
-        stm_totalTime = intent.getIntExtra(STM_TOTAL_TIME, -1)
+        val intentAkku = Intent()
+        val pm : PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (pm.isIgnoringBatteryOptimizations(packageName)) {
+            intentAkku.action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
+        } else {
+            intentAkku.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intentAkku.data = Uri.parse("package:${packageName}")
+        }
+        startActivity(intentAkku)
+
+        ustm_totalTime = intentAkku.getIntExtra(USTM_TOTAL_TIME, -1)
+        stm_totalTime = intentAkku.getIntExtra(STM_TOTAL_TIME, -1)
         if (ustm_totalTime == -1 || stm_totalTime == -1) {
             Log.d(
                 "TimerService::onStartCommand", "Invalid total time: USTM= "
