@@ -276,9 +276,12 @@ class LearnCards : FlashCardSwipeScreen() {
     override fun finish() {
         isRunning = false
 
-        if (timerServiceConnection != null) {
-            stopService(timerServiceIntent)
-            unbindService(timerServiceConnection!!)
+        try {
+            if (timerServiceConnection != null) {
+                stopService(timerServiceIntent)
+                unbindService(timerServiceConnection!!)
+            }
+        } catch (e: Exception) {
         }
         notificationManager?.cancelAll()
         super.finish()
