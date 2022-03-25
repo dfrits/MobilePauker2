@@ -2,16 +2,14 @@ package de.daniel.mobilepauker2.learning
 
 import android.app.Service
 import android.content.Intent
-import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
-import android.provider.Settings
-import de.daniel.mobilepauker2.BuildConfig.APPLICATION_ID
 import de.daniel.mobilepauker2.utils.Log
 import java.util.*
 
-class TimerService: Service() {
+@Suppress("PrivatePropertyName")
+class TimerService : Service() {
     private val binder: IBinder = LocalBinder()
     private var ustm_totalTime = 0
     private var ustm_timeRemaining: Long = 0
@@ -36,13 +34,15 @@ class TimerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        wakeLock?.acquire(stm_totalTime + 6000L)
+        wakeLock?.acquire(stm_totalTime + 60000L)
 
-        ustm_totalTime = intent.getIntExtra(Companion.USTM_TOTAL_TIME, -1)
-        stm_totalTime = intent.getIntExtra(Companion.STM_TOTAL_TIME, -1)
+        ustm_totalTime = intent.getIntExtra(USTM_TOTAL_TIME, -1)
+        stm_totalTime = intent.getIntExtra(STM_TOTAL_TIME, -1)
         if (ustm_totalTime == -1 || stm_totalTime == -1) {
-            Log.d("TimerService::onStartCommand", "Invalid total time: USTM= "
-                + ustm_totalTime + "; STM= " + stm_totalTime)
+            Log.d(
+                "TimerService::onStartCommand", "Invalid total time: USTM= "
+                        + ustm_totalTime + "; STM= " + stm_totalTime
+            )
             stopSelf()
             return START_NOT_STICKY
         }
@@ -188,24 +188,24 @@ class TimerService: Service() {
     }
 
     private fun onUstmTimerUpdate(timeElapsed: Int) {
-        val intent = Intent(Companion.ustm_receiver)
-        intent.putExtra(Companion.ustm_time, timeElapsed)
+        val intent = Intent(ustm_receiver)
+        intent.putExtra(ustm_time, timeElapsed)
         sendBroadcast(intent)
     }
 
     private fun onStmTimerUpdate(timeElapsed: Int) {
-        val intent = Intent(Companion.stm_receiver)
-        intent.putExtra(Companion.stm_time, timeElapsed)
+        val intent = Intent(stm_receiver)
+        intent.putExtra(stm_time, timeElapsed)
         sendBroadcast(intent)
     }
 
     private fun onUstmTimerFinish() {
-        val intent = Intent(Companion.ustm_finished_receiver)
+        val intent = Intent(ustm_finished_receiver)
         sendBroadcast(intent)
     }
 
     private fun onStmTimerFinish() {
-        val intent = Intent(Companion.stm_finished_receiver)
+        val intent = Intent(stm_finished_receiver)
         sendBroadcast(intent)
     }
 
@@ -239,15 +239,15 @@ class TimerService: Service() {
     }
 
     companion object {
-        val USTM_TOTAL_TIME = "USTM_TOTAL_TIME"
-        val STM_TOTAL_TIME = "STM_TOTAL_TIME"
+        const val USTM_TOTAL_TIME = "USTM_TOTAL_TIME"
+        const val STM_TOTAL_TIME = "STM_TOTAL_TIME"
 
         //Broadcast
-        val ustm_receiver = "com.paukertimerservice.ustm_time_receiver"
-        val stm_receiver = "com.paukertimerservice.stm_time_receiver"
-        val ustm_finished_receiver = "com.paukertimerservice.ustm_finished_receiver"
-        val stm_finished_receiver = "com.paukertimerservice.stm_finished_receiver"
-        val ustm_time = "USTM_TIME"
-        val stm_time = "STM_TIME"
+        const val ustm_receiver = "com.paukertimerservice.ustm_time_receiver"
+        const val stm_receiver = "com.paukertimerservice.stm_time_receiver"
+        const val ustm_finished_receiver = "com.paukertimerservice.ustm_finished_receiver"
+        const val stm_finished_receiver = "com.paukertimerservice.stm_finished_receiver"
+        const val ustm_time = "USTM_TIME"
+        const val stm_time = "STM_TIME"
     }
 }
