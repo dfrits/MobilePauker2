@@ -41,18 +41,8 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         wakeLock?.acquire(stm_totalTime + 60000L)
 
-        val intentAkku = Intent()
-        val pm : PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        if (pm.isIgnoringBatteryOptimizations(packageName)) {
-            intentAkku.action = Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS
-        } else {
-            intentAkku.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intentAkku.data = Uri.parse("package:${packageName}")
-        }
-        startActivity(intentAkku)
-
-        ustm_totalTime = intentAkku.getIntExtra(USTM_TOTAL_TIME, -1)
-        stm_totalTime = intentAkku.getIntExtra(STM_TOTAL_TIME, -1)
+        ustm_totalTime = intent.getIntExtra(USTM_TOTAL_TIME, -1)
+        stm_totalTime = intent.getIntExtra(STM_TOTAL_TIME, -1)
         if (ustm_totalTime == -1 || stm_totalTime == -1) {
             Log.d(
                 "TimerService::onStartCommand", "Invalid total time: USTM= "
