@@ -1,13 +1,15 @@
 package de.daniel.mobilepauker2.learning
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.PowerManager
+import de.daniel.mobilepauker2.notification.AlarmNotificationReceiver
 import android.provider.Settings
 import de.daniel.mobilepauker2.utils.Log
 import java.util.*
@@ -132,6 +134,7 @@ class TimerService : Service() {
             val time = currentTime + stm_totalTime * 60 * 1000
             stm_timeout = Date(time)
             scheduleStmTimer()
+            setAlarm()
             stm_timerFinished = false
             stm_timerPaused = false
         }
@@ -144,6 +147,26 @@ class TimerService : Service() {
                 onStmTimerTick()
             }
         }, 0, 1000)
+    }
+
+    private fun setAlarm() {
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+        val alarmIntent: Intent
+        val pendingIntent: PendingIntent
+        val alarmTime = System.currentTimeMillis() + stm_timeout.time
+
+        if (alarmManager != null) {
+            alarmIntent = Intent(stm_finished_receiver)
+            pendingIntent = PendingIntent.getBroadcast(
+                applicationContext, 0, alarmIntent,
+                PendingIntent.FLAG_IMMUTABLE
+            )
+
+            alarmManager.cancel(pendingIntent)
+
+            alarmManager[AlarmManager.RTC_WAKEUP, alarmTime] = pendingIntent
+            Log.d("NotificationService::setAlarm", "Alarm set")
+        }
     }
 
     fun pauseTimers() {
@@ -170,6 +193,7 @@ class TimerService : Service() {
             time = currentTime + stm_timeRemaining
             stm_timeout = Date(time)
             scheduleStmTimer()
+            setAlarm()
             stm_timerPaused = false
         }
     }
