@@ -39,7 +39,6 @@ class TimerService : Service() {
         wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "PeriSecure:MyWakeLock")
     }
 
-    @SuppressLint("BatteryLife")
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         wakeLock?.acquire(stm_totalTime + 60000L)
 
