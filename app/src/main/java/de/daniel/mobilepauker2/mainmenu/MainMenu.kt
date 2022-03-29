@@ -171,8 +171,13 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
 
     override fun onPause() {
         chartView = null
-        NotificationService.enqueueWork(context)
         super.onPause()
+    }
+
+    override fun finish() {
+        NotificationService.enqueueWork(context)
+        isRunning = false
+        super.finish()
     }
 
     override fun onResume() {
@@ -201,7 +206,6 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned))
         } else {
-            isRunning = false
             super.onBackPressed()
         }
     }

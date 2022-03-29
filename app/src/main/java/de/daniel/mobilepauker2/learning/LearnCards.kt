@@ -1,12 +1,16 @@
 package de.daniel.mobilepauker2.learning
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.*
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.os.PowerManager
+import android.provider.Settings
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
@@ -81,6 +85,7 @@ class LearnCards : FlashCardSwipeScreen() {
     @Inject
     lateinit var settingsManager: SettingsManager
 
+    @SuppressLint("BatteryLife")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -97,6 +102,14 @@ class LearnCards : FlashCardSwipeScreen() {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         init()
+
+        val pm : PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            val intentAkku = Intent()
+            intentAkku.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+            intentAkku.data = Uri.parse("package:${packageName}")
+            startActivity(intentAkku)
+        }
     }
 
     override fun updateCurrentCard() {
@@ -263,9 +276,12 @@ class LearnCards : FlashCardSwipeScreen() {
     override fun finish() {
         isRunning = false
 
-        if (timerServiceConnection != null) {
-            stopService(timerServiceIntent)
-            unbindService(timerServiceConnection!!)
+        try {
+            if (timerServiceConnection != null) {
+                stopService(timerServiceIntent)
+                unbindService(timerServiceConnection!!)
+            }
+        } catch (e: Exception) {
         }
         notificationManager?.cancelAll()
         super.finish()
