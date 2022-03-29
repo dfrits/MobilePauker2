@@ -5,9 +5,10 @@ import de.daniel.mobilepauker2.lesson.batch.LongTermBatch
 import de.daniel.mobilepauker2.lesson.batch.SummaryBatch
 import de.daniel.mobilepauker2.lesson.card.Card
 import de.daniel.mobilepauker2.utils.Log
+import java.io.Serializable
 import java.util.*
 
-class Lesson {
+class Lesson : Serializable {
     var description: String = ""
     val longTermBatches = mutableListOf<LongTermBatch>()
     val unlearnedBatch = Batch(mutableListOf())

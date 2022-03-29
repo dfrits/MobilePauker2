@@ -32,6 +32,7 @@ import de.daniel.mobilepauker2.dropbox.SyncDialog
 import de.daniel.mobilepauker2.editcard.AddCard
 import de.daniel.mobilepauker2.learning.LearnCards
 import de.daniel.mobilepauker2.lesson.EditDescription
+import de.daniel.mobilepauker2.lesson.Lesson
 import de.daniel.mobilepauker2.lesson.LessonManager
 import de.daniel.mobilepauker2.lesson.batch.BatchType
 import de.daniel.mobilepauker2.lessonimport.LessonImport
@@ -243,6 +244,19 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
                 startActivity(Intent(context, LessonImport::class.java))
             }
         }
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        (savedInstanceState.get("Lesson") as Lesson?)?.let { savedLesson ->
+            lessonManager.setupLesson(savedLesson)
+        }
+
+        super.onRestoreInstanceState(savedInstanceState)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable("Lesson", lessonManager.lesson)
+        super.onSaveInstanceState(outState)
     }
 
     private fun uploadCurrentFile() {

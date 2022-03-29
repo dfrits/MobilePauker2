@@ -46,7 +46,6 @@ abstract class FlashCardSwipeScreen : AppCompatActivity(R.layout.learn_cards),
         // Setup the cursor
         Log.d("FlashCardSwipeScreenActivity::onCreate", "Seting up cursor")
         LOADER_ID = 1
-        //val loader = LoaderManager.getInstance(this).initLoader(LOADER_ID, null, this)
         loader.initLoader(LOADER_ID, null, this)
 
         // Setup Gesture detection
