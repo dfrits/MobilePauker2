@@ -271,5 +271,11 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="dialog_battery_optimization_title">Akku-Optimierung für MobilePauker++ deaktivieren</string>
+    <string name="dialog_battery_optimization_message">Das neue Android Betriebssystem ist sehr
+        aggressiv im Ausschalten von Apps, die im Hintergrund laufen. Dies kann dazu führen, dass
+        die Zeit nicht korrekt in der Benachrichtigungsleiste angezeigt wird oder die Benachrichtigung,
+        dass die Zeit abgelaufen ist, nicht erscheint.</string>
+    <string name="do_not_show_again">Nicht erneut anzeigen</string>
     <!-- endregion -->
 </resources>

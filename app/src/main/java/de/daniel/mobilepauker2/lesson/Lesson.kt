@@ -11,8 +11,6 @@ class Lesson {
     var description: String = ""
     val longTermBatches = mutableListOf<LongTermBatch>()
     val unlearnedBatch = Batch(mutableListOf())
-    val shortTermBatch = mutableListOf<Card>()
-    val ultraShortTermBatch = mutableListOf<Card>()
     val summaryBatch = SummaryBatch(this)
     val ultraShortTermList = mutableListOf<Card>()
     val shortTermList = mutableListOf<Card>()

@@ -13,10 +13,7 @@ import android.os.PowerManager
 import android.provider.Settings
 import android.view.*
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.RelativeLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
@@ -85,7 +82,6 @@ class LearnCards : FlashCardSwipeScreen() {
     @Inject
     lateinit var settingsManager: SettingsManager
 
-    @SuppressLint("BatteryLife")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -103,12 +99,9 @@ class LearnCards : FlashCardSwipeScreen() {
 
         init()
 
-        val pm : PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val pm: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-            val intentAkku = Intent()
-            intentAkku.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intentAkku.data = Uri.parse("package:${packageName}")
-            startActivity(intentAkku)
+            showPermissionDialog()
         }
     }
 
@@ -767,6 +760,35 @@ class LearnCards : FlashCardSwipeScreen() {
             mCardCursor.moveToNext()
             updateCurrentCard()
             fillData()
+        }
+    }
+
+    @SuppressLint("BatteryLife")
+    private fun showPermissionDialog() {
+        val pref = PreferenceManager.getDefaultSharedPreferences(context)
+
+        if (pref.getBoolean("showagain", true)) {
+            val builder = AlertDialog.Builder(context)
+            val view = View.inflate(context, R.layout.dialog_battery_optimization_alert, null)
+
+            view.findViewById<CheckBox>(R.id.check).setOnCheckedChangeListener { _, isChecked ->
+                pref.edit().putBoolean("showagain", !isChecked).apply()
+            }
+
+            builder.setView(R.layout.dialog_battery_optimization_alert)
+                .setTitle(getString(R.string.dialog_battery_optimization_title))
+                .setMessage(getString(R.string.dialog_battery_optimization_message))
+                .setNegativeButton(R.string.not_now) { dialog, _ -> dialog.dismiss() }
+                .setPositiveButton(R.string.next) { dialog, _ ->
+                    dialog.dismiss()
+                    pref.edit().putBoolean("showagain", true).apply()
+                    val intent = Intent()
+                    intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                    intent.data = Uri.parse("package:${packageName}")
+                    startActivity(intent)
+                }
+                .create()
+                .show()
         }
     }
 
