@@ -41,19 +41,9 @@
     <!-- region Infos -->
     <string name="card_added">Card added</string>
     <string name="cards_expire_notify_msg">Cards are expired.</string>
-    <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close
-        without saving?</string>
     <string name="compare_ques_answ">Right answer: %s\nYour answer: %s</string>
     <string name="delete_card_message">Do you really want to delete the card?</string>
     <string name="delete_lesson_message">Do you really want to delete the lesson?</string>
-    <string name="dialog_input_message">Type in your answer.</string>
-    <string name="dialog_result_input_answer">Your answer is:</string>
-    <string name="dialog_result_message">Your answer is wrong!</string>
-    <string name="dialog_result_right_answer">Right answer is:</string>
-    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
-    and open them in the App. But it would be better for the learning process to create a Lesson and
-    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
-    Pauker]]></string>
     <string name="expire_at">Expire at:</string>
     <string name="expired">Expired</string>
     <string name="expired_at">Expired at:</string>
@@ -81,9 +71,6 @@
     <string name="put_further">Still continue</string>
     <string name="put_in_your_answer">Type in your Answer</string>
     <string name="reset_cards_message">Do you want to reset the selected cards?</string>
-    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
-    <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side
-        have to be shown first</string>
     <string name="saving_success">File saved</string>
     <string name="search_hint">Search card</string>
     <string name="skipWaiting">Timer still running…</string>
@@ -130,6 +117,7 @@
     <string name="text_size">Text size</string>
     <string name="unlinking">Unlinking</string>
     <string name="yes">Yes</string>
+    <string name="do_not_show_again">Don\'t show again</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -146,19 +134,14 @@
     <string name="edit_card">Edit Card</string>
     <string name="edit_description_title">Lesson Description</string>
     <string name="edit_info_text">Edit info text</string>
-    <string name="exit_learning_dialog">Exit Learning?</string>
     <string name="expired_date">Expired date</string>
     <string name="front">Front</string>
-    <string name="give_lesson_name_dialog_title">Give the lesson a name</string>
     <string name="instant_repeat">Instant Repeat</string>
     <string name="learn_new_card">Learn new cards</string>
     <string name="learned_date">Learned date</string>
     <string name="lektion_verwalten_titel">Manage Lesson</string>
-    <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
-    <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
     <string name="lessons">Lessons</string>
     <string name="new_lesson">New lesson</string>
-    <string name="new_lesson_dialog_title">Create new Lesson?</string>
     <string name="next">Next</string>
     <string name="not_now">Not now</string>
     <string name="open_lesson">Open Lesson</string>
@@ -172,9 +155,7 @@
     <string name="reset_card">Reset Card</string>
     <string name="reset_cards">Reset Cards</string>
     <string name="reset_lesson">Reset lesson</string>
-    <string name="reset_lesson_dialog_title">Reset Lesson?</string>
     <string name="restart_timer">Restart Time</string>
-    <string name="reverse_sides_dialog_title">Flip all card sides?</string>
     <string name="save_lesson">Save lesson</string>
     <string name="save_lesson_before_question">Do you want to save before?</string>
     <string name="saving_title">Saving… Please wait!</string>
@@ -199,6 +180,33 @@
     <string name="reset">Reset</string>
     <string name="show_me">Show me!</string>
     <string name="skip_waiting_button">Doesn\'t matter! Go on!</string>
+    <!-- endregion -->
+
+    <!-- dialog -->
+    <string name="dialog_battery_optimization_title">Deactivate batter optimization for MobilePauker++</string>
+    <string name="dialog_battery_optimization_message">The new Android OS closes Apps very aggressively
+        which are running in the background. Due to that it can happen that the time will not be shown
+        correctly in the notification bar nor the notification that the timer expired will be shown.</string>
+    <string name="reset_lesson_dialog_title">Reset Lesson?</string>
+    <string name="reverse_sides_dialog_title">Flip all card sides?</string>
+    <string name="exit_learning_dialog">Exit Learning?</string>
+    <string name="give_lesson_name_dialog_title">Give the lesson a name</string>
+    <string name="lesson_not_saved_dialog_message">Not saved changes can get lost!</string>
+    <string name="lesson_not_saved_dialog_title">The lesson is not saved yet! Go on?</string>
+    <string name="new_lesson_dialog_title">Create new Lesson?</string>
+    <string name="reset_lesson_dialog_info">Every card will be moved to the unlearned batch</string>
+    <string name="reverse_sides_dialog_info">You can change in the settings, that the reverse side
+        have to be shown first</string>
+    <string name="close_without_saving_dialog_msg">The Lesson is not saved yet. Do you want to close
+        without saving?</string>
+    <string name="dialog_input_message">Type in your answer.</string>
+    <string name="dialog_result_input_answer">Your answer is:</string>
+    <string name="dialog_result_message">Your answer is wrong!</string>
+    <string name="dialog_result_right_answer">Right answer is:</string>
+    <string name="download_file_dialog_message"><![CDATA[You are able to download new Lessons online
+    and open them in the App. But it would be better for the learning process to create a Lesson and
+    add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
+    Pauker]]></string>
     <!-- endregion -->
 
     <!-- region Settings -->
@@ -297,10 +305,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">New Strings are automatically below here</string>
-    <string name="dialog_battery_optimization_title">Deactivate batter optimization for MobilePauker++</string>
-    <string name="dialog_battery_optimization_message">The new Android OS closes Apps very aggressively
-        which are running in the background. Due to that it can happen that the time will not be shown
-        correctly in the notification bar nor the notification that the timer expired will be shown.</string>
-    <string name="do_not_show_again">Don't show again</string>
     <!-- endregion -->
 </resources>

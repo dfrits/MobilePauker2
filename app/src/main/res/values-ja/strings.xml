@@ -39,17 +39,9 @@
     <!-- region Infos -->
     <string name="card_added">カードを足しました</string>
     <string name="cards_expire_notify_msg">カードが失効した。</string>
-    <string name="close_without_saving_dialog_msg">レッソンはまだ法損されていません。 法損しなくて閉じりたいですか？</string>
     <string name="compare_ques_answ">正し答: %s\nあなたの答: %s</string>
     <string name="delete_card_message">カードを本当に消したいですか?</string>
     <string name="delete_lesson_message">レッソンを本当に消したいですか?</string>
-    <string name="dialog_input_message">答えを書いてください.</string>
-    <string name="dialog_result_input_answer">あなたの答え:</string>
-    <string name="dialog_result_message">答えは間違いです!</string>
-    <string name="dialog_result_right_answer">正解の答え:</string>
-    <string name="download_file_dialog_message"><![CDATA[オンラインで新しいレッソンをダウンロードできて、
-    アップリーで開ける。 でもより良い勉強のために新しいレッソンを作って、自分でかーどを足して方がよいです。
-    <b>次</b>を押したらあなたはぽーかー(Pauker)の公式サイトに送られる]]></string>
     <string name="expire_at">失効日:</string>
     <string name="expired">失効した</string>
     <string name="expired_at">失効時:</string>
@@ -77,8 +69,6 @@
     <string name="put_further">それでも続けます</string>
     <string name="put_in_your_answer">答を入れてください</string>
     <string name="reset_cards_message">選んだカードをリセットつもりですか?</string>
-    <string name="reset_lesson_dialog_info">全部のカードを未勉強スタックに戻します</string>
-    <string name="reverse_sides_dialog_info">裏面を最初に表示するように設定で指定できます</string>
     <string name="saving_success">レッソンを法損しました</string>
     <string name="search_hint">カードを探す</string>
     <string name="sr_repeat_type">リピートモード:</string>
@@ -122,6 +112,31 @@
     <string name="text_size">文字サイズ</string>
     <string name="unlinking">解除</string>
     <string name="yes">はい</string>
+    <string name="do_not_show_again">再び表示しない</string>
+    <!-- endregion -->
+
+    <!-- dialog -->
+    <string name="dialog_battery_optimization_title">MobilePauker++のバッテリー最適化を無効にする</string>
+    <string name="dialog_battery_optimization_message">新しいAndroidオペレーティングシステムは、
+        バックグラウンドで実行されているアプリをオフにすることに非常に積極的です。 これにより、
+        通知バーに時刻が正しく表示されなかったり、タイムアウト通知が表示されなかったりする可能性があります。</string>
+    <string name="reset_lesson_dialog_info">全部のカードを未勉強スタックに戻します</string>
+    <string name="reverse_sides_dialog_info">裏面を最初に表示するように設定で指定できます</string>
+    <string name="dialog_input_message">答えを書いてください.</string>
+    <string name="dialog_result_input_answer">あなたの答え:</string>
+    <string name="dialog_result_message">答えは間違いです!</string>
+    <string name="dialog_result_right_answer">正解の答え:</string>
+    <string name="download_file_dialog_message"><![CDATA[オンラインで新しいレッソンをダウンロードできて、
+    アップリーで開ける。 でもより良い勉強のために新しいレッソンを作って、自分でかーどを足して方がよいです。
+    <b>次</b>を押したらあなたはぽーかー(Pauker)の公式サイトに送られる]]></string>
+    <string name="close_without_saving_dialog_msg">レッソンはまだ法損されていません。 法損しなくて閉じりたいですか？</string>
+    <string name="exit_learning_dialog">勉強を止めますか?</string>
+    <string name="give_lesson_name_dialog_title">名前を付けてください</string>
+    <string name="lesson_not_saved_dialog_message">法損しなかった編集は無くなれる!</string>
+    <string name="lesson_not_saved_dialog_title">レッソンはまだ法損されていません! 続ける?</string>
+    <string name="new_lesson_dialog_title">新しいレッソンを作りますか?</string>
+    <string name="reset_lesson_dialog_title">レッソンをリセットしますか?</string>
+    <string name="reverse_sides_dialog_title">全部の側を交わし?</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -138,19 +153,14 @@
     <string name="edit_card">カードを編集</string>
     <string name="edit_description_title">レッソンの情報</string>
     <string name="edit_info_text">レッソンの情報を編集</string>
-    <string name="exit_learning_dialog">勉強を止めますか?</string>
     <string name="expired_date">有効期限日</string>
     <string name="front">面</string>
-    <string name="give_lesson_name_dialog_title">名前を付けてください</string>
     <string name="instant_repeat">インスタント復習</string>
     <string name="learn_new_card">新しいカードを勉強</string>
     <string name="learned_date">学習日</string>
     <string name="lektion_verwalten_titel">レッスンを管理する</string>
-    <string name="lesson_not_saved_dialog_message">法損しなかった編集は無くなれる!</string>
-    <string name="lesson_not_saved_dialog_title">レッソンはまだ法損されていません! 続ける?</string>
     <string name="lessons">レッソン</string>
     <string name="new_lesson">新しいレッソン</string>
-    <string name="new_lesson_dialog_title">新しいレッソンを作りますか?</string>
     <string name="next">次</string>
     <string name="not_now">今ではない</string>
     <string name="open_lesson">レッソンを開く</string>
@@ -164,9 +174,7 @@
     <string name="reset_card">かーどをリセットする</string>
     <string name="reset_cards">カードをリセット</string>
     <string name="reset_lesson">レッソンをリセット</string>
-    <string name="reset_lesson_dialog_title">レッソンをリセットしますか?</string>
     <string name="restart_timer">タイマーをｄ</string>
-    <string name="reverse_sides_dialog_title">全部の側を交わし?</string>
     <string name="save_lesson">レッソンを法損</string>
     <string name="save_lesson_before_question">前に法損をしたいですか?</string>
     <string name="saving_title">法損… お待ちください!</string>
@@ -256,11 +264,5 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
-    <string name="dialog_battery_optimization_title">Akku-Optimierung für MobilePauker++ deaktivieren</string>
-    <string name="dialog_battery_optimization_message">Das neue Android Betriebssystem ist sehr
-        aggressiv im Ausschalten von Apps, die im Hintergrund laufen. Dies kann dazu führen, dass
-        die Zeit nicht korrekt in der Benachrichtigungsleiste angezeigt wird oder die Benachrichtigung,
-        dass die Zeit abgelaufen ist, nicht erscheint</string>
-    <string name="do_not_show_again">Nicht erneut anzeigen</string>
     <!-- endregion -->
 </resources>
