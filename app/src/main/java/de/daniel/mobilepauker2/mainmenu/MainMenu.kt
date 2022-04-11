@@ -205,7 +205,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned))
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned))
         } else {
-            super.onBackPressed()
+            finish()
         }
     }
 
