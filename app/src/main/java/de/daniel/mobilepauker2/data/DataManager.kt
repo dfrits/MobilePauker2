@@ -88,7 +88,7 @@ class DataManager @Inject constructor(val context: @JvmSuppressWildcards Context
         val list = mutableListOf<File>()
         directory.listFiles()?.forEach { file ->
             if (file.isDirectory) {
-                return getFilesFromFolder(file)
+                list.addAll(getFilesFromFolder(file))
             } else {
                 if (isNameValid(file.name))
                     list.add(file)
