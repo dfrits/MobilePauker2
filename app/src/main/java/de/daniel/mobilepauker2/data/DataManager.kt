@@ -78,13 +78,23 @@ class DataManager @Inject constructor(val context: @JvmSuppressWildcards Context
         if (!appDirectory.exists() && !appDirectory.mkdir()) return emptyArray()
 
         if (appDirectory.exists() && appDirectory.isDirectory) {
-            val listFiles = appDirectory.listFiles { file ->
-                isNameValid(file.name)
-            }
-            if (listFiles != null) return listFiles
+            return getFilesFromFolder(appDirectory)
         }
 
         return emptyArray()
+    }
+
+    private fun getFilesFromFolder(directory: File): Array<File> {
+        val list = mutableListOf<File>()
+        directory.listFiles()?.forEach { file ->
+            if (file.isDirectory) {
+                return getFilesFromFolder(file)
+            } else {
+                if (isNameValid(file.name))
+                    list.add(file)
+            }
+        }
+        return list.toTypedArray()
     }
 
     fun isFileExisting(fileName: String): Boolean {
