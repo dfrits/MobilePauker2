@@ -167,7 +167,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
     private fun syncAllFiles(serializableExtra: List<File>) {
         showDialog()
         files = serializableExtra
-        //startTimer()
+        startTimer()
         initObserver()
         files?.let { list ->
             viewModel.loadDataFromDropbox(
