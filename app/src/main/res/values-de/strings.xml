@@ -280,5 +280,7 @@
 
     <!-- region Neue Strings -->
     <string name="New">Neu</string>
+    <string name="connected">Verbunden</string>
+    <string name="error_connection">Fehler beim Verbinden</string>
     <!-- endregion -->
 </resources>
