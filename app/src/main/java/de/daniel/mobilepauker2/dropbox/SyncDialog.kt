@@ -88,13 +88,13 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
 
         val intent = intent
         val credentialPref = intent.getStringExtra(ACCESS_CREDENTIAL)
-        if (credentialPref == null) {
+        if (credentialPref == null || credentialPref == "null") {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet")
             errorOccurred()
-            return
+            finish()
         }
 
-        credentials = DropboxClientFactory.readCredentialFromString(credentialPref)
+        credentials = DropboxClientFactory.readCredentialFromString(credentialPref!!)
 
         cm.registerDefaultNetworkCallback(networkCallback)
 

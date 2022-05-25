@@ -66,7 +66,6 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
     @Inject
     lateinit var errorReporter: ErrorReporter
 
-    private var credentials: DbxCredential? = null
     private var listView: ListView? = null
     private var files = emptyArray<File>()
 
@@ -162,8 +161,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             val credentialPref = preferences.getString(Constants.DROPBOX_CREDENTIAL, null)
 
             if (credentialPref != null) {
-                credentials = DropboxClientFactory.readCredentialFromString(credentialPref)
-                startSync()
+                startSync(credentialPref)
             }
         }
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
@@ -300,9 +298,9 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
         }
     }
 
-    private fun startSync() {
+    private fun startSync(credentialPref: String) {
         val syncIntent = Intent(context, SyncDialog::class.java)
-        syncIntent.putExtra(Constants.ACCESS_CREDENTIAL, credentials.toString())
+        syncIntent.putExtra(Constants.ACCESS_CREDENTIAL, credentialPref)
         syncIntent.putExtra(Constants.FILES, files)
         syncIntent.action = Constants.SYNC_ALL_ACTION
         startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG)
@@ -416,7 +414,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             assIntent.action = Constants.DROPBOX_AUTH_ACTION
             startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
         } else {
-            startSync()
+            startSync(credentialPref)
         }
     }
 
