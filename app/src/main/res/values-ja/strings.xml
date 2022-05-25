@@ -264,7 +264,7 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
-    <string name="connected">Verbunden</string>
-    <string name="error_connection">Fehler beim Verbinden</string>
+    <string name="connected">接続できました</string>
+    <string name="error_connection">接続エラー</string>
     <!-- endregion -->
 </resources>
