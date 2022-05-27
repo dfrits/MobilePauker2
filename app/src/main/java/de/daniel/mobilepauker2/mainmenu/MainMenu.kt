@@ -46,7 +46,8 @@ import de.daniel.mobilepauker2.settings.SettingsManager.Keys.HIDE_TIMES
 import de.daniel.mobilepauker2.statistics.ChartAdapter
 import de.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback
 import de.daniel.mobilepauker2.utils.Constants
-import de.daniel.mobilepauker2.utils.Constants.ACCESS_TOKEN
+import de.daniel.mobilepauker2.utils.Constants.ACCESS_CREDENTIAL
+import de.daniel.mobilepauker2.utils.Constants.DROPBOX_CREDENTIAL
 import de.daniel.mobilepauker2.utils.Constants.FILES
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID
 import de.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON
@@ -250,10 +251,10 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     private fun uploadCurrentFile() {
-        val accessToken = getDefaultSharedPreferences(context)
-            .getString(Constants.DROPBOX_ACCESS_TOKEN, null)
+        val credentialPref = getDefaultSharedPreferences(context)
+            .getString(DROPBOX_CREDENTIAL, null)
         val intent = Intent(context, SyncDialog::class.java)
-        intent.putExtra(ACCESS_TOKEN, accessToken)
+        intent.putExtra(ACCESS_CREDENTIAL, credentialPref)
         val file = dataManager.getPathOfCurrentFile()
         intent.putExtra(FILES, file)
         intent.action = UPLOAD_FILE_ACTION

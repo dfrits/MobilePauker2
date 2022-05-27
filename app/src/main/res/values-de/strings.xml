@@ -38,6 +38,7 @@
         Bitte versuche es erneut.</string>
     <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
     <string name="error_dropbox_file_older_than_local">Datei auf Dropbox ist älter als diese!</string>
+    <string name="error_connection">Fehler beim Verbinden</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -99,6 +100,7 @@
     <string name="tap_enter_answer">Tippen um Antwort einzugeben.</string>
     <string name="deleting_impossible">Löschen nicht möglich!</string>
     <string name="sync_reset_success">Synchronisation zurückgesetzt</string>
+    <string name="connected">Verbunden</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->

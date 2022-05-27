@@ -36,6 +36,7 @@
         Maybe it is solved by the next try.</string>
     <string name="error_dropbox_file_not_found">File is no longer available on Dropbox</string>
     <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
+    <string name="error_connection">Connection failed</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -97,6 +98,7 @@
     <string name="tap_enter_answer">Tap to enter your answer.</string>
     <string name="deleting_impossible">Cannot delete!</string>
     <string name="sync_reset_success">Synchronisation reset</string>
+    <string name="connected">Connected</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->

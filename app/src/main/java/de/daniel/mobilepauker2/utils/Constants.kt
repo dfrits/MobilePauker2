@@ -14,7 +14,7 @@ object Constants {
 
     // Dropboxkonstanten
     const val DROPBOX_APP_KEY = "9rqxyyq8cty3cf1"
-    const val DROPBOX_ACCESS_TOKEN = "DROPBOX_ACCESS_TOKEN"
+    const val DROPBOX_CREDENTIAL = "DROPBOX_CREDENTIAL"
     const val DROPBOX_USER_ID = "DROPBOX_USER_ID"
     const val DROPBOX_PATH = ""
     const val DROPBOX_AUTH_ACTION = "de.daniel.mobilepauker2.dropbox.auth"
@@ -52,7 +52,7 @@ object Constants {
     const val SHORTCUT_EXTRA = "Filename"
 
     // Sync
-    const val ACCESS_TOKEN = "ACCESS_TOKEN"
+    const val ACCESS_CREDENTIAL = "ACCESS_CREDENTIAL"
     const val FILES = "FILES"
     const val SYNC_ALL_ACTION = "SYNC_ALL_ACTION"
     const val UPLOAD_FILE_ACTION = "UPLOAD_FILE_ACTION"

@@ -16,12 +16,13 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.dropbox.core.DbxException
+import com.dropbox.core.oauth.DbxCredential
 import com.dropbox.core.v2.files.FileMetadata
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.utils.Constants
-import de.daniel.mobilepauker2.utils.Constants.ACCESS_TOKEN
+import de.daniel.mobilepauker2.utils.Constants.ACCESS_CREDENTIAL
 import de.daniel.mobilepauker2.utils.Constants.FILES
 import de.daniel.mobilepauker2.utils.Constants.SYNC_FILE_ACTION
 import de.daniel.mobilepauker2.utils.Constants.UPLOAD_FILE_ACTION
@@ -43,7 +44,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
     private var timeout: Timer? = null
     private var timerTask: TimerTask? = null
     private var cancelButton: Button? = null
-    private var accessToken: String? = null
+    private var credentials: DbxCredential? = null
 
     @Inject
     lateinit var toaster: Toaster
@@ -63,7 +64,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         }
 
         override fun onAvailable(network: Network) {
-            DropboxClientFactory.init(accessToken)
+            DropboxClientFactory.init(credentials!!)
             val serializableExtra = intent.getSerializableExtra(FILES)
             startSync(intent, serializableExtra!!)
         }
@@ -86,12 +87,14 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         }
 
         val intent = intent
-        accessToken = intent.getStringExtra(ACCESS_TOKEN)
-        if (accessToken == null) {
+        val credentialPref = intent.getStringExtra(ACCESS_CREDENTIAL)
+        if (credentialPref == null || credentialPref == "null") {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet")
             errorOccurred()
-            return
+            finish()
         }
+
+        credentials = DropboxClientFactory.readCredentialFromString(credentialPref!!)
 
         cm.registerDefaultNetworkCallback(networkCallback)
 
@@ -304,7 +307,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
                 .setOnDismissListener {
                     PreferenceManager.getDefaultSharedPreferences(context)
                         .edit()
-                        .putString(Constants.DROPBOX_ACCESS_TOKEN, null).apply()
+                        .putString(Constants.DROPBOX_CREDENTIAL, null).apply()
                     finishDialog(RESULT_CANCELED)
                 }
                 .setCancelable(false)

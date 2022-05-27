@@ -82,11 +82,10 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         val dbPref: Preference? =
             findPreference(settingsManager.getSettingsKey(Keys.DB_PREFERENCE))
         val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        val accessToken = pref.getString(Constants.DROPBOX_ACCESS_TOKEN, null)
-        if (accessToken == null) {
+        val credentialPref = pref.getString(Constants.DROPBOX_CREDENTIAL, null)
+        if (credentialPref == null) {
             setPrefAss(dbPref)
         } else {
-            pref.edit().putString(Constants.DROPBOX_ACCESS_TOKEN, accessToken).apply()
             setPrefUnlink(dbPref)
             Log.d("SettingsFragment::initSyncPrefs", "enable autosync")
             removeSyncPrefAndSetAutoSync(true)
@@ -100,7 +99,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
     private fun setPrefAss(dbPref: Preference?) {
         dbPref?.setTitle(R.string.associate_dropbox_title)
         val assIntent = Intent(context, DropboxAccDialog::class.java)
-        assIntent.putExtra(Constants.DROPBOX_AUTH_ACTION, true)
+        assIntent.action = Constants.DROPBOX_AUTH_ACTION
         dbPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
             false
@@ -120,7 +119,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
     private fun setPrefUnlink(dbPref: Preference?) {
         dbPref?.setTitle(R.string.unlink_dropbox_title)
         val unlIntent = Intent(context, DropboxAccDialog::class.java)
-        unlIntent.putExtra(Constants.DROPBOX_UNLINK_ACTION, true)
+        unlIntent.action = Constants.DROPBOX_UNLINK_ACTION
         dbPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             Log.d("SettingsFragment::initSyncPrefs", "unlinkDB clicked")
             startActivityForResult(unlIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)

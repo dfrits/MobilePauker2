@@ -17,18 +17,17 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.dropbox.core.android.Auth
+import com.dropbox.core.oauth.DbxCredential
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.dropbox.DropboxAccDialog
+import de.daniel.mobilepauker2.dropbox.DropboxClientFactory
 import de.daniel.mobilepauker2.dropbox.SyncDialog
 import de.daniel.mobilepauker2.lesson.LessonManager
 import de.daniel.mobilepauker2.settings.SettingsManager
 import de.daniel.mobilepauker2.shortcut.ShortcutsManager
 import de.daniel.mobilepauker2.utils.Constants
-import de.daniel.mobilepauker2.utils.Constants.ACCESS_TOKEN
-import de.daniel.mobilepauker2.utils.Constants.FILES
-import de.daniel.mobilepauker2.utils.Constants.SYNC_FILE_ACTION
 import de.daniel.mobilepauker2.utils.ErrorReporter
 import de.daniel.mobilepauker2.utils.Log
 import de.daniel.mobilepauker2.utils.Toaster
@@ -67,7 +66,6 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
     @Inject
     lateinit var errorReporter: ErrorReporter
 
-    private var accessToken: String? = null
     private var listView: ListView? = null
     private var files = emptyArray<File>()
 
@@ -160,9 +158,10 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
                 }
         }
         if (requestCode == Constants.REQUEST_CODE_DB_ACC_DIALOG && resultCode == RESULT_OK) {
-            accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null)
-            if (accessToken != null) {
-                startSync()
+            val credentialPref = preferences.getString(Constants.DROPBOX_CREDENTIAL, null)
+
+            if (credentialPref != null) {
+                startSync(credentialPref)
             }
         }
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
@@ -299,9 +298,9 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
         }
     }
 
-    private fun startSync() {
+    private fun startSync(credentialPref: String) {
         val syncIntent = Intent(context, SyncDialog::class.java)
-        syncIntent.putExtra(Constants.ACCESS_TOKEN, accessToken)
+        syncIntent.putExtra(Constants.ACCESS_CREDENTIAL, credentialPref)
         syncIntent.putExtra(Constants.FILES, files)
         syncIntent.action = Constants.SYNC_ALL_ACTION
         startActivityForResult(syncIntent, Constants.REQUEST_CODE_SYNC_DIALOG)
@@ -409,13 +408,13 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
     // Menu Clicks
 
     fun syncManuallyClicked(item: MenuItem?) {
-        accessToken = preferences.getString(Constants.DROPBOX_ACCESS_TOKEN, null)
-        if (accessToken == null) {
+        val credentialPref = preferences.getString(Constants.DROPBOX_CREDENTIAL, null)
+        if (credentialPref == null) {
             val assIntent = Intent(context, DropboxAccDialog::class.java)
             assIntent.action = Constants.DROPBOX_AUTH_ACTION
             startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
         } else {
-            startSync()
+            startSync(credentialPref)
         }
     }
 
