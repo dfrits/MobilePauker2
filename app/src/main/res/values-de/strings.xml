@@ -278,6 +278,7 @@
         zum Wiederholen.</string>
     <string name="ustm_expired_notify_message">Zeit vom Ultra-Kurzzeit-Gedächtnis ist abgelaufen.
         Tippen zum Wiederholen.</string>
+    <string name="timer_paused">Timer pausiert</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->

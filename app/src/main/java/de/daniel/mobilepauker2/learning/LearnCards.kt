@@ -134,7 +134,7 @@ class LearnCards : FlashCardSwipeScreen() {
 
     override fun screenTouched() {
         timerService?.let {
-            if (it.isUstmTimerPaused() || it.isStmTimerPaused()) return
+            if (it.isPaused()) return
         }
 
         if (currentPhase == REPEATING_LTM || currentPhase == REPEATING_STM || currentPhase == REPEATING_USTM) {
@@ -239,6 +239,12 @@ class LearnCards : FlashCardSwipeScreen() {
             mCardCursor.position
         } catch (e: Exception) {
             -1
+        }
+
+        timerService?.let { timer ->
+            if (timer.isPaused()) {
+                sendPauseNotification()
+            }
         }
     }
 
@@ -761,6 +767,36 @@ class LearnCards : FlashCardSwipeScreen() {
             updateCurrentCard()
             fillData()
         }
+    }
+
+    private fun sendPauseNotification() {
+        val showNotify = settingsManager.getBoolPreference(SHOW_TIMER_BAR)
+        Log.d("LearnActivity::Timer paused", "Acivity is not visible")
+        val mBuilder: Builder =
+            Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setContentText(getString(R.string.timer_paused))
+                .setSmallIcon(R.drawable.notify_icon)
+                .setContentTitle(getString(R.string.app_name))
+                .setPriority(PRIORITY_DEFAULT)
+                .setContentIntent(
+                    PendingIntent.getActivity(
+                        context,
+                        0,
+                        intent,
+                        PendingIntent.FLAG_IMMUTABLE
+                    )
+                )
+                .setAutoCancel(true)
+                .setVisibility(VISIBILITY_PUBLIC)
+        Log.d("LearnActivity::Timer paused", "Notification created")
+        Timer().schedule(object : TimerTask() {
+            override fun run() {
+                if (!isAppRunning(context) && !timerService!!.isStmTimerFinished() && showNotify) {
+                    notificationManager!!.notify(NOTIFICATION_ID, mBuilder.build())
+                }
+            }
+        }, 1000)
+        Log.d("LearnActivity::STM-Timer finished", "Notification shown")
     }
 
     @SuppressLint("BatteryLife")
