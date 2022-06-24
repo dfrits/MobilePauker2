@@ -64,9 +64,13 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         }
 
         override fun onAvailable(network: Network) {
-            DropboxClientFactory.init(credentials!!)
-            val serializableExtra = intent.getSerializableExtra(FILES)
-            startSync(intent, serializableExtra!!)
+            if (credentials != null) {
+                errorOccurred(Exception(getString(R.string.error_invalid_token_message)))
+            } else {
+                DropboxClientFactory.init(credentials!!)
+                val serializableExtra = intent.getSerializableExtra(FILES)
+                startSync(intent, serializableExtra!!)
+            }
         }
 
         override fun onUnavailable() {
@@ -92,9 +96,9 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
             Log.d("SyncDialog::OnCreate", "Synchro mit accessToken = null gestartet")
             errorOccurred()
             finish()
+        } else {
+            credentials = DropboxClientFactory.readCredentialFromString(credentialPref)
         }
-
-        credentials = DropboxClientFactory.readCredentialFromString(credentialPref!!)
 
         cm.registerDefaultNetworkCallback(networkCallback)
 
