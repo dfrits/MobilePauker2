@@ -123,6 +123,7 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         dbPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             Log.d("SettingsFragment::initSyncPrefs", "unlinkDB clicked")
             startActivityForResult(unlIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
+            dataManager.cacheCursor(null)
             false
         }
     }
