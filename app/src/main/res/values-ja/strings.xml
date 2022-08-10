@@ -35,6 +35,7 @@
     <string name="error_invalid_token_message">ドロップボックストークンに問題があります。
         多分それは次の試みによって解決されます。</string>
     <string name="error_connection">接続エラー</string>
+    <string name="dropbox_link_error">動作しませんでした</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -95,6 +96,7 @@
     <string name="deleting_impossible">削除できません！</string>
     <string name="sync_reset_success">同期リセット</string>
     <string name="connected">接続できました</string>
+    <string name="dropbox_unlinked">Dropboxのリンクが解除されました</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -252,6 +254,8 @@
     <string name="stm_summ">時間: %smin</string>
     <string name="ustm_summ">時間: %ss</string>
     <string name="reset_sync_sum">レッスンがアップロードされない場合など、同期をリセットします</string>
+    <string name="current_account">"当座預金: "</string>
+    <string name="current_account_no_mail">"当座預金: メールなし"</string>
     <!-- endregion -->
 
     <!-- endregion -->

@@ -53,11 +53,19 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
             Constants.DROPBOX_UNLINK_ACTION -> {
                 title.setText(R.string.unlinking)
                 if (credentialPref == null) {
-                    toaster.showToast(this, "Nicht möglich", Toast.LENGTH_SHORT)
+                    toaster.showToast(
+                        this,
+                        getString(R.string.dropbox_link_error),
+                        Toast.LENGTH_SHORT
+                    )
                     setResult(RESULT_CANCELED)
                 } else {
                     prefs?.edit()?.remove(Constants.DROPBOX_CREDENTIAL)?.apply()
-                    toaster.showToast(this, "Dropbox getrennt", Toast.LENGTH_SHORT)
+                    toaster.showToast(
+                        this,
+                        getString(R.string.dropbox_unlinked),
+                        Toast.LENGTH_SHORT
+                    )
                     Log.d("SettingsFragment::initSyncPrefs", "accessTocken = null")
                     setResult(RESULT_OK)
                 }
@@ -80,12 +88,15 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
                     .putString(Constants.DROPBOX_CREDENTIAL, credential.toString())
                     .apply()
                 toaster.showToast(this, R.string.connected, Toast.LENGTH_SHORT)
+
+                saveUserMail(credential)
+
                 setResult(RESULT_OK)
             } else {
                 toaster.showToast(this, R.string.error_connection, Toast.LENGTH_SHORT)
                 setResult(RESULT_CANCELED)
+                finish()
             }
-            finish()
         }
 
         assStarted = true
@@ -97,5 +108,19 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
         val manager = this.packageManager
         val info = manager.getPackageInfo(this.packageName, PackageManager.GET_ACTIVITIES)
         return info.versionName
+    }
+
+    private fun saveUserMail(credential: DbxCredential) {
+        DropboxClientFactory.init(credential)
+        GetUserMailTask(DropboxClientFactory.client, object : GetUserMailTask.Callback {
+            override fun onComplete(result: String) {
+                prefs?.edit()?.putString(Constants.DROPBOX_USER_MAIL, result)?.apply()
+                finish()
+            }
+
+            override fun onError() {
+                finish()
+            }
+        }).execute()
     }
 }
