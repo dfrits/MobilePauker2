@@ -1,6 +1,7 @@
 package de.daniel.mobilepauker2.dropbox
 
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.RelativeLayout
@@ -40,10 +41,9 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
             Constants.DROPBOX_AUTH_ACTION -> {
                 title.setText(R.string.association)
                 if (credentialPref == null) {
-                    val clientIdentifier = "MobilePauker++/3.1.1"
+                    val clientIdentifier = getAppVersion()
                     val requestConfig = DbxRequestConfig(clientIdentifier)
                     Auth.startOAuth2PKCE(this, Constants.DROPBOX_APP_KEY, requestConfig)
-                    //assStarted = true
                 } else {
                     toaster.showToast(this, R.string.already_connected, Toast.LENGTH_SHORT)
                     setResult(RESULT_CANCELED)
@@ -92,4 +92,10 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
     }
 
     fun cancelClicked(view: View?) {}
+
+    private fun getAppVersion(): String {
+        val manager = this.packageManager
+        val info = manager.getPackageInfo(this.packageName, PackageManager.GET_ACTIVITIES)
+        return info.versionName
+    }
 }
