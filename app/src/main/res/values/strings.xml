@@ -303,6 +303,7 @@
         cards.</string>
     <string name="ustm_expired_notify_message">Ultra-Short-Term-Memory Timer has expired. Tap to
         repeat cards.</string>
+    <string name="timer_paused">Timer paused</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->

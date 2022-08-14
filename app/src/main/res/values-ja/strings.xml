@@ -34,6 +34,7 @@
     <string name="error_dropbox_file_older_than_local">Dropboxのファイルはこれより古いです！</string>
     <string name="error_invalid_token_message">ドロップボックストークンに問題があります。
         多分それは次の試みによって解決されます。</string>
+    <string name="error_connection">接続エラー</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -93,6 +94,7 @@
     <string name="tap_enter_answer">タップして回答を入力してください。</string>
     <string name="deleting_impossible">削除できません！</string>
     <string name="sync_reset_success">同期リセット</string>
+    <string name="connected">接続できました</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -260,11 +262,10 @@
     <string name="channel_timerbar_name">タイマーバー</string>
     <string name="stm_expired_notify_message">短期記憶のタイマーは切れた。 かーどを復習するために押してください。</string>
     <string name="ustm_expired_notify_message">超短期記憶のタイマーは切れた。 かーどを復習するために押してください。</string>
+    <string name="timer_paused">タイマーが一時停止しました</string>
     <!-- endregion -->
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
-    <string name="connected">接続できました</string>
-    <string name="error_connection">接続エラー</string>
     <!-- endregion -->
 </resources>
