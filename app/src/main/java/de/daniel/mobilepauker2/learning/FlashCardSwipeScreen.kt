@@ -66,7 +66,7 @@ abstract class FlashCardSwipeScreen : AppCompatActivity(R.layout.learn_cards),
         super.onRestoreInstanceState(savedInstanceState)
     }
 
-    override fun onTouchEvent(ev: MotionEvent?): Boolean {
+    override fun onTouchEvent(ev: MotionEvent): Boolean {
         super.onTouchEvent(ev)
         return gestureDetector!!.onTouchEvent(ev)
     }

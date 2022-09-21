@@ -72,12 +72,12 @@ class Search : AppCompatActivity() {
         })
 
         search.setOnActionExpandListener(object : MenuItem.OnActionExpandListener {
-            override fun onMenuItemActionExpand(item: MenuItem?): Boolean {
+            override fun onMenuItemActionExpand(item: MenuItem): Boolean {
                 return true
             }
 
-            override fun onMenuItemActionCollapse(item: MenuItem?): Boolean {
-                (item?.actionView as SearchView?)?.setQuery("", true)
+            override fun onMenuItemActionCollapse(item: MenuItem): Boolean {
+                (item.actionView as SearchView?)?.setQuery("", true)
                 return true
             }
 
