@@ -18,7 +18,7 @@ abstract class FlashCardBasedFeedParser(val feedUrl: URL) : IFlashCardFeedParser
     val FONT = "font"
 
     open fun getInputStream(): InputStream? {
-        val feedURLString = feedUrl.toExternalForm().toLowerCase(Locale.ROOT)
+        val feedURLString = feedUrl.toExternalForm().lowercase()
         Log.d("FlashCardBaseFeedParser::getInputStream", "feedURLString =$feedURLString")
         try {
             if (feedURLString.endsWith(".gz")) {
