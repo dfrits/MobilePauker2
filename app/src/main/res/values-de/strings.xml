@@ -123,6 +123,7 @@
     <string name="unlinking">Trennen</string>
     <string name="yes">Ja</string>
     <string name="do_not_show_again">Nicht erneut anzeigen</string>
+    <string name="sync">Synchronisieren</string>
     <!-- endregion -->
 
     <!-- dialog -->
@@ -151,6 +152,8 @@
     <string name="reset_lesson_dialog_info">Es werden alle Karten auf Ungelernt zurückgesetzt</string>
     <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die
         Rückseite zuerst gezeigt werden soll</string>
+    <string name="warning_lesson_not_saved">Lektion wurde noch nicht gespeichert.
+        Es droht Datenverlust. Lektion speichern oder zurücksetzen durch erneutes Öffnen.</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->

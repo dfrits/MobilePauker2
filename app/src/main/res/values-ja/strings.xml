@@ -117,6 +117,7 @@
     <string name="unlinking">解除</string>
     <string name="yes">はい</string>
     <string name="do_not_show_again">再び表示しない</string>
+    <string name="sync">同期</string>
     <!-- endregion -->
 
     <!-- dialog -->
@@ -141,6 +142,8 @@
     <string name="new_lesson_dialog_title">新しいレッソンを作りますか?</string>
     <string name="reset_lesson_dialog_title">レッソンをリセットしますか?</string>
     <string name="reverse_sides_dialog_title">全部の側を交わし?</string>
+    <string name="warning_lesson_not_saved">レッスンはまだ保存されていません。
+        データが失われる危険性があります。 レッスンを保存するか、再度開いてリセットします。</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->

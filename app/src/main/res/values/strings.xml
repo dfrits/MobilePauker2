@@ -122,6 +122,7 @@
     <string name="unlinking">Unlinking</string>
     <string name="yes">Yes</string>
     <string name="do_not_show_again">Don\'t show again</string>
+    <string name="sync">Synchronize</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -211,6 +212,8 @@
     and open them in the App. But it would be better for the learning process to create a Lesson and
     add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
     Pauker]]></string>
+    <string name="warning_lesson_not_saved">Lesson is not saved. Data could be lost.
+        Save the lesson or reset it through reopening it.</string>
     <!-- endregion -->
 
     <!-- region Settings -->
