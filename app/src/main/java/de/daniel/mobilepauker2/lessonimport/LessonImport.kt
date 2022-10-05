@@ -143,7 +143,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             if (lessonManager.isLessonNotNew())
                 if (fileNames.contains(dataManager.currentFileName)) {
                     try {
-                        viewModel.openLesson(dataManager.getReadableCurrentFileName())
+                        viewModel.openLesson(dataManager.currentFileName)
                     } catch (ignored: IOException) {
                         toaster.showToast(
                             context as Activity,
