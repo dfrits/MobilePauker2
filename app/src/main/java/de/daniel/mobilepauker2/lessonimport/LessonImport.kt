@@ -312,7 +312,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
         }
     }
 
-    private fun LessonImport.startSync(credentialPref: String) {
+    private fun startSync(credentialPref: String) {
         val syncIntent = Intent(context, SyncDialog::class.java)
         syncIntent.putExtra(Constants.ACCESS_CREDENTIAL, credentialPref)
         syncIntent.putExtra(Constants.FILES, files)

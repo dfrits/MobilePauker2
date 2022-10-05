@@ -1,6 +1,5 @@
 package de.daniel.mobilepauker2.dropbox
 
-import android.icu.text.DateFormat
 import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +10,6 @@ import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Log
 import java.io.File
-import java.text.DateFormat.getDateInstance
 import java.util.*
 import javax.inject.Inject
 
