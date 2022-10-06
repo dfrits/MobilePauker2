@@ -64,7 +64,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         }
 
         override fun onAvailable(network: Network) {
-            if (credentials != null) {
+            if (credentials == null) {
                 errorOccurred(Exception(getString(R.string.error_invalid_token_message)))
             } else {
                 DropboxClientFactory.init(credentials!!)
