@@ -28,6 +28,8 @@ import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.data.SaveAsCallback
 import de.daniel.mobilepauker2.data.SaveAsDialog
+import de.daniel.mobilepauker2.dropbox.DropboxClientFactory
+import de.daniel.mobilepauker2.dropbox.GetUserMailTask
 import de.daniel.mobilepauker2.dropbox.SyncDialog
 import de.daniel.mobilepauker2.editcard.AddCard
 import de.daniel.mobilepauker2.learning.LearnCards
@@ -48,6 +50,7 @@ import de.daniel.mobilepauker2.statistics.ChartAdapter.ChartAdapterCallback
 import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Constants.ACCESS_CREDENTIAL
 import de.daniel.mobilepauker2.utils.Constants.DROPBOX_CREDENTIAL
+import de.daniel.mobilepauker2.utils.Constants.DROPBOX_USER_MAIL
 import de.daniel.mobilepauker2.utils.Constants.FILES
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID
 import de.daniel.mobilepauker2.utils.Constants.REQUEST_CODE_SAVE_DIALOG_NEW_LESSON
@@ -110,6 +113,8 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         initButtons()
         initView()
         initChartList()
+
+        readUserMail()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -471,6 +476,26 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
             val alert = altBld.create()
             alert.setIcon(R.mipmap.ic_launcher)
             alert.show()
+        }
+    }
+
+    private fun readUserMail() {
+        try {
+            val pref = getDefaultSharedPreferences(context)
+            if (pref.getString(DROPBOX_USER_MAIL, null) == null) {
+                pref.getString(DROPBOX_CREDENTIAL, null)?.let {
+                    val credential = DropboxClientFactory.readCredentialFromString(it)
+                    DropboxClientFactory.init(credential)
+                    GetUserMailTask(DropboxClientFactory.client, object : GetUserMailTask.Callback {
+                        override fun onComplete(result: String) {
+                            pref.edit().putString(DROPBOX_USER_MAIL, result).apply()
+                        }
+
+                        override fun onError() {}
+                    }).execute()
+                }
+            }
+        } catch (ignore: Exception) {
         }
     }
 

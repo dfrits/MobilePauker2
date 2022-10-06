@@ -16,6 +16,7 @@ object Constants {
     const val DROPBOX_APP_KEY = "9rqxyyq8cty3cf1"
     const val DROPBOX_CREDENTIAL = "DROPBOX_CREDENTIAL"
     const val DROPBOX_USER_ID = "DROPBOX_USER_ID"
+    const val DROPBOX_USER_MAIL = "DROPBOX_USER_MAIL"
     const val DROPBOX_PATH = ""
     const val DROPBOX_AUTH_ACTION = "de.daniel.mobilepauker2.dropbox.auth"
     const val DROPBOX_UNLINK_ACTION = "de.daniel.mobilepauker2.dropbox.unlink"

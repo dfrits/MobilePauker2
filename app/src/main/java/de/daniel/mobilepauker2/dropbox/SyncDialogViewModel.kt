@@ -1,5 +1,6 @@
 package de.daniel.mobilepauker2.dropbox
 
+import android.icu.text.SimpleDateFormat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.dropbox.core.DbxException
@@ -218,10 +219,13 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
                 } else if (localFile != null) {
                     val localModified = localFile.lastModified()
                     val cachedModified = cachedFile?.lastModified() ?: localModified
-                    if (localModified == cachedModified
-                        && localModified < dbFile.clientModified.time
-                    ) {
-                        filesToUpload.add(localFile)
+
+                    if (localModified == cachedModified) {
+                        if (localModified > dbFile.clientModified.time) {
+                            filesToUpload.add(localFile)
+                        } else if (localModified < dbFile.clientModified.time) {
+                            filesToDownload.add(dbFile)
+                        }
                     }
                 }
             }
@@ -254,6 +258,18 @@ class SyncDialogViewModel @Inject constructor(private val dataManager: DataManag
         uploadFiles(filesToUpload)
         deleteFilesOnPhone(filesToDeleteLocal)
         deleteFilesOnDB(filesToDeleteServer)
+    }
+
+    fun getDate(milliSeconds: Long?, dateFormat: String?): String? {
+        if (milliSeconds == null) return ""
+
+        // Create a DateFormatter object for displaying date in specified format.
+        val formatter = SimpleDateFormat(dateFormat, Locale.getDefault())
+
+        // Create a calendar object that will convert the date and time value in milliseconds to date.
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = milliSeconds
+        return formatter.format(calendar.time)
     }
 
     private fun List<Metadata>.find(file: File): Metadata? = find {

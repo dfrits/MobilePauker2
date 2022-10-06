@@ -37,6 +37,7 @@
     <string name="error_dropbox_file_not_found">File is no longer available on Dropbox</string>
     <string name="error_dropbox_file_older_than_local">File on Dropbox is older than this!</string>
     <string name="error_connection">Connection failed</string>
+    <string name="dropbox_link_error">Not possible</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -99,6 +100,7 @@
     <string name="deleting_impossible">Cannot delete!</string>
     <string name="sync_reset_success">Synchronisation reset</string>
     <string name="connected">Connected</string>
+    <string name="dropbox_unlinked">Dropbox unlinked</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -120,6 +122,7 @@
     <string name="unlinking">Unlinking</string>
     <string name="yes">Yes</string>
     <string name="do_not_show_again">Don\'t show again</string>
+    <string name="sync">Synchronize</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -209,6 +212,8 @@
     and open them in the App. But it would be better for the learning process to create a Lesson and
     add cards yourself. With a tap on <b>\"NEXT\"</b> you will be forwarded to the official site of
     Pauker]]></string>
+    <string name="warning_lesson_not_saved">Lesson is not saved. Data could be lost.
+        Save the lesson or reset it through reopening it.</string>
     <!-- endregion -->
 
     <!-- region Settings -->
@@ -282,6 +287,8 @@
     <string name="stm_summ">Short Term Memory: %smin</string>
     <string name="ustm_summ">Ultra Short Term Memory: %ss</string>
     <string name="reset_sync_sum">Reset the Synchronisation for example when a Lesson will not be uploaded</string>
+    <string name="current_account">"Current Account: "</string>
+    <string name="current_account_no_mail">"Current Account: No Mail"</string>
     <!-- endregion -->
 
     <!-- region Defaultwerte -->

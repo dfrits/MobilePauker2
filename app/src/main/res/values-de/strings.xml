@@ -39,6 +39,7 @@
     <string name="error_dropbox_file_not_found">Datei ist nicht länger verfügbar auf Dropbox</string>
     <string name="error_dropbox_file_older_than_local">Datei auf Dropbox ist älter als diese!</string>
     <string name="error_connection">Fehler beim Verbinden</string>
+    <string name="dropbox_link_error">Nicht möglich</string>
     <!-- endregion -->
 
     <!-- region Infos -->
@@ -101,6 +102,7 @@
     <string name="deleting_impossible">Löschen nicht möglich!</string>
     <string name="sync_reset_success">Synchronisation zurückgesetzt</string>
     <string name="connected">Verbunden</string>
+    <string name="dropbox_unlinked">Dropbox getrennt</string>
     <!-- endregion -->
 
     <!-- region Sonstiges -->
@@ -121,6 +123,7 @@
     <string name="unlinking">Trennen</string>
     <string name="yes">Ja</string>
     <string name="do_not_show_again">Nicht erneut anzeigen</string>
+    <string name="sync">Synchronisieren</string>
     <!-- endregion -->
 
     <!-- dialog -->
@@ -149,6 +152,8 @@
     <string name="reset_lesson_dialog_info">Es werden alle Karten auf Ungelernt zurückgesetzt</string>
     <string name="reverse_sides_dialog_info">Du kannst in den Einstellungen angeben, dass die
         Rückseite zuerst gezeigt werden soll</string>
+    <string name="warning_lesson_not_saved">Lektion wurde noch nicht gespeichert.
+        Es droht Datenverlust. Lektion speichern oder zurücksetzen durch erneutes Öffnen.</string>
     <!-- endregion -->
 
     <!-- region Content Descriptions und Titles-->
@@ -265,6 +270,8 @@
     <string name="ustm_summ">Ultrakurzzeit-Gedächtnis: %ss</string>
     <string name="reset_sync_sum">Setze die Synchronisation zurück, wenn z.B. eine Lektion nicht
         hochgeladen wird</string>
+    <string name="current_account">"Aktueller Account: "</string>
+    <string name="current_account_no_mail">"Aktueller Account: Keine Mailadresse"</string>
     <!-- endregion -->
 
     <!-- endregion -->

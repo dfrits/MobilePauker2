@@ -2,6 +2,7 @@ package de.daniel.mobilepauker2.lessonimport
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.net.Uri
@@ -17,12 +18,10 @@ import android.widget.AdapterView.OnItemClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceManager
 import com.dropbox.core.android.Auth
-import com.dropbox.core.oauth.DbxCredential
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.dropbox.DropboxAccDialog
-import de.daniel.mobilepauker2.dropbox.DropboxClientFactory
 import de.daniel.mobilepauker2.dropbox.SyncDialog
 import de.daniel.mobilepauker2.lesson.LessonManager
 import de.daniel.mobilepauker2.settings.SettingsManager
@@ -102,14 +101,14 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             CONTEXT_CREATE_SHORTCUT -> {
                 Log.d(
                     "LessonImportActivity::createShortcut", "create new dynamic " +
-                        "shortcut for list pos:" + position + " id:" + menuInfo.id
+                            "shortcut for list pos:" + position + " id:" + menuInfo.id
                 )
                 createShortCut(position)
             }
             CONTEXT_DELETE_SHORTCUT -> {
                 Log.d(
                     "LessonImportActivity::deleteShortcut", "delete dynamic " +
-                        "shortcut for list pos:" + position + " id:" + menuInfo.id
+                            "shortcut for list pos:" + position + " id:" + menuInfo.id
                 )
                 deleteShortCut(position)
             }
@@ -143,7 +142,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             if (lessonManager.isLessonNotNew())
                 if (fileNames.contains(dataManager.currentFileName)) {
                     try {
-                        viewModel.openLesson(dataManager.getReadableCurrentFileName())
+                        viewModel.openLesson(dataManager.currentFileName)
                     } catch (ignored: IOException) {
                         toaster.showToast(
                             context as Activity,
@@ -161,7 +160,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             val credentialPref = preferences.getString(Constants.DROPBOX_CREDENTIAL, null)
 
             if (credentialPref != null) {
-                startSync(credentialPref)
+                checkIfLessonIsNotSavedThenStartSync(credentialPref)
             }
         }
         if (requestCode == Constants.REQUEST_CODE_SYNC_DIALOG_BEFORE_OPEN) {
@@ -298,6 +297,21 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
         }
     }
 
+    private fun checkIfLessonIsNotSavedThenStartSync(credentialPref: String) {
+        if (dataManager.saveRequired) {
+            AlertDialog.Builder(context)
+                .setTitle(R.string.warning)
+                .setMessage(R.string.warning_lesson_not_saved)
+                .setNeutralButton(R.string.cancel) { dialog: DialogInterface, _: Int -> dialog.dismiss() }
+                .setPositiveButton(R.string.sync) { _: DialogInterface, _: Int ->
+                    startSync(credentialPref)
+                }
+                .create().show()
+        } else {
+            startSync(credentialPref)
+        }
+    }
+
     private fun startSync(credentialPref: String) {
         val syncIntent = Intent(context, SyncDialog::class.java)
         syncIntent.putExtra(Constants.ACCESS_CREDENTIAL, credentialPref)
@@ -414,7 +428,7 @@ class LessonImport : AppCompatActivity(R.layout.open_lesson) {
             assIntent.action = Constants.DROPBOX_AUTH_ACTION
             startActivityForResult(assIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
         } else {
-            startSync(credentialPref)
+            checkIfLessonIsNotSavedThenStartSync(credentialPref)
         }
     }
 

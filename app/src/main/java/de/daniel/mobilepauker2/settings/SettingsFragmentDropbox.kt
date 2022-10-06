@@ -10,6 +10,7 @@ import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.dropbox.DropboxAccDialog
+import de.daniel.mobilepauker2.dropbox.DropboxClientFactory
 import de.daniel.mobilepauker2.settings.SettingsManager.Keys
 import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Log
@@ -83,16 +84,15 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
             findPreference(settingsManager.getSettingsKey(Keys.DB_PREFERENCE))
         val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val credentialPref = pref.getString(Constants.DROPBOX_CREDENTIAL, null)
+        dbPref?.summary = getUserMail()
         if (credentialPref == null) {
             setPrefAss(dbPref)
+            initResetSyncClicked(false)
         } else {
             setPrefUnlink(dbPref)
             Log.d("SettingsFragment::initSyncPrefs", "enable autosync")
             removeSyncPrefAndSetAutoSync(true)
-
-            val syncPref: Preference? =
-                findPreference(settingsManager.getSettingsKey(Keys.RESET_SYNC))
-            initResetSyncClicked(syncPref)
+            initResetSyncClicked(true)
         }
     }
 
@@ -108,12 +108,19 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         removeSyncPrefAndSetAutoSync(false)
     }
 
-    private fun initResetSyncClicked(syncPref: Preference?) {
+    private fun initResetSyncClicked(enableResetSync: Boolean) {
+        val syncPref: Preference? =
+            findPreference(settingsManager.getSettingsKey(Keys.RESET_SYNC))
         syncPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             dataManager.cacheCursor(null)
-            toaster.showToast(context as Activity, getString(R.string.sync_reset_success), Toast.LENGTH_SHORT)
+            toaster.showToast(
+                context as Activity,
+                getString(R.string.sync_reset_success),
+                Toast.LENGTH_SHORT
+            )
             false
         }
+        syncPref?.isEnabled = enableResetSync
     }
 
     private fun setPrefUnlink(dbPref: Preference?) {
@@ -123,7 +130,21 @@ class SettingsFragmentDropbox : PreferenceFragmentCompat(),
         dbPref?.onPreferenceClickListener = Preference.OnPreferenceClickListener {
             Log.d("SettingsFragment::initSyncPrefs", "unlinkDB clicked")
             startActivityForResult(unlIntent, Constants.REQUEST_CODE_DB_ACC_DIALOG)
+            dataManager.cacheCursor(null)
+            PreferenceManager.getDefaultSharedPreferences(requireContext())
+                .edit().putString(Constants.DROPBOX_USER_MAIL, null).apply()
+            initSyncPrefs()
             false
+        }
+    }
+
+    private fun getUserMail(): String {
+        val pref = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val userMail = pref.getString(Constants.DROPBOX_USER_MAIL, null)
+        return if (userMail == null) {
+            getString(R.string.current_account_no_mail)
+        } else {
+            getString(R.string.current_account) + userMail
         }
     }
 
