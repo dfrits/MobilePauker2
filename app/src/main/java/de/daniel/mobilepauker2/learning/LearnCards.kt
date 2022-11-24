@@ -39,6 +39,7 @@ import de.daniel.mobilepauker2.settings.SettingsManager.Keys.*
 import de.daniel.mobilepauker2.utils.Constants
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_CHANNEL_ID
 import de.daniel.mobilepauker2.utils.Constants.NOTIFICATION_ID
+import de.daniel.mobilepauker2.utils.Constants.TIMER_BAR_CHANNEL_ID
 import de.daniel.mobilepauker2.utils.Constants.TIME_BAR_ID
 import de.daniel.mobilepauker2.utils.ErrorReporter
 import de.daniel.mobilepauker2.utils.Log
@@ -773,7 +774,7 @@ class LearnCards : FlashCardSwipeScreen() {
         val showNotify = settingsManager.getBoolPreference(SHOW_TIMER_BAR)
         Log.d("LearnActivity::Timer paused", "Acivity is not visible")
         val mBuilder: Builder =
-            Builder(context, NOTIFICATION_CHANNEL_ID)
+            Builder(context, TIMER_BAR_CHANNEL_ID)
                 .setContentText(getString(R.string.timer_paused))
                 .setSmallIcon(R.drawable.notify_icon)
                 .setContentTitle(getString(R.string.app_name))
@@ -1076,7 +1077,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     val timerbarText =
                         ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText
                     val contentIntent = if (pendingIntent == null) getIntent() else pendingIntent!!
-                    val mBuilder: Builder = Builder(context, Constants.TIMER_BAR_CHANNEL_ID)
+                    val mBuilder: Builder = Builder(context, TIMER_BAR_CHANNEL_ID)
                         .setContentText(timerbarText)
                         .setSmallIcon(R.drawable.notify_icon)
                         .setPriority(PRIORITY_DEFAULT)
