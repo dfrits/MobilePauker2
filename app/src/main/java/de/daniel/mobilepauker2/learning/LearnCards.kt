@@ -256,10 +256,7 @@ class LearnCards : FlashCardSwipeScreen() {
         }
         notificationManager?.cancelAll()
         if (!firstStart && !restartButton!!.isVisible) {
-            if (currentPhase != REPEATING_LTM
-                && (currentPhase != SIMPLE_LEARNING
-                        || currentPhase != NOTHING)
-            ) {
+            if (currentPhase != REPEATING_LTM) {
                 restartTimer()
             }
             if (mSavedCursorPosition != -1) {
@@ -316,16 +313,13 @@ class LearnCards : FlashCardSwipeScreen() {
     }
 
     private fun init() {
-        if (currentPhase != REPEATING_LTM
-            && (currentPhase != SIMPLE_LEARNING
-                    || currentPhase != NOTHING)
-        ) {
+        if (currentPhase != REPEATING_LTM) {
             // A check on mActivitySetupOk is done here as onCreate is called even if the
             // super (FlashCardSwipeScreenActivity) onCreate fails to find any cards and calls finish()
             if (mActivitySetupOk) {
                 initTimer()
             }
-        } else if (currentPhase === REPEATING_LTM) {
+        } else {
             repeatingLTM = true
         }
 
