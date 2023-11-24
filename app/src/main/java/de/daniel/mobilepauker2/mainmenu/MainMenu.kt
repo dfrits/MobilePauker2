@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.preference.PreferenceManager
@@ -84,6 +85,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     lateinit var settingsManager: SettingsManager
 
     private val context = this
+    private val RQ_POST_NOTIFICATION = 96
     private val RQ_WRITE_EXT_SAVE_NEW = 97
     private val RQ_WRITE_EXT_SAVE = 98
     private val RQ_WRITE_EXT_OPEN = 99
@@ -101,6 +103,8 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         PreferenceManager.setDefaultValues(this, R.xml.preferences_main, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_dropbox, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_notifications, false)
+
+        checkNotificationPermission()
         createNotificationChannels()
 
         setContentView(R.layout.main_menu)
@@ -109,6 +113,8 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
 
         errorReporter.init()
         checkErrors()
+
+        onBackPressedDispatcher.addCallback { backPressed() }
 
         initButtons()
         initView()
@@ -200,21 +206,6 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         NotificationManagerCompat.from(context).cancelAll()
     }
 
-    override fun onBackPressed() {
-        if (dataManager.saveRequired) {
-            val builder = AlertDialog.Builder(context)
-            builder.setMessage(R.string.close_without_saving_dialog_msg)
-                .setPositiveButton(R.string.cancel, null)
-                .setNeutralButton(R.string.close) { _, _ -> finish() }
-            val dialog = builder.create()
-            dialog.show()
-            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned))
-            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned))
-        } else {
-            finish()
-        }
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -232,6 +223,21 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         }
     }
 
+    private fun backPressed() {
+        if (dataManager.saveRequired) {
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage(R.string.close_without_saving_dialog_msg)
+                .setPositiveButton(R.string.cancel, null)
+                .setNeutralButton(R.string.close) { _, _ -> finish() }
+            val dialog = builder.create()
+            dialog.show()
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setTextColor(getColor(R.color.unlearned))
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getColor(R.color.learned))
+        } else {
+            finish()
+        }
+    }
+
     private fun saveFinished(requestCode: Int) {
         if (settingsManager.getBoolPreference(AUTO_UPLOAD)) {
             uploadCurrentFile()
@@ -246,9 +252,11 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
                 onResume()
                 invalidateOptionsMenu()
             }
+
             REQUEST_CODE_SAVE_DIALOG_NEW_LESSON -> {
                 createNewLesson()
             }
+
             REQUEST_CODE_SAVE_DIALOG_OPEN -> {
                 startActivity(Intent(context, LessonImport::class.java))
             }
@@ -353,7 +361,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     private fun openLesson() {
-        if (!hasPermission()) {
+        if (!hasSaveFilePermission()) {
             showPermissionDialog(RQ_WRITE_EXT_OPEN)
         } else {
             if (dataManager.saveRequired) {
@@ -380,7 +388,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         initView()
     }
 
-    private fun hasPermission(): Boolean {
+    private fun hasSaveFilePermission(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Environment.isExternalStorageManager()
             ) {
@@ -500,7 +508,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     private fun checkSavePermissionThenSave(requestCode: Int) {
-        if (!hasPermission()) {
+        if (!hasSaveFilePermission()) {
             when (requestCode) {
                 REQUEST_CODE_SAVE_DIALOG_NORMAL -> showPermissionDialog(RQ_WRITE_EXT_SAVE)
                 REQUEST_CODE_SAVE_DIALOG_NEW_LESSON -> showPermissionDialog(RQ_WRITE_EXT_SAVE_NEW)
@@ -657,6 +665,31 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     }
 
     // Notification
+    private fun checkNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (!hasNotificationPermission()) {
+                requestPermissions(
+                    arrayOf(Manifest.permission.POST_NOTIFICATIONS),
+                    RQ_POST_NOTIFICATION
+                )
+            }
+        }
+    }
+
+    private fun hasNotificationPermission(): Boolean {
+        return when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU -> {
+                checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            }
+
+            NotificationManagerCompat.from(context).areNotificationsEnabled() -> {
+                true
+            }
+
+            else -> false
+        }
+    }
+
     private fun createNotificationChannels() {
         // Für Notification
         createNotificationChannel(

@@ -21,7 +21,6 @@ class ChartAdapter(private val context: PaukerApplication, val callback: ChartAd
     @Inject
     lateinit var lessonManager: LessonManager
 
-    @NonNull
     override fun onCreateViewHolder(parent: ViewGroup, position: Int): ViewHolder {
         val view: View = LayoutInflater.from(context).inflate(R.layout.chart_bar, parent, false)
         val titel: String

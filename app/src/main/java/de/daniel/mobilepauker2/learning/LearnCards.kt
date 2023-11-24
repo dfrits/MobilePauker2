@@ -1,21 +1,27 @@
 package de.daniel.mobilepauker2.learning
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.content.*
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.IBinder
 import android.os.PowerManager
 import android.provider.Settings
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.activity.addCallback
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import com.danilomendes.progressbar.InvertedTextProgressbar
@@ -104,6 +110,8 @@ class LearnCards : FlashCardSwipeScreen() {
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             showPermissionDialog()
         }
+
+        onBackPressedDispatcher.addCallback { backPressed() }
     }
 
     override fun updateCurrentCard() {
@@ -218,22 +226,6 @@ class LearnCards : FlashCardSwipeScreen() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    override fun onBackPressed() {
-        Log.d("LearnCardsActivity::onBackPressed", "Back Button pressed")
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(R.string.exit_learning_dialog)
-            .setPositiveButton(R.string.yes) { _, _ ->
-                stopBothTimer()
-                Log.d("LearnCardsActivity::onBackPressed", "Finish and Timer stopped")
-                unbindTimerService()
-                notificationManager?.cancelAll()
-                isRunning = false
-                finish()
-            }
-            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
-            .create().show()
-    }
-
     override fun onPause() {
         super.onPause()
         mSavedCursorPosition = try {
@@ -310,6 +302,22 @@ class LearnCards : FlashCardSwipeScreen() {
             stopService(timerServiceIntent)
             unbindService(timerServiceConnection!!)
         }
+    }
+
+    private fun backPressed() {
+        Log.d("LearnCardsActivity::onBackPressed", "Back Button pressed")
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(R.string.exit_learning_dialog)
+            .setPositiveButton(R.string.yes) { _, _ ->
+                stopBothTimer()
+                Log.d("LearnCardsActivity::onBackPressed", "Finish and Timer stopped")
+                unbindTimerService()
+                notificationManager?.cancelAll()
+                isRunning = false
+                finish()
+            }
+            .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.cancel() }
+            .create().show()
     }
 
     private fun init() {
@@ -403,6 +411,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     val rand = Random()
                     rand.nextBoolean()
                 }
+
                 else -> false
             }
         } else {
@@ -443,6 +452,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     setButtonVisibilityRepeating()
                 }
             }
+
             FILLING_USTM -> {
                 setButtonVisibilityFilling()
                 if (timerService!!.isStmTimerFinished()) // STM timeout so go straight to repeating ustm cards
@@ -457,6 +467,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     updateLearningPhase()
                 }
             }
+
             WAITING_FOR_USTM -> {
                 Log.d("LearnCardsActivity::updateLearningPhase", "Waiting for USTM")
                 // Gif zeigen
@@ -470,6 +481,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     updateLearningPhase()
                 }
             }
+
             REPEATING_USTM -> {
                 setButtonsVisibility()
                 if (zeroUSTMCards) // We have learned all the ustm cards
@@ -489,6 +501,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     setLearningPhase(REPEATING_USTM)
                 }
             }
+
             WAITING_FOR_STM -> {
 
                 // Gif zeigen
@@ -503,6 +516,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     updateLearningPhase()
                 }
             }
+
             REPEATING_STM -> {
                 setButtonsVisibility()
                 if (zeroSTMCards) {
@@ -511,6 +525,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     setLearningPhase(REPEATING_STM)
                 }
             }
+
             REPEATING_LTM -> {
                 if (completedLearning && lessonManager.getBatchSize(BatchType.EXPIRED) <= 0) {
                     finishLearning()
@@ -520,6 +535,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     setButtonsVisibility()
                 }
             }
+
             else -> {}
         }
     }
@@ -787,7 +803,13 @@ class LearnCards : FlashCardSwipeScreen() {
         Timer().schedule(object : TimerTask() {
             override fun run() {
                 if (!isAppRunning(context) && !timerService!!.isStmTimerFinished() && showNotify) {
-                    notificationManager!!.notify(NOTIFICATION_ID, mBuilder.build())
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        notificationManager!!.notify(NOTIFICATION_ID, mBuilder.build())
+                    }
                 }
             }
         }, 1000)
@@ -1014,7 +1036,13 @@ class LearnCards : FlashCardSwipeScreen() {
                     Log.d("LearnActivity::STM-Timer finished", "Notification created")
                     Timer().schedule(object : TimerTask() {
                         override fun run() {
-                            notificationManager!!.notify(NOTIFICATION_ID, mBuilder.build())
+                            if (ActivityCompat.checkSelfPermission(
+                                    context,
+                                    Manifest.permission.POST_NOTIFICATIONS
+                                ) == PackageManager.PERMISSION_GRANTED
+                            ) {
+                                notificationManager!!.notify(NOTIFICATION_ID, mBuilder.build())
+                            }
                         }
                     }, 1000)
                     Log.d("LearnActivity::STM-Timer finished", "Notification shown")
@@ -1086,7 +1114,15 @@ class LearnCards : FlashCardSwipeScreen() {
                         .setAutoCancel(true)
                         .setOngoing(true)
                     Log.d("LearnActivity::STM-onStmTimerUpdate", "Notification created")
-                    notificationManager!!.notify(TIME_BAR_ID, mBuilder.build())
+
+                    if (ActivityCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        notificationManager!!.notify(TIME_BAR_ID, mBuilder.build())
+                    }
+
                     Log.d("LearnActivity::STM-onStmTimerUpdate", "Show Notification")
                 }
             }

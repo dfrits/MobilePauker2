@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -104,10 +105,9 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
 
         val title = findViewById<TextView>(R.id.pTitle)
         title.setText(R.string.synchronizing)
-    }
 
-    // Touchevents und Backbutton blockieren, dass er nicht minimiert werden kann
-    override fun onBackPressed() {}
+        onBackPressedDispatcher.addCallback { backPressed() }
+    }
 
     override fun onResume() {
         super.onResume()
@@ -332,4 +332,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
             else -> false
         }
     }
+
+    // Touchevents und Backbutton blockieren, dass er nicht minimiert werden kann
+    private fun backPressed() {}
 }

@@ -19,31 +19,34 @@
             android:layout_weight="50"
             android:padding="5dp">
 
-            <TextView
-                android:id="@+id/tFront"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:labelFor="@+id/eTSideA"
-                android:text="@string/front"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
             <ImageButton
                 android:id="@+id/mSideA"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_above="@+id/eTSideA"
                 android:layout_alignTop="@+id/tFront"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="3dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit_card"
                 android:elevation="2dp"
                 android:onClick="editFontA"
                 android:scaleType="fitCenter"
+                android:scaleX=".8"
+                android:scaleY=".8"
                 android:src="@drawable/button_edit_font"
-                tools:ignore="ContentDescription" />
+                tools:ignore="ContentDescription,DuplicateSpeakableTextCheck" />
+
+            <TextView
+                android:id="@+id/tFront"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:fontFamily="serif"
+                android:labelFor="@+id/eTSideA"
+                android:text="@string/front"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <de.daniel.mobilepauker2.models.view.MPEditText
                 android:id="@+id/eTSideA"
@@ -69,31 +72,34 @@
             android:layout_weight="50"
             android:padding="5dp">
 
-            <TextView
-                android:id="@+id/tBack"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="serif"
-                android:labelFor="@+id/eTSideB"
-                android:text="@string/back"
-                android:textColor="@color/black"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
             <ImageButton
                 android:id="@+id/mSideB"
-                android:layout_width="40dp"
-                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_above="@+id/eTSideB"
                 android:layout_alignTop="@+id/tBack"
                 android:layout_alignEnd="@+id/eTSideB"
                 android:layout_marginBottom="3dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit_card"
                 android:elevation="2dp"
                 android:onClick="editFontB"
                 android:scaleType="fitCenter"
+                android:scaleX=".8"
+                android:scaleY=".8"
                 android:src="@drawable/button_edit_font"
                 tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/tBack"
+                android:layout_width="wrap_content"
+                android:layout_height="51dp"
+                android:fontFamily="serif"
+                android:labelFor="@+id/eTSideB"
+                android:text="@string/back"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <de.daniel.mobilepauker2.models.view.MPEditText
                 android:id="@+id/eTSideB"
@@ -122,11 +128,6 @@
         android:layout_centerInParent="true"
         android:weightSum="5">
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-
         <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -151,7 +152,12 @@
                 android:text="@string/ok" />
         </RelativeLayout>
 
-        <Space
+        <androidx.legacy.widget.Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <androidx.legacy.widget.Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />

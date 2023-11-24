@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.PopupMenu
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
@@ -71,15 +72,13 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
         sideAEditText = findViewById(R.id.eTSideA)
         sideBEditText = findViewById(R.id.eTSideB)
         fontChanged = false
+
+        onBackPressedDispatcher.addCallback { backPressed() }
     }
 
     override fun onPause() {
         super.onPause()
         hideKeyboard()
-    }
-
-    override fun onBackPressed() {
-        resetCardAndFinish()
     }
 
     open fun okClicked(view: View?) {}
@@ -305,5 +304,9 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
 
             item.icon = BitmapDrawable(icon)
         }
+    }
+
+    private fun backPressed() {
+        resetCardAndFinish()
     }
 }

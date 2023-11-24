@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.preference.PreferenceManager
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.lesson.card.FlashCard
@@ -18,20 +19,8 @@ class AddCard : AbstractEditCard() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         flashCard = FlashCard()
-    }
 
-    override fun onBackPressed() {
-        val sideAText = sideAEditText.text.toString()
-        val sideBText = sideBEditText.text.toString()
-        if (sideAText.isEmpty() && sideBText.isEmpty()) {
-            resetCardAndFinish()
-        } else {
-            val builder = Builder(context)
-            builder.setMessage(R.string.finish_add_card_message)
-                .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
-                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
-            builder.create().show()
-        }
+        onBackPressedDispatcher.addCallback { backPressed() }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -73,5 +62,19 @@ class AddCard : AbstractEditCard() {
         checkBox.isChecked = !isChecked
         PreferenceManager.getDefaultSharedPreferences(context).edit()
             .putBoolean(Constants.KEEP_OPEN_KEY, !isChecked).apply()
+    }
+
+    private fun backPressed() {
+        val sideAText = sideAEditText.text.toString()
+        val sideBText = sideBEditText.text.toString()
+        if (sideAText.isEmpty() && sideBText.isEmpty()) {
+            resetCardAndFinish()
+        } else {
+            val builder = Builder(context)
+            builder.setMessage(R.string.finish_add_card_message)
+                .setPositiveButton(R.string.yes) { _, _ -> resetCardAndFinish() }
+                .setNeutralButton(R.string.cancel) { dialog, _ -> dialog.dismiss() }
+            builder.create().show()
+        }
     }
 }

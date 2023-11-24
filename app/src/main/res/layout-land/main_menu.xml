@@ -37,8 +37,8 @@
                 android:onClick="addNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_add_card"
-                android:tint="@color/color_selector_buttons_homescreen"
-                android:tintMode="src_in" />
+                android:tintMode="src_in"
+                app:tint="@color/color_selector_buttons_homescreen" />
 
             <TextView
                 android:id="@+id/tAddNewCardsDesc"
@@ -82,8 +82,8 @@
                 android:onClick="learnNewCard"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_learn_new_cards"
-                android:tint="@color/color_selector_buttons_homescreen"
-                android:tintMode="src_in" />
+                android:tintMode="src_in"
+                app:tint="@color/color_selector_buttons_homescreen" />
 
             <TextView
                 android:id="@+id/tLearnNewCardDesc"
@@ -124,8 +124,8 @@
                 android:onClick="repeatCards"
                 android:scaleType="fitCenter"
                 android:src="@drawable/button_repeat_cards"
-                android:tint="@color/color_selector_buttons_homescreen"
-                android:tintMode="src_in" />
+                android:tintMode="src_in"
+                app:tint="@color/color_selector_buttons_homescreen" />
 
             <TextView
                 android:id="@+id/tRepeatExpiredCardsDesc"

@@ -8,7 +8,6 @@ import javax.inject.Inject
 
 class SettingsManager @Inject constructor(val context: Context) {
 
-    @NonNull
     fun getSettingsKey(key: Keys?): String {
         return when (key) {
             Keys.STM -> context.getString(R.string.stm_key)

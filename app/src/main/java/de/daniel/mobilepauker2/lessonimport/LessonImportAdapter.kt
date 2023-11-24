@@ -17,7 +17,7 @@ class LessonImportAdapter(context: Context, private val data: List<String>) :
     @Inject
     lateinit var dataManager: DataManager
 
-    override fun getView(position: Int, @Nullable convertView: View?, parent: ViewGroup): View {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent)
         if (view.isSelected) {
             view.setBackgroundColor(Color.LTGRAY)
