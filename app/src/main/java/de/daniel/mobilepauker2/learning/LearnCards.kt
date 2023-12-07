@@ -10,7 +10,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.IBinder
 import android.os.PowerManager
 import android.provider.Settings
@@ -22,7 +21,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
 import com.danilomendes.progressbar.InvertedTextProgressbar
@@ -377,12 +375,12 @@ class LearnCards : FlashCardSwipeScreen() {
     }
 
     private fun registerListener() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) registerListenerAfterOS14()
-        else registerListenerBeforeOS14()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) registerListenerAfterOS13()
+        else registerListenerBeforeOS13()
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
-    private fun registerListenerBeforeOS14() {
+    private fun registerListenerBeforeOS13() {
         registerReceiver(ustmTimeBroadcastReceiver, IntentFilter(TimerService.ustm_receiver))
         registerReceiver(stmTimeBroadcastReceiver, IntentFilter(TimerService.stm_receiver))
         registerReceiver(
@@ -395,9 +393,8 @@ class LearnCards : FlashCardSwipeScreen() {
         )
     }
 
-
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun registerListenerAfterOS14() {
+    private fun registerListenerAfterOS13() {
         registerReceiver(
             ustmTimeBroadcastReceiver, IntentFilter(TimerService.ustm_receiver),
             RECEIVER_NOT_EXPORTED
