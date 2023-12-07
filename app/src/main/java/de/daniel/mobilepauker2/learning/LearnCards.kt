@@ -397,21 +397,21 @@ class LearnCards : FlashCardSwipeScreen() {
     private fun registerListenerAfterOS13() {
         registerReceiver(
             ustmTimeBroadcastReceiver, IntentFilter(TimerService.ustm_receiver),
-            RECEIVER_NOT_EXPORTED
+            RECEIVER_EXPORTED
         )
         registerReceiver(
             stmTimeBroadcastReceiver, IntentFilter(TimerService.stm_receiver),
-            RECEIVER_NOT_EXPORTED
+            RECEIVER_EXPORTED
         )
         registerReceiver(
             ustmFinishedBroadcastReceiver,
             IntentFilter(TimerService.ustm_finished_receiver),
-            RECEIVER_NOT_EXPORTED
+            RECEIVER_EXPORTED
         )
         registerReceiver(
             stmFinishedBroadcastReceiver,
             IntentFilter(TimerService.stm_finished_receiver),
-            RECEIVER_NOT_EXPORTED
+            RECEIVER_EXPORTED
         )
     }
 
