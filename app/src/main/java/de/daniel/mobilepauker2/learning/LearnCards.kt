@@ -18,6 +18,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.activity.addCallback
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
@@ -376,6 +377,12 @@ class LearnCards : FlashCardSwipeScreen() {
     }
 
     private fun registerListener() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) registerListenerAfterOS14()
+        else registerListenerBeforeOS14()
+    }
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    private fun registerListenerBeforeOS14() {
         registerReceiver(ustmTimeBroadcastReceiver, IntentFilter(TimerService.ustm_receiver))
         registerReceiver(stmTimeBroadcastReceiver, IntentFilter(TimerService.stm_receiver))
         registerReceiver(
@@ -385,6 +392,29 @@ class LearnCards : FlashCardSwipeScreen() {
         registerReceiver(
             stmFinishedBroadcastReceiver,
             IntentFilter(TimerService.stm_finished_receiver)
+        )
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun registerListenerAfterOS14() {
+        registerReceiver(
+            ustmTimeBroadcastReceiver, IntentFilter(TimerService.ustm_receiver),
+            RECEIVER_NOT_EXPORTED
+        )
+        registerReceiver(
+            stmTimeBroadcastReceiver, IntentFilter(TimerService.stm_receiver),
+            RECEIVER_NOT_EXPORTED
+        )
+        registerReceiver(
+            ustmFinishedBroadcastReceiver,
+            IntentFilter(TimerService.ustm_finished_receiver),
+            RECEIVER_NOT_EXPORTED
+        )
+        registerReceiver(
+            stmFinishedBroadcastReceiver,
+            IntentFilter(TimerService.stm_finished_receiver),
+            RECEIVER_NOT_EXPORTED
         )
     }
 
