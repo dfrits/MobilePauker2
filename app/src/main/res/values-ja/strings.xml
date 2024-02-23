@@ -274,5 +274,6 @@
 
     <!-- region Neue Strings -->
     <string name="New">新</string>
+    <string name="download_new_lesson">Download new lesson</string>
     <!-- endregion -->
 </resources>

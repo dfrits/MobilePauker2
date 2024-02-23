@@ -10,7 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="serif"
-        android:labelFor="@+id/editField"
         android:text="@string/edit_description_title"
         android:textAlignment="center"
         android:textColor="@color/black"
@@ -31,6 +30,7 @@
         android:gravity="top"
         android:textColor="@color/black"
         android:textSize="17sp"
-        android:hint="@string/no_description"/>
+        android:hint="@string/no_description"
+        android:importantForAutofill="no" />
 
 </RelativeLayout>

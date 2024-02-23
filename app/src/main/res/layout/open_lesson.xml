@@ -45,5 +45,6 @@
         android:layout_margin="10dp"
         android:onClick="downloadNewLesson"
         android:src="@drawable/button_download_lesson"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/download_new_lesson" />
 </RelativeLayout>
