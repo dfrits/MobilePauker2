@@ -37,8 +37,7 @@ class AddCard : AbstractEditCard() {
         if (sideAText.isNotEmpty() && sideBText.isNotEmpty()) {
             lessonManager.addCard(flashCard, sideAText, sideBText)
             toaster.showToast(context as Activity, R.string.card_added, Toast.LENGTH_SHORT)
-            sideAEditText.setText("")
-            sideBEditText.setText("")
+            resetCardSides()
             dataManager.saveRequired = true
             sideAEditText.requestFocus()
             sideAEditText.setSelection(0, 0)
