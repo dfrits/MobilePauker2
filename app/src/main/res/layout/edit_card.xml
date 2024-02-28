@@ -25,6 +25,7 @@
                 android:layout_height="48dp"
                 android:layout_above="@+id/eTSideA"
                 android:layout_alignTop="@+id/tFront"
+                android:layout_alignBottom="@+id/tFront"
                 android:layout_alignParentEnd="true"
                 android:layout_marginBottom="3dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
@@ -40,7 +41,7 @@
             <TextView
                 android:id="@+id/tFront"
                 android:layout_width="wrap_content"
-                android:layout_height="51dp"
+                android:layout_height="wrap_content"
                 android:fontFamily="serif"
                 android:labelFor="@+id/eTSideA"
                 android:text="@string/front"
@@ -80,6 +81,7 @@
                 android:layout_above="@+id/eTSideB"
                 android:layout_alignTop="@+id/tBack"
                 android:layout_alignEnd="@+id/eTSideB"
+                android:layout_alignBottom="@+id/tBack"
                 android:layout_marginBottom="3dp"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:contentDescription="@string/edit_card"
@@ -94,7 +96,7 @@
             <TextView
                 android:id="@+id/tBack"
                 android:layout_width="wrap_content"
-                android:layout_height="51dp"
+                android:layout_height="wrap_content"
                 android:fontFamily="serif"
                 android:labelFor="@+id/eTSideB"
                 android:text="@string/back"
