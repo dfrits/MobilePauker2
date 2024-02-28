@@ -60,6 +60,7 @@
                 android:importantForAutofill="no"
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
+                android:nextFocusForward="@id/eTSideB"
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
                 android:textColor="@color/black" />
@@ -113,6 +114,7 @@
                 android:importantForAutofill="no"
                 android:inputType="text|textMultiLine"
                 android:longClickable="true"
+                android:nextFocusForward="@id/bOK"
                 android:paddingStart="5dp"
                 android:paddingEnd="0dp"
                 android:scrollHorizontally="false"
