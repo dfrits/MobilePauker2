@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -36,6 +37,28 @@
                 android:scaleX=".8"
                 android:scaleY=".8"
                 android:src="@drawable/button_edit_font"
+                tools:ignore="ContentDescription,DuplicateSpeakableTextCheck" />
+
+            <ImageButton
+                android:id="@+id/sSideA"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_above="@+id/eTSideA"
+                android:layout_alignTop="@+id/tFront"
+                android:layout_alignBottom="@+id/tFront"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="3dp"
+                android:layout_toStartOf="@id/mSideA"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit_card"
+                android:elevation="2dp"
+                android:onClick="searchCardA"
+                android:scaleType="fitCenter"
+                android:scaleX=".8"
+                android:scaleY=".8"
+                android:src="@drawable/menu_search"
+                android:visibility="invisible"
+                app:tint="@color/black"
                 tools:ignore="ContentDescription,DuplicateSpeakableTextCheck" />
 
             <TextView
@@ -92,6 +115,28 @@
                 android:scaleY=".8"
                 android:src="@drawable/button_edit_font"
                 tools:ignore="ContentDescription" />
+
+            <ImageButton
+                android:id="@+id/sSideB"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_above="@+id/eTSideB"
+                android:layout_alignTop="@+id/tBack"
+                android:layout_alignBottom="@+id/tBack"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="3dp"
+                android:layout_toStartOf="@id/mSideB"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:contentDescription="@string/edit_card"
+                android:elevation="2dp"
+                android:onClick="searchCardB"
+                android:scaleType="fitCenter"
+                android:scaleX=".8"
+                android:scaleY=".8"
+                android:src="@drawable/menu_search"
+                android:visibility="invisible"
+                app:tint="@color/black"
+                tools:ignore="ContentDescription,DuplicateSpeakableTextCheck" />
 
             <TextView
                 android:id="@+id/tBack"

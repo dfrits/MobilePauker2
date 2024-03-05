@@ -2,15 +2,19 @@ package de.daniel.mobilepauker2.editcard
 
 import android.app.Activity
 import android.app.AlertDialog.Builder
+import android.app.SearchManager
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.preference.PreferenceManager
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.lesson.card.FlashCard
+import de.daniel.mobilepauker2.search.Search
 import de.daniel.mobilepauker2.utils.Constants
 
 class AddCard : AbstractEditCard() {
@@ -20,6 +24,8 @@ class AddCard : AbstractEditCard() {
         super.onCreate(savedInstanceState)
         flashCard = FlashCard()
 
+        findViewById<ImageButton>(R.id.sSideA).visibility = View.VISIBLE
+        findViewById<ImageButton>(R.id.sSideB).visibility = View.VISIBLE
         onBackPressedDispatcher.addCallback { backPressed() }
     }
 
@@ -29,6 +35,26 @@ class AddCard : AbstractEditCard() {
         checkBox = menu.findItem(R.id.mKeepOpen)
         checkBox.isChecked = pref.getBoolean(Constants.KEEP_OPEN_KEY, true)
         return true
+    }
+
+    override fun searchCardA(view: View?) {
+        val query = sideAEditText.text.toString().trim()
+        if (query.isNotEmpty()) {
+            val browseIntent = Intent(Intent.ACTION_SEARCH)
+            browseIntent.setClass(context, Search::class.java)
+            browseIntent.putExtra(SearchManager.QUERY, query)
+            startActivity(browseIntent)
+        }
+    }
+
+    override fun searchCardB(view: View?) {
+        val query = sideBEditText.text.toString().trim()
+        if (query.isNotEmpty()) {
+            val browseIntent = Intent(Intent.ACTION_SEARCH)
+            browseIntent.setClass(context, Search::class.java)
+            browseIntent.putExtra(SearchManager.QUERY, query)
+            startActivity(browseIntent)
+        }
     }
 
     override fun okClicked(view: View?) {

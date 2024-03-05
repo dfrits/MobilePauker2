@@ -83,6 +83,10 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
 
     open fun okClicked(view: View?) {}
 
+    open fun searchCardA(view: View?) {}
+
+    open fun searchCardB(view: View?) {}
+
     open fun resetCardSides(view: View? = null) {
         fontChanged = false
         flashCard.setRepeatByTyping(initIsRepeatedByTyping)
@@ -146,10 +150,12 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
                 font.isBold = !font.isBold
                 fontChanged = true
             }
+
             R.id.mItalic -> {
                 font.isItalic = !font.isItalic
                 fontChanged = true
             }
+
             R.id.mBackground -> {
                 val bcPicker = ColorPickerView(context)
                 bcPicker.showHex(false)
@@ -173,6 +179,7 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
                     .setNeutralButton(R.string.cancel, null)
                 bcBuilder.create().show()
             }
+
             R.id.mTextColor -> {
                 val tcPicker = ColorPickerView(context)
                 tcPicker.showHex(false)
@@ -196,11 +203,13 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
                     .setNeutralButton(R.string.cancel, null)
                 tcBuilder.create().show()
             }
+
             R.id.mTextSize -> editTextSize(cardSide, font)
             R.id.mRepeatType -> {
                 fontChanged = true
                 flashCard.setRepeatByTyping(!flashCard.isRepeatedByTyping)
             }
+
             else -> return false
         }
         cardSide.setFont(font)

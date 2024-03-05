@@ -16,12 +16,9 @@ import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
 import de.daniel.mobilepauker2.editcard.EditCard
 import de.daniel.mobilepauker2.lesson.LessonManager
-import de.daniel.mobilepauker2.lesson.card.Card.*
-import de.daniel.mobilepauker2.lesson.card.Card.Element.*
 import de.daniel.mobilepauker2.lesson.card.FlashCard
-import de.daniel.mobilepauker2.search.SearchResultMultiChoiceModeListener.*
+import de.daniel.mobilepauker2.search.SearchResultMultiChoiceModeListener.SRMCMListenerCallback
 import de.daniel.mobilepauker2.utils.Constants
-import java.util.*
 import javax.inject.Inject
 
 class Search : AppCompatActivity() {
@@ -43,7 +40,6 @@ class Search : AppCompatActivity() {
 
         (applicationContext as PaukerApplication).applicationSingletonComponent.inject(this)
 
-        intent = intent
         if (Intent.ACTION_SEARCH == intent.action) {
             setContentView(R.layout.search_cards)
             listView = findViewById(R.id.listView)
@@ -105,6 +101,7 @@ class Search : AppCompatActivity() {
             invalidateOptionsMenu()
             true
         }
+
         else -> false
     }
 
