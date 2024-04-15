@@ -138,4 +138,8 @@
         <service android:name=".learning.TimerService" />
 
     </application>
+
+    <queries>
+        <package android:name="com.dropbox.android" />
+    </queries>
 </manifest>
