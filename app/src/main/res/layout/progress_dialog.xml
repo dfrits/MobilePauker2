@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="serif"
         android:textAlignment="center"
-        android:textColor="@android:color/background_light"
+        android:textColor="#06060a"
         android:textSize="18sp"
         tools:text="Syncen"
         tools:visibility="visible" />
