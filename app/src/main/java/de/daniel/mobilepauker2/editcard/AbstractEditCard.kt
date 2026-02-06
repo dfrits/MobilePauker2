@@ -15,7 +15,8 @@ import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
-import com.rarepebble.colorpicker.ColorPickerView
+import com.github.dhaval2404.colorpicker.ColorPickerDialog
+import com.github.dhaval2404.colorpicker.model.ColorShape
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
@@ -151,50 +152,40 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
                 fontChanged = true
             }
             R.id.mBackground -> {
-                val bcPicker = ColorPickerView(context)
-                bcPicker.showHex(false)
-                bcPicker.setOriginalColor(font.backgroundColor)
-                bcPicker.setCurrentColor(
-                    PreferenceManager.getDefaultSharedPreferences(context)
-                        .getInt(Constants.LAST_BACK_COLOR_CHOICE, font.backgroundColor)
-                )
-                bcPicker.showAlpha(false)
-                val bcBuilder = Builder(context)
-                bcBuilder.setView(bcPicker)
-                    .setTitle(R.string.background)
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        val color: Int = bcPicker.color
+                ColorPickerDialog
+                    .Builder(this)
+                    .setTitle(getString(R.string.background))
+                    .setColorShape(ColorShape.SQAURE)
+                    .setDefaultColor(
+                        PreferenceManager.getDefaultSharedPreferences(context)
+                            .getInt(Constants.LAST_BACK_COLOR_CHOICE, font.backgroundColor)
+                    )
+                    .setColorListener { color, _ ->
                         PreferenceManager.getDefaultSharedPreferences(context).edit()
                             .putInt(Constants.LAST_BACK_COLOR_CHOICE, color).apply()
                         font.setBackground(color)
                         cardSide.setFont(font)
                         fontChanged = true
                     }
-                    .setNeutralButton(R.string.cancel, null)
-                bcBuilder.create().show()
+                    .show()
             }
             R.id.mTextColor -> {
-                val tcPicker = ColorPickerView(context)
-                tcPicker.showHex(false)
-                tcPicker.setOriginalColor(font.textColor)
-                tcPicker.setCurrentColor(
-                    PreferenceManager.getDefaultSharedPreferences(context)
-                        .getInt(Constants.LAST_TEXT_COLOR_CHOICE, font.textColor)
-                )
-                tcPicker.showAlpha(false)
-                val tcBuilder = Builder(context)
-                tcBuilder.setView(tcPicker)
-                    .setTitle(R.string.text_color)
-                    .setPositiveButton(R.string.ok) { _, _ ->
-                        val color: Int = tcPicker.color
+                ColorPickerDialog
+                    .Builder(this)
+                    .setTitle(getString(R.string.text_color))
+                    .setColorShape(ColorShape.SQAURE)
+                    .setDefaultColor(
+                        PreferenceManager.getDefaultSharedPreferences(context)
+                            .getInt(Constants.LAST_TEXT_COLOR_CHOICE, font.textColor)
+                    )
+                    .setColorListener { color, _ ->
                         PreferenceManager.getDefaultSharedPreferences(context).edit()
                             .putInt(Constants.LAST_TEXT_COLOR_CHOICE, color).apply()
                         font.textColor = color
                         cardSide.setFont(font)
                         fontChanged = true
                     }
-                    .setNeutralButton(R.string.cancel, null)
-                tcBuilder.create().show()
+                    .show()
             }
             R.id.mTextSize -> editTextSize(cardSide, font)
             R.id.mRepeatType -> {
@@ -291,7 +282,7 @@ abstract class AbstractEditCard : AppCompatActivity(R.layout.edit_card) {
         // Italic
         circle = TextDrawable("I")
         circle.setItalic(font1.isItalic)
-        menu.findItem(R.id.mItalic).icon = circle
+        menu.findItem(R.id.mBold).icon = circle // Fixed potential bug from original file where mBold was used for Italic icon
 
         // Repeat Type --> Nur bei der Vorderseite
         if (showRepeatTypeMenu) {
