@@ -22,8 +22,9 @@ import androidx.preference.PreferenceManager
 import androidx.preference.PreferenceManager.getDefaultSharedPreferences
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sothree.slidinguppanel.PanelSlideListener
+import com.sothree.slidinguppanel.PanelState
 import com.sothree.slidinguppanel.SlidingUpPanelLayout
-import com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
@@ -302,7 +303,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         }
 
         findViewById<SlidingUpPanelLayout>(R.id.drawerPanel)?.let {
-            it.addPanelSlideListener(object : SlidingUpPanelLayout.PanelSlideListener {
+            it.addPanelSlideListener(object : PanelSlideListener {
                 override fun onPanelSlide(panel: View, slideOffset: Float) {}
                 override fun onPanelStateChanged(
                     panel: View,
@@ -315,7 +316,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
                         findViewById<ImageView>(R.id.drawerImage).rotation = 0f
                 }
             })
-            it.panelState = PanelState.COLLAPSED
+            it.setPanelState(PanelState.COLLAPSED)
         }
 
         title =

@@ -23,7 +23,6 @@ import androidx.core.app.NotificationCompat.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.preference.PreferenceManager
-import com.danilomendes.progressbar.InvertedTextProgressbar
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.application.PaukerApplication
 import de.daniel.mobilepauker2.data.DataManager
@@ -65,8 +64,12 @@ class LearnCards : FlashCardSwipeScreen() {
     private var timerServiceConnection: ServiceConnection? = null
     private var timerService: TimerService? = null
     private lateinit var timerServiceIntent: Intent
-    private lateinit var ustmTimerBar: InvertedTextProgressbar
-    private lateinit var stmTimerBar: InvertedTextProgressbar
+
+    // <-- geänderte Felder: native ProgressBar + TextView für Textanzeige
+    private lateinit var ustmTimerBar: ProgressBar
+    private lateinit var stmTimerBar: ProgressBar
+    private lateinit var ustmTimerTextView: TextView
+    private lateinit var stmTimerTextView: TextView
     private var bNext: Button? = null
     private var bShowMe: Button? = null
     private var lRepeatButtons: RelativeLayout? = null
@@ -336,12 +339,17 @@ class LearnCards : FlashCardSwipeScreen() {
     private fun initTimer() {
         val ustmTotalTime: Int = settingsManager.getStringPreference(USTM)?.toInt() ?: 0
         ustmTimerBar = findViewById(R.id.UKZGTimerBar)
-        ustmTimerBar.maxProgress = ustmTotalTime
-        ustmTimerBar.minProgress = 0
+        ustmTimerTextView = findViewById(R.id.UKZGTimerBarText)
+        // setze max/progress (entspricht vorher maxProgress/minProgress)
+        ustmTimerBar.max = ustmTotalTime
+        ustmTimerBar.progress = 0
+
         val stmTotalTime: Int = settingsManager.getStringPreference(STM)?.toInt() ?: 0
         stmTimerBar = findViewById(R.id.KZGTimerBar)
-        stmTimerBar.maxProgress = stmTotalTime * 60
-        stmTimerBar.minProgress = 0
+        stmTimerTextView = findViewById(R.id.KZGTimerBarText)
+        stmTimerBar.max = stmTotalTime * 60
+        stmTimerBar.progress = 0
+
         timerServiceConnection = object : ServiceConnection {
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
                 Log.d("LearnActivity::initTimer", "onServiceConnectedCalled")
@@ -1014,8 +1022,8 @@ class LearnCards : FlashCardSwipeScreen() {
         override fun onReceive(context: Context, intent: Intent) {
             runOnUiThread {
                 Log.d("LearnActivity::USTM-Timer finished", "Timer finished")
-                ustmTimerBar.setProgress(timerService!!.getUstmTotalTime() * 60)
-                ustmTimerBar.text = " "
+                ustmTimerBar.progress = timerService!!.getUstmTotalTime() * 60
+                ustmTimerTextView.text = " "
                 if (currentPhase == WAITING_FOR_USTM) {
                     Log.d("LearnActivity::onUSTMTimerFinish", "USTM Timer finished, stop waiting!")
                     stopWaiting = true
@@ -1029,8 +1037,8 @@ class LearnCards : FlashCardSwipeScreen() {
             runOnUiThread {
                 Log.d("LearnActivity::STM-Timer finished", "Timer finished")
                 notificationManager!!.cancel(TIME_BAR_ID)
-                stmTimerBar.text = " "
-                stmTimerBar.setProgress(timerService!!.getStmTotalTime() * 60)
+                stmTimerTextView.text = " "
+                stmTimerBar.progress = timerService!!.getStmTotalTime() * 60
                 if (pauseButton != null) {
                     pauseButton!!.isVisible = false
                 }
@@ -1089,8 +1097,8 @@ class LearnCards : FlashCardSwipeScreen() {
                         sec,
                         timerService!!.getUstmTotalTime()
                     )
-                    ustmTimerBar.setProgress(timeElapsed)
-                    ustmTimerBar.text = ustmTimerText
+                    ustmTimerBar.progress = timeElapsed
+                    ustmTimerTextView.text = ustmTimerText
                 }
             }
         }
@@ -1113,8 +1121,8 @@ class LearnCards : FlashCardSwipeScreen() {
                         "%d:%d / %d:00min", min, sec, timerService!!.getStmTotalTime()
                     )
                 }
-                stmTimerBar.setProgress(timeElapsed)
-                stmTimerBar.text = timerText
+                stmTimerBar.progress = timeElapsed
+                stmTimerTextView.text = timerText
 
                 // Ist die App pausiert, soll in der Titelleiste die Zeit angezeigt werden
                 if (!isAppRunning(context) && !timerService!!.isStmTimerFinished()) {

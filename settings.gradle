@@ -16,10 +16,10 @@ dependencyResolutionManagement {
                 includeGroup "com.github.Dhaval2404"
                 includeGroup "com.github.danilomendes"
                 includeGroup "com.github.hannesa2"
+                includeGroup "com.github.PhilJay"
             }
         }
     }
 }
 rootProject.name = "MobilePauker++"
 include ':app'
-rootProject.name = "MobilePauker++"

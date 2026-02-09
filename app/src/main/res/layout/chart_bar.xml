@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:williamchart="http://schemas.android.com/apk/res-auto"
     android:id="@+id/labelsGroup"
     android:layout_width="80dp"
     android:layout_height="match_parent">
 
-    <com.db.chart.view.StackBarChartView
+    <!-- MPAndroidChart BarChart: füllt den Raum zwischen Parent-Top und abgelaufenValue -->
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chartBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentTop="true"
         android:layout_above="@+id/abgelaufenValue"
-        williamchart:chart_axis="false" />
+        android:layout_marginBottom="4dp" />
 
     <TextView
         android:id="@+id/abgelaufenValue"

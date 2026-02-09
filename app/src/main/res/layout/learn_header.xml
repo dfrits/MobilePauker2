@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:lib="http://schemas.android.com/apk/res-auto">
+    xmlns:lib="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
         android:id="@+id/lTimerFrame"
@@ -22,64 +23,104 @@
                 android:id="@+id/UKZGTimerFrame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal">
+                android:layout_marginStart="10dp">
 
-                <TextView
-                    android:id="@+id/UKZGTimerBarDesc"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/ustm"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:orientation="horizontal">
 
-                <com.danilomendes.progressbar.InvertedTextProgressbar
-                    android:id="@+id/UKZGTimerBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:layout_toEndOf="@+id/UKZGTimerBarDesc"
-                    android:background="@drawable/timer_bar_background"
-                    android:maxWidth="150dp"
-                    android:minWidth="120dp"
-                    android:src="@drawable/timer_bar_foreground"
-                    lib:text_color="@color/black"
-                    lib:text_inverted_color="@color/defaultBackground" />
+                    <TextView
+                        android:id="@+id/UKZGTimerBarDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/ustm"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <!-- FrameLayout zum Stacken von ProgressBar + Text -->
+                    <FrameLayout
+                        android:id="@+id/UKZGTimerBarContainer"
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp">
+
+                        <ProgressBar
+                            android:id="@+id/UKZGTimerBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/timer_bar_background"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/timer_bar_foreground" />
+
+                        <TextView
+                            android:id="@+id/UKZGTimerBarText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:text="0%"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            tools:ignore="HardcodedText" />
+                    </FrameLayout>
+                </LinearLayout>
             </RelativeLayout>
 
+            <!-- KZG identisch -->
             <RelativeLayout
                 android:id="@+id/KZGTimerFrame"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:orientation="horizontal">
+                android:layout_marginStart="10dp">
 
-                <TextView
-                    android:id="@+id/KZGTimerBarDesc"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:fontFamily="sans-serif"
-                    android:text="@string/stm"
-                    android:textColor="@color/black"
-                    android:textSize="14sp" />
+                    android:orientation="horizontal">
 
-                <com.danilomendes.progressbar.InvertedTextProgressbar
-                    android:id="@+id/KZGTimerBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="5dp"
-                    android:layout_toEndOf="@+id/KZGTimerBarDesc"
-                    android:background="@drawable/timer_bar_background"
-                    android:maxWidth="150dp"
-                    android:minWidth="120dp"
-                    android:src="@drawable/timer_bar_foreground"
-                    lib:text_color="@color/black"
-                    lib:text_inverted_color="@color/defaultBackground" />
+                    <TextView
+                        android:id="@+id/KZGTimerBarDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif"
+                        android:text="@string/stm"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <FrameLayout
+                        android:id="@+id/KZGTimerBarContainer"
+                        android:layout_width="120dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="5dp">
+
+                        <ProgressBar
+                            android:id="@+id/KZGTimerBar"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/timer_bar_background"
+                            android:indeterminate="false"
+                            android:max="100"
+                            android:progress="0"
+                            android:progressDrawable="@drawable/timer_bar_foreground" />
+
+                        <TextView
+                            android:id="@+id/KZGTimerBarText"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:fontFamily="sans-serif"
+                            android:gravity="center"
+                            android:text="0%"
+                            android:textColor="@color/black"
+                            android:textSize="12sp"
+                            tools:ignore="HardcodedText" />
+                    </FrameLayout>
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
 

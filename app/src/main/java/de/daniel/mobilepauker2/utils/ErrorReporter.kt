@@ -172,7 +172,7 @@ class ErrorReporter @Inject constructor(private val context: Context) :
             // Version
             if (pm != null) {
                 pi = pm.getPackageInfo(context.packageName, 0)
-                versionName = pi.versionName
+                versionName = pi.versionName!!
                 // Package name
                 packageName = pi.packageName
                 // Device model

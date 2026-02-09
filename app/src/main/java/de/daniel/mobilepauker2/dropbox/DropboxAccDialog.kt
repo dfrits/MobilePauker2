@@ -104,7 +104,7 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
 
     fun cancelClicked(view: View?) {}
 
-    private fun getAppVersion(): String {
+    private fun getAppVersion(): String? {
         val manager = this.packageManager
         val info = manager.getPackageInfo(this.packageName, PackageManager.GET_ACTIVITIES)
         return info.versionName

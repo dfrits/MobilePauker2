@@ -1,35 +1,27 @@
 package de.daniel.mobilepauker2.statistics
 
 import android.content.Context
-import android.graphics.Typeface
 import android.view.View
 import android.widget.TextView
-import com.db.chart.model.BarSet
-import com.db.chart.renderer.AxisRenderer
-import com.db.chart.view.StackBarChartView
+import androidx.core.content.ContextCompat
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.utils.Log
 
 internal class ChartBar(view: View) {
-    private val chart: StackBarChartView = view.findViewById(R.id.chartBar)
+    private val chart: BarChart = view.findViewById(R.id.chartBar)
     private val abgelaufenValue: TextView = view.findViewById(R.id.abgelaufenValue)
     private val gelerntValue: TextView = view.findViewById(R.id.gelerntValue)
     private val sumValue: TextView = view.findViewById(R.id.sumValue)
 
     /**
-     * Erstellt einen Balken mit den jeweiligen Farben und setzt die Textfelder darunter.
-     * -1 bedeutet kein Balken und kein Label.
-     * Ist aktuell keine Lektion geöffnet, wird kein Balken angezeigt und nur die Labels.
-     * @param context     Context der aufrufenden Aktivity um Farben zu setzen
-     * @param titel       Der Titel des Balken
-     * @param sum         Gesamtzahl aller Karten in diesem Stapel. Wird nur als Label angezeigt
-     * @param gelernt         Anzahl der gelernten Karten im Stapel. Wird als grüner Teil im Balken
-     * angezeigt und als Label
-     * @param ungelernt       Anzahl der ungelernten Karten im Stapel. Wird nur als roter Teil Teil im
-     * Balken angezeigt
-     * @param abgelaufen        Anzahl der abgelaufenen Karten im Stapel. Wird als Blauer Teil im Balken
-     * @param numAllCards Gesamtzahl Aller Karten in der Lektion. Ist die gleiche Zahl wie
-     * **sum** vom ersten Balken. Wird benötigt, um die Gesamthöhe des Balken
+     * titel: Label (nicht sichtbar im Chart, du hast eigene TextViews)
+     * sum, gelernt, ungelernt, abgelaufen: wie bisher (-1 = absent)
+     * numAllCards: Gesamthöhe zur Berechnung diff (wie vorher)
      */
     fun show(
         context: Context,
@@ -40,61 +32,75 @@ internal class ChartBar(view: View) {
         abgelaufen: Int,
         numAllCards: Int
     ) {
-        val titelLabel = arrayOf(titel)
+        // Labels unter dem Chart wie bisher
+        abgelaufenValue.text = if (abgelaufen == -1) "" else abgelaufen.toString()
+        gelerntValue.text = if (gelernt == -1) "" else gelernt.toString()
+        sumValue.text = if (sum == -1) "" else sum.toString()
 
-        var text = if (abgelaufen == -1) "" else abgelaufen.toString()
-        abgelaufenValue.text = text
-        text = if (gelernt == -1) "" else gelernt.toString()
-        gelerntValue.text = text
-        text = if (sum == -1) "" else sum.toString()
-        sumValue.text = text
+        // Bereite die Stack-Werte in der gewünschten Reihenfolge vor.
+        // Wir verwenden die Reihenfolge: ungelernt (rot), gelernt (grün), abgelaufen (blau), diff (background)
+        // Falls ein Wert -1 ist setzen wir 0f (MPAndroidChart zeichnet dann nichts für diesen Stackteil).
+        val ungelerntF = if (ungelernt <= 0) 0f else ungelernt.toFloat()
+        val gelerntF = if (gelernt <= 0) 0f else gelernt.toFloat()
+        val abgelaufenF = if (abgelaufen <= 0) 0f else abgelaufen.toFloat()
+        val diff = if (sum > -1 && sum != numAllCards) (numAllCards - sum) else 0
+        val diffF = if (diff <= 0) 0f else diff.toFloat()
 
-        var stackBarSet: BarSet
-        if (ungelernt != -1) {
-            stackBarSet = BarSet(titelLabel, floatArrayOf(ungelernt.toFloat()))
-            stackBarSet.color = context.getColor(R.color.unlearned)
-            chart.addData(stackBarSet)
-        }
-        if (gelernt != -1) {
-            stackBarSet = BarSet(titelLabel, floatArrayOf(gelernt.toFloat()))
-            stackBarSet.color = context.getColor(R.color.learned)
-            chart.addData(stackBarSet)
-        }
-        if (abgelaufen != -1) {
-            stackBarSet = BarSet(titelLabel, floatArrayOf(abgelaufen.toFloat()))
-            stackBarSet.color = context.getColor(R.color.colorPrimary)
-            chart.addData(stackBarSet)
-        }
-        if (sum > -1 && sum != numAllCards) {
-            val diff = numAllCards - sum
-            stackBarSet = BarSet(titelLabel, floatArrayOf(diff.toFloat()))
-            stackBarSet.color = context.getColor(R.color.defaultBackground)
-            chart.addData(stackBarSet)
+        // Fallback - wenn sum == 0 (wie früher) damit Chart nicht leer bleibt
+        val hasAny = (ungelerntF + gelerntF + abgelaufenF + diffF) > 0f
+        val entryValues = if (hasAny) {
+            floatArrayOf(ungelerntF, gelerntF, abgelaufenF, diffF)
+        } else {
+            floatArrayOf(1f) // minimaler Balken (Hintergrundfarbe)
         }
 
-        // Sind alle Werte null, wird ein Mindestwert gesetzt, da sonst eine Exception geworfen wird
-        if (sum == 0) {
-            chart.reset()
-            stackBarSet = BarSet(titelLabel, floatArrayOf(1f))
-            stackBarSet.color = context.getColor(R.color.defaultBackground)
-            chart.addData(stackBarSet)
-        }
+        val entries = ArrayList<BarEntry>()
+        // x-index 0 (ein Balken). Wenn du mehrere Balken brauchst, passe x entsprechend an.
+        entries.add(BarEntry(0f, entryValues))
 
-        chart.setXLabels(AxisRenderer.LabelPosition.OUTSIDE)
-            .setYLabels(AxisRenderer.LabelPosition.NONE)
-            .setTypeface(Typeface.DEFAULT_BOLD)
+        // Erzeuge DataSet
+        val set = BarDataSet(entries, "")
+        // Farben – genau in derselben Reihenfolge wie die Werte oben
+        val colors = ArrayList<Int>()
+        colors.add(ContextCompat.getColor(context, R.color.unlearned))      // ungelernt
+        colors.add(ContextCompat.getColor(context, R.color.learned))        // gelernt
+        colors.add(ContextCompat.getColor(context, R.color.colorPrimary))   // abgelaufen
+        colors.add(ContextCompat.getColor(context, R.color.defaultBackground)) // diff / filler
+        set.colors = colors
 
-        //chart.isClickable = true
-        /*chart.setOnClickListener {
-            Log.d("ChartBar::showBar", "On Bar clicked")
-            callback.onClick()
-        }*/
-        Log.d("ChartBar::showBar", "Set Callback")
+        // Wir zeichnen keine Werte/Legende innerhalb des Charts (du nutzt externe TextViews)
+        set.setDrawValues(false)
+        // Optional: Ecken abrunden / andere Darstellungen sind mit MPAndroidChart möglich aber aufwändiger
 
-        chart.show()
-    }
+        val data = BarData(set)
+        // Bar-Breite (verkleinern/vergrößern nach Geschmack)
+        data.barWidth = 0.6f
 
-    interface ChartBarCallback {
-        fun onClick()
+        chart.data = data
+
+        // Chart optisch vereinfachen – Achsen/Legende/Description ausblenden wie beim alten StackBarChart
+        chart.description.isEnabled = false
+        chart.legend.isEnabled = false
+
+        val left = chart.axisLeft
+        left.isEnabled = false
+        val right = chart.axisRight
+        right.isEnabled = false
+
+        val xAxis = chart.xAxis
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.setDrawLabels(false)
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawAxisLine(false)
+
+        chart.setFitBars(true)
+        chart.setScaleEnabled(false)
+        chart.setPinchZoom(false)
+        chart.setDrawValueAboveBar(false)
+
+        // Refresh
+        chart.invalidate()
+
+        Log.d("ChartBar::show", "Chart updated")
     }
 }
