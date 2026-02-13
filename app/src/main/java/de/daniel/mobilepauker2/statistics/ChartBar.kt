@@ -5,10 +5,12 @@ import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import de.daniel.mobilepauker2.R
 import de.daniel.mobilepauker2.utils.Log
 
@@ -89,9 +91,21 @@ internal class ChartBar(view: View) {
 
         val xAxis = chart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawLabels(false)
         xAxis.setDrawGridLines(false)
         xAxis.setDrawAxisLine(false)
+        xAxis.granularity = 1f
+        xAxis.labelCount = 1
+        xAxis.textSize = 12f
+        xAxis.isGranularityEnabled = true
+
+        xAxis.setDrawLabels(true)
+
+        xAxis.valueFormatter = object : ValueFormatter() {
+            override fun getAxisLabel(value: Float, axis: AxisBase?): String {
+                // wir haben einen Balken bei x = 0
+                return if (value.toInt() == 0) titel else ""
+            }
+        }
 
         chart.setFitBars(true)
         chart.setScaleEnabled(false)
