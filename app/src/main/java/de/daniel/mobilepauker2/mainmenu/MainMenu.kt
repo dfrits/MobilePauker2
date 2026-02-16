@@ -64,6 +64,7 @@ import de.daniel.mobilepauker2.utils.ErrorReporter
 import de.daniel.mobilepauker2.utils.Log
 import de.daniel.mobilepauker2.utils.Toaster
 import javax.inject.Inject
+import androidx.core.content.edit
 
 @Suppress("PrivatePropertyName")
 class MainMenu : AppCompatActivity(R.layout.main_menu) {
@@ -409,7 +410,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         builder.setTitle(R.string.app_name)
             .setPositiveButton(R.string.next) { dialog, _ ->
                 getDefaultSharedPreferences(context)
-                    .edit().putBoolean("FirstTime", false).apply()
+                    .edit { putBoolean("FirstTime", false) }
                 requestPermission(requestCode)
                 dialog.dismiss()
             }
@@ -497,14 +498,14 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
                     DropboxClientFactory.init(credential)
                     GetUserMailTask(DropboxClientFactory.client, object : GetUserMailTask.Callback {
                         override fun onComplete(result: String) {
-                            pref.edit().putString(DROPBOX_USER_MAIL, result).apply()
+                            pref.edit { putString(DROPBOX_USER_MAIL, result) }
                         }
 
                         override fun onError() {}
                     }).execute()
                 }
             }
-        } catch (ignore: Exception) {
+        } catch (_: Exception) {
         }
     }
 

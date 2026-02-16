@@ -274,7 +274,7 @@ class ErrorReporter @Inject constructor(private val context: Context) :
             val trace = context.openFileOutput(fileName, Context.MODE_PRIVATE)
             trace.write(ErrorContent.toByteArray())
             trace.close()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             throw RuntimeException("Exception in ErrorReporter!")
         }
     }
@@ -285,14 +285,14 @@ class ErrorReporter @Inject constructor(private val context: Context) :
             val inputStream = context.openFileInput("error.stacktrace")
             bis = BufferedReader(InputStreamReader(inputStream))
             bis.readLine() != ""
-        } catch (e: FileNotFoundException) {
+        } catch (_: FileNotFoundException) {
             false
-        } catch (e: IOException) {
+        } catch (_: IOException) {
             false
         } finally {
             try {
                 bis?.close()
-            } catch (ignored: IOException) {
+            } catch (_: IOException) {
             }
         }
     }

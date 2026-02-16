@@ -51,6 +51,9 @@ import de.daniel.mobilepauker2.utils.Toaster
 import de.daniel.mobilepauker2.utils.Utility.Companion.isAppRunning
 import java.util.*
 import javax.inject.Inject
+import androidx.core.view.isVisible
+import androidx.core.content.edit
+import androidx.core.net.toUri
 
 class LearnCards : FlashCardSwipeScreen() {
     private val context: Context = this
@@ -108,7 +111,7 @@ class LearnCards : FlashCardSwipeScreen() {
 
         init()
 
-        val pm: PowerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        val pm: PowerManager = getSystemService(POWER_SERVICE) as PowerManager
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             showPermissionDialog()
         }
@@ -131,7 +134,7 @@ class LearnCards : FlashCardSwipeScreen() {
                     "Card Cursor not available"
                 )
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.e("FlashCardSwipeScreenActivity::updateCurrentCard", "Caught Exception")
             toaster.showToast(
                 context as Activity,
@@ -190,7 +193,7 @@ class LearnCards : FlashCardSwipeScreen() {
             mCardCursor.moveToPosition(mSavedCursorPosition)
             updateCurrentCard()
             fillInData(flipCardSides)
-            if (bShowMe!!.visibility == View.VISIBLE
+            if (bShowMe!!.isVisible
                 && (flipCardSides && currentCard.side == SIDE_A
                         || !flipCardSides && currentCard.side == SIDE_B)
             ) {
@@ -232,7 +235,7 @@ class LearnCards : FlashCardSwipeScreen() {
         super.onPause()
         mSavedCursorPosition = try {
             mCardCursor.position
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             -1
         }
 
@@ -272,7 +275,7 @@ class LearnCards : FlashCardSwipeScreen() {
                 stopService(timerServiceIntent)
                 unbindService(timerServiceConnection!!)
             }
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
         notificationManager?.cancelAll()
         super.finish()
@@ -356,8 +359,8 @@ class LearnCards : FlashCardSwipeScreen() {
                 val binder: LocalBinder = service as LocalBinder
                 timerService = binder.serviceInstance
                 registerListener()
-                timerService!!.startUstmTimer()
-                timerService!!.startStmTimer()
+                (timerService ?: return).startUstmTimer()
+                (timerService ?: return).startStmTimer()
                 findViewById<RelativeLayout>(R.id.lTimerFrame).visibility = View.VISIBLE
                 timerAnimation = findViewById(R.id.timerAnimationPanel)
             }
@@ -376,13 +379,13 @@ class LearnCards : FlashCardSwipeScreen() {
         bindService(timerServiceIntent, timerServiceConnection!!, BIND_AUTO_CREATE)
     }
 
-    private fun stopBothTimer() {
+    internal fun stopBothTimer() {
         unregisterListener()
         timerService?.stopUstmTimer()
         timerService?.stopStmTimer()
     }
 
-    private fun registerListener() {
+    internal fun registerListener() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) registerListenerAfterOS13()
         else registerListenerBeforeOS13()
     }
@@ -429,7 +432,7 @@ class LearnCards : FlashCardSwipeScreen() {
             unregisterReceiver(stmTimeBroadcastReceiver)
             unregisterReceiver(ustmFinishedBroadcastReceiver)
             unregisterReceiver(stmFinishedBroadcastReceiver)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
         }
     }
 
@@ -466,7 +469,7 @@ class LearnCards : FlashCardSwipeScreen() {
         enableButtons()
     }
 
-    private fun updateLearningPhase() {
+    internal fun updateLearningPhase() {
         var zeroUnlearnedCards = false
         var zeroUSTMCards = false
         var zeroSTMCards = false
@@ -630,7 +633,7 @@ class LearnCards : FlashCardSwipeScreen() {
         bShowMe!!.visibility = View.VISIBLE
         val currentCard = try {
             lessonManager.getCardFromCurrentPack(mCardCursor.position)
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             Log.d("LearnCards::setButtons()", "Cursor not loades yet.")
             toaster.showToast(
                 context as Activity,
@@ -860,7 +863,7 @@ class LearnCards : FlashCardSwipeScreen() {
             val view = View.inflate(context, R.layout.dialog_battery_optimization_alert, null)
 
             view.findViewById<CheckBox>(R.id.check).setOnCheckedChangeListener { _, isChecked ->
-                pref.edit().putBoolean("showagain", !isChecked).apply()
+                pref.edit { putBoolean("showagain", !isChecked) }
             }
 
             builder.setView(R.layout.dialog_battery_optimization_alert)
@@ -869,10 +872,10 @@ class LearnCards : FlashCardSwipeScreen() {
                 .setNegativeButton(R.string.not_now) { dialog, _ -> dialog.dismiss() }
                 .setPositiveButton(R.string.next) { dialog, _ ->
                     dialog.dismiss()
-                    pref.edit().putBoolean("showagain", true).apply()
+                    pref.edit { putBoolean("showagain", true)}
                     val intent = Intent()
                     intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                    intent.data = Uri.parse("package:${packageName}")
+                    intent.data = "package:${packageName}".toUri()
                     startActivity(intent)
                 }
                 .create()
@@ -965,8 +968,9 @@ class LearnCards : FlashCardSwipeScreen() {
             else ResourcesCompat.getDrawable(resources, android.R.color.transparent, null)
         item?.isChecked = !checked
 
-        PreferenceManager.getDefaultSharedPreferences(context).edit()
-            .putBoolean(Constants.HIDE_TIMER_KEY, !checked).apply()
+        PreferenceManager.getDefaultSharedPreferences(context).edit {
+            putBoolean(Constants.HIDE_TIMER_KEY, !checked)
+        }
     }
 
     /* Button clicks */
@@ -1052,20 +1056,23 @@ class LearnCards : FlashCardSwipeScreen() {
                 val showNotify = settingsManager.getBoolPreference(SHOW_TIMER_BAR)
                 if (!isAppRunning(context) && timerService!!.isStmTimerFinished() && showNotify) {
                     Log.d("LearnActivity::STM-Timer finished", "Acivity is visible")
+                    val safeIntent = Intent(context, LearnCards::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        `package` = context.packageName
+                    }
+                    val pending = PendingIntent.getActivity(
+                        context,
+                        0,
+                        safeIntent,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
                     val mBuilder: Builder =
                         Builder(context, NOTIFICATION_CHANNEL_ID)
                             .setContentText(getString(R.string.stm_expired_notify_message))
                             .setSmallIcon(R.drawable.notify_icon)
                             .setContentTitle(getString(R.string.app_name))
                             .setPriority(PRIORITY_DEFAULT)
-                            .setContentIntent(
-                                PendingIntent.getActivity(
-                                    context,
-                                    0,
-                                    getIntent(),
-                                    PendingIntent.FLAG_IMMUTABLE
-                                )
-                            )
+                            .setContentIntent(pending)
                             .setAutoCancel(true)
                             .setVisibility(VISIBILITY_PUBLIC)
                     Log.d("LearnActivity::STM-Timer finished", "Notification created")
@@ -1089,13 +1096,13 @@ class LearnCards : FlashCardSwipeScreen() {
         override fun onReceive(context: Context, intent: Intent) {
             val timeElapsed = intent.getIntExtra(TimerService.ustm_time, 0)
             runOnUiThread {
-                if (ustmTimerBar.visibility == View.VISIBLE && !timerService!!.isUstmTimerFinished()) {
+                if (ustmTimerBar.isVisible && !timerService!!.isUstmTimerFinished()) {
                     val sec = timeElapsed % 60
                     ustmTimerText = java.lang.String.format(
                         Locale.getDefault(),
                         "%d / %ds",
                         sec,
-                        timerService!!.getUstmTotalTime()
+                        (timerService ?: return@runOnUiThread).getUstmTotalTime()
                     )
                     ustmTimerBar.progress = timeElapsed
                     ustmTimerTextView.text = ustmTimerText
@@ -1133,18 +1140,23 @@ class LearnCards : FlashCardSwipeScreen() {
                         ) + " " + ustmTimerText
                     val timerbarText =
                         ustmTimerBarText + "  " + getString(R.string.stm) + " " + timerText
-                    val contentIntent = if (pendingIntent == null) getIntent() else pendingIntent!!
+                    val safeIntent = Intent(context, LearnCards::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                        `package` = context.packageName
+                    }
+                    val contentIntent = if (pendingIntent == null) safeIntent else pendingIntent ?: return@runOnUiThread
+                    val pending = PendingIntent.getActivity(
+                        context,
+                        0,
+                        contentIntent,
+                        PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+                    )
                     val mBuilder: Builder = Builder(context, TIMER_BAR_CHANNEL_ID)
                         .setContentText(timerbarText)
                         .setSmallIcon(R.drawable.notify_icon)
                         .setPriority(PRIORITY_DEFAULT)
                         .setContentIntent(
-                            PendingIntent.getActivity(
-                                context,
-                                0,
-                                contentIntent,
-                                PendingIntent.FLAG_IMMUTABLE
-                            )
+                            pending
                         )
                         .setAutoCancel(true)
                         .setOngoing(true)

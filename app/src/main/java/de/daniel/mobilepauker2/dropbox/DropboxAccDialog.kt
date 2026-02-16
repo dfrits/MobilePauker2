@@ -8,6 +8,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.dropbox.core.DbxRequestConfig
 import com.dropbox.core.android.Auth
@@ -60,7 +61,9 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
                     )
                     setResult(RESULT_CANCELED)
                 } else {
-                    prefs?.edit()?.remove(Constants.DROPBOX_CREDENTIAL)?.apply()
+                    prefs?.edit {
+                        remove(Constants.DROPBOX_CREDENTIAL)
+                    }
                     toaster.showToast(
                         this,
                         getString(R.string.dropbox_unlinked),
@@ -84,9 +87,9 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
             val credential = Auth.getDbxCredential()
 
             if (credential != null) {
-                prefs!!.edit()
-                    .putString(Constants.DROPBOX_CREDENTIAL, credential.toString())
-                    .apply()
+                prefs!!.edit {
+                    putString(Constants.DROPBOX_CREDENTIAL, credential.toString())
+                }
                 toaster.showToast(this, R.string.connected, Toast.LENGTH_SHORT)
 
                 saveUserMail(credential)
@@ -114,7 +117,9 @@ class DropboxAccDialog : AppCompatActivity(R.layout.progress_dialog) {
         DropboxClientFactory.init(credential)
         GetUserMailTask(DropboxClientFactory.client, object : GetUserMailTask.Callback {
             override fun onComplete(result: String) {
-                prefs?.edit()?.putString(Constants.DROPBOX_USER_MAIL, result)?.apply()
+                prefs?.edit {
+                    putString(Constants.DROPBOX_USER_MAIL, result)
+                }
                 finish()
             }
 
