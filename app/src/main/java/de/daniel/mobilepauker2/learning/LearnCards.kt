@@ -919,6 +919,7 @@ class LearnCards : FlashCardSwipeScreen() {
         val intent = Intent(context, EditCard::class.java)
         intent.putExtra(Constants.CURSOR_POSITION, mCardCursor.position)
         pendingIntent = intent
+        @Suppress("DEPRECATION")
         startActivityForResult(intent, Constants.REQUEST_CODE_EDIT_CARD)
     }
 

@@ -631,6 +631,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
     @Suppress("UNUSED_PARAMETER")
     fun mEditInfoTextClicked(menuItem: MenuItem) {
         startActivity(Intent(context, EditDescription::class.java))
+        @Suppress("DEPRECATION")
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay)
     }
 

@@ -69,9 +69,10 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
             if (credentials == null) {
                 errorOccurred(Exception(getString(R.string.error_invalid_token_message)))
             } else {
-                DropboxClientFactory.init(credentials!!)
+                DropboxClientFactory.init(credentials ?: return)
+                @Suppress("DEPRECATION")
                 val serializableExtra = intent.getSerializableExtra(FILES)
-                startSync(intent, serializableExtra!!)
+                startSync(intent, serializableExtra ?: return)
             }
         }
 
@@ -155,7 +156,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         errorOccurred(Exception(getString(R.string.synchro_canceled_by_user)))
     }
 
-    private fun startSync(intent: Intent, serializableExtra: Serializable) {
+    internal fun startSync(intent: Intent, serializableExtra: Serializable) {
         val action = intent.action
         if (Constants.SYNC_ALL_ACTION == action && serializableExtra is Array<*>) {
             syncAllFiles(convertExtraToList(serializableExtra))
@@ -300,7 +301,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
                 .setPositiveButton(R.string.ok, null)
                 .setNeutralButton("Send E-Mail") { _, _ ->
                     errorReporter.init()
-                    errorReporter.uncaughtException(null, e)
+                    errorReporter.uncaughtException(Thread(), e)
                     val errorReportIntent = errorReporter.checkErrorAndSendMail()
                     context.startActivity(
                         Intent.createChooser(
