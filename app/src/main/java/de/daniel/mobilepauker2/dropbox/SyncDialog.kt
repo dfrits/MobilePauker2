@@ -37,6 +37,7 @@ import java.io.File
 import java.io.Serializable
 import java.util.*
 import javax.inject.Inject
+import androidx.core.content.edit
 
 class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
     private val context: Context = this
@@ -280,7 +281,7 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
         })
     }
 
-    private fun errorOccurred(e: Exception? = null) {
+    internal fun errorOccurred(e: Exception? = null) {
         val errorMessage = e?.message ?: getString(R.string.simple_error_message)
         toaster.showToast(
             context as Activity,
@@ -310,8 +311,9 @@ class SyncDialog : AppCompatActivity(R.layout.progress_dialog) {
                 }
                 .setOnDismissListener {
                     PreferenceManager.getDefaultSharedPreferences(context)
-                        .edit()
-                        .putString(Constants.DROPBOX_CREDENTIAL, null).apply()
+                        .edit {
+                            putString(Constants.DROPBOX_CREDENTIAL, null)
+                        }
                     finishDialog(RESULT_CANCELED)
                 }
                 .setCancelable(false)

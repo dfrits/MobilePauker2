@@ -63,7 +63,7 @@ class ErrorReporter @Inject constructor(private val context: Context) :
             return bIsThereAnyErrorFile()
         }
 
-    override fun uncaughtException(t: Thread, e: Throwable) {
+    override fun uncaughtException(t: Thread?, e: Throwable) {
         Log.d("ErrorReporter::uncaughtException", "Building error report")
         val report = StringBuilder()
         val curDate = Date()
