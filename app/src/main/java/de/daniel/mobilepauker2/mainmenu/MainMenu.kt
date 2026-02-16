@@ -348,7 +348,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         Log.d("MainMenu::ChartInit", "Adapter set")
     }
 
-    private fun showBatchDetails(index: Int) {
+    internal fun showBatchDetails(index: Int) {
         if (lessonManager.getBatchSize(BatchType.LESSON) == 0) return
         val browseIntent = Intent(Intent.ACTION_SEARCH)
         browseIntent.setClass(context, Search::class.java)
@@ -541,7 +541,7 @@ class MainMenu : AppCompatActivity(R.layout.main_menu) {
         }
     }
 
-    private fun saveLesson(isNewFile: Boolean, requestCode: Int) {
+    internal fun saveLesson(isNewFile: Boolean, requestCode: Int) {
         val result = dataManager.writeLessonToFile(isNewFile)
         if (result.successful) {
             saveFinished(requestCode)

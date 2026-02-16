@@ -20,6 +20,7 @@
         android:layout_above="@+id/gelerntValue"
         android:fontFamily="serif"
         android:textAlignment="center"
+        android:textIsSelectable="false"
         android:textSize="12sp" />
 
     <TextView
@@ -29,6 +30,7 @@
         android:layout_above="@+id/sumValue"
         android:fontFamily="serif"
         android:textAlignment="center"
+        android:textIsSelectable="false"
         android:textSize="12sp" />
 
     <TextView
@@ -38,5 +40,6 @@
         android:layout_alignParentBottom="true"
         android:fontFamily="serif"
         android:textAlignment="center"
+        android:textIsSelectable="false"
         android:textSize="12sp" />
 </RelativeLayout>
